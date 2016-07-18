@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail.host}" />
+        <property name="port" value="${mail.port}" />
+        <property name="username" value="${mail.senderAddress}" />
+        <property name="password" value="${mail.senderPassword}" />
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.transport.protocol">${mail.transport.protocol}</prop>
+                <prop key="mail.smtp.ssl.enable">${mail.smtp.ssl.enable}</prop>
+                <prop key="mail.debug">${mail.debug}</prop>
+            </props>
+        </property>
+    </bean>
+
+    <bean id="templateMessage" class="org.springframework.mail.SimpleMailMessage" />
+
+    <bean id="mailService" class="main.service.mail.MailServiceImpl">
+        <property name="mailSender" ref="mailSender" />
+        <property name="message" ref="templateMessage" />
+        <property name="from" value="${mail.senderAddress}" />
+    </bean>
+
+</beans>

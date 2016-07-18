@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app id="WebApp_ID" version="3.1"
+	xmlns="http://java.sun.com/xml/ns/j2ee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
+	http://java.sun.com/xml/ns/j2ee/web-app_3_1.xsd">
+
+	<display-name>Spring Security with Hibernate</display-name>
+
+	<!-- <Dispatcher servlet configuration> -->
+		<servlet>
+			<servlet-name>dispatcher</servlet-name>
+			<servlet-class>
+				org.springframework.web.servlet.DispatcherServlet
+			</servlet-class>
+			<init-param>
+				<param-name>contextConfigLocation</param-name>
+				<param-value>/WEB-INF/config/spring-servlet.xml</param-value>
+			</init-param>
+			<load-on-startup>1</load-on-startup>
+		</servlet>
+		<servlet-mapping>
+			<servlet-name>dispatcher</servlet-name>
+			<url-pattern>/</url-pattern>
+		</servlet-mapping>
+	<!-- </Dispatcher servlet configuration> -->
+
+	<!-- </Spring Security (oAuth), Spring Security and Spring Database config files location> -->
+		<listener>
+			<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+		</listener>
+		<context-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>
+				/WEB-INF/config/spring-context.xml
+			</param-value>
+		</context-param>
+	<!-- </Spring Security and Spring Database config files location> -->
+
+	<!-- <Spring Security filter configuration> -->
+		<filter>
+			<filter-name>springSecurityFilterChain</filter-name>
+			<filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+		</filter>
+		<filter-mapping>
+			<filter-name>springSecurityFilterChain</filter-name>
+			<url-pattern>/*</url-pattern>
+		</filter-mapping>
+	<!-- </Spring Security filter configuration> -->
+
+</web-app>
