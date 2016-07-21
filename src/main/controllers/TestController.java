@@ -55,7 +55,7 @@ public class TestController {
     @ResponseBody
     public ResponseEntity<String> editSampleUser() {
         User bill = userService.findUserByUsername("bill");
-        Integer billID = bill.getId();
+        String billID = bill.getId();
         bill.setFirstName("Bill");
 
         userService.updateUser(bill);
@@ -79,6 +79,13 @@ public class TestController {
     public ResponseEntity<String> sendSampleMail( @RequestParam String to, @RequestParam String title, @RequestParam String message ) {
         mailService.sendMail(to, title, message);
         return new ResponseEntity<>("", HttpStatus.OK);
+    }
+
+    @RequestMapping( value = "/UUIDgen", method = RequestMethod.GET, produces = "application/text_plain" )
+    @PermitAll
+    @ResponseBody
+    public ResponseEntity<String> generateUUID() {
+        return new ResponseEntity<>(new com.eaio.uuid.UUID().toString(), HttpStatus.OK);
     }
 
 }

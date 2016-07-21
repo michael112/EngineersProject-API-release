@@ -8,7 +8,7 @@ import main.model.user.User;
 
 public interface UserService {
 
-	User findUserByID(int id);
+	User findUserByID(String id);
 	
 	User findUserByUsername(String username);
 
@@ -20,7 +20,7 @@ public interface UserService {
 
 	void deleteUser(User entity);
 
-	void deleteUserByID(Integer id);
+	void deleteUserByID(String id);
 
 	void deleteUserByUsername(String username);
 

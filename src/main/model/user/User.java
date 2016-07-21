@@ -2,8 +2,6 @@
 
 package main.model.user;
 
-import main.model.AbstractModel;
-
 import java.util.HashSet;
 import java.util.Set;
 
@@ -20,19 +18,23 @@ import javax.persistence.Entity;
 
 import org.hibernate.annotations.Type;
 
+import com.eaio.uuid.UUID;
+
 import lombok.Getter;
 import lombok.Setter;
 
+import main.model.AbstractModel;
+
 @Entity
 @Table(name="users")
-public class User extends AbstractModel<Integer> {
+public class User extends AbstractModel<String> {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="userID")
     @Getter
     @Setter
-    private Integer id;
+    private String id;
 
     @Column(name="username", unique=true, nullable=false)
     @Getter
@@ -72,5 +74,9 @@ public class User extends AbstractModel<Integer> {
     @Getter
     @Setter
     private String lastName;
+
+    public User() {
+        this.id = new UUID().toString();
+    }
 
 }

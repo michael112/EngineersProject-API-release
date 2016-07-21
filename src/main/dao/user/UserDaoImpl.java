@@ -12,9 +12,9 @@ import main.dao.AbstractDao;
 import main.model.user.User;
 
 @Repository("userDao")
-public class UserDaoImpl extends AbstractDao<Integer, User> implements UserDao {
+public class UserDaoImpl extends AbstractDao<String, User> implements UserDao {
 
-	public User findUserByID(int id) {
+	public User findUserByID(String id) {
 		return findByID(id);
 	}
 

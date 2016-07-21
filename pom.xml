@@ -48,6 +48,7 @@
 		<jackson.version>2.7.3</jackson.version>
 		<lombok.version>1.16.10</lombok.version>
 		<javax.mail.version>1.5.5</javax.mail.version>
+		<uuid.version>3.2</uuid.version>
 	</properties>
 
 	<dependencies>
@@ -201,6 +202,12 @@
 			<groupId>com.sun.mail</groupId>
 			<artifactId>javax.mail</artifactId>
 			<version>${javax.mail.version}</version>
+		</dependency>
+		<!-- UUID Generator -->
+		<dependency>
+			<groupId>com.eaio.uuid</groupId>
+			<artifactId>uuid</artifactId>
+			<version>${uuid.version}</version>
 		</dependency>
 
 	</dependencies>

@@ -18,7 +18,7 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserDao dao;
 
-	public User findUserByID(int id) {
+	public User findUserByID(String id) {
 		return dao.findUserByID(id);
 	}
 
@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService {
 		dao.deleteUser(entity);
 	}
 
-	public void deleteUserByID(Integer id) {
+	public void deleteUserByID(String id) {
 		deleteUser(findUserByID(id));
 	}
 

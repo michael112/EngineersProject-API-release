@@ -8,7 +8,7 @@ import main.model.user.User;
 
 public interface UserDao {
 
-	User findUserByID(int id);
+	User findUserByID(String id);
 	
 	User findUserByUsername(String sso);
 
