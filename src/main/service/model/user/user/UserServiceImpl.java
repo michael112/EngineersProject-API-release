@@ -1,6 +1,6 @@
 // (C) websystique
 
-package main.service.user;
+package main.service.model.user.user;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import main.dao.user.UserDao;
+import main.dao.user.user.UserDao;
 import main.model.user.User;
 
 @Service("userService")

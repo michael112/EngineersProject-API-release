@@ -36,7 +36,7 @@ public abstract class AbstractDao<PK extends Serializable, T extends AbstractMod
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> getAll() {
+	public List<T> findAll() {
 		Criteria criteria = createEntityCriteria();
 		return (List<T>) criteria.list();
 	}

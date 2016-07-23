@@ -1,0 +1,56 @@
+package main.model.placementtest;
+
+import java.util.Set;
+
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Column;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
+
+import com.eaio.uuid.UUID;
+
+import lombok.Getter;
+import lombok.Setter;
+
+import main.model.AbstractModel;
+
+@Entity
+@Table(name="placementSentences")
+public class PlacementSentence extends AbstractModel<String> {
+
+	@Getter
+	@Setter
+	@Id
+	@Column(name="placementSentenceID")
+	private String id;
+
+	@Getter
+	@Setter
+	@Column(name="prefix", nullable=true)
+	private String prefix;
+
+	@Getter
+	@Setter
+	@Column(name="suffix", nullable=true)
+	private String suffix;
+
+	@Getter
+	@Setter
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@JoinColumn(name="placementAnswerID", referencedColumnName="placementAnswerID")
+	private Set<PlacementAnswer> answers;
+
+	@Getter
+	@Setter
+	@Column(name="correctAnswer", nullable=true)
+	private String correctAnswer;
+
+	public PlacementSentence() {
+		this.id = new UUID().toString();
+	}
+
+}

@@ -1,6 +1,6 @@
 -- MySQL dump 10.13  Distrib 5.7.9, for Win64 (x86_64)
 --
--- Host: localhost    Database: springoauth
+-- Host: localhost    Database: engineers_project
 -- ------------------------------------------------------
 -- Server version	5.7.11-log
 
@@ -42,6 +42,32 @@ LOCK TABLES `attachementscourses` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `attachementshomeworks`
+--
+
+DROP TABLE IF EXISTS `attachementshomeworks`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `attachementshomeworks` (
+  `attachementID` varchar(36) NOT NULL,
+  `homeworkID` varchar(36) NOT NULL,
+  PRIMARY KEY (`attachementID`,`homeworkID`),
+  KEY `FK_ATT_HWRK__HWRK` (`homeworkID`),
+  CONSTRAINT `FK_ATT_HWRK__FILE` FOREIGN KEY (`attachementID`) REFERENCES `files` (`fileID`),
+  CONSTRAINT `FK_ATT_HWRK__HWRK` FOREIGN KEY (`homeworkID`) REFERENCES `homeworks` (`homeworkID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `attachementshomeworks`
+--
+
+LOCK TABLES `attachementshomeworks` WRITE;
+/*!40000 ALTER TABLE `attachementshomeworks` DISABLE KEYS */;
+/*!40000 ALTER TABLE `attachementshomeworks` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `attachementsmessages`
 --
 
@@ -77,7 +103,7 @@ DROP TABLE IF EXISTS `coursedays`;
 CREATE TABLE `coursedays` (
   `courseDayID` varchar(36) NOT NULL,
   `courseID` varchar(36) NOT NULL,
-  `day` varchar(20) NOT NULL,
+  `day` tinyint(1) NOT NULL,
   `hourFrom` varchar(5) NOT NULL,
   `hourTo` varchar(5) NOT NULL,
   PRIMARY KEY (`courseDayID`)
@@ -274,8 +300,8 @@ CREATE TABLE `grades` (
   `gradedByID` varchar(36) NOT NULL,
   `courseID` varchar(36) NOT NULL,
   `gradeTitle` varchar(50) NOT NULL,
-  `gradeDescription` varchar(50) NOT NULL,
-  `homeworkOrTestID` varchar(36) NOT NULL,
+  `gradeDescription` varchar(50) DEFAULT NULL,
+  `homeworkOrTestID` varchar(36) DEFAULT NULL,
   `scale` varchar(8) NOT NULL,
   `maxPoints` double DEFAULT NULL,
   `weight` double NOT NULL DEFAULT '1',
@@ -336,7 +362,7 @@ CREATE TABLE `homeworksolutions` (
   `courseMembershipID` varchar(36) NOT NULL,
   `taskID` varchar(36) NOT NULL,
   `fileID` varchar(36) NOT NULL,
-  `studentGradeID` varchar(36) NOT NULL,
+  `studentGradeID` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`homeworkSolutionID`),
   KEY `FK__HWR_SOL__CRS` (`courseMembershipID`),
   KEY `FK__HWR_SOL__HWR` (`taskID`),
@@ -418,6 +444,7 @@ CREATE TABLE `messages` (
   `content` varchar(300) NOT NULL,
   `isAnnouncement` tinyint(1) NOT NULL,
   `courseID` varchar(36) NOT NULL,
+  `senderID` varchar(36) NOT NULL,
   PRIMARY KEY (`messageID`),
   KEY `FK_MSG_CRS` (`courseID`),
   CONSTRAINT `FK_MSG_CRS` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`)
@@ -740,16 +767,16 @@ DROP TABLE IF EXISTS `testsolutions`;
 CREATE TABLE `testsolutions` (
   `testSolutionID` varchar(36) NOT NULL,
   `courseMembershipID` varchar(36) NOT NULL,
-  `testID` varchar(36) NOT NULL,
+  `taskID` varchar(36) NOT NULL,
   `written` tinyint(1) NOT NULL,
   `studentGradeID` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`testSolutionID`),
   KEY `FK__TST_SOL__STD_GRD` (`studentGradeID`),
-  KEY `FK__TST_SOL__TST` (`testID`),
+  KEY `FK__TST_SOL__TST` (`taskID`),
   KEY `FK__TST_SOL__CRS` (`courseMembershipID`),
   CONSTRAINT `FK__TST_SOL__CRS` FOREIGN KEY (`courseMembershipID`) REFERENCES `coursememberships` (`courseMembershipID`),
   CONSTRAINT `FK__TST_SOL__STD_GRD` FOREIGN KEY (`studentGradeID`) REFERENCES `studentgrades` (`studentGradeID`),
-  CONSTRAINT `FK__TST_SOL__TST` FOREIGN KEY (`testID`) REFERENCES `tests` (`testID`)
+  CONSTRAINT `FK__TST_SOL__TST` FOREIGN KEY (`taskID`) REFERENCES `tests` (`testID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -800,7 +827,7 @@ CREATE TABLE `users` (
   `password` varchar(100) NOT NULL,
   `firstname` varchar(30) NOT NULL,
   `lastname` varchar(30) NOT NULL,
-  `email` varchar(30) NOT NULL,
+  `email` varchar(50) NOT NULL,
   `active` tinyint(1) NOT NULL,
   `addressStreet` varchar(50) NOT NULL,
   `addressHouseNumber` varchar(5) NOT NULL,
@@ -856,4 +883,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-21  9:00:46
+-- Dump completed on 2016-07-23 17:14:22

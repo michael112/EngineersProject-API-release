@@ -1,6 +1,6 @@
 // (C) websystique
 
-package main.dao.user;
+package main.dao.user.user;
 
 import java.util.List;
 
@@ -14,30 +14,30 @@ import main.model.user.User;
 @Repository("userDao")
 public class UserDaoImpl extends AbstractDao<String, User> implements UserDao {
 
-	public User findUserByID(String id) {
-		return findByID(id);
-	}
-
 	public User findUserByUsername(String sso) {
 		Criteria crit = createEntityCriteria();
 		crit.add(Restrictions.eq("username", sso));
 		return (User) crit.uniqueResult();
 	}
 
+	public User findUserByID(String id) {
+		return findByID(id);
+	}
+
 	public List<User> findAllUsers() {
-		return getAll();
+		return findAll();
 	}
 
-	public void saveUser(User user) {
-		save(user);
+	public void saveUser(User entity) {
+		save(entity);
 	}
 
-	public void updateUser(User user) {
-		update(user);
+	public void updateUser(User entity) {
+		update(entity);
 	}
 
-	public void deleteUser(User user) {
-		delete(user);
+	public void deleteUser(User entity) {
+		delete(entity);
 	}
 	
 }

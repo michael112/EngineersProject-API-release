@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
-import main.service.user.UserService;
+import main.service.model.user.user.UserService;
 import main.model.user.User;
 import main.service.mail.MailService;
 

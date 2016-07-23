@@ -1,16 +1,16 @@
 // (C) websystique
 
-package main.service.user;
+package main.dao.user.user;
 
 import java.util.List;
 
 import main.model.user.User;
 
-public interface UserService {
+public interface UserDao {
+
+	User findUserByUsername(String sso);
 
 	User findUserByID(String id);
-	
-	User findUserByUsername(String username);
 
 	List<User> findAllUsers();
 
@@ -20,9 +20,5 @@ public interface UserService {
 
 	void deleteUser(User entity);
 
-	void deleteUserByID(String id);
-
-	void deleteUserByUsername(String username);
-
-	boolean isUsernameUnique(String username);
 }
+

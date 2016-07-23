@@ -5,7 +5,7 @@ package main.service.userdetails;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.model.user.UserRole;
+import main.model.user.userrole.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import main.model.user.User;
-import main.service.user.UserService;
+import main.service.model.user.user.UserService;
 
 @Service("customUserDetailsService")
 public class UserDetailsServiceImpl implements org.springframework.security.core.userdetails.UserDetailsService {

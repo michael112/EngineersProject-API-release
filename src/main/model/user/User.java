@@ -5,16 +5,7 @@ package main.model.user;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.Column;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
-import javax.persistence.Entity;
+import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
@@ -24,13 +15,20 @@ import lombok.Getter;
 import lombok.Setter;
 
 import main.model.AbstractModel;
+import main.model.user.userrole.UserRole;
+import main.model.user.userprofile.Address;
+import main.model.user.userprofile.Phone;
+import main.model.user.userprofile.PlacementTestResult;
+import main.model.course.Course;
+import main.model.course.CourseMembership;
+import main.model.course.Message;
+import main.model.language.Language;
 
 @Entity
 @Table(name="users")
 public class User extends AbstractModel<String> {
 
     @Id
-    @GeneratedValue(strategy=GenerationType.IDENTITY)
     @Column(name="userID")
     @Getter
     @Setter
@@ -58,9 +56,9 @@ public class User extends AbstractModel<String> {
     private boolean active;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "users_user_roles",
-            joinColumns = { @JoinColumn(name = "userID") },
-            inverseJoinColumns = { @JoinColumn(name = "userRoleID") })
+    @JoinTable(name = "usersuserroles",
+            joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
+            inverseJoinColumns = { @JoinColumn(name = "userRoleID", referencedColumnName="roleID") })
     @Getter
     @Setter
     private Set<UserRole> userRoles = new HashSet<UserRole>();
@@ -74,6 +72,67 @@ public class User extends AbstractModel<String> {
     @Getter
     @Setter
     private String lastName;
+	
+	@Getter
+	@Setter
+    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+    @JoinColumn(name="userID", referencedColumnName="phoneID")
+	private Set<Phone> phone;
+
+	@Getter
+	@Setter
+    @Embedded
+	private Address address;
+	
+	@Getter
+	@Setter
+    /*
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+    @JoinColumn(name="userID", referencedColumnName="userID")
+    */
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user")
+	private Set<PlacementTestResult> placementTest;
+
+	@Getter
+	@Setter
+    /*
+    @OneToMany(fetch=FetchType.EAGER)
+    @JoinColumn(name="userID", referencedColumnName="userID")
+    */
+    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user")
+	private Set<CourseMembership> coursesAsStudent;
+
+    @Getter
+    @Setter
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="sender")
+    private Set<Message> myMessages;
+
+	@Getter
+	@Setter
+    /*
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name = "messagesusers",
+            joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
+            inverseJoinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") })
+    */
+    @ManyToMany(fetch=FetchType.LAZY, mappedBy="receivers")
+	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów
+
+	@Getter
+	@Setter
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name = "teacherslanguages",
+            joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
+            inverseJoinColumns = { @JoinColumn(name = "languageID", referencedColumnName="languageID") })
+	private Set<Language> taughtLanguages;
+
+	@Getter
+	@Setter
+    @ManyToMany(fetch=FetchType.LAZY)
+    @JoinTable(name = "teacherscourses",
+            joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
+            inverseJoinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") })
+	private Set<Course> coursesAsTeacher;
 
     public User() {
         this.id = new UUID().toString();
