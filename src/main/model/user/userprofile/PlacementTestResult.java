@@ -2,8 +2,6 @@ package main.model.user.userprofile;
 
 import javax.persistence.*;
 
-import com.eaio.uuid.UUID;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,19 +9,13 @@ import main.model.user.User;
 import main.model.placementtest.PlacementTest;
 import main.model.language.Language;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementTestResults")
-public class PlacementTestResult extends AbstractModel<String> {
-	
-	// ===== fields =====
-	
-	@Getter
-	@Setter
-	@Id
-	@Column(name="placementTestResultID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementTestResultID")) })
+public class PlacementTestResult extends AbstractUuidModel {
+
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -46,7 +38,7 @@ public class PlacementTestResult extends AbstractModel<String> {
 	// ===== constructor ======
 	
 	public PlacementTestResult() {
-		this.id = new UUID().toString();
+		super();
 	}
 	
 }

@@ -5,30 +5,23 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="files")
-public class File extends AbstractModel<String> {
-	
-	// ===== fields =====
-	@Getter
-	@Setter
-	@Id
-	@Column(name="fileID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "fileID")) })
+public class File extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -52,7 +45,7 @@ public class File extends AbstractModel<String> {
 	private User sender;
 
 	public File() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

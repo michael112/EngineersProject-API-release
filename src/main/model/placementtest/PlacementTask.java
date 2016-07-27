@@ -5,28 +5,22 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementTasks")
-public class PlacementTask extends AbstractModel<String> {
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="placementTaskID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementTaskID")) })
+public class PlacementTask extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -40,6 +34,6 @@ public class PlacementTask extends AbstractModel<String> {
 	private Set<PlacementSentence> sentences;
 	
 	public PlacementTask() {
-		this.id = new UUID().toString();
+		super();
 	}
 }

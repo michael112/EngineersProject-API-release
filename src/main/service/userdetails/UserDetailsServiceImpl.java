@@ -40,7 +40,7 @@ public class UserDetailsServiceImpl implements org.springframework.security.core
 
         for(UserRole userRole : (java.util.Set<UserRole>) user.getUserRoles()){
 			System.out.println("UserRole : "+ userRole);
-			authorities.add(new SimpleGrantedAuthority("ROLE_"+ userRole.getRole()));
+			authorities.add(new SimpleGrantedAuthority("ROLE_"+ userRole.getRoleName()));
 		}
 		System.out.print("authorities :"+authorities);
 		return authorities;

@@ -5,7 +5,6 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
@@ -13,8 +12,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.CascadeType;
 import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
-import com.eaio.uuid.UUID;
+// Homework / Test mapping imports:
+import org.hibernate.annotations.Any;
+import org.hibernate.annotations.AnyMetaDef;
+import org.hibernate.annotations.MetaValue;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -22,18 +26,13 @@ import lombok.Setter;
 import main.model.enums.GradeScale;
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 
 @Entity
 @Table(name="grades")
-public class Grade extends AbstractModel<String> {
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="gradeID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "gradeID")) })
+public class Grade extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -57,11 +56,25 @@ public class Grade extends AbstractModel<String> {
 	@Column(name="gradeDescription", nullable=true)
 	private String gradeDescription;
 
+	/*
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=true)
+	@JoinColumn(name="taskID", referencedColumnName="courseID", nullable=true)
 	private AbstractHomeworkOrTest homeworkOrTest; // może być null-em
+	*/
+
+	@Getter
+	@Setter
+	@Any(metaColumn = @Column(name = "taskType"))
+	@AnyMetaDef(idType = "string", metaType = "byte",
+			metaValues = {
+					@MetaValue(value = "0", targetEntity = Homework.class),
+					@MetaValue(value = "1", targetEntity = Test.class)
+			}
+	)
+	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
+	private AbstractHomeworkOrTest task; // może być null-em
 
 	@Getter
 	@Setter
@@ -85,7 +98,7 @@ public class Grade extends AbstractModel<String> {
 	private Set<StudentGrade> grades;
 	
 	public Grade() {
-		this.id = new UUID().toString();
+		super();
 	}
 	
 }

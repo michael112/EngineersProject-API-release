@@ -4,34 +4,28 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import org.hibernate.annotations.Type;
-
-import com.eaio.uuid.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseMemberships")
-public class CourseMembership extends AbstractModel<String> {
-	
-	@Getter
-	@Setter
-	@Id
-	@Column(name="courseMembershipID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseMembershipID")) })
+public class CourseMembership extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -69,7 +63,7 @@ public class CourseMembership extends AbstractModel<String> {
 	private boolean resignation;
 
 	public CourseMembership() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

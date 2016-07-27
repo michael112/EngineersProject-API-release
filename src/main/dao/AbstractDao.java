@@ -12,7 +12,8 @@ import org.hibernate.SessionFactory;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractModel;
+import main.model.ModelInterface;
 
 public abstract class AbstractDao<PK extends Serializable, T extends AbstractModel> {
 	

@@ -1,22 +1,23 @@
 package main.model.course;
 
-/*
 import java.util.Set;
-import java.util.Date;
-*/
+// import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
-/*
-import com.eaio.uuid.UUID;
+import javax.persistence.Column;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.OneToMany;
+import javax.persistence.FetchType;
+import javax.persistence.CascadeType;
 
 import lombok.Getter;
 import lombok.Setter;
-*/
 
 @Entity
 @Table(name="tests")
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Test extends AbstractHomeworkOrTest {
 
 	/*
@@ -43,8 +44,12 @@ public class Test extends AbstractHomeworkOrTest {
 	private Set<TestSolution> solutions;
 	*/
 
+	@Getter
+	@Setter
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task")
+	private Set<TestSolution> solutions;
+
 	public Test() {
-		//this.id = new UUID().toString();
 		super();
 	}
 

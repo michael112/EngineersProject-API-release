@@ -5,7 +5,6 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToOne;
@@ -14,14 +13,15 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name="homeworks")
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Homework extends AbstractHomeworkOrTest {
 	
 	// ===== fields =====
@@ -62,20 +62,17 @@ public class Homework extends AbstractHomeworkOrTest {
 	@Getter
 	@Setter
 	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
-	@JoinTable(name = "attachementscourses",
-			joinColumns = { @JoinColumn(name = "homeworkID", referencedColumnName="homeworkID") },
+	@JoinTable(name = "attachementshomeworks",
+			joinColumns = { @JoinColumn(name = "homeworkID", referencedColumnName="taskID") },
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })
 	private Set<File> attachements;
 
-	/*
 	@Getter
 	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task")
 	private Set<HomeworkSolution> solutions;
-	*/
 	
 	public Homework() {
-		//this.id = new UUID().toString();
 		super();
 	}
 

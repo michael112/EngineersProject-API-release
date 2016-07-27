@@ -2,28 +2,22 @@ package main.model.course;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.user.User;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="studentGrades")
-public class StudentGrade {
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="studentGradeID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "studentGradeID")) })
+public class StudentGrade extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -43,7 +37,7 @@ public class StudentGrade {
 	private Grade grade;
 
 	public StudentGrade() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

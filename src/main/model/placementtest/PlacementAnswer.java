@@ -3,24 +3,18 @@ package main.model.placementtest;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementAnswers")
-public class PlacementAnswer extends AbstractModel<String> {
-	
-	@Getter
-	@Setter
-	@Id
-	@Column(name="placementAnswerID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementAnswerID")) })
+public class PlacementAnswer extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -33,7 +27,7 @@ public class PlacementAnswer extends AbstractModel<String> {
 	private String answerName;
 
 	public PlacementAnswer() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

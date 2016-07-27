@@ -5,31 +5,30 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Id;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
-import com.eaio.uuid.UUID;
+import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import main.model.user.userprofile.PlacementTestResult;
 import main.model.language.Language;
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementTests")
-public class PlacementTest extends AbstractModel<String> {
-	
-	@Getter
-	@Setter
-	@Id
-	@Column(name="placementTestID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementTestID")) })
+public class PlacementTest extends AbstractUuidModel {
+
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -46,7 +45,7 @@ public class PlacementTest extends AbstractModel<String> {
 	private Set<PlacementTestResult> results;
 
 	public PlacementTest() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

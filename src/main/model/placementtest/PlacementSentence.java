@@ -5,28 +5,22 @@ import java.util.Set;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementSentences")
-public class PlacementSentence extends AbstractModel<String> {
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="placementSentenceID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementSentenceID")) })
+public class PlacementSentence extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -41,7 +35,7 @@ public class PlacementSentence extends AbstractModel<String> {
 	@Getter
 	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="placementAnswerID", referencedColumnName="placementAnswerID")
+	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID")
 	private Set<PlacementAnswer> answers;
 
 	@Getter
@@ -50,7 +44,7 @@ public class PlacementSentence extends AbstractModel<String> {
 	private String correctAnswer;
 
 	public PlacementSentence() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

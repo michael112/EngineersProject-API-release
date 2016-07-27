@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.OneToMany;
@@ -14,8 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -23,19 +22,12 @@ import lombok.Setter;
 import main.model.language.Language;
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courses")
-public class Course extends AbstractModel<String> {
-	
-	// ===== fields =====
-	
-	@Getter
-	@Setter
-	@Id
-	@Column(name="courseID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseID")) })
+public class Course extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -46,7 +38,7 @@ public class Course extends AbstractModel<String> {
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="name", referencedColumnName="courseLevelName", nullable=false)
+	@JoinColumn(name="courseLevelName", referencedColumnName="name", nullable=false)
 	private CourseLevel courseLevel;
 
 	@Getter
@@ -63,7 +55,7 @@ public class Course extends AbstractModel<String> {
 	@Getter
 	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="courseID", referencedColumnName="courseDayID")
+	@JoinColumn(name="courseID", referencedColumnName="courseID")
 	private Set<CourseDay> courseDays;
 
 	@Getter
@@ -110,7 +102,7 @@ public class Course extends AbstractModel<String> {
 	private double price;
 
 	public Course() {
-		this.id = new UUID().toString();
+		super();
 	}
 	
 }

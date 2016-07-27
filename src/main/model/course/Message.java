@@ -4,7 +4,6 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.ManyToMany;
@@ -12,29 +11,22 @@ import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import org.hibernate.annotations.Type;
-
-import com.eaio.uuid.UUID;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="messages")
-public class Message extends AbstractModel<String> {
-// KONIECZNIE dodać usera, który jest nadawcą wiadomości - także w bazie!
-
-	// ===== fields =====
-	@Getter
-	@Setter
-	@Id
-	@Column(name="messageID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "messageID")) })
+public class Message extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -81,7 +73,7 @@ public class Message extends AbstractModel<String> {
 	private Course course; // mapowanie poprzez courseID
 
 	public Message() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

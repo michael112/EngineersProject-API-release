@@ -1,32 +1,25 @@
 package main.model.course;
 
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
-
-import com.eaio.uuid.UUID;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import main.model.language.Language;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseTypeNames")
-public class CourseTypeName extends AbstractModel<String> {
-	
-	// ===== fields =====
-	@Getter
-	@Setter
-	@Id
-	@Column(name="courseTypeID")
-	private String id; // nie wiem, czy potrzebne w tym wypadku
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseTypeNameID")) })
+public class CourseTypeName extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -46,7 +39,7 @@ public class CourseTypeName extends AbstractModel<String> {
 	private String courseTypeName;
 
 	public CourseTypeName() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

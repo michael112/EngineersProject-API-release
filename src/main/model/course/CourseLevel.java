@@ -4,25 +4,29 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractModel;
 
 @Entity
 @Table(name="courseLevels")
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name="name", nullable=false)) })
 public class CourseLevel extends AbstractModel<String> {
 
-	@Getter
-	@Setter
-	@Id
-	@Column(name="name", nullable=false)
-	private String name;
+	public String getName() {
+		return this.getId();
+	}
+
+	public void setName(String name) {
+		this.setId(name);
+	}
 
 	@Getter
 	@Setter

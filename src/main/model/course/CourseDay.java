@@ -1,12 +1,7 @@
 package main.model.course;
 
-
-
-import com.eaio.uuid.UUID;
-
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.AttributeOverride;
@@ -16,19 +11,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import main.model.enums.DayOfWeek;
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseDays")
-public class CourseDay extends AbstractModel<String> {
-
-	// ===== fields =====
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="courseDayID")
-	private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseDayID")) })
+public class CourseDay extends AbstractUuidModel {
 
 	@Getter
 	@Setter
@@ -38,17 +26,17 @@ public class CourseDay extends AbstractModel<String> {
 	@Getter
 	@Setter
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "hour", column = @Column(name = "hourFrom")) }) // albo time zamiast hour
+	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourFrom")) }) // albo hour zamiast time
 	private MyHour hourFrom;
 
 	@Getter
 	@Setter
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "hour", column = @Column(name = "hourTo")) }) // albo time zamiast hour
+	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourTo")) }) // albo hour zamiast time
 	private MyHour hourTo;
 
 	public CourseDay() {
-		this.id = new UUID().toString();
+		super();
 	}
 
 }

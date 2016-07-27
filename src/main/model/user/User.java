@@ -9,12 +9,11 @@ import javax.persistence.*;
 
 import org.hibernate.annotations.Type;
 
-import com.eaio.uuid.UUID;
-
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractUuidModel;
+
 import main.model.user.userrole.UserRole;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
@@ -26,13 +25,8 @@ import main.model.language.Language;
 
 @Entity
 @Table(name="users")
-public class User extends AbstractModel<String> {
-
-    @Id
-    @Column(name="userID")
-    @Getter
-    @Setter
-    private String id;
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "userID")) })
+public class User extends AbstractUuidModel {
 
     @Column(name="username", unique=true, nullable=false)
     @Getter
@@ -76,7 +70,7 @@ public class User extends AbstractModel<String> {
 	@Getter
 	@Setter
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @JoinColumn(name="userID", referencedColumnName="phoneID")
+    @JoinColumn(name="userID", referencedColumnName="userID")
 	private Set<Phone> phone;
 
 	@Getter
@@ -135,7 +129,7 @@ public class User extends AbstractModel<String> {
 	private Set<Course> coursesAsTeacher;
 
     public User() {
-        this.id = new UUID().toString();
+        super();
     }
 
 }

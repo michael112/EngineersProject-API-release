@@ -54,7 +54,7 @@ CREATE TABLE `attachementshomeworks` (
   PRIMARY KEY (`attachementID`,`homeworkID`),
   KEY `FK_ATT_HWRK__HWRK` (`homeworkID`),
   CONSTRAINT `FK_ATT_HWRK__FILE` FOREIGN KEY (`attachementID`) REFERENCES `files` (`fileID`),
-  CONSTRAINT `FK_ATT_HWRK__HWRK` FOREIGN KEY (`homeworkID`) REFERENCES `homeworks` (`homeworkID`)
+  CONSTRAINT `FK_ATT_HWRK__HWRK` FOREIGN KEY (`homeworkID`) REFERENCES `homeworks` (`taskID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -301,7 +301,8 @@ CREATE TABLE `grades` (
   `courseID` varchar(36) NOT NULL,
   `gradeTitle` varchar(50) NOT NULL,
   `gradeDescription` varchar(50) DEFAULT NULL,
-  `homeworkOrTestID` varchar(36) DEFAULT NULL,
+  `taskID` varchar(36) DEFAULT NULL,
+  `taskType` tinyint(1) DEFAULT NULL,
   `scale` varchar(8) NOT NULL,
   `maxPoints` double DEFAULT NULL,
   `weight` double NOT NULL DEFAULT '1',
@@ -330,12 +331,12 @@ DROP TABLE IF EXISTS `homeworks`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `homeworks` (
-  `homeworkID` varchar(36) NOT NULL,
+  `taskID` varchar(36) NOT NULL,
   `title` varchar(50) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `courseID` varchar(36) NOT NULL,
-  PRIMARY KEY (`homeworkID`),
+  PRIMARY KEY (`taskID`),
   KEY `FK_HWR_CRS` (`courseID`),
   CONSTRAINT `FK_HWR_CRS` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -369,7 +370,7 @@ CREATE TABLE `homeworksolutions` (
   KEY `FK__HWR_SOL__FILE` (`fileID`),
   CONSTRAINT `FK__HWR_SOL__CRS` FOREIGN KEY (`courseMembershipID`) REFERENCES `coursememberships` (`courseMembershipID`),
   CONSTRAINT `FK__HWR_SOL__FILE` FOREIGN KEY (`fileID`) REFERENCES `files` (`fileID`),
-  CONSTRAINT `FK__HWR_SOL__HWR` FOREIGN KEY (`taskID`) REFERENCES `homeworks` (`homeworkID`)
+  CONSTRAINT `FK__HWR_SOL__HWR` FOREIGN KEY (`taskID`) REFERENCES `homeworks` (`taskID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -737,12 +738,12 @@ DROP TABLE IF EXISTS `tests`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `tests` (
-  `testID` varchar(36) NOT NULL,
+  `taskID` varchar(36) NOT NULL,
   `title` varchar(50) DEFAULT NULL,
   `date` datetime DEFAULT NULL,
   `description` varchar(100) DEFAULT NULL,
   `courseID` varchar(36) NOT NULL,
-  PRIMARY KEY (`testID`),
+  PRIMARY KEY (`taskID`),
   KEY `FK_TST_CRS` (`courseID`),
   CONSTRAINT `FK_TST_CRS` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -776,7 +777,7 @@ CREATE TABLE `testsolutions` (
   KEY `FK__TST_SOL__CRS` (`courseMembershipID`),
   CONSTRAINT `FK__TST_SOL__CRS` FOREIGN KEY (`courseMembershipID`) REFERENCES `coursememberships` (`courseMembershipID`),
   CONSTRAINT `FK__TST_SOL__STD_GRD` FOREIGN KEY (`studentGradeID`) REFERENCES `studentgrades` (`studentGradeID`),
-  CONSTRAINT `FK__TST_SOL__TST` FOREIGN KEY (`taskID`) REFERENCES `tests` (`testID`)
+  CONSTRAINT `FK__TST_SOL__TST` FOREIGN KEY (`taskID`) REFERENCES `tests` (`taskID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -883,4 +884,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-23 17:14:22
+-- Dump completed on 2016-07-27 23:49:38

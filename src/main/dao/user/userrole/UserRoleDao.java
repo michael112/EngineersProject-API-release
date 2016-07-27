@@ -8,6 +8,8 @@ public interface UserRoleDao {
 
     UserRole findUserRoleByID(String id);
 
+    UserRole findUserRoleByRoleName(String roleName);
+
     List<UserRole> findAllUserRoles();
 
     void saveUserRole(UserRole entity);

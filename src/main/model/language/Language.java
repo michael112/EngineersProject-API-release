@@ -6,11 +6,12 @@ import java.util.Iterator;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
-import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.ManyToMany;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -19,19 +20,12 @@ import main.model.course.Course;
 import main.model.placementtest.PlacementTest;
 import main.model.user.User;
 
-import main.model.AbstractModel;
+import main.model.abstracts.AbstractModel;
 
 @Entity
 @Table(name="languages")
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "languageID")) })
 public class Language extends AbstractModel<String> {
-	
-	// ===== fields =====
-
-	@Getter
-	@Setter
-	@Id
-	@Column(name="languageID")
-	private String id;
 
 	@Getter
 	@Setter
@@ -50,13 +44,13 @@ public class Language extends AbstractModel<String> {
 
 	@Getter
 	@Setter
-	@ManyToMany(fetch=FetchType.LAZY, mappedBy="taughtlanguages")
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="taughtLanguages")
 	private Set<User> teachers;
 	
 	// ===== constructor =====
 	
 	public Language( String languageID, Set<LanguageName> languageNames ) {
-		this.id = languageID;
+		this.setId(languageID);
 		this.languageNames = languageNames;
 	}
 	public Language() {}
