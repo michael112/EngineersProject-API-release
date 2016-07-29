@@ -13,4 +13,6 @@ public abstract class AbstractModel<PK extends Serializable> implements ModelInt
     @Setter
     private PK id;
 
+    public AbstractModel() {}
+
 }
