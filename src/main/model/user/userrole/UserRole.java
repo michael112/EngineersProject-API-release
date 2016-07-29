@@ -22,6 +22,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="userroles")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "roleID")) })
 public class UserRole extends AbstractUuidModel {
 

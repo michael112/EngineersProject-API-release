@@ -13,44 +13,54 @@ import javax.persistence.MapsId;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
+import javax.persistence.Transient;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.ModelInterface;
+import main.model.abstracts.AbstractModel;
 
 @Entity
 @Table(name="languageNames")
-public class LanguageName implements ModelInterface<LanguageName.LanguageNameKey> {
+@Access(AccessType.FIELD)
+public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 
 	// ===== fields =====
+	@Transient
+	private LanguageNameKey key;
 
 	@EmbeddedId
-	private LanguageNameKey languageNameKey;
-
+	@Access(AccessType.PROPERTY)
 	@Override
 	public LanguageNameKey getId() {
-		return this.languageNameKey;
+		return this.key;
 	}
-
 	@Override
 	public void setId(LanguageNameKey key) {
-		this.languageNameKey = key;
+		this.key = key;
 	}
 
 	@Getter
-	@Setter
 	@MapsId("namedLanguageID")
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="namedLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namedLanguage; //  język którego wpis dotyczy
+	public void setNamedLanguage(Language namedLanguage) {
+		this.namedLanguage = namedLanguage;
+		this.key.setNamedLanguageID(namedLanguage.getId());
+	}
 	
 	@Getter
-	@Setter
 	@MapsId("namingLanguageID")
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="namingLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namingLanguage; // język w którym robimy nazwę
+	public void setNamingLanguage(Language namingLanguage) {
+		this.namingLanguage = namingLanguage;
+		this.key.setNamingLanguageID(namingLanguage.getId());
+	}
 
 	// double primary key: PRIMARY KEY (namedLanguageID, namingLanguageID)
 
@@ -93,10 +103,14 @@ public class LanguageName implements ModelInterface<LanguageName.LanguageNameKey
 	public LanguageName() {
 		this.setId(new LanguageNameKey());
 	}
-
-	@Override
-	public int hashCode() {
-		return this.getId().hashCode();
+	public LanguageName(Language namedLanguage, Language namingLanguage, String languageName) {
+		this();
+		this.setNamedLanguage(namedLanguage);
+		this.setNamingLanguage(namingLanguage);
+		this.setLanguageName(languageName);
+	}
+	public LanguageName(Language language, String languageName) {
+		this(language, language, languageName);
 	}
 
 }

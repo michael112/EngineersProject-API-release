@@ -14,6 +14,8 @@ import javax.persistence.Enumerated;
 import javax.persistence.EnumType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 // Homework / Test mapping imports:
 import org.hibernate.annotations.Any;
@@ -31,6 +33,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="grades")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "gradeID")) })
 public class Grade extends AbstractUuidModel {
 

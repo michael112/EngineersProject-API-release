@@ -4,8 +4,6 @@ import java.util.Set;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
-import javax.persistence.Id;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
@@ -14,8 +12,8 @@ import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
-
-import org.hibernate.annotations.GenericGenerator;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -26,6 +24,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementTests")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementTestID")) })
 public class PlacementTest extends AbstractUuidModel {
 

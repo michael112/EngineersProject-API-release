@@ -6,6 +6,8 @@ import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +17,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseDays")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseDayID")) })
 public class CourseDay extends AbstractUuidModel {
 

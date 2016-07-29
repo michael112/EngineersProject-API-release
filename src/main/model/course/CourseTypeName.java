@@ -8,6 +8,8 @@ import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -18,6 +20,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseTypeNames")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseTypeNameID")) })
 public class CourseTypeName extends AbstractUuidModel {
 

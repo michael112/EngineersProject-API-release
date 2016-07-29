@@ -5,6 +5,8 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementAnswers")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementAnswerID")) })
 public class PlacementAnswer extends AbstractUuidModel {
 

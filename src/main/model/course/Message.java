@@ -13,6 +13,8 @@ import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import org.hibernate.annotations.Type;
 
@@ -25,6 +27,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="messages")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "messageID")) })
 public class Message extends AbstractUuidModel {
 

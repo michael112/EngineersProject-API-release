@@ -13,6 +13,7 @@ import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="placementTestResults")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementTestResultID")) })
 public class PlacementTestResult extends AbstractUuidModel {
 

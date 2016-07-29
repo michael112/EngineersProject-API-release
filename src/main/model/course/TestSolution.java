@@ -8,6 +8,8 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.AttributeOverride;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import org.hibernate.annotations.Type;
 
@@ -18,6 +20,7 @@ import main.model.user.User;
 
 @Entity
 @Table(name="testSolutions")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "testSolutionID")) }) // albo solutionID zamiast id
 public class TestSolution extends AbstractSolution {
 

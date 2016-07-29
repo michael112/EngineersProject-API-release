@@ -5,6 +5,8 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -15,6 +17,7 @@ import main.model.enums.PhoneType;
 
 @Entity
 @Table(name="phones")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "phoneID")) })
 public class Phone extends AbstractUuidModel {
 

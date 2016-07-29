@@ -9,16 +9,19 @@ import javax.persistence.OneToMany;
 import javax.persistence.FetchType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
 
-import main.model.abstracts.AbstractModel;
+import main.model.abstracts.AbstractSinglePKModel;
 
 @Entity
 @Table(name="courseLevels")
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name="name", nullable=false)) })
-public class CourseLevel extends AbstractModel<String> {
+@Access(AccessType.FIELD)
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "name")) })
+public class CourseLevel extends AbstractSinglePKModel<String> {
 
 	public String getName() {
 		return this.getId();

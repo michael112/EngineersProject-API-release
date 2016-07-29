@@ -9,6 +9,8 @@ import javax.persistence.AttributeOverride;
 import javax.persistence.ManyToOne;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -17,6 +19,7 @@ import main.model.user.User;
 
 @Entity
 @Table(name="homeworkSolutions")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "homeworkSolutionID")) }) // albo solutionID zamiast id
 public class HomeworkSolution extends AbstractSolution {
 	

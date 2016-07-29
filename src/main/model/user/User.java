@@ -25,6 +25,7 @@ import main.model.language.Language;
 
 @Entity
 @Table(name="users")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "userID")) })
 public class User extends AbstractUuidModel {
 
@@ -70,7 +71,7 @@ public class User extends AbstractUuidModel {
 	@Getter
 	@Setter
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-    @JoinColumn(name="userID", referencedColumnName="userID")
+    @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
 
 	@Getter

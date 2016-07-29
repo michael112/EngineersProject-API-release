@@ -20,6 +20,10 @@ public class UserRoleServiceImpl implements UserRoleService {
         return dao.findUserRoleByID(id);
     }
 
+    public UserRole findUserRoleByRoleName(String roleName) {
+        return dao.findUserRoleByRoleName(roleName);
+    }
+
     public List<UserRole> findAllUserRoles() {
         return dao.findAllUserRoles();
     }

@@ -15,12 +15,15 @@ import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Entity
 @Table(name="homeworks")
+@Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Homework extends AbstractHomeworkOrTest {
 	

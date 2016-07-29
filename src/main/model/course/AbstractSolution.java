@@ -4,6 +4,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -13,6 +15,7 @@ import main.model.user.User;
 import main.model.abstracts.AbstractUuidModel;
 
 @MappedSuperclass
+@Access(AccessType.FIELD)
 public abstract class AbstractSolution extends AbstractUuidModel {
 
 	@Getter
