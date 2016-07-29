@@ -36,4 +36,8 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseLevel")
 	private Set<Course> courses;
 
+	public CourseLevel( String name ) {
+		this.setName(name);
+	}
+
 }
