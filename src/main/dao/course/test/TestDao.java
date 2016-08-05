@@ -1,6 +1,6 @@
 package main.dao.course.test;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.Test;
 
@@ -8,7 +8,7 @@ public interface TestDao {
 
     Test findTestByID(String id);
 
-    List<Test> findAllTests();
+    Set<Test> findAllTests();
 
     void saveTest(Test entity);
 

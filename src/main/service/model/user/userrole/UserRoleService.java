@@ -1,6 +1,6 @@
 package main.service.model.user.userrole;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.user.userrole.UserRole;
 
@@ -10,7 +10,7 @@ public interface UserRoleService {
 
     UserRole findUserRoleByRoleName(String roleName);
 
-    List<UserRole> findAllUserRoles();
+    Set<UserRole> findAllUserRoles();
 
     void saveUserRole(UserRole entity);
 

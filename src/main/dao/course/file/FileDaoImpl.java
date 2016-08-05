@@ -1,6 +1,6 @@
 package main.dao.course.file;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class FileDaoImpl extends AbstractDao<String, File> implements FileDao {
         return findByID(id);
     }
 
-    public List<File> findAllFiles() {
+    public Set<File> findAllFiles() {
         return findAll();
     }
 

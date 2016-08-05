@@ -1,6 +1,6 @@
 package main.service.model.language;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class LanguageServiceImpl implements LanguageService {
         return dao.findLanguageByID(id);
     }
 
-    public List<Language> findAllLanguages() {
+    public Set<Language> findAllLanguages() {
         return dao.findAllLanguages();
     }
 

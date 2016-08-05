@@ -1,6 +1,6 @@
 package main.dao.course.test;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class TestDaoImpl extends AbstractDao<String, Test> implements TestDao {
         return findByID(id);
     }
 
-    public List<Test> findAllTests() {
+    public Set<Test> findAllTests() {
         return findAll();
     }
 

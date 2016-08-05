@@ -1,6 +1,6 @@
 package main.dao.language;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class LanguageDaoImpl extends AbstractDao<String, Language> implements La
         return findByID(id);
     }
 
-    public List<Language> findAllLanguages() {
+    public Set<Language> findAllLanguages() {
         return findAll();
     }
 

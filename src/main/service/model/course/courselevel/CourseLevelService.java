@@ -1,6 +1,6 @@
 package main.service.model.course.courselevel;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.CourseLevel;
 
@@ -8,7 +8,7 @@ public interface CourseLevelService {
 
     CourseLevel findCourseLevelByID(String id);
 
-    List<CourseLevel> findAllCourseLevels();
+    Set<CourseLevel> findAllCourseLevels();
 
     void saveCourseLevel(CourseLevel entity);
 

@@ -2,7 +2,7 @@
 
 package main.service.model.user.user;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,7 +26,7 @@ public class UserServiceImpl implements UserService {
 		return dao.findUserByUsername(username);
 	}
 
-	public List<User> findAllUsers() {
+	public Set<User> findAllUsers() {
 		return dao.findAllUsers();
 	}
 

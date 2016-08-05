@@ -1,6 +1,6 @@
 package main.service.model.course.message;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class MessageServiceImpl implements MessageService {
         return dao.findMessageByID(id);
     }
 
-    public List<Message> findAllMessages() {
+    public Set<Message> findAllMessages() {
         return dao.findAllMessages();
     }
 

@@ -1,6 +1,6 @@
 package main.service.model.course.homework;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.Homework;
 
@@ -8,7 +8,7 @@ public interface HomeworkService {
 
     Homework findHomeworkByID(String id);
 
-    List<Homework> findAllHomeworks();
+    Set<Homework> findAllHomeworks();
 
     void saveHomework(Homework entity);
 

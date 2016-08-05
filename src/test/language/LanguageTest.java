@@ -81,8 +81,8 @@ LanguageTest extends AbstractTest {
     }
 
     @Test
-    public void testLanguageList() {
-        List<Language> languages = this.languageService.findAllLanguages();
+    public void testLanguageSet() {
+        Set<Language> languages = this.languageService.findAllLanguages();
 
         Assert.assertNotNull(languages);
     }

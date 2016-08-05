@@ -1,6 +1,6 @@
 package main.service.model.course.file;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.File;
 
@@ -8,7 +8,7 @@ public interface FileService {
 
     File findFileByID(String id);
 
-    List<File> findAllFiles();
+    Set<File> findAllFiles();
 
     void saveFile(File entity);
 

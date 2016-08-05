@@ -1,6 +1,6 @@
 package main.service.model.user.placementtestresult;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class PlacementTestResultServiceImpl implements PlacementTestResultServic
         return dao.findPlacementTestResultByID(id);
     }
 
-    public List<PlacementTestResult> findAllPlacementTestResults() {
+    public Set<PlacementTestResult> findAllPlacementTestResults() {
         return dao.findAllPlacementTestResults();
     }
 

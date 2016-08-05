@@ -2,7 +2,7 @@
 
 package main.dao.user.user;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.user.User;
 
@@ -12,7 +12,7 @@ public interface UserDao {
 
 	User findUserByID(String id);
 
-	List<User> findAllUsers();
+	Set<User> findAllUsers();
 
 	void saveUser(User entity);
 

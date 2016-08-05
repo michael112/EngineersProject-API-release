@@ -1,6 +1,6 @@
 package main.dao.user.userrole;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.user.userrole.UserRole;
 
@@ -10,7 +10,7 @@ public interface UserRoleDao {
 
     UserRole findUserRoleByRoleName(String roleName);
 
-    List<UserRole> findAllUserRoles();
+    Set<UserRole> findAllUserRoles();
 
     void saveUserRole(UserRole entity);
 

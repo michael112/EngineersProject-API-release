@@ -1,6 +1,6 @@
 package main.service.model.course.grade;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class GradeServiceImpl implements GradeService {
         return dao.findGradeByID(id);
     }
 
-    public List<Grade> findAllGrades() {
+    public Set<Grade> findAllGrades() {
         return dao.findAllGrades();
     }
 

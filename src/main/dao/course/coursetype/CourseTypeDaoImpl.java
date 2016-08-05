@@ -1,6 +1,6 @@
 package main.dao.course.coursetype;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class CourseTypeDaoImpl extends AbstractDao<String, CourseType> implement
         return findByID(id);
     }
 
-    public List<CourseType> findAllCourseTypes() {
+    public Set<CourseType> findAllCourseTypes() {
         return findAll();
     }
 

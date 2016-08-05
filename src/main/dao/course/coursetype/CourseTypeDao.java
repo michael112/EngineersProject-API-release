@@ -1,6 +1,6 @@
 package main.dao.course.coursetype;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.CourseType;
 
@@ -8,7 +8,7 @@ public interface CourseTypeDao {
 
     CourseType findCourseTypeByID(String id);
 
-    List<CourseType> findAllCourseTypes();
+    Set<CourseType> findAllCourseTypes();
 
     void saveCourseType(CourseType entity);
 

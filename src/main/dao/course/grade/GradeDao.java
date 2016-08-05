@@ -1,6 +1,6 @@
 package main.dao.course.grade;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.Grade;
 
@@ -8,7 +8,7 @@ public interface GradeDao {
 
     Grade findGradeByID(String id);
 
-    List<Grade> findAllGrades();
+    Set<Grade> findAllGrades();
 
     void saveGrade(Grade entity);
 

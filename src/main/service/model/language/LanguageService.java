@@ -1,6 +1,6 @@
 package main.service.model.language;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.language.Language;
 
@@ -8,7 +8,7 @@ public interface LanguageService {
 
     Language findLanguageByID(String id);
 
-    List<Language> findAllLanguages();
+    Set<Language> findAllLanguages();
 
     void saveLanguage(Language entity);
 

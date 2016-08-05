@@ -1,6 +1,6 @@
 package main.service.model.course.homework;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class HomeworkServiceImpl implements HomeworkService {
         return dao.findHomeworkByID(id);
     }
 
-    public List<Homework> findAllHomeworks() {
+    public Set<Homework> findAllHomeworks() {
         return dao.findAllHomeworks();
     }
 

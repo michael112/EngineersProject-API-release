@@ -2,7 +2,7 @@
 
 package main.service.model.user.user;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.user.User;
 
@@ -12,7 +12,7 @@ public interface UserService {
 	
 	User findUserByUsername(String username);
 
-	List<User> findAllUsers();
+	Set<User> findAllUsers();
 
 	void saveUser(User entity);
 

@@ -1,6 +1,6 @@
 package main.dao.user.placementtestresult;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.user.userprofile.PlacementTestResult;
 
@@ -8,7 +8,7 @@ public interface PlacementTestResultDao {
 
     PlacementTestResult findPlacementTestResultByID(String id);
 
-    List<PlacementTestResult> findAllPlacementTestResults();
+    Set<PlacementTestResult> findAllPlacementTestResults();
 
     void savePlacementTestResult(PlacementTestResult entity);
 

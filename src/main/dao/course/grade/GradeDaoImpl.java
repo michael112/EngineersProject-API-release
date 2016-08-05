@@ -1,6 +1,6 @@
 package main.dao.course.grade;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class GradeDaoImpl extends AbstractDao<String, Grade> implements GradeDao
         return findByID(id);
     }
 
-    public List<Grade> findAllGrades() {
+    public Set<Grade> findAllGrades() {
         return findAll();
     }
 

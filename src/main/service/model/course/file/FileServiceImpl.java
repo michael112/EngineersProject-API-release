@@ -1,6 +1,6 @@
 package main.service.model.course.file;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class FileServiceImpl implements FileService {
         return dao.findFileByID(id);
     }
 
-    public List<File> findAllFiles() {
+    public Set<File> findAllFiles() {
         return dao.findAllFiles();
     }
 

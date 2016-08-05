@@ -1,6 +1,6 @@
 package main.service.model.placementtest;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.placementtest.PlacementTest;
 
@@ -8,7 +8,7 @@ public interface PlacementTestService {
 
     PlacementTest findPlacementTestByID(String id);
 
-    List<PlacementTest> findAllPlacementTests();
+    Set<PlacementTest> findAllPlacementTests();
 
     void savePlacementTest(PlacementTest entity);
 

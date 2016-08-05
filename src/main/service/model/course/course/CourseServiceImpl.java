@@ -1,6 +1,6 @@
 package main.service.model.course.course;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CourseServiceImpl implements CourseService {
         return dao.findCourseByID(id);
     }
 
-    public List<Course> findAllCourses() {
+    public Set<Course> findAllCourses() {
         return dao.findAllCourses();
     }
 

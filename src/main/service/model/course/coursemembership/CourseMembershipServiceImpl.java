@@ -1,6 +1,6 @@
 package main.service.model.course.coursemembership;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class CourseMembershipServiceImpl implements CourseMembershipService {
         return dao.findCourseMembershipByID(id);
     }
 
-    public List<CourseMembership> findAllCourseMemberships() {
+    public Set<CourseMembership> findAllCourseMemberships() {
         return dao.findAllCourseMemberships();
     }
 

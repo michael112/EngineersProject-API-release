@@ -1,6 +1,6 @@
 package main.service.model.user.userrole;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,7 +24,7 @@ public class UserRoleServiceImpl implements UserRoleService {
         return dao.findUserRoleByRoleName(roleName);
     }
 
-    public List<UserRole> findAllUserRoles() {
+    public Set<UserRole> findAllUserRoles() {
         return dao.findAllUserRoles();
     }
 

@@ -2,7 +2,7 @@
 
 package main.dao.user.user;
 
-import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Restrictions;
@@ -24,7 +24,7 @@ public class UserDaoImpl extends AbstractDao<String, User> implements UserDao {
 		return findByID(id);
 	}
 
-	public List<User> findAllUsers() {
+	public Set<User> findAllUsers() {
 		return findAll();
 	}
 

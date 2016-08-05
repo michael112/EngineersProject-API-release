@@ -5,6 +5,8 @@ package main.dao;
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -36,9 +38,9 @@ public abstract class AbstractDao<PK extends Serializable, T extends AbstractMod
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<T> findAll() {
+	public Set<T> findAll() {
 		Criteria criteria = createEntityCriteria();
-		return (List<T>) criteria.list();
+		return new HashSet<>( (List<T>) criteria.list() );
 	}
 
 	public void save(T entity) {

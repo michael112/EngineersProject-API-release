@@ -1,6 +1,6 @@
 package main.dao.user.userrole;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -24,7 +24,7 @@ public class UserRoleDaoImpl extends AbstractDao<String, UserRole> implements Us
     }
 
 
-    public List<UserRole> findAllUserRoles() {
+    public Set<UserRole> findAllUserRoles() {
         return findAll();
     }
 

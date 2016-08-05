@@ -1,6 +1,6 @@
 package main.dao.course.homework;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class HomeworkDaoImpl extends AbstractDao<String, Homework> implements Ho
         return findByID(id);
     }
 
-    public List<Homework> findAllHomeworks() {
+    public Set<Homework> findAllHomeworks() {
         return findAll();
     }
 

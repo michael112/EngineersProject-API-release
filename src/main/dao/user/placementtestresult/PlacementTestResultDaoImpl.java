@@ -1,6 +1,6 @@
 package main.dao.user.placementtestresult;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class PlacementTestResultDaoImpl extends AbstractDao<String, PlacementTes
         return findByID(id);
     }
 
-    public List<PlacementTestResult> findAllPlacementTestResults() {
+    public Set<PlacementTestResult> findAllPlacementTestResults() {
         return findAll();
     }
 

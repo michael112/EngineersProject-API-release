@@ -27,8 +27,8 @@ public class UserTest extends AbstractTest {
     }
 
     @Test
-    public void testUserList() {
-        List<User> dbUsers = this.userService.findAllUsers();
+    public void testUserSet() {
+        Set<User> dbUsers = this.userService.findAllUsers();
 
         Assert.assertNotNull(dbUsers);
     }

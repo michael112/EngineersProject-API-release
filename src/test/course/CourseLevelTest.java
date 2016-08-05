@@ -61,7 +61,7 @@ public class CourseLevelTest extends AbstractTest {
 
     @Test
     public void testCourseLevelCoursePoints() {
-        List<Course> coursesDb = courseService.findAllCourses();
+        Set<Course> coursesDb = courseService.findAllCourses();
         Assert.assertEquals(1, coursesDb.size());
         for( Course courseDb : coursesDb ) {
             Assert.assertEquals(A1, courseDb.getCourseLevel());
@@ -92,8 +92,8 @@ public class CourseLevelTest extends AbstractTest {
     }
 
     @Test
-    public void testCourseLevelList() {
-        List<CourseLevel> courseLevels = this.courseLevelService.findAllCourseLevels();
+    public void testCourseLevelSet() {
+        Set<CourseLevel> courseLevels = this.courseLevelService.findAllCourseLevels();
 
         Assert.assertNotNull(courseLevels);
     }

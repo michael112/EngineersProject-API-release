@@ -1,6 +1,6 @@
 package main.dao.course.message;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.stereotype.Repository;
 
@@ -14,7 +14,7 @@ public class MessageDaoImpl extends AbstractDao<String, Message> implements Mess
         return findByID(id);
     }
 
-    public List<Message> findAllMessages() {
+    public Set<Message> findAllMessages() {
         return findAll();
     }
 

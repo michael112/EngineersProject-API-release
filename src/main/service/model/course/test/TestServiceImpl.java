@@ -1,6 +1,6 @@
 package main.service.model.course.test;
 
-import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class TestServiceImpl implements TestService {
         return dao.findTestByID(id);
     }
 
-    public List<Test> findAllTests() {
+    public Set<Test> findAllTests() {
         return dao.findAllTests();
     }
 

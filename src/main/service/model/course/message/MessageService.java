@@ -1,6 +1,6 @@
 package main.service.model.course.message;
 
-import java.util.List;
+import java.util.Set;
 
 import main.model.course.Message;
 
@@ -8,7 +8,7 @@ public interface MessageService {
 
     Message findMessageByID(String id);
 
-    List<Message> findAllMessages();
+    Set<Message> findAllMessages();
 
     void saveMessage(Message entity);
 

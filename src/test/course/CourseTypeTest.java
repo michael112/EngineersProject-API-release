@@ -54,8 +54,8 @@ public class CourseTypeTest extends AbstractTest {
     }
 
     @Test
-    public void testCourseTypeList() {
-        List<CourseType> courseTypes = this.courseTypeService.findAllCourseTypes();
+    public void testCourseTypeSet() {
+        Set<CourseType> courseTypes = this.courseTypeService.findAllCourseTypes();
 
         Assert.assertNotNull(courseTypes);
     }
@@ -84,16 +84,9 @@ public class CourseTypeTest extends AbstractTest {
 
     @Test
     public void testCourseTypeCoursePoints() {
-        List<Course> coursesDb = courseService.findAllCourses();
-        /*
+        Set<Course> coursesDb = courseService.findAllCourses();
         Assert.assertEquals(1, coursesDb.size());
         for( Course courseDb : coursesDb ) {
-            Assert.assertEquals(standardType, courseDb.getCourseType());
-        }
-        */
-        Set<Course> coursesDbSet = new HashSet<>(coursesDb);
-        Assert.assertEquals(1, coursesDbSet.size());
-        for( Course courseDb : coursesDbSet ) {
             Assert.assertEquals(standardType, courseDb.getCourseType());
         }
     }
