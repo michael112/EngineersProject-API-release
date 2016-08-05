@@ -1,15 +1,9 @@
-package test;
+package test.language;
 
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.ContextConfiguration;
-
-import org.springframework.transaction.annotation.Transactional;
-
-import org.junit.runner.RunWith;
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
@@ -18,10 +12,10 @@ import main.model.language.Language;
 import main.model.language.LanguageName;
 import main.service.model.language.LanguageService;
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = { "file:src/test/test-context.xml" })
-@Transactional // powoduje usunięcie testowanych elementów z bazy
-public class LanguageTest {
+import test.AbstractTest;
+
+public class
+LanguageTest extends AbstractTest {
 
     @Autowired
     private LanguageService languageService;
@@ -32,13 +26,9 @@ public class LanguageTest {
 
     @Before
     public void setUp() {
-        english = new Language();
-        english.setId("EN");
-
-        polish = new Language();
-        polish.setId("PL");
-
-        german = new Language("DE");
+        this.english = new Language("EN");
+        this.polish = new Language("PL");
+        this.german = new Language("DE");
 
         this.languageService.saveLanguage(english);
         this.languageService.saveLanguage(polish);
@@ -66,6 +56,28 @@ public class LanguageTest {
 
         this.languageService.updateLanguage(english);
         this.languageService.updateLanguage(polish);
+    }
+
+    @Test(expected = org.springframework.orm.hibernate5.HibernateSystemException.class)
+    public void testNullNameLevel() {
+        Language nullLevel = new Language();
+        languageService.saveLanguage(nullLevel);
+    }
+
+    @Test
+    public void testEditLanguageIdentifier() {
+        Language sampleLng = new Language("SK");
+        languageService.saveLanguage(sampleLng);
+        sampleLng.setId("KS");
+        languageService.updateLanguage(sampleLng);
+
+        // Dziadostwo: w ogóle nie informuje, że nic nie robi!
+
+        Language SKDb = languageService.findLanguageByID("SK");
+        Language KSDb = languageService.findLanguageByID("KS");
+
+        Assert.assertNull(KSDb);
+        Assert.assertNotNull(SKDb);
     }
 
     @Test

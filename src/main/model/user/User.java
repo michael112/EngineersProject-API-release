@@ -7,6 +7,7 @@ import java.util.Set;
 
 import javax.persistence.*;
 
+import org.apache.commons.codec.language.bm.Lang;
 import org.hibernate.annotations.Type;
 
 import lombok.Getter;
@@ -55,8 +56,23 @@ public class User extends AbstractUuidModel {
             joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "userRoleID", referencedColumnName="roleID") })
     @Getter
-    @Setter
-    private Set<UserRole> userRoles = new HashSet<UserRole>();
+    private Set<UserRole> userRoles;
+    public void setUserRoles(Set<UserRole> userRoles) {
+        if( userRoles != null ) {
+            this.userRoles = userRoles;
+        }
+        else {
+            this.userRoles = new HashSet<>();
+        }
+    }
+    public void addUserRole(UserRole userRole) {
+        if ( !( this.userRoles.contains(userRole) ) ) {
+            this.userRoles.add(userRole);
+        }
+    }
+    public void removeUserRole(UserRole userRole) {
+        this.userRoles.remove(userRole);
+    }
 
     @Column(name="firstname", nullable=false)
     @Getter
@@ -69,68 +85,226 @@ public class User extends AbstractUuidModel {
     private String lastName;
 	
 	@Getter
-	@Setter
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
     @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
+    public void setPhone(Set<Phone> phone) {
+        if( phone != null ) {
+            this.phone = phone;
+        }
+        else {
+            this.phone = new HashSet<>();
+        }
+    }
+    public void addPhone(Phone phone) {
+        if ( !( this.phone.contains(phone) ) ) {
+            this.phone.add(phone);
+        }
+    }
+    public void removePhone(Phone phone) {
+        this.phone.remove(phone); // powinno powodować usunięcie z bazy (sprawdzić!)
+    }
 
 	@Getter
 	@Setter
     @Embedded
 	private Address address;
 	
-	@Getter
-	@Setter
-    /*
+	/*
     @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
     @JoinColumn(name="userID", referencedColumnName="userID")
     */
+    @Getter
     @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<PlacementTestResult> placementTest;
+    public void setPlacementTest(Set<PlacementTestResult> placementTest) {
+        if( placementTest != null ) {
+            this.placementTest = placementTest;
+        }
+        else {
+            this.placementTest = new HashSet<>();
+        }
+    }
+    public void addPlacementTest(PlacementTestResult placementTest) {
+        if ( !( this.placementTest.contains(placementTest) ) ) {
+            this.placementTest.add(placementTest);
+        }
+        if( placementTest.getUser() != this ) {
+            placementTest.setUser(this); // przypisanie powiązania
+        }
+    }
+    public void removePlacementTest(PlacementTestResult placementTest) {
+        this.placementTest.remove(placementTest); // powinno powodować usunięcie z bazy (sprawdzić!)
+    }
+    public boolean containsPlacementTest(PlacementTestResult placementTest) {
+        return this.placementTest.contains(placementTest);
+    }
 
-	@Getter
-	@Setter
-    /*
+	/*
     @OneToMany(fetch=FetchType.EAGER)
     @JoinColumn(name="userID", referencedColumnName="userID")
     */
+    @Getter
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<CourseMembership> coursesAsStudent;
+    public void setCoursesAsStudent(Set<CourseMembership> coursesAsStudent) {
+        if( coursesAsStudent != null ) {
+            this.coursesAsStudent = coursesAsStudent;
+        }
+        else {
+            this.coursesAsStudent = new HashSet<>();
+        }
+    }
+    public void addCourseAsStudent(CourseMembership courseAsStudent) {
+        if ( !( this.coursesAsStudent.contains(courseAsStudent) ) ) {
+            this.coursesAsStudent.add(courseAsStudent);
+        }
+        if( courseAsStudent.getUser() != this ) {
+            courseAsStudent.setUser(this); // przypisanie powiązania
+        }
+    }
+    public void removeCourseAsStudent(CourseMembership courseAsStudent) {
+        this.coursesAsStudent.remove(courseAsStudent); // powinno powodować usunięcie z bazy (sprawdzić!)
+    }
+    public boolean containsCourseAsStudent(CourseMembership courseAsStudent) {
+        return this.coursesAsStudent.contains(courseAsStudent);
+    }
 
     @Getter
-    @Setter
     @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="sender")
     private Set<Message> myMessages;
+    public void setMyMessages(Set<Message> myMessages) {
+        if( myMessages != null ) {
+            this.myMessages = myMessages;
+        }
+        else {
+            this.myMessages = new HashSet<>();
+        }
+    }
+    public void addMyMessage(Message myMessage) {
+        if ( !( this.myMessages.contains(myMessage) ) ) {
+            this.myMessages.add(myMessage);
+        }
+        if( myMessage.getSender() != this ) {
+            myMessage.setSender(this); // przypisanie powiązania
+        }
+    }
+    public void removeMyMessage(Message myMessage) {
+        this.myMessages.remove(myMessage); // powinno powodować usunięcie z bazy (sprawdzić!)
+    }
+    public boolean containsMyMessage(Message myMessage) {
+        return this.myMessages.contains(myMessage);
+    }
 
-	@Getter
-	@Setter
     /*
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "messagesusers",
             joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") })
     */
+    @Getter
     @ManyToMany(fetch=FetchType.LAZY, mappedBy="receivers")
 	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów
+    public void setMessages(Set<Message> messages) {
+        if( messages != null ) {
+            this.messages = messages;
+        }
+        else {
+            this.messages = new HashSet<>();
+        }
+    }
+    public void addMessage(Message message) {
+        if ( !( this.messages.contains(message) ) ) {
+            this.messages.add(message);
+        }
+        if( !( message.containsReceiver(this) ) ) {
+            message.addReceiver(this); // przypisanie powiązania
+        }
+    }
+    public void removeMessage(Message message) {
+        this.messages.remove(message);
+        if( message.containsReceiver(this) ) {
+            message.removeReceiver(this);
+        }
+    }
+    public boolean containsMessage(Message message) {
+        return this.messages.contains(message);
+    }
 
 	@Getter
-	@Setter
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "teacherslanguages",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "languageID", referencedColumnName="languageID") })
 	private Set<Language> taughtLanguages;
+    public void setTaughtLanguages(Set<Language> taughtLanguages) {
+        if( taughtLanguages != null ) {
+            this.taughtLanguages = taughtLanguages;
+        }
+        else {
+            this.taughtLanguages = new HashSet<>();
+        }
+    }
+    public void addTaughtLanguage(Language taughtLanguage) {
+        if ( !( this.taughtLanguages.contains(taughtLanguage) ) ) {
+            this.taughtLanguages.add(taughtLanguage);
+        }
+        if( !( taughtLanguage.containsTeacher(this) ) ) {
+            taughtLanguage.addTeacher(this); // przypisanie powiązania
+        }
+    }
+    public void removeTaughtLanguage(Language taughtLanguage) {
+        this.taughtLanguages.remove(taughtLanguage);
+        if( taughtLanguage.containsTeacher(this) ) {
+            taughtLanguage.removeTeacher(this);
+        }
+    }
+    public boolean containsTaughtLanguage(Language taughtLanguage) {
+        return this.messages.contains(taughtLanguage);
+    }
 
 	@Getter
-	@Setter
     @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "teacherscourses",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") })
 	private Set<Course> coursesAsTeacher;
+    public void setCoursesAsTeacher(Set<Course> coursesAsTeacher) {
+        if( coursesAsTeacher != null ) {
+            this.coursesAsTeacher = coursesAsTeacher;
+        }
+        else {
+            this.coursesAsTeacher = new HashSet<>();
+        }
+    }
+    public void addCourseAsTeacher(Course course) {
+        if ( !( this.coursesAsTeacher.contains(course) ) ) {
+            this.coursesAsTeacher.add(course);
+        }
+        if( !( course.getTeachers().contains(this) ) ) {
+            course.addTeacher(this);
+        }
+    }
+    public boolean containsCourseAsTeacher(Course course) {
+        return this.coursesAsTeacher.contains(course);
+    }
+    public void removeCourseAsTeacher(Course course) {
+        this.coursesAsTeacher.remove(course);
+        if( course.containsTeacher(this) ) {
+            course.removeTeacher(this);
+        }
+    }
 
     public User() {
         super();
+        this.userRoles = new HashSet<>();
+        this.phone = new HashSet<>();
+        this.placementTest = new HashSet<>();
+        this.coursesAsStudent = new HashSet<>();
+        this.myMessages = new HashSet<>();
+        this.messages = new HashSet<>();
+        this.taughtLanguages = new HashSet<>();
+        this.coursesAsTeacher = new HashSet<>();
     }
 
 }

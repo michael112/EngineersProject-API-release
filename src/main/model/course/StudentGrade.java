@@ -23,10 +23,19 @@ import main.model.abstracts.AbstractUuidModel;
 public class StudentGrade extends AbstractUuidModel {
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="studentID", referencedColumnName="courseMembershipID", nullable=false)
 	private CourseMembership student;
+	public void setStudent(CourseMembership student) {
+		// do sprawdzenia
+		if( this.student != null ) {
+			if (this.student.containsGrade(this)) {
+				this.student.removeGrade(this);
+			}
+		}
+		this.student = student;
+		student.addGrade(this); // przypisanie powiązania
+	}
 
 	@Getter
 	@Setter
@@ -34,10 +43,19 @@ public class StudentGrade extends AbstractUuidModel {
 	private double gradeValue;
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="gradeID", referencedColumnName="gradeID")
 	private Grade grade;
+	public void setGrade(Grade grade) {
+		// do sprawdzenia
+		if( this.grade != null ) {
+			if (this.grade.containsGrade(this)) {
+				this.grade.removeGrade(this);
+			}
+		}
+		this.grade = grade;
+		grade.addGrade(this); // przypisanie powiązania
+	}
 
 	public StudentGrade() {
 		super();

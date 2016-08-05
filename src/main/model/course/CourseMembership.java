@@ -1,6 +1,7 @@
 package main.model.course;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -31,21 +32,60 @@ import main.model.abstracts.AbstractUuidModel;
 public class CourseMembership extends AbstractUuidModel {
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
+	public void setCourse(Course course) {
+		// do sprawdzenia
+		if( this.course != null ) {
+			if (this.course.containsStudent(this)) {
+				this.course.changeStudentCourse(this, course);
+			}
+		}
+		this.course = course;
+		course.addStudent(this); // przypisanie powiązania
+	}
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
+	public void setUser(User user) {
+		// do sprawdzenia
+		if( this.user != null ) {
+			if (this.user.containsCourseAsStudent(this)) {
+				this.user.removeCourseAsStudent(this);
+			}
+		}
+		this.user = user;
+		user.addCourseAsStudent(this); // przypisanie powiązania
+	}
 
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="student")
 	private Set<StudentGrade> grades;
+	public void setGrades(Set<StudentGrade> grades) {
+		if( grades != null ) {
+			this.grades = grades;
+		}
+		else {
+			this.grades = new HashSet<>();
+		}
+	}
+	public void addGrade(StudentGrade grade) {
+		if ( !( this.grades.contains(grade) ) ) {
+			this.grades.add(grade);
+		}
+		if( grade.getStudent() != this ) {
+			grade.setStudent(this); // przypisanie powiązania
+		}
+	}
+	public void removeGrade(StudentGrade grade) {
+		this.grades.remove(grade); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+	}
+	public boolean containsGrade(StudentGrade grade) {
+		return this.grades.contains(grade);
+	}
 
 	@Getter
 	@Setter
@@ -67,6 +107,7 @@ public class CourseMembership extends AbstractUuidModel {
 
 	public CourseMembership() {
 		super();
+		this.grades = new HashSet<>();
 	}
 
 }

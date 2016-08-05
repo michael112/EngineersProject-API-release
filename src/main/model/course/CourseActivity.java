@@ -26,6 +26,7 @@ public class CourseActivity {
 	// ===== constructor =====
 	
 	public CourseActivity( Date fromDate, Date toDate ) {
+		this();
 		this.from = fromDate;
 		this.to = toDate;
 	}

@@ -38,8 +38,12 @@ public class CourseDay extends AbstractUuidModel {
 	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourTo")) }) // albo hour zamiast time
 	private MyHour hourTo;
 
-	public CourseDay() {
+	public CourseDay() {}
+	public CourseDay(int dayOfWeek, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
 		super();
+		this.day = new DayOfWeek(dayOfWeek);
+		this.hourFrom = new MyHour(hourFrom, minuteFrom);
+		this.hourTo = new MyHour(hourTo, minuteTo);
 	}
 
 }

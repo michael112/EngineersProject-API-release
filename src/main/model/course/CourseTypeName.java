@@ -25,10 +25,18 @@ import main.model.abstracts.AbstractUuidModel;
 public class CourseTypeName extends AbstractUuidModel {
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
+	public void setCourseType(CourseType courseType) {
+		if( this.courseType != null ) {
+			if (this.courseType.containsCourseTypeName(this)) {
+				this.courseType.changeCourseTypeNameCourseType(this, courseType);
+			}
+		}
+		this.courseType = courseType;
+		courseType.addCourseTypeName(this); // przypisanie powiązania
+	}
 
 	@Getter
 	@Setter
@@ -43,6 +51,13 @@ public class CourseTypeName extends AbstractUuidModel {
 
 	public CourseTypeName() {
 		super();
+	}
+
+	public CourseTypeName(CourseType type, Language namingLanguage, String courseTypeName) {
+		this();
+		this.setCourseType(type);
+		this.setNamingLanguage(namingLanguage);
+		this.setCourseTypeName(courseTypeName);
 	}
 
 }

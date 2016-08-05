@@ -1,6 +1,7 @@
 package main.model.placementtest;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -29,22 +30,71 @@ import main.model.abstracts.AbstractUuidModel;
 public class PlacementTest extends AbstractUuidModel {
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
+	public void setLanguage(Language language) {
+		// do sprawdzenia
+		if( this.language != null ) {
+			if (this.language.containsPlacementTest(this)) {
+				this.language.changePlacementTestLanguage(this, language);
+			}
+		}
+		this.language = language;
+		language.addPlacementTest(this); // przypisanie powiązania
+	}
+
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	@JoinColumn(name="placementTestID", referencedColumnName="placementTestID", nullable=false)
 	private Set<PlacementTask> tasks;
+	public void setTasks(Set<PlacementTask> tasks) {
+		if( tasks != null ) {
+			this.tasks = tasks;
+		}
+		else {
+			this.tasks = new HashSet<>();
+		}
+	}
+	public void addTask(PlacementTask task) {
+		if ( !( this.tasks.contains(task) ) ) {
+			this.tasks.add(task);
+		}
+	}
+	public void removeTask(PlacementTask task) {
+		this.tasks.remove(task); // powinno powodować usunięcie z bazy (sprawdzić!)
+	}
+
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="test")
 	private Set<PlacementTestResult> results;
+	public void setResults(Set<PlacementTestResult> results) {
+		if( results != null ) {
+			this.results = results;
+		}
+		else {
+			this.results = new HashSet<>();
+		}
+	}
+	public void addResult(PlacementTestResult result) {
+		if ( !( this.results.contains(result) ) ) {
+			this.results.add(result);
+		}
+		if( result.getTest() != this ) {
+			result.setTest(this); // przypisanie powiązania
+		}
+	}
+	public void removeResult(PlacementTestResult result) {
+		this.results.remove(result); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+	}
+	public boolean containsResult(PlacementTestResult result) {
+		return this.results.contains(result);
+	}
 
 	public PlacementTest() {
 		super();
+		this.tasks = new HashSet<>();
+		this.results = new HashSet<>();
 	}
 
 }

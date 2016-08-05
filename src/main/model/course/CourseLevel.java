@@ -1,6 +1,7 @@
 package main.model.course;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -13,7 +14,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import main.model.abstracts.AbstractSinglePKModel;
 
@@ -32,11 +32,39 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 	}
 
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseLevel")
 	private Set<Course> courses;
+	public void setCourses(Set<Course> courses) {
+		if( courses != null ) {
+			this.courses = courses;
+		}
+		else {
+			this.courses = new HashSet<>();
+		}
+	}
+	public void addCourse(Course course) {
+		if ( !( this.courses.contains(course) ) ) {
+			this.courses.add(course);
+		}
+		if( course.getCourseLevel() != this ) {
+			course.setCourseLevel(this); // przypisanie powiązania
+		}
+	}
+	public boolean containsCourse(Course course) {
+		return this.courses.contains(course);
+	}
+	public void changeCourse(Course course, CourseLevel newCourseLevel) {
+		this.courses.remove(course);
+		course.setCourseLevel(newCourseLevel);
+	}
 
+
+	public CourseLevel() {
+		super();
+		this.courses = new HashSet<>();
+	}
 	public CourseLevel( String name ) {
+		this();
 		this.setName(name);
 	}
 

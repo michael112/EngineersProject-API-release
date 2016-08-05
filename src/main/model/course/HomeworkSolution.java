@@ -35,9 +35,24 @@ public class HomeworkSolution extends AbstractSolution {
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable=false)
+	/*
 	@Getter
 	@Setter
 	private Homework task;
+	*/
+	@Access(AccessType.PROPERTY)
+	@Override
+	/*
+	public AbstractHomeworkOrTest getTask() {
+		return super.getTask();
+	}
+	*/
+	public Homework getTask() {
+		return (Homework) super.getTask();
+	}
+	public void setTask(Homework task) {
+		super.setTask(task);
+	}
 
 	@Getter
 	@Setter

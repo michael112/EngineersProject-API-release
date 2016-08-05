@@ -1,6 +1,7 @@
 package main.model.course;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -68,7 +69,6 @@ public class Grade extends AbstractUuidModel {
 	*/
 
 	@Getter
-	@Setter
 	@Any(metaColumn = @Column(name = "taskType"))
 	@AnyMetaDef(idType = "string", metaType = "byte",
 			metaValues = {
@@ -77,7 +77,18 @@ public class Grade extends AbstractUuidModel {
 			}
 	)
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
-	private AbstractHomeworkOrTest task; // może być null-em
+	private AbstractHomeworkOrTest task; // może być null-em\
+	public void setTask(AbstractHomeworkOrTest task) {
+
+		// do sprawdzenia
+		if( this.task != null ) {
+			if (this.task.containsGrade(this)) {
+				this.task.removeGrade(this);
+			}
+		}
+		this.task = task;
+		task.addGrade(this); // przypisanie powiązania
+	}
 
 	@Getter
 	@Setter
@@ -96,12 +107,34 @@ public class Grade extends AbstractUuidModel {
 	private double weight;
 
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="grade")
 	private Set<StudentGrade> grades;
+	public void setGrades(Set<StudentGrade> grades) {
+		if( grades != null ) {
+			this.grades = grades;
+		}
+		else {
+			this.grades = new HashSet<>();
+		}
+	}
+	public void addGrade(StudentGrade grade) {
+		if ( !( this.grades.contains(grade) ) ) {
+			this.grades.add(grade);
+		}
+		if( grade.getGrade() != this ) {
+			grade.setGrade(this); // przypisanie powiązania
+		}
+	}
+	public void removeGrade(StudentGrade grade) {
+		this.grades.remove(grade); // powinno powodować usunięcie z bazy (sprawdzić!)
+	}
+	public boolean containsGrade(StudentGrade grade) {
+		return this.grades.contains(grade);
+	}
 	
 	public Grade() {
 		super();
+		this.grades = new HashSet<>();
 	}
 	
 }

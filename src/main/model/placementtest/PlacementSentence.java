@@ -1,6 +1,7 @@
 package main.model.placementtest;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -36,10 +37,25 @@ public class PlacementSentence extends AbstractUuidModel {
 	private String suffix;
 
 	@Getter
-	@Setter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID")
 	private Set<PlacementAnswer> answers;
+	public void setAnswers(Set<PlacementAnswer> answers) {
+		if( answers != null ) {
+			this.answers = answers;
+		}
+		else {
+			this.answers = new HashSet<>();
+		}
+	}
+	public void addAnswer(PlacementAnswer answer) {
+		if ( !( this.answers.contains(answer) ) ) {
+			this.answers.add(answer);
+		}
+	}
+	public void removeAnswer(PlacementAnswer answer) {
+		this.answers.remove(answer); // powinno powodować usunięcie z bazy (sprawdzić!)
+	}
 
 	@Getter
 	@Setter
@@ -48,6 +64,7 @@ public class PlacementSentence extends AbstractUuidModel {
 
 	public PlacementSentence() {
 		super();
+		this.answers = new HashSet<>();
 	}
 
 }

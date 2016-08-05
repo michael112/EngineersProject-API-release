@@ -6,6 +6,7 @@ import javax.persistence.FetchType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
+import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -31,6 +32,20 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 	@Setter
 	private AbstractHomeworkOrTest task;
 	*/
+
+	@Transient
+	@Getter
+	private AbstractHomeworkOrTest task;
+	public void setTask(AbstractHomeworkOrTest task) {
+		// do sprawdzenia
+		if( this.task != null ) {
+			if (this.task.containsSolution(this)) {
+				this.task.removeSolution(this);
+			}
+		}
+		this.task = task;
+		task.addSolution(this); // przypisanie powiązania
+	}
 
 	@Getter
 	@Setter

@@ -48,8 +48,15 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	@JoinColumn(name="namedLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namedLanguage; //  język którego wpis dotyczy
 	public void setNamedLanguage(Language namedLanguage) {
+		// do sprawdzenia
+		if( this.namedLanguage != null ) {
+			if (this.namedLanguage.containsLanguageName(this)) {
+				this.namedLanguage.removeLanguageName(this);
+			}
+		}
 		this.namedLanguage = namedLanguage;
 		this.key.setNamedLanguageID(namedLanguage.getId());
+		namedLanguage.addLanguageName(this); // przypisanie powiązania
 	}
 	
 	@Getter
@@ -111,6 +118,12 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	}
 	public LanguageName(Language language, String languageName) {
 		this(language, language, languageName);
+	}
+
+	@Override
+	public int hashCode() {
+		if( this.getId() != null ) return this.getId().hashCode();
+		else return new Integer(0).hashCode();
 	}
 
 }
