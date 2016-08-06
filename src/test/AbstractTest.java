@@ -26,6 +26,8 @@ import main.model.user.User;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
 
+import main.service.model.user.user.UserService;
+
 // UserRole model & service imports
 
 import main.model.user.userrole.UserRole;
@@ -55,6 +57,14 @@ import main.model.course.CourseDay;
 import main.model.language.Language;
 import main.service.model.language.LanguageService;
 
+// PlacementTest model & service imports
+
+import main.model.placementtest.PlacementTest;
+import main.model.placementtest.PlacementTask;
+import main.model.placementtest.PlacementSentence;
+import main.model.placementtest.PlacementAnswer;
+import main.service.model.placementtest.PlacementTestService;
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/test/test-context.xml" })
 @Transactional // powoduje usunięcie testowanych elementów z bazy
@@ -64,12 +74,13 @@ public abstract class AbstractTest {
         // <user-fields>
             @Autowired
             protected UserRoleService userRoleService;
+            @Autowired
+            protected UserService userService;
         // </user-fields>
 
         // <language-fields>
             @Autowired
             protected LanguageService languageService;
-            protected Language english;
         // </language-fields>
 
         // <course-fields>
@@ -80,6 +91,11 @@ public abstract class AbstractTest {
             @Autowired
             protected CourseService courseService;
         // </course-fields>
+
+        // <placement-test-fields>
+            @Autowired
+            protected PlacementTestService placementTestService;
+        // <placement-test-fields>
     // </fields>
 
     // <user-methods>
@@ -118,45 +134,91 @@ public abstract class AbstractTest {
                 sampleUser.setLastName("Zaworsky");
                 sampleUser.setPhone(getBasicUserPhones());
                 sampleUser.setAddress(getBasicUserAddress());
+                this.userService.saveUser(sampleUser);
                 return sampleUser;
             }
     // </user-methods>
 
 
     // <course-methods>
-    public Course getBasicCourse(Language language, CourseLevel level, CourseType type, CourseActivity activity, CourseDay day1, CourseDay day2) {
-        Course sampleCourse = new Course(language, level, type, activity);
-        sampleCourse.addCourseDay(day1);
-        sampleCourse.addCourseDay(day2);
+        public Course getBasicCourse(Language language, CourseLevel level, CourseType type, CourseActivity activity, CourseDay day1, CourseDay day2) {
+            Course sampleCourse = new Course(language, level, type, activity);
+            sampleCourse.addCourseDay(day1);
+            sampleCourse.addCourseDay(day2);
 
-        return sampleCourse;
-    }
+            return sampleCourse;
+        }
 
-    public Language setBasicLanguage() {
-        Language english = new Language("EN");
-        this.languageService.saveLanguage(english);
-        return english;
-    }
-    public CourseLevel setBasicCourseLevel() {
-        CourseLevel A1 = new CourseLevel("A1");
-        this.courseLevelService.saveCourseLevel(A1);
-        return A1;
-    }
+        public Language setBasicLanguage(boolean register) {
+            Language english = new Language("EN");
+            if( register ) this.languageService.saveLanguage(english);
+            return english;
+        }
+        public CourseLevel setBasicCourseLevel(boolean register) {
+            CourseLevel A1 = new CourseLevel("A1");
+            if( register ) this.courseLevelService.saveCourseLevel(A1);
+            return A1;
+        }
 
-    public CourseType setBasicCourseType() {
-        CourseType standardType = new main.model.course.CourseType();
-        this.courseTypeService.saveCourseType(standardType);
-        return standardType;
-    }
+        public CourseType setBasicCourseType(boolean register) {
+            if( register ) {
+                CourseType standardType = new CourseType();
+                this.courseTypeService.saveCourseType(standardType);
+                return standardType;
+            }
+            else {
+                Set<CourseType> types = this.courseTypeService.findAllCourseTypes();
+                CourseType type = null;
+                for( CourseType ctp: types ) {
+                    if( type == null ) type = ctp;
+                }
+                return type;
+            }
+        }
 
-    public Course setCourseRequirements() {
-        Language english = setBasicLanguage();
-        CourseLevel A1 = setBasicCourseLevel();
-        CourseType standardType = setBasicCourseType();
-        Course sampleCourse = new Course(english, A1, standardType, new CourseActivity(new Date(2016,9,1), new Date(2016,6,30)));
-        this.courseService.saveCourse(sampleCourse);
-        return sampleCourse;
-    }
+        public Course getBasicCourse(boolean register) {
+            Language english = setBasicLanguage(register);
+            CourseLevel A1 = setBasicCourseLevel(register);
+            CourseType standardType = setBasicCourseType(register);
+            Course sampleCourse = new Course(english, A1, standardType, new CourseActivity(new Date(2016,9,1), new Date(2016,6,30)));
+            this.courseService.saveCourse(sampleCourse);
+            return sampleCourse;
+        }
     // </course-methods>
+
+    // <placement-test-methods>
+        public PlacementTest getBasicPlacementTest(boolean register) {
+            Language english = setBasicLanguage(register);
+            PlacementTest placementTest = new PlacementTest(english, getBasicTasks());
+            this.placementTestService.savePlacementTest(placementTest);
+            return placementTest;
+        }
+
+        public Set<PlacementTask> getBasicTasks() {
+            PlacementTask task = new PlacementTask("Sample command", getBasicSentences());
+            Set<PlacementTask> tasks = new HashSet<>();
+            tasks.add(task);
+            return tasks;
+        }
+
+        public Set<PlacementSentence> getBasicSentences() {
+            PlacementSentence sentence = new PlacementSentence("sample prefix", "sample suffix", getBasicAnswers(), "d");
+            Set<PlacementSentence> sentences = new HashSet<>();
+            sentences.add(sentence);
+            return sentences;
+        }
+        public Set<PlacementAnswer> getBasicAnswers() {
+            PlacementAnswer a = new PlacementAnswer("a", "Sample answer a");
+            PlacementAnswer b = new PlacementAnswer("b", "Sample answer b");
+            PlacementAnswer c = new PlacementAnswer("c", "Sample answer c");
+            PlacementAnswer d = new PlacementAnswer("d", "Sample answer d");
+            Set<PlacementAnswer> answers = new HashSet<>();
+            answers.add(a);
+            answers.add(b);
+            answers.add(c);
+            answers.add(d);
+            return answers;
+        }
+    // </placement-test-methods>
 
 }

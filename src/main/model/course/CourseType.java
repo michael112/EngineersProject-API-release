@@ -3,6 +3,8 @@ package main.model.course;
 import java.util.Set;
 import java.util.HashSet;
 
+import java.util.Iterator;
+
 import javax.persistence.Entity;
 import javax.persistence.Column;
 import javax.persistence.Table;
@@ -85,6 +87,24 @@ public class CourseType extends AbstractUuidModel {
 		super();
 		this.courseTypeNames = new HashSet<>();
 		this.courses = new HashSet<>();
+	}
+
+	// zwracają nazwę typu w podanym języku
+
+	public CourseTypeName getCourseTypeNameObj( String userLanguage ) {
+		Iterator<CourseTypeName> iterator = this.courseTypeNames.iterator();
+		while( iterator.hasNext() ) {
+			CourseTypeName element = iterator.next();
+			if( userLanguage.equals( element.getNamingLanguage().getId() ) ) {
+				return element;
+			}
+		}
+		return null;
+	}
+
+	public String getCourseTypeName( String userLanguage ) {
+		CourseTypeName result = getCourseTypeNameObj(userLanguage);
+		return result != null ? result.getCourseTypeName() : null;
 	}
 
 }

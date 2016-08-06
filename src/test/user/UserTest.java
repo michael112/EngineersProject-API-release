@@ -15,15 +15,11 @@ import test.AbstractTest;
 
 public class UserTest extends AbstractTest {
 
-	@Autowired
-    private UserService userService;
-
     private User user;
 
     @Before
     public void setUp() {
         this.user = getBasicUser();
-        this.userService.saveUser(this.user);
     }
 
     @Test

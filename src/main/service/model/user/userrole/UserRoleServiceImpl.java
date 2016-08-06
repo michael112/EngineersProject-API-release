@@ -28,6 +28,8 @@ public class UserRoleServiceImpl implements UserRoleService {
         return dao.findAllUserRoles();
     }
 
+    /* DAO tylko do odczytu
+
     public void saveUserRole(UserRole entity) {
         dao.saveUserRole(entity);
     }
@@ -43,5 +45,7 @@ public class UserRoleServiceImpl implements UserRoleService {
     public void deleteUserRoleByID(String id) {
         deleteUserRole(findUserRoleByID(id));
     }
+
+    */
 
 }

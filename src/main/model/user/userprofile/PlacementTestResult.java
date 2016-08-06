@@ -61,5 +61,16 @@ public class PlacementTestResult extends AbstractUuidModel {
 	public PlacementTestResult() {
 		super();
 	}
+
+	public PlacementTestResult(PlacementTest test, User user) {
+		this();
+		this.setTest(test);
+		this.setUser(user);
+	}
+
+	public PlacementTestResult(PlacementTest test, User user, double result) {
+		this(test, user);
+		this.setResult(result);
+	}
 	
 }

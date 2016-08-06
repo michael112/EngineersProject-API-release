@@ -12,6 +12,8 @@ public interface UserRoleService {
 
     Set<UserRole> findAllUserRoles();
 
+    /* DAO tylko do odczytu
+
     void saveUserRole(UserRole entity);
 
     void updateUserRole(UserRole entity);
@@ -19,4 +21,6 @@ public interface UserRoleService {
     void deleteUserRole(UserRole entity);
 
     void deleteUserRoleByID(String id);
+
+    */
 }

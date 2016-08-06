@@ -12,10 +12,14 @@ public interface UserRoleDao {
 
     Set<UserRole> findAllUserRoles();
 
+    /* DAO tylko do odczytu
+
     void saveUserRole(UserRole entity);
 
     void updateUserRole(UserRole entity);
 
     void deleteUserRole(UserRole entity);
+
+    */
 
 }

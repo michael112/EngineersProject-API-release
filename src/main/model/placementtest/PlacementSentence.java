@@ -38,7 +38,7 @@ public class PlacementSentence extends AbstractUuidModel {
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID")
+	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID", nullable=false)
 	private Set<PlacementAnswer> answers;
 	public void setAnswers(Set<PlacementAnswer> answers) {
 		if( answers != null ) {
@@ -65,6 +65,14 @@ public class PlacementSentence extends AbstractUuidModel {
 	public PlacementSentence() {
 		super();
 		this.answers = new HashSet<>();
+	}
+
+	public PlacementSentence(String prefix, String suffix, Set<PlacementAnswer> answers, String correctAnswer) {
+		this();
+		this.setPrefix(prefix);
+		this.setSuffix(suffix);
+		this.setAnswers(answers);
+		this.setCorrectAnswer(correctAnswer);
 	}
 
 }

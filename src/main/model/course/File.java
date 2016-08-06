@@ -51,4 +51,12 @@ public class File extends AbstractUuidModel {
 		super();
 	}
 
+	public File(String name, Date date, String path, User sender) {
+		this();
+		this.setName(name);
+		this.setDate(date);
+		this.setPath(path);
+		this.setSender(sender);
+	}
+
 }

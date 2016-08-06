@@ -97,4 +97,10 @@ public class PlacementTest extends AbstractUuidModel {
 		this.results = new HashSet<>();
 	}
 
+	public PlacementTest(Language language, Set<PlacementTask> tasks) {
+		this();
+		this.setLanguage(language);
+		this.setTasks(tasks);
+	}
+
 }

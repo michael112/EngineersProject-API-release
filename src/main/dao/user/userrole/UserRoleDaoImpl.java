@@ -28,6 +28,8 @@ public class UserRoleDaoImpl extends AbstractDao<String, UserRole> implements Us
         return findAll();
     }
 
+    /* DAO tylko do odczytu
+
     public void saveUserRole(UserRole entity) {
         save(entity);
     }
@@ -39,5 +41,7 @@ public class UserRoleDaoImpl extends AbstractDao<String, UserRole> implements Us
     public void deleteUserRole(UserRole entity) {
         delete(entity);
     }
+
+    */
 
 }

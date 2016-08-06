@@ -2,20 +2,16 @@ package test.course;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
 import main.model.course.CourseType;
-import main.service.model.course.coursetype.CourseTypeService;
 import main.model.course.CourseTypeName;
 
 import main.model.course.Course;
 
 import main.model.language.Language;
-import main.service.model.language.LanguageService;
 
 import test.AbstractTest;
 
@@ -36,7 +32,7 @@ public class CourseTypeTest extends AbstractTest {
 
     @Before
     public void setUp() {
-        this.sampleCourse = setCourseRequirements();
+        this.sampleCourse = getBasicCourse(true);
         this.standardType = this.sampleCourse.getCourseType();
         this.businessType = new CourseType();
         this.courseTypeService.saveCourseType(this.businessType);
@@ -72,6 +68,80 @@ public class CourseTypeTest extends AbstractTest {
         courseTypeService.deleteCourseType(standardType);
 
         Assert.assertNull(courseTypeService.findCourseTypeByID(standardType.getId()));
+    }
+
+    public void beforeAddCourseTypeName() {
+        // creating spanish language
+        Language spanish = new Language("ES");
+        this.languageService.saveLanguage(spanish);
+
+        // creating portuguese language
+        Language portuguese = new Language("PT");
+        this.languageService.saveLanguage(portuguese);
+
+        CourseTypeName businessTypeSpanish = new CourseTypeName(this.businessType, spanish, "curso de negocios");
+        this.languageService.updateLanguage(spanish);
+        CourseTypeName businessTypePortuguese = new CourseTypeName(this.businessType, portuguese, "curso de negócios");
+        this.languageService.updateLanguage(portuguese);
+    }
+
+    @Test
+    public void testAddCourseTypeName() {
+        beforeAddCourseTypeName();
+
+        CourseType businessTypeDb = this.courseTypeService.findCourseTypeByID(this.businessType.getId());
+
+        boolean foundSpanish = false;
+        CourseTypeName spanishCtn = null;
+        boolean foundPortuguese = false;
+        CourseTypeName portugueseCtn = null;
+        for( CourseTypeName ctn : businessTypeDb.getCourseTypeNames() ) {
+            if( ctn.getNamingLanguage().getId().equals("ES") ) {
+                foundSpanish = true;
+                spanishCtn = ctn;
+            }
+            if( ctn.getNamingLanguage().getId().equals("PT") ) {
+                foundPortuguese = true;
+                portugueseCtn = ctn;
+            }
+        }
+
+        Assert.assertEquals(true, foundSpanish);
+        Assert.assertEquals(true, foundPortuguese);
+
+        Assert.assertEquals("curso de negocios", spanishCtn.getCourseTypeName());
+        Assert.assertEquals("curso de negócios", portugueseCtn.getCourseTypeName());
+    }
+
+    public CourseTypeName getEnglishBusinessTypeName() {
+        CourseTypeName englishBusiness = null;
+        for( CourseTypeName ctn : this.businessType.getCourseTypeNames() ) {
+            if( ctn.getCourseTypeName().equals("business course") ) {
+                englishBusiness = ctn;
+            }
+        }
+        return englishBusiness;
+    }
+
+    @Test
+    public void testRemoveCourseTypeName() {
+        CourseTypeName englishBusiness = getEnglishBusinessTypeName();
+        this.businessType.removeCourseTypeName(englishBusiness);
+        this.courseTypeService.updateCourseType(this.businessType);
+
+        CourseType businessTypeDb = this.courseTypeService.findCourseTypeByID(this.businessType.getId());
+
+        Assert.assertEquals(false, businessTypeDb.containsCourseTypeName(englishBusiness));
+    }
+
+    @Test
+    public void testModifyCourseTypeName() {
+        CourseTypeName englishBusiness = getEnglishBusinessTypeName();
+        englishBusiness.setCourseTypeName("English business course");
+        this.courseTypeService.updateCourseType(this.businessType);
+        CourseType businessTypeDb = this.courseTypeService.findCourseTypeByID(this.businessType.getId());
+
+        Assert.assertEquals("English business course", businessTypeDb.getCourseTypeName("EN"));
     }
 
     @Test

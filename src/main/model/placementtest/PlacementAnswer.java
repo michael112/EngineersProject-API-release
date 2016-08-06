@@ -33,4 +33,9 @@ public class PlacementAnswer extends AbstractUuidModel {
 		super();
 	}
 
+	public PlacementAnswer(String answerKey, String answerName) {
+		this();
+		this.setAnswerKey(answerKey);
+		this.setAnswerName(answerName);
+	}
 }

@@ -46,6 +46,11 @@ public class CourseMembership extends AbstractUuidModel {
 		course.addStudent(this); // przypisanie powiązania
 	}
 
+	public void changeCourse(Course newCourse) {
+		this.movedFrom = this.course; // zapisanie przeniesienia
+		this.course = newCourse;
+	}
+
 	@Getter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
@@ -108,6 +113,20 @@ public class CourseMembership extends AbstractUuidModel {
 	public CourseMembership() {
 		super();
 		this.grades = new HashSet<>();
+		this.setMovedFrom(null);
+		this.setActive(false);
+		this.setResignation(false);
+	}
+
+	public CourseMembership(User user, Course course) {
+		this();
+		this.setUser(user);
+		this.setCourse(course);
+	}
+
+	public CourseMembership(User user, Course course, boolean active) {
+		this(user, course);
+		this.setActive(active);
 	}
 
 }

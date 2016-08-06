@@ -126,10 +126,6 @@ LanguageTest extends AbstractTest {
 
     @Test
     public void testRemoveLanguage() {
-        LanguageName germanLanguageName = new LanguageName(german, "Deutsch");
-
-        german.addLanguageName(germanLanguageName);
-
         languageService.deleteLanguage(german);
 
         Assert.assertNull(languageService.findLanguageByID("DE"));

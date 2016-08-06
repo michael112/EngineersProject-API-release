@@ -33,7 +33,7 @@ public class PlacementTask extends AbstractUuidModel {
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="placementTaskID", referencedColumnName="placementTaskID")
+	@JoinColumn(name="placementTaskID", referencedColumnName="placementTaskID", nullable=false)
 	private Set<PlacementSentence> sentences;
 	public void setSentences(Set<PlacementSentence> sentences) {
 		if( sentences != null ) {
@@ -55,5 +55,10 @@ public class PlacementTask extends AbstractUuidModel {
 	public PlacementTask() {
 		super();
 		this.sentences = new HashSet<>();
+	}
+	public PlacementTask(String command, Set<PlacementSentence> sentences) {
+		this();
+		this.setCommand(command);
+		this.setSentences(sentences);
 	}
 }

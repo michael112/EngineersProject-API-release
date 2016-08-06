@@ -38,7 +38,7 @@ public class CourseLevelTest extends AbstractTest {
 
     @Before
     public void setUp() {
-        this.A1SampleCourse = setCourseRequirements();
+        this.A1SampleCourse = getBasicCourse(true);
         this.A1 = A1SampleCourse.getCourseLevel();
         setRemainingCourseLevels();
     }
@@ -51,44 +51,10 @@ public class CourseLevelTest extends AbstractTest {
         courseLevelService.saveCourseLevel(B1);
     }
 
-    @Test
-    public void testCourseLevelCoursesContent() {
-        CourseLevel A1Db = courseLevelService.findCourseLevelByID("A1");
-
-        Assert.assertNotNull(A1Db.getCourses());
-        Assert.assertEquals(1, A1Db.getCourses().size());
-    }
-
-    @Test
-    public void testCourseLevelCoursePoints() {
-        Set<Course> coursesDb = courseService.findAllCourses();
-        Assert.assertEquals(1, coursesDb.size());
-        for( Course courseDb : coursesDb ) {
-            Assert.assertEquals(A1, courseDb.getCourseLevel());
-        }
-    }
-
     @Test(expected = org.springframework.orm.hibernate5.HibernateSystemException.class)
     public void testNullNameLevel() {
         CourseLevel nullLevel = new CourseLevel();
         courseLevelService.saveCourseLevel(nullLevel);
-    }
-
-    @Test
-    public void testEditCourseLevelIdentifier() {
-        CourseLevel sampleLevel = new CourseLevel("B5");
-        courseLevelService.saveCourseLevel(sampleLevel);
-
-        sampleLevel.setId("B6");
-        courseLevelService.updateCourseLevel(sampleLevel);
-
-        // Dziadostwo: w ogóle nie informuje, że nic nie robi!
-
-        CourseLevel B5Db = courseLevelService.findCourseLevelByID("B5");
-        CourseLevel B6Db = courseLevelService.findCourseLevelByID("B6");
-
-        Assert.assertNull(B6Db);
-        Assert.assertNotNull(B5Db);
     }
 
     @Test
@@ -110,5 +76,67 @@ public class CourseLevelTest extends AbstractTest {
         courseLevelService.deleteCourseLevel(B1);
 
         Assert.assertNull(courseLevelService.findCourseLevelByID("B1"));
+    }
+
+    @Test
+    public void testAddCourse() {
+        Course newCourse = getBasicCourse(false);
+        this.A1.addCourse(newCourse);
+        this.courseLevelService.updateCourseLevel(this.A1);
+
+        CourseLevel A1Db = this.courseLevelService.findCourseLevelByID("A1");
+        Assert.assertEquals(true, A1Db.containsCourse(newCourse));
+    }
+
+    @Test
+    public void testChangeCourseLevel() {
+        this.A1.changeCourse(this.A1SampleCourse, this.A2);
+
+        // wystarczy dowolna spośród tych trzech linijek
+
+        this.courseLevelService.updateCourseLevel(this.A1);
+        //this.courseLevelService.updateCourseLevel(this.A2);
+        //this.courseService.updateCourse(this.A1SampleCourse);
+
+        Course A2SampleCourseDb = this.courseService.findCourseByID(this.A1SampleCourse.getId());
+        Assert.assertEquals("A2", A2SampleCourseDb.getCourseLevel().getName());
+        CourseLevel A1Db = this.courseLevelService.findCourseLevelByID("A1");
+        Assert.assertEquals(false, A1Db.containsCourse(this.A1SampleCourse));
+        CourseLevel A2Db = this.courseLevelService.findCourseLevelByID("A2");
+        Assert.assertEquals(true, A2Db.containsCourse(this.A1SampleCourse));
+    }
+
+    @Test
+    public void testUpdateCourseLevelName() {
+        CourseLevel sampleLevel = new CourseLevel("B5");
+        courseLevelService.saveCourseLevel(sampleLevel);
+
+        sampleLevel.setId("B6");
+        courseLevelService.updateCourseLevel(sampleLevel);
+
+        // Dziadostwo: w ogóle nie informuje, że nic nie robi!
+
+        CourseLevel B5Db = courseLevelService.findCourseLevelByID("B5");
+        CourseLevel B6Db = courseLevelService.findCourseLevelByID("B6");
+
+        Assert.assertNull(B6Db);
+        Assert.assertNotNull(B5Db);
+    }
+
+    @Test
+    public void testCourseLevelCoursesContent() {
+        CourseLevel A1Db = courseLevelService.findCourseLevelByID("A1");
+
+        Assert.assertNotNull(A1Db.getCourses());
+        Assert.assertEquals(1, A1Db.getCourses().size());
+    }
+
+    @Test
+    public void testCourseLevelCoursePoints() {
+        Set<Course> coursesDb = courseService.findAllCourses();
+        Assert.assertEquals(1, coursesDb.size());
+        for( Course courseDb : coursesDb ) {
+            Assert.assertEquals(A1, courseDb.getCourseLevel());
+        }
     }
 }
