@@ -665,7 +665,7 @@ CREATE TABLE `studentgrades` (
   KEY `FK__ST_GRD__ST` (`studentID`),
   KEY `FK__ST_GRD__GRD` (`gradeID`),
   CONSTRAINT `FK__ST_GRD__GRD` FOREIGN KEY (`gradeID`) REFERENCES `grades` (`gradeID`),
-  CONSTRAINT `FK__ST_GRD__ST` FOREIGN KEY (`studentID`) REFERENCES `users` (`userID`)
+  CONSTRAINT `FK__ST_GRD__ST` FOREIGN KEY (`studentID`) REFERENCES `coursememberships` (`courseMembershipID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
