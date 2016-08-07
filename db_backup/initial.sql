@@ -444,7 +444,7 @@ CREATE TABLE `messages` (
   `title` varchar(50) NOT NULL,
   `content` varchar(300) NOT NULL,
   `isAnnouncement` tinyint(1) NOT NULL,
-  `courseID` varchar(36) NOT NULL,
+  `courseID` varchar(36) DEFAULT NULL,
   `senderID` varchar(36) NOT NULL,
   PRIMARY KEY (`messageID`),
   KEY `FK_MSG_CRS` (`courseID`),
