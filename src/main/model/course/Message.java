@@ -34,7 +34,7 @@ public class Message extends AbstractUuidModel {
 
 	@Getter
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="senderID", referencedColumnName="userID")
+	@JoinColumn(name="senderID", referencedColumnName="userID", nullable=false)
 	private User sender;
 	public void setSender(User sender) {
 		// do sprawdzenia
@@ -104,6 +104,9 @@ public class Message extends AbstractUuidModel {
 	public void removeAttachement(File attachement) {
 		this.attachements.remove(attachement); // powinno powodować usunięcie testu z bazy (sprawdzić!)
 	}
+	public boolean containsAttachement(File attachement) {
+		return this.attachements.contains(attachement);
+	}
 
 	@Getter
 	@Setter
@@ -113,7 +116,7 @@ public class Message extends AbstractUuidModel {
 
 	@Getter
 	@ManyToOne(fetch=FetchType.LAZY)
-	@JoinColumn(name="courseID", referencedColumnName="courseID")
+	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=true)
 	private Course course;
 	public void setCourse(Course course) {
 		// do sprawdzenia
@@ -130,6 +133,29 @@ public class Message extends AbstractUuidModel {
 		super();
 		this.receivers = new HashSet<>();
 		this.attachements = new HashSet<>();
+		this.setAnnouncement(false);
+	}
+
+	public Message(User sender, String title, String content) {
+		this();
+		this.setSender(sender);
+		this.setTitle(title);
+		this.setContent(content);
+	}
+
+	public Message(User sender, String title, String content, boolean isAnnouncement) {
+		this();
+		this.setSender(sender);
+		this.setTitle(title);
+		this.setContent(content);
+		this.setAnnouncement(isAnnouncement);
+	}
+
+	public Message(User sender, Set<User> receivers, String title, String content, Set<File> attachements, boolean isAnnouncement, Course course) {
+		this(sender, title, content, isAnnouncement);
+		this.setReceivers(receivers);
+		this.setAttachements(attachements);
+		this.setCourse(course);
 	}
 
 }

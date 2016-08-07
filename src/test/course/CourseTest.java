@@ -1,6 +1,6 @@
 package test.course;
 
-import java.util.Date;
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -131,6 +131,27 @@ public class CourseTest extends AbstractTest {
         courseService.saveCourse(sampleCourse);
     }
 
+    @org.junit.Test
+    public void testCourseSet() {
+        Set<Course> courses = this.courseService.findAllCourses();
+
+        Assert.assertNotNull(courses);
+    }
+
+    @org.junit.Test
+    public void testGetCourse() {
+        Course sampleCourseDb = this.courseService.findCourseByID(this.sampleCourse.getId());
+        Assert.assertNotNull(sampleCourseDb);
+        Assert.assertEquals(this.sampleCourse, sampleCourse);
+    }
+
+    @org.junit.Test
+    public void testDeleteCourse() {
+        this.courseService.deleteCourse(sampleCourse);
+
+        Assert.assertNull(courseService.findCourseByID(sampleCourse.getId()));
+    }
+
     @org.junit.Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
     public void testNullLanguage() {
         Course sample = new Course();
@@ -174,13 +195,6 @@ public class CourseTest extends AbstractTest {
         Assert.assertEquals(true, courseDb.containsStudent(sampleStudent1));
         Assert.assertEquals(true, courseDb.containsStudent(sampleStudent2));
         */
-    }
-
-    @org.junit.Test
-    public void testDeleteCourse() {
-        this.courseService.deleteCourse(sampleCourse);
-
-        Assert.assertNull(courseService.findCourseByID(sampleCourse.getId()));
     }
 
 }

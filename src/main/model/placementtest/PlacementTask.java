@@ -51,6 +51,9 @@ public class PlacementTask extends AbstractUuidModel {
 	public void removeSentence(PlacementSentence sentence) {
 		this.sentences.remove(sentence); // powinno powodować usunięcie z bazy (sprawdzić!)
 	}
+	public boolean containsSentence(PlacementSentence sentence) {
+		return this.sentences.contains(sentence);
+	}
 	
 	public PlacementTask() {
 		super();

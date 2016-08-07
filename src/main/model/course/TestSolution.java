@@ -78,6 +78,30 @@ public class TestSolution extends AbstractSolution {
 
     public TestSolution() {
         super();
+        this.setWritten(false);
+    }
+
+    public TestSolution(CourseMembership courseMembership, Test task) {
+        this();
+        this.setCourseMembership(courseMembership);
+        this.setTask(task);
+    }
+
+    public TestSolution(CourseMembership courseMembership, Test task, boolean written) {
+        this();
+        this.setCourseMembership(courseMembership);
+        this.setTask(task);
+        this.setWritten(written);
+    }
+
+    public TestSolution(CourseMembership courseMembership, Test task, StudentGrade grade) {
+        this(courseMembership, task);
+        this.setGrade(grade);
+    }
+
+    public TestSolution(CourseMembership courseMembership, Test task, StudentGrade grade, boolean written) {
+        this(courseMembership, task, written);
+        this.setGrade(grade);
     }
 
 }

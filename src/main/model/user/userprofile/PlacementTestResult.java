@@ -56,8 +56,6 @@ public class PlacementTestResult extends AbstractUuidModel {
 		return this.test.getLanguage();
 	}
 
-
-	
 	public PlacementTestResult() {
 		super();
 	}

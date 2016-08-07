@@ -2,14 +2,11 @@ package test.course;
 
 import java.util.*;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
 import main.model.course.File;
-import main.service.model.course.file.FileService;
 
 import main.model.user.User;
 
@@ -17,19 +14,11 @@ import test.AbstractTest;
 
 public class FileTest extends AbstractTest {
 
-    @Autowired
-    private FileService fileService;
-
     private File sampleFile;
-
-    private User sampleSender;
 
     @Before
     public void setUp() {
-        this.sampleSender = getBasicUser();
-
-        this.sampleFile = new File("gowno.pdf", new Date(), "/files/", this.sampleSender);
-        this.fileService.saveFile(this.sampleFile);
+        this.sampleFile = getBasicFile(null);
     }
 
     @Test
@@ -55,6 +44,7 @@ public class FileTest extends AbstractTest {
 
     @Test
     public void testUpdateSender() {
+        User formerSender = this.sampleFile.getSender();
         User anotherSampleSender = getBasicUser();
 
         this.sampleFile.setSender(anotherSampleSender);
@@ -62,7 +52,7 @@ public class FileTest extends AbstractTest {
 
         File sampleFileDb = this.fileService.findFileByID(this.sampleFile.getId());
         Assert.assertEquals(anotherSampleSender, sampleFileDb.getSender());
-        Assert.assertNotEquals(this.sampleSender, sampleFileDb.getSender());
+        Assert.assertNotEquals(formerSender, sampleFileDb.getSender());
     }
 
     @Test

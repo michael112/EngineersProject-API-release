@@ -5,6 +5,8 @@ import java.util.Date;
 import javax.persistence.Embeddable;
 import javax.persistence.Column;
 import javax.persistence.Transient;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 
 @Embeddable
 public class MyHour {
@@ -61,6 +63,7 @@ public class MyHour {
 		return this.dateHour.getMinutes();
 	}
 
+	@Access(AccessType.PROPERTY)
 	@Column(name="hour", nullable=false)
 	public String getTime() {
 		return this.getHour() + ":" + this.getMinute();

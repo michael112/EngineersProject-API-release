@@ -77,7 +77,7 @@ public class Grade extends AbstractUuidModel {
 			}
 	)
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
-	private AbstractHomeworkOrTest task; // może być null-em\
+	private AbstractHomeworkOrTest task; // może być null-em
 	public void setTask(AbstractHomeworkOrTest task) {
 
 		// do sprawdzenia
@@ -135,6 +135,41 @@ public class Grade extends AbstractUuidModel {
 	public Grade() {
 		super();
 		this.grades = new HashSet<>();
+		this.setWeight(1);
+	}
+
+	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale) {
+		this();
+		this.setGradedBy(gradedBy);
+		this.setCourse(course);
+		this.setScale(scale);
+	}
+
+	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale, double weight) {
+		this();
+		this.setGradedBy(gradedBy);
+		this.setGradeTitle(gradeTitle);
+		this.setCourse(course);
+		this.setScale(scale);
+		this.setWeight(weight);
 	}
 	
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, double weight) {
+		this(gradedBy, course, gradeTitle, scale, weight);
+		this.setGradeDescription(gradeDescription);
+	}
+	
+	public Grade(User gradedBy, Course course, String gradeTitle, AbstractHomeworkOrTest task, GradeScale scale, double weight) {
+		this(gradedBy, course, gradeTitle, scale, weight);
+		this.setTask(task);
+	}
+
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, Set<StudentGrade> grades) {
+		this(gradedBy, course, gradeTitle, scale, weight);
+		this.setGradeDescription(gradeDescription);
+		this.setTask(task);
+		this.setMaxPoints(maxPoints);
+		this.setGrades(grades);
+	}
+
 }

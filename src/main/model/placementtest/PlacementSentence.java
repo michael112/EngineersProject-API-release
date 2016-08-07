@@ -56,6 +56,9 @@ public class PlacementSentence extends AbstractUuidModel {
 	public void removeAnswer(PlacementAnswer answer) {
 		this.answers.remove(answer); // powinno powodować usunięcie z bazy (sprawdzić!)
 	}
+	public boolean containsAnswer(PlacementAnswer answer) {
+		return this.answers.contains(answer);
+	}
 
 	@Getter
 	@Setter

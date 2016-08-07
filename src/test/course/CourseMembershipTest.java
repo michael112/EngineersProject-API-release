@@ -18,21 +18,11 @@ import test.AbstractTest;
 
 public class CourseMembershipTest extends AbstractTest {
 
-    @Autowired
-    private CourseMembershipService courseMembershipService;
-
-    private Course sampleCourse;
-    private User sampleUser;
-
     private CourseMembership sampleCourseMembership;
 
     @Before
     public void setUp() {
-        this.sampleUser = getBasicUser();
-        this.sampleCourse = getBasicCourse(true);
-
-        this.sampleCourseMembership = new CourseMembership(this.sampleUser, this.sampleCourse, true);
-        this.courseMembershipService.saveCourseMembership(this.sampleCourseMembership);
+        this.sampleCourseMembership = getBasicCourseMembership(true);
     }
 
     @Test
@@ -58,25 +48,27 @@ public class CourseMembershipTest extends AbstractTest {
 
     @Test
     public void testUpdateUser() {
-        User anotherSampleUser = getBasicUser();
+        User formerUser = this.sampleCourseMembership.getUser();
+        User anotherSampleUser = getBasicUser("new_" + formerUser.getUsername());
 
         this.sampleCourseMembership.setUser(anotherSampleUser);
         this.courseMembershipService.updateCourseMembership(this.sampleCourseMembership);
 
         CourseMembership sampleCourseMembershipDb = this.courseMembershipService.findCourseMembershipByID(this.sampleCourseMembership.getId());
         Assert.assertEquals(anotherSampleUser, sampleCourseMembershipDb.getUser());
-        Assert.assertNotEquals(this.sampleUser, sampleCourseMembershipDb.getUser());
+        Assert.assertNotEquals(formerUser, sampleCourseMembershipDb.getUser());
     }
 
     @Test
     public void testUpdateCourse() {
+        Course formerCourse = this.sampleCourseMembership.getCourse();
         Course anotherSampleCourse = getBasicCourse(false);
         this.sampleCourseMembership.changeCourse(anotherSampleCourse); // trzeba użyć osobnej metody, żeby dobrze zapisało stary i nowy kurs
         this.courseMembershipService.updateCourseMembership(this.sampleCourseMembership);
 
         CourseMembership sampleCourseMembershipDb = this.courseMembershipService.findCourseMembershipByID(this.sampleCourseMembership.getId());
-        Assert.assertEquals(sampleCourse, sampleCourseMembershipDb.getMovedFrom());
-        Assert.assertNotEquals(sampleCourse, sampleCourseMembershipDb.getCourse());
+        Assert.assertEquals(formerCourse, sampleCourseMembershipDb.getMovedFrom());
+        Assert.assertNotEquals(formerCourse, sampleCourseMembershipDb.getCourse());
         Assert.assertEquals(anotherSampleCourse, sampleCourseMembershipDb.getCourse());
     }
 

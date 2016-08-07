@@ -85,7 +85,7 @@ public class Course extends AbstractUuidModel {
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@JoinColumn(name="courseID", referencedColumnName="courseID")
+	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Set<CourseDay> courseDays;
 	public void setCourseDays(Set<CourseDay> courseDays) {
 		if( courseDays != null ) {

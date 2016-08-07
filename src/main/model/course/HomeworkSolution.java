@@ -78,5 +78,17 @@ public class HomeworkSolution extends AbstractSolution {
 	public HomeworkSolution() {
 		super();
 	}
+
+	public HomeworkSolution(CourseMembership courseMembership, Homework task, File solutionFile) {
+		this();
+		this.setCourseMembership(courseMembership);
+		this.setTask(task);
+		this.setSolutionFile(solutionFile);
+	}
+
+	public HomeworkSolution(CourseMembership courseMembership, Homework task, File solutionFile, StudentGrade grade) {
+		this(courseMembership, task, solutionFile);
+		this.setGrade(grade);
+	}
 	
 }

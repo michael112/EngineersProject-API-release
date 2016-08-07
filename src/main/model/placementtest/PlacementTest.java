@@ -64,6 +64,9 @@ public class PlacementTest extends AbstractUuidModel {
 	public void removeTask(PlacementTask task) {
 		this.tasks.remove(task); // powinno powodować usunięcie z bazy (sprawdzić!)
 	}
+	public boolean containsTask(PlacementTask task) {
+		return this.tasks.contains(task);
+	}
 
 	@Getter
 	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="test")

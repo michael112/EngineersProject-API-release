@@ -2,7 +2,7 @@ package main.model.course;
 
 import java.util.Set;
 import java.util.HashSet;
-// import java.util.Date;
+import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -81,6 +81,23 @@ public class Test extends AbstractHomeworkOrTest {
 
 	public Test() {
 		super();
+	}
+
+	public Test(Course course) {
+		this();
+		this.setCourse(course);
+	}
+
+	public Test(String title, Date date, String desciption, Course course) {
+		this(course);
+		this.setDate(date);
+		this.setDescription(desciption);
+	}
+
+	public Test(String title, Date date, String desciption, Set<Grade> grades, Course course, Set<TestSolution> solutions) {
+		this(title, date, desciption, course);
+		this.setGrades(grades);
+		this.setTestSolutions(solutions);
 	}
 
 }

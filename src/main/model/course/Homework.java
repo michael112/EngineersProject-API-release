@@ -8,7 +8,6 @@ import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
-import javax.persistence.ManyToOne;
 import javax.persistence.JoinTable;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
@@ -20,7 +19,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 
 import lombok.Getter;
-import lombok.Setter;
 
 @Entity
 @Table(name="homeworks")
@@ -97,6 +95,9 @@ public class Homework extends AbstractHomeworkOrTest {
 	public void removeAttachement(File attachement) {
 		this.attachements.remove(attachement); // powinno powodować usunięcie testu z bazy (sprawdzić!)
 	}
+	public boolean containsAttachement(File attachement) {
+		return this.attachements.contains(attachement);
+	}
 
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task")
 	@Access(AccessType.PROPERTY)
@@ -120,6 +121,24 @@ public class Homework extends AbstractHomeworkOrTest {
 	public Homework() {
 		super();
 		this.attachements = new HashSet<>();
+	}
+
+	public Homework(Course course) {
+		this();
+		this.setCourse(course);
+	}
+
+	public Homework(String title, Date date, String description, Course course) {
+		this(course);
+		this.setDate(date);
+		this.setDescription(description);
+	}
+
+	public Homework(String title, Date date, String description, Set<Grade> grades, Course course, Set<File> attachements, Set<HomeworkSolution> solutions ){
+		this(title, date, description, course);
+		this.setAttachements(attachements);
+		this.setGrades(grades);
+		this.setHomeworkSolutions(solutions);
 	}
 
 }

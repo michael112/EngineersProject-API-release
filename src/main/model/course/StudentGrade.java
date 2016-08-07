@@ -61,4 +61,11 @@ public class StudentGrade extends AbstractUuidModel {
 		super();
 	}
 
+	public StudentGrade(CourseMembership student, double gradeValue, Grade grade) {
+		this();
+		this.setStudent(student);
+		this.setGradeValue(gradeValue);
+		this.setGrade(grade);
+	}
+
 }

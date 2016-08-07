@@ -29,16 +29,19 @@ public class CourseDay extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourFrom")) }) // albo hour zamiast time
+	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourFrom", nullable=false)) }) // albo hour zamiast time
 	private MyHour hourFrom;
 
 	@Getter
 	@Setter
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourTo")) }) // albo hour zamiast time
+	@AttributeOverrides({ @AttributeOverride(name = "time", column = @Column(name = "hourTo", nullable=false)) }) // albo hour zamiast time
 	private MyHour hourTo;
 
-	public CourseDay() {}
+	public CourseDay() {
+		this.hourFrom = new MyHour();
+		this.hourTo = new MyHour();
+	}
 	public CourseDay(int dayOfWeek, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
 		super();
 		this.day = new DayOfWeek(dayOfWeek);
