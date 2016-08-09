@@ -40,7 +40,6 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	private String description;
 
 	@Getter
-	//@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="task")
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	@JoinColumn(name="taskID", referencedColumnName="taskID")
 	private Set<Grade> grades;

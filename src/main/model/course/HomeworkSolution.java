@@ -20,33 +20,13 @@ import main.model.user.User;
 @Entity
 @Table(name="homeworkSolutions")
 @Access(AccessType.FIELD)
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "homeworkSolutionID")) }) // albo solutionID zamiast id
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "homeworkSolutionID")) })
 public class HomeworkSolution extends AbstractSolution {
-	
-	// ===== fields =====
-	/*
-	@Getter
-	@Setter
-	private String id;
-	@Getter
-	@Setter
-	private CourseMembership courseMembership;
-	*/
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable=false)
-	/*
-	@Getter
-	@Setter
-	private Homework task;
-	*/
 	@Access(AccessType.PROPERTY)
 	@Override
-	/*
-	public AbstractHomeworkOrTest getTask() {
-		return super.getTask();
-	}
-	*/
 	public Homework getTask() {
 		return (Homework) super.getTask();
 	}
@@ -59,11 +39,6 @@ public class HomeworkSolution extends AbstractSolution {
 	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
 	@JoinColumn(name="fileID", referencedColumnName="fileID", nullable=false)
 	private File solutionFile;
-	/*
-	@Getter
-	@Setter
-	private StudentGrade grade;
-	*/
 
 	@Override
 	public User getUser() {

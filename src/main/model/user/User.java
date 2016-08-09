@@ -115,10 +115,6 @@ public class User extends AbstractUuidModel {
     @Embedded
 	private Address address;
 	
-	/*
-    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
-    @JoinColumn(name="userID", referencedColumnName="userID")
-    */
     @Getter
     @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<PlacementTestResult> placementTest;
@@ -145,10 +141,6 @@ public class User extends AbstractUuidModel {
         return this.placementTest.contains(placementTest);
     }
 
-	/*
-    @OneToMany(fetch=FetchType.EAGER)
-    @JoinColumn(name="userID", referencedColumnName="userID")
-    */
     @Getter
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<CourseMembership> coursesAsStudent;
@@ -201,12 +193,6 @@ public class User extends AbstractUuidModel {
         return this.myMessages.contains(myMessage);
     }
 
-    /*
-    @ManyToMany(fetch=FetchType.LAZY)
-    @JoinTable(name = "messagesusers",
-            joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
-            inverseJoinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") })
-    */
     @Getter
     @ManyToMany(fetch=FetchType.LAZY, mappedBy="receivers")
 	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów

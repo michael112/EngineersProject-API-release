@@ -27,7 +27,6 @@ import main.model.abstracts.AbstractModel;
 @Access(AccessType.FIELD)
 public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 
-	// ===== fields =====
 	@Transient
 	private LanguageNameKey key;
 

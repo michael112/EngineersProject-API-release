@@ -17,7 +17,6 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 
 import lombok.Getter;
-import lombok.Setter;
 
 import main.model.user.userprofile.PlacementTestResult;
 import main.model.language.Language;

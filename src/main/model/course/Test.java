@@ -15,38 +15,11 @@ import javax.persistence.CascadeType;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
-import lombok.Getter;
-import lombok.Setter;
-
 @Entity
 @Table(name="tests")
 @Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Test extends AbstractHomeworkOrTest {
-
-	/*
-	@Getter
-	@Setter
-	private String id;
-	@Getter
-	@Setter
-	private String title;
-	@Getter
-	@Setter
-	private Date date;
-	@Getter
-	@Setter
-	private String description;
-	@Getter
-	@Setter
-	private Set<Grade> grades;
-	@Getter
-	@Setter
-	private Course course;
-	@Getter
-	@Setter
-	private Set<TestSolution> solutions;
-	*/
 
 	@Override
 	public void setCourse(Course course) {

@@ -18,7 +18,6 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
-// Homework / Test mapping imports:
 import org.hibernate.annotations.Any;
 import org.hibernate.annotations.AnyMetaDef;
 import org.hibernate.annotations.MetaValue;
@@ -42,13 +41,13 @@ public class Grade extends AbstractUuidModel {
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="gradedByID", referencedColumnName="userID", nullable=false)
-	private User gradedBy; // nauczyciel, który wystawił ocenę, mapowane
+	private User gradedBy; // nauczyciel, który wystawił ocenę
 
 	@Getter
 	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
-	private Course course; // mapowanie poprzez courseID
+	private Course course;
 
 	@Getter
 	@Setter
@@ -60,14 +59,6 @@ public class Grade extends AbstractUuidModel {
 	@Column(name="gradeDescription", nullable=true)
 	private String gradeDescription;
 
-	/*
-	@Getter
-	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="taskID", referencedColumnName="courseID", nullable=true)
-	private AbstractHomeworkOrTest homeworkOrTest; // może być null-em
-	*/
-
 	@Getter
 	@Any(metaColumn = @Column(name = "taskType"))
 	@AnyMetaDef(idType = "string", metaType = "byte",
@@ -77,7 +68,7 @@ public class Grade extends AbstractUuidModel {
 			}
 	)
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
-	private AbstractHomeworkOrTest task; // może być null-em
+	private AbstractHomeworkOrTest task;
 	public void setTask(AbstractHomeworkOrTest task) {
 
 		// do sprawdzenia

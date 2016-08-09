@@ -9,8 +9,6 @@ import lombok.Setter;
 @Embeddable
 public class Address {
 
-	// ===== fields =====
-	
 	@Getter
 	@Setter
 	@Column(name="addressStreet", nullable=false)
@@ -32,8 +30,6 @@ public class Address {
 	@Column(name="addressCity", nullable=false)
 	private String city;
 	
-	// ===== constructors =====
-
 	public Address( String street, String houseNumber, String postCode, String city ) {
 		this.street = street;
 		this.houseNumber = houseNumber;

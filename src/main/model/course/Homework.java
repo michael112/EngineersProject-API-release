@@ -25,41 +25,6 @@ import lombok.Getter;
 @Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Homework extends AbstractHomeworkOrTest {
-	
-	// ===== fields =====
-	/*
-	@Getter
-	@Setter
-	@Id
-	@Column(name="homeworkID")
-	private String id;
-
-	@Getter
-	@Setter
-	@Column(name="title", nullable=true)
-	private String title;
-
-	@Getter
-	@Setter
-	@Column(name="date", nullable=true)
-	private Date date;
-
-	@Getter
-	@Setter
-	@Column(name="description", nullable=true)
-	private String description;
-
-	@Getter
-	@Setter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="homeworkOrTest")
-	private Set<Grade> grades;
-
-	@Getter
-	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
-	private Course course;
-	*/
 
 	@Override
 	public void setCourse(Course course) {

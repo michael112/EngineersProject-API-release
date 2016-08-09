@@ -11,8 +11,6 @@ import lombok.Setter;
 @Embeddable
 public class CourseActivity {
 
-	// ===== fields =====
-
 	@Getter
 	@Setter
 	@Column(name="activityFrom", nullable=true)
@@ -22,9 +20,7 @@ public class CourseActivity {
 	@Setter
 	@Column(name="activityTo", nullable=true)
 	private Date to;
-	
-	// ===== constructor =====
-	
+
 	public CourseActivity( Date fromDate, Date toDate ) {
 		this();
 		this.from = fromDate;

@@ -25,14 +25,6 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 	@JoinColumn(name="courseMembershipID", referencedColumnName="courseMembershipID", nullable=false)
 	private CourseMembership courseMembership;
 
-	/*
-	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable=false)
-	@Getter
-	@Setter
-	private AbstractHomeworkOrTest task;
-	*/
-
 	@Transient
 	@Getter
 	private AbstractHomeworkOrTest task;
@@ -60,20 +52,6 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 	public Course getCourse() {
 		return this.courseMembership.getCourse();
 	}
-
-	/*
-	protected AbstractHomeworkOrTest mapTask(String taskID) {
-		AbstractHomeworkOrTest task;
-		// check if any homework contains "my" taskID:
-			main.dao.course.homework.HomeworkDao homeworkDao = new main.dao.course.homework.HomeworkDaoImpl();
-			task = homeworkDao.findHomeworkByID(taskID);
-		if( task == null ) { // check if any test contains "my" taskID:
-			main.dao.course.test.TestDao testDao = new main.dao.course.test.TestDaoImpl();
-			task = testDao.findTestByID(taskID);
-		}
-		return task;
-	}
-	*/
 
 	public AbstractSolution() {
 		super();
