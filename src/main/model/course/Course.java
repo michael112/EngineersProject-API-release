@@ -260,6 +260,9 @@ public class Course extends AbstractUuidModel {
 	public void removeAttachement(File attachement) {
 		this.attachements.remove(attachement); // powinno powodować usunięcie pliku z bazy (sprawdzić!)
 	}
+	public boolean containsAttachement(File attachement) {
+		return this.attachements.contains(attachement);
+	}
 
 	@Getter
 	@Setter

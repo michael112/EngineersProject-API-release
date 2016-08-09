@@ -7,7 +7,6 @@ import java.util.Set;
 
 import javax.persistence.*;
 
-import org.apache.commons.codec.language.bm.Lang;
 import org.hibernate.annotations.Type;
 
 import lombok.Getter;
@@ -73,6 +72,9 @@ public class User extends AbstractUuidModel {
     public void removeUserRole(UserRole userRole) {
         this.userRoles.remove(userRole);
     }
+    public boolean containsUserRole(UserRole userRole) {
+        return this.userRoles.contains(userRole);
+    }
 
     @Column(name="firstname", nullable=false)
     @Getter
@@ -103,6 +105,9 @@ public class User extends AbstractUuidModel {
     }
     public void removePhone(Phone phone) {
         this.phone.remove(phone); // powinno powodować usunięcie z bazy (sprawdzić!)
+    }
+    public boolean containsPhone(Phone phone) {
+        return this.phone.contains(phone);
     }
 
 	@Getter
@@ -260,7 +265,7 @@ public class User extends AbstractUuidModel {
         }
     }
     public boolean containsTaughtLanguage(Language taughtLanguage) {
-        return this.messages.contains(taughtLanguage);
+        return this.taughtLanguages.contains(taughtLanguage);
     }
 
 	@Getter
@@ -297,6 +302,7 @@ public class User extends AbstractUuidModel {
 
     public User() {
         super();
+        this.setActive(true);
         this.userRoles = new HashSet<>();
         this.phone = new HashSet<>();
         this.placementTest = new HashSet<>();
@@ -305,6 +311,19 @@ public class User extends AbstractUuidModel {
         this.messages = new HashSet<>();
         this.taughtLanguages = new HashSet<>();
         this.coursesAsTeacher = new HashSet<>();
+    }
+
+    public User(String username, String password, String email, String firstName, String lastName) {
+        this();
+        this.setUsername(username);
+        this.setPassword(password);
+        this.setEmail(email);
+        this.setFirstName(firstName);
+        this.setLastName(lastName);
+    }
+    public User(String username, String password, String email, String firstName, String lastName, boolean active) {
+        this(username, password, email, firstName, lastName);
+        this.setActive(active);
     }
 
 }

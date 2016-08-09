@@ -282,14 +282,14 @@ public abstract class AbstractTest {
     // </course-membership-methods>
 
     // <placement-test-result-methods>
-            public PlacementTestResult getBasicPlacementTestResult(boolean register) {
-                User sampleUser = getBasicUser();
-                PlacementTest samplePlacementTest = getBasicPlacementTest(register);
+        public PlacementTestResult getBasicPlacementTestResult(boolean register) {
+            User sampleUser = getBasicUser();
+            PlacementTest samplePlacementTest = getBasicPlacementTest(register);
 
-                PlacementTestResult result = new PlacementTestResult(samplePlacementTest, sampleUser);
-                this.placementTestResultService.savePlacementTestResult(result);
-                return result;
-            }
+            PlacementTestResult result = new PlacementTestResult(samplePlacementTest, sampleUser);
+            this.placementTestResultService.savePlacementTestResult(result);
+            return result;
+        }
     // </placement-test-result-methods>
 
     // <placement-test-methods>

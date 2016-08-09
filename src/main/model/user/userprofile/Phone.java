@@ -30,14 +30,14 @@ public class Phone extends AbstractUuidModel {
 	@Column(name="phoneNumber", nullable=false)
 	private String phoneNumber;
 
-	public Phone( PhoneType phoneType, String phoneNumber ) {
-		this();
-		this.phoneType = phoneType;
-		this.phoneNumber = phoneNumber;
-	}
-	
 	public Phone() {
 		super();
+	}
+
+	public Phone(PhoneType phoneType, String phoneNumber) {
+		this();
+		this.setPhoneType(phoneType);
+		this.setPhoneNumber(phoneNumber);
 	}
 
 }
