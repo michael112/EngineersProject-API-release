@@ -98,7 +98,7 @@ import main.service.model.course.grade.GradeService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/test/test-context.xml" })
-@Transactional // powoduje usunięcie testowanych elementów z bazy
+//@Transactional // powoduje usunięcie testowanych elementów z bazy
 public abstract class AbstractTest {
 
     // <fields>

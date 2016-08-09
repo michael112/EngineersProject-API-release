@@ -312,4 +312,10 @@ public class User extends AbstractUuidModel {
         this.setActive(active);
     }
 
+    public User(String username, String password, String email, String firstName, String lastName, Set<Phone> phone, Address address, UserRole userRole) {
+        this(username, password, email, firstName, lastName );
+        this.setPhone(phone);
+        this.setAddress(address);
+        this.addUserRole(userRole);
+    }
 }

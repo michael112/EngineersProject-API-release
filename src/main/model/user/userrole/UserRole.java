@@ -11,6 +11,8 @@ import javax.persistence.AccessType;
 import javax.persistence.AttributeOverride;
 import javax.persistence.AttributeOverrides;
 
+import main.model.enums.Role;
+
 import main.model.abstracts.AbstractUuidModel;
 
 @Entity
@@ -18,11 +20,6 @@ import main.model.abstracts.AbstractUuidModel;
 @Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "roleID")) })
 public class UserRole extends AbstractUuidModel {
-
-	enum Role {
-		USER,
-		ADMIN
-	}
 
 	@Transient
 	private Role role;
@@ -44,6 +41,11 @@ public class UserRole extends AbstractUuidModel {
 
 	public UserRole() {
 		super();
+	}
+
+	public UserRole(Role role) {
+		this();
+		this.role = role;
 	}
 
 }
