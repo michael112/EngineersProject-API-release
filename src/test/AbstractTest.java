@@ -77,7 +77,6 @@ import main.service.model.course.message.MessageService;
 import main.service.model.course.file.FileService;
 
 import main.model.course.AbstractHomeworkOrTest;
-import main.model.course.AbstractSolution;
 
 // Homework model & service imports
 import main.model.course.Homework;
@@ -98,7 +97,7 @@ import main.service.model.course.grade.GradeService;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = { "file:src/test/test-context.xml" })
-//@Transactional // powoduje usunięcie testowanych elementów z bazy
+@Transactional // powoduje usunięcie testowanych elementów z bazy
 public abstract class AbstractTest {
 
     // <fields>
@@ -356,7 +355,7 @@ public abstract class AbstractTest {
         }
         public Homework getBasicHomework(boolean register) {
             Homework sampleHomework = new Homework("Sample homework title", new Date(2015,9,12), "Sample homework description", getBasicCourse(register));
-            sampleHomework.addSolution(getBasicHomeworkSolution(false, sampleHomework));
+            sampleHomework.addHomeworkSolution(getBasicHomeworkSolution(false, sampleHomework));
             sampleHomework.addGrade(getBasicGrade(sampleHomework, false));
             this.homeworkService.saveHomework(sampleHomework);
             return sampleHomework;
@@ -369,7 +368,7 @@ public abstract class AbstractTest {
         }
         public Test getBasicTest(boolean register) {
             Test sampleTest = new Test("Sample test title", new Date(2015,9,12), "Sample test decscription", getBasicCourse(register));
-            sampleTest.addSolution(getBasicTestSolution(false, sampleTest));
+            sampleTest.addTestSolution(getBasicTestSolution(false, sampleTest));
             sampleTest.addGrade(getBasicGrade(sampleTest, false));
             this.testService.saveTest(sampleTest);
             return sampleTest;
@@ -393,7 +392,7 @@ public abstract class AbstractTest {
             return sampleGrade;
         }
         public Grade getBasicGrade(AbstractHomeworkOrTest task, boolean register) {
-            User sampleUser = ((AbstractSolution)task.getSolutions().toArray()[0]).getCourseMembership().getUser();
+            User sampleUser = getBasicUser("sampleusername");
             Grade sampleGrade = new Grade(sampleUser, task.getCourse(), "sample grade title", "sample grade description", GradeScale.SZKOLNA, 1);
             this.gradeService.saveGrade(sampleGrade);
             return sampleGrade;

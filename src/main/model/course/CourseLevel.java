@@ -32,7 +32,7 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseLevel")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseLevel")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
 		if( courses != null ) {

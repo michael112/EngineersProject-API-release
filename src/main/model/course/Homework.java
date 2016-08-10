@@ -28,18 +28,18 @@ public class Homework extends AbstractHomeworkOrTest {
 
 	@Override
 	public void setCourse(Course course) {
-		// do sprawdzenia
 		if( this.getCourse() != null ) {
 			if (this.getCourse().containsHomework(this)) {
 				this.getCourse().removeHomework(this);
 			}
 		}
 		super.setCourse(course);
-		course.addHomework(this); // przypisanie powiązania
+		if( course != null) course.addHomework(this); // przypisanie powiązania
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementshomeworks",
 			joinColumns = { @JoinColumn(name = "homeworkID", referencedColumnName="taskID") },
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })
@@ -58,34 +58,42 @@ public class Homework extends AbstractHomeworkOrTest {
 		}
 	}
 	public void removeAttachement(File attachement) {
-		this.attachements.remove(attachement); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.attachements.remove(attachement);
 	}
 	public boolean containsAttachement(File attachement) {
 		return this.attachements.contains(attachement);
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task")
-	@Access(AccessType.PROPERTY)
-	public Set<HomeworkSolution> getHomeworkSolutions() {
-		Set<HomeworkSolution> result = new HashSet<>();
-		for( AbstractSolution solution : super.getSolutions() ) {
-			if( solution instanceof HomeworkSolution ) {
-				result.add((HomeworkSolution)solution);
-			}
-		}
-		return result;
-	}
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
+	@Getter
+	private Set<HomeworkSolution> homeworkSolutions;
 	public void setHomeworkSolutions(Set<HomeworkSolution> solutions) {
-		Set<AbstractSolution> result = new HashSet<>();
-		for( HomeworkSolution solution : solutions ) {
-			result.add(solution);
+		if( solutions != null ) {
+			this.homeworkSolutions = solutions;
 		}
-		super.setSolutions(result);
+		else {
+			this.homeworkSolutions = new HashSet<>();
+		}
+	}
+	public void addHomeworkSolution(HomeworkSolution solution) {
+		if ( !( this.homeworkSolutions.contains(solution) ) ) {
+			this.homeworkSolutions.add(solution);
+		}
+		if( solution.getTask() != this ) {
+			solution.setTask(this); // przypisanie powiązania
+		}
+	}
+	public void removeHomeworkSolution(HomeworkSolution solution) {
+		this.homeworkSolutions.remove(solution);
+	}
+	public boolean containsHomeworkSolution(HomeworkSolution solution) {
+		return this.homeworkSolutions.contains(solution);
 	}
 	
 	public Homework() {
 		super();
 		this.attachements = new HashSet<>();
+		this.homeworkSolutions = new HashSet<>();
 	}
 
 	public Homework(Course course) {

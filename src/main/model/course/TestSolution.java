@@ -31,8 +31,19 @@ public class TestSolution extends AbstractSolution {
     public Test getTask() {
         return (Test) super.getTask();
     }
+    /*
     public void setTask(Test task) {
         super.setTask(task);
+    }
+    */
+    public void setTask(Test task) {
+        if( this.getTask() != null ) {
+            if (this.getTask().containsTestSolution(this)) {
+                this.getTask().removeTestSolution(this);
+            }
+        }
+        super.setTask(task);
+        task.addTestSolution(this); // przypisanie powiązania
     }
 
     @Getter

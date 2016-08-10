@@ -87,7 +87,7 @@ public class User extends AbstractUuidModel {
     private String lastName;
 	
 	@Getter
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
     public void setPhone(Set<Phone> phone) {
@@ -104,7 +104,7 @@ public class User extends AbstractUuidModel {
         }
     }
     public void removePhone(Phone phone) {
-        this.phone.remove(phone); // powinno powodować usunięcie z bazy (sprawdzić!)
+        this.phone.remove(phone);
     }
     public boolean containsPhone(Phone phone) {
         return this.phone.contains(phone);
@@ -116,7 +116,7 @@ public class User extends AbstractUuidModel {
 	private Address address;
 	
     @Getter
-    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user")
+    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user", orphanRemoval=true)
 	private Set<PlacementTestResult> placementTest;
     public void setPlacementTest(Set<PlacementTestResult> placementTest) {
         if( placementTest != null ) {
@@ -135,7 +135,7 @@ public class User extends AbstractUuidModel {
         }
     }
     public void removePlacementTest(PlacementTestResult placementTest) {
-        this.placementTest.remove(placementTest); // powinno powodować usunięcie z bazy (sprawdzić!)
+        this.placementTest.remove(placementTest);
     }
     public boolean containsPlacementTest(PlacementTestResult placementTest) {
         return this.placementTest.contains(placementTest);
@@ -168,7 +168,7 @@ public class User extends AbstractUuidModel {
     }
 
     @Getter
-    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="sender")
+    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="sender", orphanRemoval=true)
     private Set<Message> myMessages;
     public void setMyMessages(Set<Message> myMessages) {
         if( myMessages != null ) {
@@ -187,14 +187,14 @@ public class User extends AbstractUuidModel {
         }
     }
     public void removeMyMessage(Message myMessage) {
-        this.myMessages.remove(myMessage); // powinno powodować usunięcie z bazy (sprawdzić!)
+        this.myMessages.remove(myMessage);
     }
     public boolean containsMyMessage(Message myMessage) {
         return this.myMessages.contains(myMessage);
     }
 
     @Getter
-    @ManyToMany(fetch=FetchType.LAZY, mappedBy="receivers")
+    @ManyToMany(fetch=FetchType.EAGER, mappedBy="receivers")
 	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów
     public void setMessages(Set<Message> messages) {
         if( messages != null ) {
@@ -223,7 +223,7 @@ public class User extends AbstractUuidModel {
     }
 
 	@Getter
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "teacherslanguages",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "languageID", referencedColumnName="languageID") })
@@ -255,7 +255,7 @@ public class User extends AbstractUuidModel {
     }
 
 	@Getter
-    @ManyToMany(fetch=FetchType.LAZY)
+    @ManyToMany(fetch=FetchType.EAGER)
     @JoinTable(name = "teacherscourses",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") })

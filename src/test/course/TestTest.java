@@ -150,25 +150,25 @@ public class TestTest extends AbstractTest {
     @org.junit.Test
     public void testAddSolution() {
         TestSolution newSolution = getBasicTestSolution(false, this.sampleTest);
-        this.sampleTest.addSolution(newSolution);
+        this.sampleTest.addTestSolution(newSolution);
         this.testService.updateTest(this.sampleTest);
 
         Test sampleTestDb = this.testService.findTestByID(this.sampleTest.getId());
-        Assert.assertEquals(true, sampleTestDb.containsSolution(newSolution));
+        Assert.assertEquals(true, sampleTestDb.containsTestSolution(newSolution));
     }
 
     @org.junit.Test
     public void testRemoveSolution() {
         TestSolution newSolution = getBasicTestSolution(false, this.sampleTest);
-        this.sampleTest.addSolution(newSolution);
+        this.sampleTest.addTestSolution(newSolution);
         this.testService.updateTest(this.sampleTest);
 
         Test sampleTestDbBefore = this.testService.findTestByID(this.sampleTest.getId());
-        sampleTestDbBefore.removeSolution(newSolution);
+        sampleTestDbBefore.removeTestSolution(newSolution);
         this.testService.updateTest(sampleTestDbBefore);
 
         Test sampleTestDbAfter = this.testService.findTestByID(this.sampleTest.getId());
-        Assert.assertEquals(false, sampleTestDbAfter.containsSolution(newSolution));
+        Assert.assertEquals(false, sampleTestDbAfter.containsTestSolution(newSolution));
     }
 
     @org.junit.Test

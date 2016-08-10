@@ -8,6 +8,9 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -24,6 +27,7 @@ public class Phone extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Column(name="phoneType", nullable=false)
+	@Enumerated(EnumType.STRING)
 	private PhoneType phoneType;
 	@Getter
 	@Setter

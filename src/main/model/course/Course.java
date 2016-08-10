@@ -38,7 +38,6 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
-		// do sprawdzenia
 		if( this.language != null ) {
 			if (this.language.containsCourse(this)) {
 				this.language.changeCourseLanguage(this, language);
@@ -53,7 +52,6 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="courseLevelName", referencedColumnName="name", nullable=false)
 	private CourseLevel courseLevel;
 	public void setCourseLevel(CourseLevel courseLevel) {
-		// do sprawdzenia
 		if( this.courseLevel != null ) {
 			if (this.courseLevel.containsCourse(this)) {
 				this.courseLevel.changeCourse(this, courseLevel);
@@ -68,7 +66,6 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
 	public void setCourseType(CourseType courseType) {
-		// do sprawdzenia
 		if( this.courseType != null ) {
 			if (this.courseType.containsCourse(this)) {
 				this.courseType.changeCourseCourseType(this, courseType);
@@ -84,7 +81,7 @@ public class Course extends AbstractUuidModel {
 	private CourseActivity courseActivity;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Set<CourseDay> courseDays;
 	public void setCourseDays(Set<CourseDay> courseDays) {
@@ -102,6 +99,9 @@ public class Course extends AbstractUuidModel {
 	}
 	public void removeCourseDay(CourseDay courseDay) {
 		this.courseDays.remove(courseDay);
+	}
+	public boolean containsCourseDay(CourseDay courseDay) {
+		return this.courseDays.contains(courseDay);
 	}
 
 	@Getter
@@ -161,7 +161,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course")
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Test> tests;
 	public void setTests(Set<Test> tests) {
 		if( tests != null ) {
@@ -180,14 +180,14 @@ public class Course extends AbstractUuidModel {
 		}
 	}
 	public void removeTest(Test test) {
-		this.tests.remove(test); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.tests.remove(test);
 	}
 	public boolean containsTest(Test test) {
 		return this.tests.contains(test);
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course")
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Homework> homeworks;
 	public void setHomeworks(Set<Homework> homeworks) {
 		if( homeworks != null ) {
@@ -206,14 +206,14 @@ public class Course extends AbstractUuidModel {
 		}
 	}
 	public void removeHomework(Homework homework) {
-		this.homeworks.remove(homework); // powinno powodować usunięcie homework'a z bazy (sprawdzić!)
+		this.homeworks.remove(homework);
 	}
 	public boolean containsHomework(Homework homework) {
 		return this.homeworks.contains(homework);
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="course")
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Message> messages;
 	public void setMessages(Set<Message> messages) {
 		if( messages != null ) {
@@ -232,14 +232,15 @@ public class Course extends AbstractUuidModel {
 		}
 	}
 	public void removeMessage(Message message) {
-		this.messages.remove(message); // powinno powodować usunięcie wiadomości z bazy (sprawdzić!)
+		this.messages.remove(message);
 	}
 	public boolean containsMessage(Message message) {
 		return this.messages.contains(message);
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementscourses",
 			joinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") },
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })
@@ -258,7 +259,7 @@ public class Course extends AbstractUuidModel {
 		}
 	}
 	public void removeAttachement(File attachement) {
-		this.attachements.remove(attachement); // powinno powodować usunięcie pliku z bazy (sprawdzić!)
+		this.attachements.remove(attachement);
 	}
 	public boolean containsAttachement(File attachement) {
 		return this.attachements.contains(attachement);
@@ -267,12 +268,12 @@ public class Course extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Column(name="maxStudents", nullable=true)
-	private int maxStudents;
+	private Integer maxStudents;
 
 	@Getter
 	@Setter
 	@Column(name="price", nullable=true)
-	private double price;
+	private Double price;
 
 	public Course() {
 		super();

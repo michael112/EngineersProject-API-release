@@ -28,15 +28,8 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 	@Transient
 	@Getter
 	private AbstractHomeworkOrTest task;
-	public void setTask(AbstractHomeworkOrTest task) {
-		// do sprawdzenia
-		if( this.task != null ) {
-			if (this.task.containsSolution(this)) {
-				this.task.removeSolution(this);
-			}
-		}
+	protected void setTask(AbstractHomeworkOrTest task) {
 		this.task = task;
-		task.addSolution(this); // przypisanie powiązania
 	}
 
 	@Getter

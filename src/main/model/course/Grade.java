@@ -70,8 +70,6 @@ public class Grade extends AbstractUuidModel {
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
 	private AbstractHomeworkOrTest task;
 	public void setTask(AbstractHomeworkOrTest task) {
-
-		// do sprawdzenia
 		if( this.task != null ) {
 			if (this.task.containsGrade(this)) {
 				this.task.removeGrade(this);
@@ -98,7 +96,7 @@ public class Grade extends AbstractUuidModel {
 	private double weight;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="grade")
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="grade", orphanRemoval=true)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {
 		if( grades != null ) {
@@ -117,7 +115,7 @@ public class Grade extends AbstractUuidModel {
 		}
 	}
 	public void removeGrade(StudentGrade grade) {
-		this.grades.remove(grade); // powinno powodować usunięcie z bazy (sprawdzić!)
+		this.grades.remove(grade);
 	}
 	public boolean containsGrade(StudentGrade grade) {
 		return this.grades.contains(grade);

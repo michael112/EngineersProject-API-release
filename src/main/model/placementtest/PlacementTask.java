@@ -32,7 +32,7 @@ public class PlacementTask extends AbstractUuidModel {
 	private String command;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="placementTaskID", referencedColumnName="placementTaskID", nullable=false)
 	private Set<PlacementSentence> sentences;
 	public void setSentences(Set<PlacementSentence> sentences) {
@@ -49,7 +49,7 @@ public class PlacementTask extends AbstractUuidModel {
 		}
 	}
 	public void removeSentence(PlacementSentence sentence) {
-		this.sentences.remove(sentence); // powinno powodować usunięcie z bazy (sprawdzić!)
+		this.sentences.remove(sentence);
 	}
 	public boolean containsSentence(PlacementSentence sentence) {
 		return this.sentences.contains(sentence);

@@ -189,25 +189,25 @@ public class HomeworkTest extends AbstractTest {
     @Test
     public void testAddSolution() {
         HomeworkSolution newSolution = getBasicHomeworkSolution(false, this.sampleHomework);
-        this.sampleHomework.addSolution(newSolution);
+        this.sampleHomework.addHomeworkSolution(newSolution);
         this.homeworkService.updateHomework(this.sampleHomework);
 
         Homework sampleHomeworkDb = this.homeworkService.findHomeworkByID(this.sampleHomework.getId());
-        Assert.assertEquals(true, sampleHomeworkDb.containsSolution(newSolution));
+        Assert.assertEquals(true, sampleHomeworkDb.containsHomeworkSolution(newSolution));
     }
 
     @Test
     public void testRemoveSolution() {
         HomeworkSolution newSolution = getBasicHomeworkSolution(false, this.sampleHomework);
-        this.sampleHomework.addSolution(newSolution);
+        this.sampleHomework.addHomeworkSolution(newSolution);
         this.homeworkService.updateHomework(this.sampleHomework);
 
         Homework sampleHomeworkDbBefore = this.homeworkService.findHomeworkByID(this.sampleHomework.getId());
-        sampleHomeworkDbBefore.removeSolution(newSolution);
+        sampleHomeworkDbBefore.removeHomeworkSolution(newSolution);
         this.homeworkService.updateHomework(sampleHomeworkDbBefore);
 
         Homework sampleHomeworkDbAfter = this.homeworkService.findHomeworkByID(this.sampleHomework.getId());
-        Assert.assertEquals(false, sampleHomeworkDbAfter.containsSolution(newSolution));
+        Assert.assertEquals(false, sampleHomeworkDbAfter.containsHomeworkSolution(newSolution));
     }
 
     @Test

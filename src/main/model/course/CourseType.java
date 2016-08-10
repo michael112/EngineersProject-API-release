@@ -26,7 +26,7 @@ import main.model.abstracts.AbstractUuidModel;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseTypeID")) })
 public class CourseType extends AbstractUuidModel {
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="courseType")
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="courseType", orphanRemoval=true)
 	private Set<CourseTypeName> courseTypeNames;
 	public void setCourseTypeNames(Set<CourseTypeName> courseTypeNames) {
 		if( courseTypeNames != null ) {
@@ -45,7 +45,7 @@ public class CourseType extends AbstractUuidModel {
 		}
 	}
 	public void removeCourseTypeName(CourseTypeName courseTypeName) {
-		this.courseTypeNames.remove(courseTypeName); // powinno powodować usunięcie z bazy (sprawdzić!)
+		this.courseTypeNames.remove(courseTypeName);
 	}
 	public boolean containsCourseTypeName(CourseTypeName courseTypeName) {
 		return this.courseTypeNames.contains(courseTypeName);
@@ -56,7 +56,7 @@ public class CourseType extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseType")
+	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseType")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
 		if( courses != null ) {

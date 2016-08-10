@@ -15,6 +15,8 @@ import javax.persistence.CascadeType;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
+import lombok.Getter;
+
 @Entity
 @Table(name="tests")
 @Access(AccessType.FIELD)
@@ -23,37 +25,45 @@ public class Test extends AbstractHomeworkOrTest {
 
 	@Override
 	public void setCourse(Course course) {
-		// do sprawdzenia
 		if( this.getCourse() != null ) {
 			if (this.getCourse().containsTest(this)) {
 				this.getCourse().removeTest(this);
 			}
 		}
 		super.setCourse(course);
-		course.addTest(this); // przypisanie powiązania
+		if( course != null) course.addTest(this); // przypisanie powiązania
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task")
-	@Access(AccessType.PROPERTY)
-	public Set<TestSolution> getTestSolutions() {
-		Set<TestSolution> result = new HashSet<>();
-		for( AbstractSolution solution : super.getSolutions() ) {
-			if( solution instanceof TestSolution ) {
-				result.add((TestSolution)solution);
-			}
-		}
-		return result;
-	}
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
+	@Getter
+	private Set<TestSolution> testSolutions;
 	public void setTestSolutions(Set<TestSolution> solutions) {
-		Set<AbstractSolution> result = new HashSet<>();
-		for( TestSolution solution : solutions ) {
-			result.add(solution);
+		if( solutions != null ) {
+			this.testSolutions = solutions;
 		}
-		super.setSolutions(result);
+		else {
+			this.testSolutions = new HashSet<>();
+		}
 	}
+	public void addTestSolution(TestSolution solution) {
+		if ( !( this.testSolutions.contains(solution) ) ) {
+			this.testSolutions.add(solution);
+		}
+		if( solution.getTask() != this ) {
+			solution.setTask(this); // przypisanie powiązania
+		}
+	}
+	public void removeTestSolution(TestSolution solution) {
+		this.testSolutions.remove(solution);
+	}
+	public boolean containsTestSolution(TestSolution solution) {
+		return this.testSolutions.contains(solution);
+	}
+
 
 	public Test() {
 		super();
+		this.testSolutions = new HashSet<>();
 	}
 
 	public Test(Course course) {

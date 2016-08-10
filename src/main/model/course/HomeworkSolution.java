@@ -31,7 +31,13 @@ public class HomeworkSolution extends AbstractSolution {
 		return (Homework) super.getTask();
 	}
 	public void setTask(Homework task) {
+		if( this.getTask() != null ) {
+			if (this.getTask().containsHomeworkSolution(this)) {
+				this.getTask().removeHomeworkSolution(this);
+			}
+		}
 		super.setTask(task);
+		task.addHomeworkSolution(this); // przypisanie powiązania
 	}
 
 	@Getter

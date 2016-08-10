@@ -13,7 +13,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
-import javax.persistence.Transient;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -40,7 +39,7 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	private String description;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="taskID", referencedColumnName="taskID")
 	private Set<Grade> grades;
 	public void setGrades(Set<Grade> grades) {
@@ -60,7 +59,7 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 		}
 	}
 	public void removeGrade(Grade grade) {
-		this.grades.remove(grade); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.grades.remove(grade);
 	}
 	public boolean containsGrade(Grade grade) {
 		return this.grades.contains(grade);
@@ -72,36 +71,9 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 
-	@Transient
-	@Getter
-	private Set<AbstractSolution> solutions;
-	public void setSolutions(Set<AbstractSolution> solutions) {
-		if( solutions != null ) {
-			this.solutions = solutions;
-		}
-		else {
-			this.solutions = new HashSet<>();
-		}
-	}
-	public void addSolution(AbstractSolution solution) {
-		if ( !( this.solutions.contains(solution) ) ) {
-			this.solutions.add(solution);
-		}
-		if( solution.getTask() != this ) {
-			solution.setTask(this); // przypisanie powiązania
-		}
-	}
-	public void removeSolution(AbstractSolution solution) {
-		this.solutions.remove(solution); // powinno powodować usunięcie testu z bazy (sprawdzić!)
-	}
-	public boolean containsSolution(AbstractSolution solution) {
-		return this.solutions.contains(solution);
-	}
-
 	public AbstractHomeworkOrTest() {
 		super();
 		this.grades = new HashSet<>();
-		this.solutions = new HashSet<>();
 	}
 
 }

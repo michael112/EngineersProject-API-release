@@ -33,7 +33,6 @@ public class PlacementTest extends AbstractUuidModel {
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
-		// do sprawdzenia
 		if( this.language != null ) {
 			if (this.language.containsPlacementTest(this)) {
 				this.language.changePlacementTestLanguage(this, language);
@@ -44,7 +43,7 @@ public class PlacementTest extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="placementTestID", referencedColumnName="placementTestID", nullable=false)
 	private Set<PlacementTask> tasks;
 	public void setTasks(Set<PlacementTask> tasks) {
@@ -61,14 +60,14 @@ public class PlacementTest extends AbstractUuidModel {
 		}
 	}
 	public void removeTask(PlacementTask task) {
-		this.tasks.remove(task); // powinno powodować usunięcie z bazy (sprawdzić!)
+		this.tasks.remove(task);
 	}
 	public boolean containsTask(PlacementTask task) {
 		return this.tasks.contains(task);
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="test")
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="test", orphanRemoval=true)
 	private Set<PlacementTestResult> results;
 	public void setResults(Set<PlacementTestResult> results) {
 		if( results != null ) {
@@ -87,7 +86,7 @@ public class PlacementTest extends AbstractUuidModel {
 		}
 	}
 	public void removeResult(PlacementTestResult result) {
-		this.results.remove(result); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.results.remove(result);
 	}
 	public boolean containsResult(PlacementTestResult result) {
 		return this.results.contains(result);

@@ -22,7 +22,6 @@ public class PlacementTestResult extends AbstractUuidModel {
 	@JoinColumn(name="testID", referencedColumnName="placementTestID", nullable=false)
 	private PlacementTest test;
 	public void setTest(PlacementTest test) {
-		// do sprawdzenia
 		if( this.test != null ) {
 			if (this.test.containsResult(this)) {
 				this.test.removeResult(this);
@@ -37,7 +36,6 @@ public class PlacementTestResult extends AbstractUuidModel {
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {
-		// do sprawdzenia
 		if( this.user != null ) {
 			if (this.user.containsPlacementTest(this)) {
 				this.user.removePlacementTest(this);

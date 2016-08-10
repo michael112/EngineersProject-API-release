@@ -36,7 +36,6 @@ public class CourseMembership extends AbstractUuidModel {
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 	public void setCourse(Course course) {
-		// do sprawdzenia
 		if( this.course != null ) {
 			if (this.course.containsStudent(this)) {
 				this.course.changeStudentCourse(this, course);
@@ -56,7 +55,6 @@ public class CourseMembership extends AbstractUuidModel {
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {
-		// do sprawdzenia
 		if( this.user != null ) {
 			if (this.user.containsCourseAsStudent(this)) {
 				this.user.removeCourseAsStudent(this);
@@ -67,7 +65,7 @@ public class CourseMembership extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="student")
+	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="student", orphanRemoval=true)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {
 		if( grades != null ) {
@@ -86,7 +84,7 @@ public class CourseMembership extends AbstractUuidModel {
 		}
 	}
 	public void removeGrade(StudentGrade grade) {
-		this.grades.remove(grade); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.grades.remove(grade);
 	}
 	public boolean containsGrade(StudentGrade grade) {
 		return this.grades.contains(grade);
@@ -94,7 +92,7 @@ public class CourseMembership extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseIDMovedFrom", referencedColumnName="courseID", nullable=true)
 	private Course movedFrom;
 

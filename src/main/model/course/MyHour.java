@@ -11,12 +11,8 @@ import javax.persistence.AccessType;
 @Embeddable
 public class MyHour {
 
-	// ===== fields =====
-
 	@Transient
 	private Date dateHour;
-
-	// ===== constructors =====
 
 	public MyHour( int h, int m ) {
 		this();
@@ -34,8 +30,6 @@ public class MyHour {
 		this.dateHour = new Date();
 	}
 
-	// ===== setters =====
-
 	public void setHour( int h ) {
 		this.dateHour.setHours(h);
 	}
@@ -52,8 +46,6 @@ public class MyHour {
 		}
 		catch( NumberFormatException ex ) {}
 	}
-
-	// ===== getters =====
 
 	public int getHour() {
 		return this.dateHour.getHours();

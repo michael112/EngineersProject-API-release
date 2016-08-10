@@ -350,8 +350,8 @@ public class CourseTest extends AbstractTest {
 
     @org.junit.Test
     public void testUpdateMaxStudents() {
-        int formerMaxStudents = this.sampleCourse.getMaxStudents();
-        int newMaxStudents = formerMaxStudents + 20;
+        Integer formerMaxStudents = (this.sampleCourse.getMaxStudents() != null) ? this.sampleCourse.getMaxStudents() : 0;
+        Integer newMaxStudents = formerMaxStudents + 20;
         this.sampleCourse.setMaxStudents(newMaxStudents);
         this.courseService.updateCourse(this.sampleCourse);
 
@@ -362,8 +362,8 @@ public class CourseTest extends AbstractTest {
 
     @org.junit.Test
     public void testUpdatePrice() {
-        double formerPrice = this.sampleCourse.getPrice();
-        double newPrice = formerPrice - 0.01;
+        Double formerPrice = (this.sampleCourse.getPrice() != null) ? this.sampleCourse.getPrice() : 0;
+        Double newPrice = formerPrice - 0.01;
         this.sampleCourse.setPrice(newPrice);
         this.courseService.updateCourse(this.sampleCourse);
 

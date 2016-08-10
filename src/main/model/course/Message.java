@@ -33,11 +33,10 @@ import main.model.abstracts.AbstractUuidModel;
 public class Message extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="senderID", referencedColumnName="userID", nullable=false)
 	private User sender;
 	public void setSender(User sender) {
-		// do sprawdzenia
 		if( this.sender != null ) {
 			if (this.sender.containsMyMessage(this)) {
 				this.sender.removeMyMessage(this);
@@ -49,7 +48,7 @@ public class Message extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToMany(fetch=FetchType.LAZY)
+	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "messagesusers",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") })
@@ -83,7 +82,8 @@ public class Message extends AbstractUuidModel {
 	private String content;
 
 	@Getter
-	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementsmessages",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "fileID", referencedColumnName="fileID") })
@@ -102,7 +102,7 @@ public class Message extends AbstractUuidModel {
 		}
 	}
 	public void removeAttachement(File attachement) {
-		this.attachements.remove(attachement); // powinno powodować usunięcie testu z bazy (sprawdzić!)
+		this.attachements.remove(attachement);
 	}
 	public boolean containsAttachement(File attachement) {
 		return this.attachements.contains(attachement);
@@ -115,11 +115,10 @@ public class Message extends AbstractUuidModel {
 	private boolean isAnnouncement;
 
 	@Getter
-	@ManyToOne(fetch=FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=true)
 	private Course course;
 	public void setCourse(Course course) {
-		// do sprawdzenia
 		if( this.course != null ) {
 			if (this.course.containsMessage(this)) {
 				this.course.removeMessage(this);
