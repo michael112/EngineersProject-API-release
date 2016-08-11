@@ -1,4 +1,4 @@
-package main.urlconstants;
+package main.constants;
 
 public class GlobalUrlConstants {
 

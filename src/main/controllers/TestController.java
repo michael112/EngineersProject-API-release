@@ -12,7 +12,7 @@ import main.service.model.user.user.UserService;
 import main.model.user.User;
 import main.service.mail.MailService;
 
-import main.urlconstants.GlobalUrlConstants;
+import main.constants.GlobalUrlConstants;
 
 @RestController
 @RequestMapping(GlobalUrlConstants.GLOBAL_API_URL + "/test")
@@ -26,21 +26,21 @@ public class TestController {
 
     @RequestMapping( value = "/user", method = RequestMethod.GET, produces = "application/text-plain" )
     @ResponseBody
-    @RolesAllowed({"ROLE_USER"})
+    @RolesAllowed({"USER"})
     public ResponseEntity<String> methodForUser() {
         return new ResponseEntity<>("Uzyskano dostęp do metody dla użytkowników!", HttpStatus.OK);
     }
 
     @RequestMapping( value = "/admin", method = RequestMethod.GET, produces = "application/text-plain" )
     @ResponseBody
-    @RolesAllowed({"ROLE_ADMIN"})
+    @RolesAllowed({"ADMIN"})
     public ResponseEntity<String> methodForAdmin() {
         return new ResponseEntity<>("Uzyskano dostęp do metody dla administratora!", HttpStatus.OK);
     }
 
     @RequestMapping( value = "/useradmin", method = RequestMethod.GET, produces = "application/text-plain" )
     @ResponseBody
-    @RolesAllowed({"ROLE_ADMIN", "ROLE_USER"})
+    @RolesAllowed({"ADMIN", "USER"})
     public ResponseEntity<String> methodForUserAndAdmin() {
         return new ResponseEntity<>("Uzyskano dostęp do metody dla użytkownika i administratora!", HttpStatus.OK);
     }

@@ -16,7 +16,7 @@ import main.json.user.UserJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
 
-import main.urlconstants.UserControllerUrlConstants;
+import main.constants.UserControllerUrlConstants;
 
 import main.model.user.User;
 
@@ -51,5 +51,7 @@ public class UserController {
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson("User " + userJson.getUsername() + " saved successfully", responseStatus), responseStatus);
         }
     }
+
+    // public ResponseEntity<? extends ResponseJson> getUserInfo()
 
 }
