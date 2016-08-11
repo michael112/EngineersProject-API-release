@@ -3,6 +3,7 @@ package main.model.language;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Locale;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -160,7 +161,20 @@ public class Language extends AbstractSinglePKModel<String> {
 		this(languageID);
 		this.languageNames = languageNames;
 	}
-	
+
+	public boolean hasLocale() {
+		return java.util.Arrays.asList(Locale.getISOLanguages()).contains(new Locale(super.getId()).getLanguage());
+	}
+
+	public Locale toLocale() {
+		if( !( this.hasLocale() ) ) {
+			return null;
+		}
+		else {
+			return new Locale(super.getId());
+		}
+	}
+
 	// ===== zwracają nazwę języka w podanym języku =====
 
 	public LanguageName getLanguageNameObj( String userLanguage ) {
