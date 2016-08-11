@@ -12,8 +12,10 @@ import main.service.model.user.user.UserService;
 import main.model.user.User;
 import main.service.mail.MailService;
 
+import main.urlconstants.GlobalUrlConstants;
+
 @RestController
-@RequestMapping("/api/test")
+@RequestMapping(GlobalUrlConstants.GLOBAL_API_URL + "/test")
 public class TestController {
 
     @Autowired

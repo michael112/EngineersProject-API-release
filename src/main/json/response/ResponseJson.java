@@ -1,4 +1,4 @@
-package main.json;
+package main.json.response;
 
 public abstract class ResponseJson {
 }

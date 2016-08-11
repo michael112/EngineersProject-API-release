@@ -1,4 +1,4 @@
-package main.json;
+package main.json.user;
 
 import java.util.Set;
 import java.util.HashSet;

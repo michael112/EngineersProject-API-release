@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import main.json.UserJson;
-import main.json.MessageResponseJson;
-import main.json.ResponseJson;
+import main.json.user.UserJson;
+import main.json.response.MessageResponseJson;
+import main.json.response.ResponseJson;
 
 import main.urlconstants.UserControllerUrlConstants;
 
