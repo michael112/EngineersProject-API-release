@@ -6,17 +6,16 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.stereotype.Service;
+import lombok.Setter;
 
 import main.model.language.Language;
 
-@Service("localeToLanguageService")
 public class LocaleToLanguageService {
 
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    @Autowired
+    @Setter
     private LocaleResolver localeResolver;
 
     public String getLanguageName(Language language) {

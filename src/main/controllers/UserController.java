@@ -18,17 +18,23 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import main.json.user.UserInfoJson;
 import main.json.user.NewUserJson;
-import main.json.response.MessageResponseJson;
-import main.json.response.ResponseJson;
+
+import main.json.course.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 import main.constants.messageconstants.UserControllerMessageConstants;
 
 import main.model.user.User;
+import main.model.course.Course;
+import main.model.course.CourseMembership;
 
 import main.service.model.user.user.UserService;
 import main.service.model.user.userrole.UserRoleService;
 
+import main.service.localetolanguage.LocaleToLanguageService;
+
+import main.json.response.MessageResponseJson;
+import main.json.response.ResponseJson;
 import main.json.response.CurrentUserResponseJson;
 
 @RequestMapping(value = UserControllerUrlConstants.CLASS_URL)
@@ -42,6 +48,9 @@ public class UserController {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private LocaleToLanguageService localeToLanguageService;
 
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER_URL, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
@@ -78,13 +87,35 @@ public class UserController {
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
 		}
 		else {
-            UserInfoJson userJson = new UserInfoJson();
+            UserInfoJson userJson = userToJson(currentUser);
 
             responseStatus = HttpStatus.OK;
             messageStr = UserControllerMessageConstants.USER_INFO_SUCCESS;
             return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
 		}
 
+    }
+
+    public UserInfoJson userToJson(User user) {
+        UserInfoJson res = new UserInfoJson(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
+
+        for( CourseMembership cs : user.getCoursesAsStudent() ) {
+            res.addCourseAsStudent(studentCourseToJson(cs));
+        }
+        for( Course ct : user.getCoursesAsTeacher() ) {
+            res.addCourseAsTeacher(teacherCourseToJson(ct));
+        }
+
+        return res;
+    }
+
+    public CourseJson studentCourseToJson(CourseMembership courseMembership) {
+        Course course = courseMembership.getCourse();
+        return new CourseJson(course.getId(), this.localeToLanguageService.getLanguageName(course.getLanguage()), course.getCourseLevel().getName(), courseMembership.isActive());
+    }
+
+    public CourseJson teacherCourseToJson(Course course) {
+        return new CourseJson(course.getId(), this.localeToLanguageService.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
     }
 
 }
