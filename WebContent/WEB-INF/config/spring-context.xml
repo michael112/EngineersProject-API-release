@@ -3,10 +3,10 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <import resource="files/spring-default.xml" />
-    <import resource="files/spring-database.xml" />
-    <import resource="files/spring-security-oauth.xml" />
-    <import resource="files/spring-security.xml" />
-    <import resource="files/spring-mail.xml" />
+    <import resource="context-files/spring-default.xml" />
+    <import resource="context-files/spring-database.xml" />
+    <import resource="context-files/spring-security-oauth.xml" />
+    <import resource="context-files/spring-security.xml" />
+    <import resource="context-files/spring-mail.xml" />
 
 </beans>

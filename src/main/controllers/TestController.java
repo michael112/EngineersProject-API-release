@@ -12,7 +12,7 @@ import main.service.model.user.user.UserService;
 import main.model.user.User;
 import main.service.mail.MailService;
 
-import main.constants.GlobalUrlConstants;
+import main.constants.urlconstants.GlobalUrlConstants;
 
 @RestController
 @RequestMapping(GlobalUrlConstants.GLOBAL_API_URL + "/test")

@@ -11,17 +11,14 @@
 	http://www.springframework.org/schema/security/spring-security-4.0.xsd">
 
     <security:global-method-security jsr250-annotations="enabled" access-decision-manager-ref="accessDecisionManager" />
-	<context:component-scan base-package="main.controllers" />
-    <mvc:annotation-driven/> 
+
+    <context:component-scan base-package="main.controllers" />
+
+    <mvc:annotation-driven/>
+
     <mvc:resources mapping="/static/**" location="/static/" />
 
-    <bean id="jsonMessageConverter" class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter" />
-    <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
-        <property name="messageConverters">
-            <list>
-                <ref bean="jsonMessageConverter"/>
-            </list>
-        </property>
-    </bean>
+    <import resource="servlet-files/spring-jackson.xml" />
+    <import resource="servlet-files/spring-locale.xml" />
   
 </beans>

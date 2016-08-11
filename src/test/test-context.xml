@@ -10,9 +10,9 @@
     <context:property-placeholder properties-ref="deployProperties" />
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" />
 	
-    <import resource="file:WebContent/WEB-INF/config/files/spring-database.xml" />
-    <import resource="file:WebContent/WEB-INF/config/files/spring-security-oauth.xml" />
-    <import resource="file:WebContent/WEB-INF/config/files/spring-security.xml" />
-    <import resource="file:WebContent/WEB-INF/config/files/spring-mail.xml" />
+    <import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
+    <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
+    <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />
+    <import resource="file:WebContent/WEB-INF/config/context-files/spring-mail.xml" />
 
 </beans>

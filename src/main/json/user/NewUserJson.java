@@ -9,7 +9,7 @@ import main.model.user.userprofile.Phone;
 import lombok.Getter;
 import lombok.Setter;
 
-public class UserJson {
+public class NewUserJson {
 
     @Getter
     @Setter
@@ -50,7 +50,7 @@ public class UserJson {
         this.phone.remove(phone);
     }
 
-    public UserJson() {
+    public NewUserJson() {
         this.phone = new HashSet<>();
     }
 }

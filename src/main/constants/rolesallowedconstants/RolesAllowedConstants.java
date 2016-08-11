@@ -1,4 +1,4 @@
-package main.constants;
+package main.constants.rolesallowedconstants;
 
 public class RolesAllowedConstants {
 
