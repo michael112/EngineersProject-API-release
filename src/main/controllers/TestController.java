@@ -1,9 +1,21 @@
 package main.controllers;
 
-import org.springframework.web.bind.annotation.*;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import org.springframework.web.servlet.LocaleResolver;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
@@ -23,6 +35,26 @@ public class TestController {
 
     @Autowired
     private MailService mailService;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private LocaleResolver localeResolver;
+
+    @RequestMapping( value = "/localelng", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
+    @ResponseBody
+    @PermitAll
+    public ResponseEntity<String> getCurrentLocaleLanguage() {
+        Locale locale = this.localeResolver.resolveLocale(this.httpServletRequest);
+        String localeLanguageDefault = locale.getDisplayLanguage();
+        String localeLanguageEnglish = locale.getDisplayLanguage(new Locale("EN"));
+        return new ResponseEntity<>(localeLanguageDefault + "\n" + localeLanguageEnglish + "\n" + (isValidLocale(locale) ? "Język poprawny" : "Język niepoprawny"), HttpStatus.OK);
+    }
+
+    private boolean isValidLocale(Locale locale) {
+        return java.util.Arrays.asList(Locale.getISOLanguages()).contains(locale.getLanguage());
+    }
 
     @RequestMapping( value = "/user", method = RequestMethod.GET, produces = "application/text-plain" )
     @ResponseBody
