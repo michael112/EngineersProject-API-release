@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import main.json.user.UserJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
@@ -32,26 +34,33 @@ public class UserController {
     @Autowired
     private UserRoleService userRoleService;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER_URL, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> registerUser(@RequestBody UserJson userJson) {
         HttpStatus responseStatus;
-        if( !( userJson.getPassword().equals(userJson.getPasswordConfirm()) ) ) {
+        if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson("Passwords not equal!", responseStatus), responseStatus);
         }
-        else if( !( userService.isUsernameUnique(userJson.getUsername()) ) ) {
+        else if (!(userService.isUsernameUnique(userJson.getUsername()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson("Username " + userJson.getUsername() + " already exists!", responseStatus), responseStatus);
         }
         else {
-            User user = new User(userJson.getUsername(), userJson.getPassword(), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleService.findUserRoleByRoleName("USER"));
+            User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleService.findUserRoleByRoleName("USER"));
             this.userService.saveUser(user);
             responseStatus = HttpStatus.OK;
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson("User " + userJson.getUsername() + " saved successfully", responseStatus), responseStatus);
         }
     }
 
-    // public ResponseEntity<? extends ResponseJson> getUserInfo()
+    /*
+    public ResponseEntity<? extends ResponseJson> getUserInfo() {
+        
+    }
+    */
 
 }
