@@ -25,8 +25,4 @@
 		<property name="defaultEncoding" value="UTF-8"/>
 	</bean>
 
-	<bean id="localeToLanguageService" class="main.service.localetolanguage.LocaleToLanguageService">
-		<property name="localeResolver" ref="localeResolver" />
-	</bean>
-
 </beans>

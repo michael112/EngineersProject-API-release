@@ -39,6 +39,11 @@ import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
 import main.json.response.CurrentUserResponseJson;
 
+import javax.servlet.http.HttpServletRequest;
+import org.springframework.web.servlet.LocaleResolver;
+
+import javax.annotation.PostConstruct;
+
 @RequestMapping(value = UserControllerUrlConstants.CLASS_URL)
 @RestController
 public class UserController {
@@ -52,7 +57,17 @@ public class UserController {
     private PasswordEncoder passwordEncoder;
 
     @Autowired
+    private LocaleResolver localeResolver;
+
+    @Autowired
+    private HttpServletRequest httpServletRequest;
+
     private LocaleToLanguageService localeToLanguageService;
+
+    @PostConstruct
+    public void initialize() {
+        this.localeToLanguageService = new LocaleToLanguageService(this.localeResolver, this.httpServletRequest);
+    }
 
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER_URL, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
