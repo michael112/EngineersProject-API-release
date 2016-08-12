@@ -3,7 +3,7 @@ package main.json.user;
 import lombok.Getter;
 import lombok.Setter;
 
-public class ChangePasswordJson {
+public class EditPasswordJson {
 
     @Getter
     @Setter

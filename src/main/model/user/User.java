@@ -91,11 +91,17 @@ public class User extends AbstractUuidModel {
     @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
     public void setPhone(Set<Phone> phone) {
+        /*
         if( phone != null ) {
             this.phone = phone;
         }
         else {
             this.phone = new HashSet<>();
+        }
+        */
+        this.phone.clear();
+        if( phone != null ) {
+            this.phone.addAll(phone);
         }
     }
     public void addPhone(Phone phone) {
@@ -108,6 +114,14 @@ public class User extends AbstractUuidModel {
     }
     public boolean containsPhone(Phone phone) {
         return this.phone.contains(phone);
+    }
+    public Phone getPhone(String phoneNumber) {
+        for( Phone phone : this.phone ) {
+            if( phone.getPhoneNumber().equals(phoneNumber) ) {
+                return phone;
+            }
+        }
+        return null;
     }
 
 	@Getter
