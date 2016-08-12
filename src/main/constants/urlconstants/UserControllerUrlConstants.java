@@ -8,4 +8,6 @@ public class UserControllerUrlConstants {
 
     public static final String USER_INFO_URL = "";
 
+    public static final String EDIT_USER_PASSWORD = "/edit/password";
+
 }

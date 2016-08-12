@@ -2,6 +2,9 @@ package main.controllers;
 
 import javax.servlet.http.HttpServletRequest;
 
+import javax.annotation.PostConstruct;
+
+import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import org.springframework.web.servlet.LocaleResolver;
+
 import main.json.user.UserInfoJson;
 import main.json.user.NewUserJson;
 
@@ -25,6 +30,7 @@ import main.json.course.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 import main.constants.messageconstants.UserControllerMessageConstants;
+import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -39,10 +45,7 @@ import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
 import main.json.response.CurrentUserResponseJson;
 
-import javax.servlet.http.HttpServletRequest;
-import org.springframework.web.servlet.LocaleResolver;
-
-import javax.annotation.PostConstruct;
+import main.json.user.ChangePasswordJson;
 
 @RequestMapping(value = UserControllerUrlConstants.CLASS_URL)
 @RestController
@@ -91,23 +94,28 @@ public class UserController {
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @PermitAll
+    private User getCurrentUser() {
+        return this.userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+    }
+
+    private ResponseEntity<MessageResponseJson> unauthorizedResponse() {
+        HttpStatus responseStatus = HttpStatus.UNAUTHORIZED;
+        String messageStr = UserControllerMessageConstants.UNAUTHORIZED_USER_INFO;
+        return new ResponseEntity<>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO_URL, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> getUserInfo() {
-        HttpStatus responseStatus;
-        String messageStr;
-
-        User currentUser = this.userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        User currentUser = getCurrentUser();
+        //User currentUser = this.userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 		if( currentUser == null ) {
-			responseStatus = HttpStatus.UNAUTHORIZED;
-            messageStr = UserControllerMessageConstants.UNAUTHORIZED_USER_INFO;
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+			return unauthorizedResponse();
 		}
 		else {
             UserInfoJson userJson = userToJson(currentUser);
-
-            responseStatus = HttpStatus.OK;
-            messageStr = UserControllerMessageConstants.USER_INFO_SUCCESS;
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = UserControllerMessageConstants.USER_INFO_SUCCESS;
             return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
 		}
 
@@ -133,6 +141,34 @@ public class UserController {
 
     public CourseJson teacherCourseToJson(Course course) {
         return new CourseJson(course.getId(), this.localeToLanguageService.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
+    }
+
+    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PASSWORD, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
+    public ResponseEntity<? extends ResponseJson> editUserPassword(@RequestBody ChangePasswordJson changePasswordJson) {
+        User currentUser = getCurrentUser();
+        if( currentUser == null ) {
+            return unauthorizedResponse();
+        }
+        else {
+            HttpStatus responseStatus;
+            String messageStr;
+            if( !( this.passwordEncoder.matches(changePasswordJson.getOldPassword(), currentUser.getPassword()) ) ) {
+                responseStatus = HttpStatus.BAD_REQUEST;
+                messageStr = UserControllerMessageConstants.INVALID_PASSWORD;
+            }
+            else if( !( changePasswordJson.getNewPassword().equals(changePasswordJson.getNewPasswordConfirm()) ) ) {
+                responseStatus = HttpStatus.BAD_REQUEST;
+                messageStr = UserControllerMessageConstants.PASSWORD_DONT_MATCH;
+            }
+            else {
+                currentUser.setPassword(this.passwordEncoder.encode(changePasswordJson.getNewPassword()));
+                this.userService.updateUser(currentUser);
+                responseStatus = HttpStatus.OK;
+                messageStr = UserControllerMessageConstants.EDIT_PASSWORD_SUCCESS;
+            }
+            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        }
     }
 
 }
