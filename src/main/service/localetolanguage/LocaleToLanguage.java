@@ -1,4 +1,4 @@
-package main.service.locale;
+package main.service.localetolanguage;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
