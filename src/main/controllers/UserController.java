@@ -38,7 +38,7 @@ import main.model.course.CourseMembership;
 import main.service.model.user.user.UserService;
 import main.service.model.user.userrole.UserRoleService;
 
-import main.service.locale.LocaleToLanguage;
+import main.service.localetolanguage.LocaleToLanguage;
 
 import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
