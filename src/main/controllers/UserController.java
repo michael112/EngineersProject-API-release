@@ -29,7 +29,6 @@ import main.json.user.NewUserJson;
 import main.json.course.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
-import main.constants.messageconstants.UserControllerMessageConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
 import main.model.user.User;
@@ -39,7 +38,7 @@ import main.model.course.CourseMembership;
 import main.service.model.user.user.UserService;
 import main.service.model.user.userrole.UserRoleService;
 
-import main.service.localetolanguage.LocaleToLanguageService;
+import main.service.locale.LocaleToLanguage;
 
 import main.json.response.MessageResponseJson;
 import main.json.response.ResponseJson;
@@ -65,11 +64,14 @@ public class UserController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    private LocaleToLanguageService localeToLanguageService;
+    private LocaleToLanguage localeToLanguage;
+
+    @Autowired
+    private main.service.labels.LabelsService labelsService;
 
     @PostConstruct
     public void initialize() {
-        this.localeToLanguageService = new LocaleToLanguageService(this.localeResolver, this.httpServletRequest);
+        this.localeToLanguage = new LocaleToLanguage(this.localeResolver, this.httpServletRequest);
     }
 
     @PermitAll
@@ -79,17 +81,17 @@ public class UserController {
         String messageStr;
         if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = UserControllerMessageConstants.PASSWORDS_NOT_EQUAL;
+            messageStr = this.labelsService.getLabel("user.passwords.not.equal");
         }
         else if (!(userService.isUsernameUnique(userJson.getUsername()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = UserControllerMessageConstants.USER_ALREADY_EXISTS_PREFIX + userJson.getUsername() + UserControllerMessageConstants.USER_ALREADY_EXISTS_SUFFIX;
+            messageStr = this.labelsService.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelsService.getLabel("user.already.exists.suffix");
         }
         else {
             User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleService.findUserRoleByRoleName("USER"));
             this.userService.saveUser(user);
             responseStatus = HttpStatus.OK;
-            messageStr = UserControllerMessageConstants.USER_SAVED_PREFIX + userJson.getUsername() + UserControllerMessageConstants.USER_SAVED_SUFFIX;
+            messageStr = this.labelsService.getLabel("user.saved.prefix") + userJson.getUsername() + this.labelsService.getLabel("user.saved.suffix");
         }
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
@@ -100,7 +102,7 @@ public class UserController {
 
     private ResponseEntity<MessageResponseJson> unauthorizedResponse() {
         HttpStatus responseStatus = HttpStatus.UNAUTHORIZED;
-        String messageStr = UserControllerMessageConstants.UNAUTHORIZED_USER_INFO;
+        String messageStr = this.labelsService.getLabel("user.unauthorized.user.info");
         return new ResponseEntity<>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
@@ -108,14 +110,13 @@ public class UserController {
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO_URL, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> getUserInfo() {
         User currentUser = getCurrentUser();
-        //User currentUser = this.userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		if( currentUser == null ) {
+        if( currentUser == null ) {
 			return unauthorizedResponse();
 		}
 		else {
             UserInfoJson userJson = userToJson(currentUser);
             HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = UserControllerMessageConstants.USER_INFO_SUCCESS;
+            String messageStr = this.labelsService.getLabel("user.info.success");
             return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
 		}
 
@@ -136,11 +137,11 @@ public class UserController {
 
     public CourseJson studentCourseToJson(CourseMembership courseMembership) {
         Course course = courseMembership.getCourse();
-        return new CourseJson(course.getId(), this.localeToLanguageService.getLanguageName(course.getLanguage()), course.getCourseLevel().getName(), courseMembership.isActive());
+        return new CourseJson(course.getId(), this.localeToLanguage.getLanguageName(course.getLanguage()), course.getCourseLevel().getName(), courseMembership.isActive());
     }
 
     public CourseJson teacherCourseToJson(Course course) {
-        return new CourseJson(course.getId(), this.localeToLanguageService.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
+        return new CourseJson(course.getId(), this.localeToLanguage.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
     }
 
     @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
@@ -155,17 +156,17 @@ public class UserController {
             String messageStr;
             if( !( this.passwordEncoder.matches(changePasswordJson.getOldPassword(), currentUser.getPassword()) ) ) {
                 responseStatus = HttpStatus.BAD_REQUEST;
-                messageStr = UserControllerMessageConstants.INVALID_PASSWORD;
+                messageStr = this.labelsService.getLabel("user.invalid.password");
             }
             else if( !( changePasswordJson.getNewPassword().equals(changePasswordJson.getNewPasswordConfirm()) ) ) {
                 responseStatus = HttpStatus.BAD_REQUEST;
-                messageStr = UserControllerMessageConstants.PASSWORD_DONT_MATCH;
+                messageStr = this.labelsService.getLabel("user.password.dont.match");
             }
             else {
                 currentUser.setPassword(this.passwordEncoder.encode(changePasswordJson.getNewPassword()));
                 this.userService.updateUser(currentUser);
                 responseStatus = HttpStatus.OK;
-                messageStr = UserControllerMessageConstants.EDIT_PASSWORD_SUCCESS;
+                messageStr = this.labelsService.getLabel("user.edit.password.success");
             }
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
         }
