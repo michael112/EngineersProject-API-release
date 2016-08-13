@@ -41,11 +41,9 @@ public class PlacementSentence extends AbstractUuidModel {
 	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID", nullable=false)
 	private Set<PlacementAnswer> answers;
 	public void setAnswers(Set<PlacementAnswer> answers) {
+		this.answers.clear();
 		if( answers != null ) {
-			this.answers = answers;
-		}
-		else {
-			this.answers = new HashSet<>();
+			this.answers.addAll(answers);
 		}
 	}
 	public void addAnswer(PlacementAnswer answer) {

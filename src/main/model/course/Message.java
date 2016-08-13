@@ -53,6 +53,12 @@ public class Message extends AbstractUuidModel {
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") })
 	private Set<User> receivers; // osoba lub osoby będące adresatami wiadomości - groupID trzeba zewnętrznie przetworzyć na listę osób
+	public void setReceivers(Set<User> receivers) {
+		this.receivers.clear();
+		if( receivers != null ) {
+			this.receivers.addAll(receivers);
+		}
+	}
 	public void addReceiver(User receiver) {
 		if ( !( this.receivers.contains(receiver) ) ) {
 			this.receivers.add(receiver);
@@ -89,11 +95,9 @@ public class Message extends AbstractUuidModel {
 			inverseJoinColumns = { @JoinColumn(name = "fileID", referencedColumnName="fileID") })
 	private Set<File> attachements;
 	public void setAttachements(Set<File> attachements) {
+		this.attachements.clear();
 		if( attachements != null ) {
-			this.attachements = attachements;
-		}
-		else {
-			this.attachements = new HashSet<>();
+			this.attachements.addAll(attachements);
 		}
 	}
 	public void addAttachement(File attachement) {

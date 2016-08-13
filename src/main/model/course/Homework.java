@@ -45,11 +45,9 @@ public class Homework extends AbstractHomeworkOrTest {
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })
 	private Set<File> attachements;
 	public void setAttachements(Set<File> attachements) {
+		this.attachements.clear();
 		if( attachements != null ) {
-			this.attachements = attachements;
-		}
-		else {
-			this.attachements = new HashSet<>();
+			this.attachements.addAll(attachements);
 		}
 	}
 	public void addAttachement(File attachement) {
@@ -68,11 +66,9 @@ public class Homework extends AbstractHomeworkOrTest {
 	@Getter
 	private Set<HomeworkSolution> homeworkSolutions;
 	public void setHomeworkSolutions(Set<HomeworkSolution> solutions) {
+		this.homeworkSolutions.clear();
 		if( solutions != null ) {
-			this.homeworkSolutions = solutions;
-		}
-		else {
-			this.homeworkSolutions = new HashSet<>();
+			this.homeworkSolutions.addAll(solutions);
 		}
 	}
 	public void addHomeworkSolution(HomeworkSolution solution) {

@@ -85,11 +85,9 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Set<CourseDay> courseDays;
 	public void setCourseDays(Set<CourseDay> courseDays) {
+		this.courseDays.clear();
 		if( courseDays != null ) {
-			this.courseDays = courseDays;
-		}
-		else {
-			this.courseDays = new HashSet<>();
+			this.courseDays.addAll(courseDays);
 		}
 	}
 	public void addCourseDay(CourseDay courseDay) {
@@ -108,11 +106,9 @@ public class Course extends AbstractUuidModel {
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="coursesAsTeacher")
 	private Set<User> teachers;
 	public void setTeachers(Set<User> teachers) {
+		this.teachers.clear();
 		if( teachers != null ) {
-			this.teachers = teachers;
-		}
-		else {
-			this.teachers = new HashSet<>();
+			this.teachers.addAll(teachers);
 		}
 	}
 	public void addTeacher(User teacher) {
@@ -137,11 +133,9 @@ public class Course extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="course")
 	private Set<CourseMembership> students;
 	public void setStudents(Set<CourseMembership> students) {
+		this.students.clear();
 		if( students != null ) {
-			this.students = students;
-		}
-		else {
-			this.students = new HashSet<>();
+			this.students.addAll(students);
 		}
 	}
 	public void addStudent(CourseMembership student) {
@@ -164,11 +158,9 @@ public class Course extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Test> tests;
 	public void setTests(Set<Test> tests) {
+		this.tests.clear();
 		if( tests != null ) {
-			this.tests = tests;
-		}
-		else {
-			this.tests = new HashSet<>();
+			this.tests.addAll(tests);
 		}
 	}
 	public void addTest(Test test) {
@@ -190,11 +182,9 @@ public class Course extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Homework> homeworks;
 	public void setHomeworks(Set<Homework> homeworks) {
+		this.homeworks.clear();
 		if( homeworks != null ) {
-			this.homeworks = homeworks;
-		}
-		else {
-			this.homeworks = new HashSet<>();
+			this.homeworks.addAll(homeworks);
 		}
 	}
 	public void addHomework(Homework homework) {
@@ -216,11 +206,9 @@ public class Course extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Message> messages;
 	public void setMessages(Set<Message> messages) {
+		this.messages.clear();
 		if( messages != null ) {
-			this.messages = messages;
-		}
-		else {
-			this.messages = new HashSet<>();
+			this.messages.addAll(messages);
 		}
 	}
 	public void addMessage(Message message) {
@@ -246,11 +234,9 @@ public class Course extends AbstractUuidModel {
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })
 	private Set<File> attachements;
 	public void setAttachements(Set<File> attachements) {
+		this.attachements.clear();
 		if( attachements != null ) {
-			this.attachements = attachements;
-		}
-		else {
-			this.attachements = new HashSet<>();
+			this.attachements.addAll(attachements);
 		}
 	}
 	public void addAttachement(File attachement) {

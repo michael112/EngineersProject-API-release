@@ -47,11 +47,9 @@ public class PlacementTest extends AbstractUuidModel {
 	@JoinColumn(name="placementTestID", referencedColumnName="placementTestID", nullable=false)
 	private Set<PlacementTask> tasks;
 	public void setTasks(Set<PlacementTask> tasks) {
+		this.tasks.clear();
 		if( tasks != null ) {
-			this.tasks = tasks;
-		}
-		else {
-			this.tasks = new HashSet<>();
+			this.tasks.addAll(tasks);
 		}
 	}
 	public void addTask(PlacementTask task) {
@@ -70,11 +68,9 @@ public class PlacementTest extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="test", orphanRemoval=true)
 	private Set<PlacementTestResult> results;
 	public void setResults(Set<PlacementTestResult> results) {
+		this.results.clear();
 		if( results != null ) {
-			this.results = results;
-		}
-		else {
-			this.results = new HashSet<>();
+			this.results.addAll(results);
 		}
 	}
 	public void addResult(PlacementTestResult result) {

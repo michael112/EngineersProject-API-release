@@ -35,11 +35,9 @@ public class Language extends AbstractSinglePKModel<String> {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="namedLanguage", orphanRemoval=true)
 	private Set<LanguageName> languageNames;
 	public void setLanguageNames(Set<LanguageName> languageNames) {
+		this.languageNames.clear();
 		if( languageNames != null ) {
-			this.languageNames = languageNames;
-		}
-		else {
-			this.languageNames = new HashSet<>();
+			this.languageNames.addAll(languageNames);
 		}
 	}
 	public void addLanguageName(LanguageName languageName) {
@@ -67,11 +65,9 @@ public class Language extends AbstractSinglePKModel<String> {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="language")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
+		this.courses.clear();
 		if( courses != null ) {
-			this.courses = courses;
-		}
-		else {
-			this.courses = new HashSet<>();
+			this.courses.addAll(courses);
 		}
 	}
 	public void addCourse(Course course) {
@@ -94,11 +90,9 @@ public class Language extends AbstractSinglePKModel<String> {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="language")
 	private Set<PlacementTest> placementTests;
 	public void setPlacementTests(Set<PlacementTest> placementTests) {
+		this.placementTests.clear();
 		if( placementTests != null ) {
-			this.placementTests = placementTests;
-		}
-		else {
-			this.placementTests = new HashSet<>();
+			this.placementTests.addAll(placementTests);
 		}
 	}
 	public void addPlacementTest(PlacementTest placementTest) {
@@ -121,11 +115,9 @@ public class Language extends AbstractSinglePKModel<String> {
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="taughtLanguages")
 	private Set<User> teachers;
 	public void setTeachers(Set<User> teachers) {
+		this.teachers.clear();
 		if( teachers != null ) {
-			this.teachers = teachers;
-		}
-		else {
-			this.teachers = new HashSet<>();
+			this.teachers.addAll(teachers);
 		}
 	}
 	public void addTeacher(User teacher) {

@@ -38,11 +38,9 @@ public class Test extends AbstractHomeworkOrTest {
 	@Getter
 	private Set<TestSolution> testSolutions;
 	public void setTestSolutions(Set<TestSolution> solutions) {
+		this.testSolutions.clear();
 		if( solutions != null ) {
-			this.testSolutions = solutions;
-		}
-		else {
-			this.testSolutions = new HashSet<>();
+			this.testSolutions.addAll(solutions);
 		}
 	}
 	public void addTestSolution(TestSolution solution) {

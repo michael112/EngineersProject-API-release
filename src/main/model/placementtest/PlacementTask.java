@@ -36,11 +36,9 @@ public class PlacementTask extends AbstractUuidModel {
 	@JoinColumn(name="placementTaskID", referencedColumnName="placementTaskID", nullable=false)
 	private Set<PlacementSentence> sentences;
 	public void setSentences(Set<PlacementSentence> sentences) {
+		this.sentences.clear();
 		if( sentences != null ) {
-			this.sentences = sentences;
-		}
-		else {
-			this.sentences = new HashSet<>();
+			this.sentences.addAll(sentences);
 		}
 	}
 	public void addSentence(PlacementSentence sentence) {

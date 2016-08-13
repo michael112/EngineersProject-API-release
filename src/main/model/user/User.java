@@ -57,11 +57,9 @@ public class User extends AbstractUuidModel {
     @Getter
     private Set<UserRole> userRoles;
     public void setUserRoles(Set<UserRole> userRoles) {
+        this.userRoles.clear();
         if( userRoles != null ) {
-            this.userRoles = userRoles;
-        }
-        else {
-            this.userRoles = new HashSet<>();
+            this.userRoles.addAll(userRoles);
         }
     }
     public void addUserRole(UserRole userRole) {
@@ -91,14 +89,6 @@ public class User extends AbstractUuidModel {
     @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
     public void setPhone(Set<Phone> phone) {
-        /*
-        if( phone != null ) {
-            this.phone = phone;
-        }
-        else {
-            this.phone = new HashSet<>();
-        }
-        */
         this.phone.clear();
         if( phone != null ) {
             this.phone.addAll(phone);
@@ -133,11 +123,9 @@ public class User extends AbstractUuidModel {
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user", orphanRemoval=true)
 	private Set<PlacementTestResult> placementTest;
     public void setPlacementTest(Set<PlacementTestResult> placementTest) {
+        this.placementTest.clear();
         if( placementTest != null ) {
-            this.placementTest = placementTest;
-        }
-        else {
-            this.placementTest = new HashSet<>();
+            this.placementTest.addAll(placementTest);
         }
     }
     public void addPlacementTest(PlacementTestResult placementTest) {
@@ -159,11 +147,9 @@ public class User extends AbstractUuidModel {
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<CourseMembership> coursesAsStudent;
     public void setCoursesAsStudent(Set<CourseMembership> coursesAsStudent) {
+        this.coursesAsStudent.clear();
         if( coursesAsStudent != null ) {
-            this.coursesAsStudent = coursesAsStudent;
-        }
-        else {
-            this.coursesAsStudent = new HashSet<>();
+            this.coursesAsStudent.addAll(coursesAsStudent);
         }
     }
     public void addCourseAsStudent(CourseMembership courseAsStudent) {
@@ -185,11 +171,9 @@ public class User extends AbstractUuidModel {
     @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="sender", orphanRemoval=true)
     private Set<Message> myMessages;
     public void setMyMessages(Set<Message> myMessages) {
+        this.myMessages.clear();
         if( myMessages != null ) {
-            this.myMessages = myMessages;
-        }
-        else {
-            this.myMessages = new HashSet<>();
+            this.myMessages.addAll(myMessages);
         }
     }
     public void addMyMessage(Message myMessage) {
@@ -211,11 +195,9 @@ public class User extends AbstractUuidModel {
     @ManyToMany(fetch=FetchType.EAGER, mappedBy="receivers")
 	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów
     public void setMessages(Set<Message> messages) {
+        this.messages.clear();
         if( messages != null ) {
-            this.messages = messages;
-        }
-        else {
-            this.messages = new HashSet<>();
+            this.messages.addAll(messages);
         }
     }
     public void addMessage(Message message) {
@@ -243,11 +225,9 @@ public class User extends AbstractUuidModel {
             inverseJoinColumns = { @JoinColumn(name = "languageID", referencedColumnName="languageID") })
 	private Set<Language> taughtLanguages;
     public void setTaughtLanguages(Set<Language> taughtLanguages) {
+        this.taughtLanguages.clear();
         if( taughtLanguages != null ) {
-            this.taughtLanguages = taughtLanguages;
-        }
-        else {
-            this.taughtLanguages = new HashSet<>();
+            this.taughtLanguages.addAll(taughtLanguages);
         }
     }
     public void addTaughtLanguage(Language taughtLanguage) {
@@ -275,11 +255,9 @@ public class User extends AbstractUuidModel {
             inverseJoinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") })
 	private Set<Course> coursesAsTeacher;
     public void setCoursesAsTeacher(Set<Course> coursesAsTeacher) {
+        this.coursesAsTeacher.clear();
         if( coursesAsTeacher != null ) {
-            this.coursesAsTeacher = coursesAsTeacher;
-        }
-        else {
-            this.coursesAsTeacher = new HashSet<>();
+            this.coursesAsTeacher.addAll(coursesAsTeacher);
         }
     }
     public void addCourseAsTeacher(Course course) {

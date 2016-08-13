@@ -35,11 +35,9 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseLevel")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
+		this.courses.clear();
 		if( courses != null ) {
-			this.courses = courses;
-		}
-		else {
-			this.courses = new HashSet<>();
+			this.courses.addAll(courses);
 		}
 	}
 	public void addCourse(Course course) {

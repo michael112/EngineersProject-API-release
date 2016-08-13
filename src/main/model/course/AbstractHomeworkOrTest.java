@@ -43,11 +43,9 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	@JoinColumn(name="taskID", referencedColumnName="taskID")
 	private Set<Grade> grades;
 	public void setGrades(Set<Grade> grades) {
+		this.grades.clear();
 		if( grades != null ) {
-			this.grades = grades;
-		}
-		else {
-			this.grades = new HashSet<>();
+			this.grades.addAll(grades);
 		}
 	}
 	public void addGrade(Grade grade) {

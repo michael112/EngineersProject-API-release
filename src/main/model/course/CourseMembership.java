@@ -68,11 +68,9 @@ public class CourseMembership extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="student", orphanRemoval=true)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {
+		this.grades.clear();
 		if( grades != null ) {
-			this.grades = grades;
-		}
-		else {
-			this.grades = new HashSet<>();
+			this.grades.addAll(grades);
 		}
 	}
 	public void addGrade(StudentGrade grade) {

@@ -29,11 +29,9 @@ public class CourseType extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="courseType", orphanRemoval=true)
 	private Set<CourseTypeName> courseTypeNames;
 	public void setCourseTypeNames(Set<CourseTypeName> courseTypeNames) {
+		this.courseTypeNames.clear();
 		if( courseTypeNames != null ) {
-			this.courseTypeNames = courseTypeNames;
-		}
-		else {
-			this.courseTypeNames = new HashSet<>();
+			this.courseTypeNames.addAll(courseTypeNames);
 		}
 	}
 	public void addCourseTypeName(CourseTypeName courseTypeName) {
@@ -59,11 +57,9 @@ public class CourseType extends AbstractUuidModel {
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseType")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
+		this.courses.clear();
 		if( courses != null ) {
-			this.courses = courses;
-		}
-		else {
-			this.courses = new HashSet<>();
+			this.courses.addAll(courses);
 		}
 	}
 	public void addCourse(Course course) {
