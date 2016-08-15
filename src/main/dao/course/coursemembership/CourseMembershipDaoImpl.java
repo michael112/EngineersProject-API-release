@@ -14,6 +14,10 @@ public class CourseMembershipDaoImpl extends AbstractDao<String, CourseMembershi
         return findByID(id);
     }
 
+    public Set<CourseMembership> findCourseMembershipsByQuery(String queryStr) {
+        return findByQuery(queryStr);
+    }
+
     public Set<CourseMembership> findAllCourseMemberships() {
         return findAll();
     }

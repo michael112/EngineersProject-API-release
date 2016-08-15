@@ -20,6 +20,10 @@ public class LanguageServiceImpl implements LanguageService {
         return dao.findLanguageByID(id);
     }
 
+    public Set<Language> findLanguagesByQuery(String queryStr) {
+        return dao.findLanguagesByQuery(queryStr);
+    }
+
     public Set<Language> findAllLanguages() {
         return dao.findAllLanguages();
     }

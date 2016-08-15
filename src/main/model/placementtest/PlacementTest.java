@@ -88,6 +88,17 @@ public class PlacementTest extends AbstractUuidModel {
 		return this.results.contains(result);
 	}
 
+	public PlacementSentence getSentence(String sentenceID) {
+		for( PlacementTask task : this.getTasks() ) {
+			for( PlacementSentence sentence : task.getSentences() ) {
+				if( sentence.getId().equals(sentenceID) ) {
+					return sentence;
+				}
+			}
+		}
+		return null;
+	}
+
 	public PlacementTest() {
 		super();
 		this.tasks = new HashSet<>();

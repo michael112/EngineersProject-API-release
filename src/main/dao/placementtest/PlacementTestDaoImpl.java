@@ -14,6 +14,10 @@ public class PlacementTestDaoImpl extends AbstractDao<String, PlacementTest> imp
         return findByID(id);
     }
 
+    public Set<PlacementTest> findPlacementTestByQuery(String queryStr) {
+        return findByQuery(queryStr);
+    }
+
     public Set<PlacementTest> findAllPlacementTests() {
         return findAll();
     }

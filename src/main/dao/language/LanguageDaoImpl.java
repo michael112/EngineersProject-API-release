@@ -14,6 +14,10 @@ public class LanguageDaoImpl extends AbstractDao<String, Language> implements La
         return findByID(id);
     }
 
+    public Set<Language> findLanguagesByQuery(String queryStr) {
+        return findByQuery(queryStr);
+    }
+
     public Set<Language> findAllLanguages() {
         return findAll();
     }

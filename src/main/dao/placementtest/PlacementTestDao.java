@@ -8,6 +8,8 @@ public interface PlacementTestDao {
 
     PlacementTest findPlacementTestByID(String id);
 
+    Set<PlacementTest> findPlacementTestByQuery(String queryStr);
+
     Set<PlacementTest> findAllPlacementTests();
 
     void savePlacementTest(PlacementTest entity);

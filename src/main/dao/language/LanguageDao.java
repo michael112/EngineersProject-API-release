@@ -8,6 +8,8 @@ public interface LanguageDao {
 
     Language findLanguageByID(String id);
 
+    Set<Language> findLanguagesByQuery(String queryStr);
+
     Set<Language> findAllLanguages();
 
     void saveLanguage(Language entity);

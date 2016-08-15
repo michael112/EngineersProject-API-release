@@ -20,6 +20,10 @@ public class PlacementTestServiceImpl implements PlacementTestService {
         return dao.findPlacementTestByID(id);
     }
 
+    public Set<PlacementTest> findPlacementTestByQuery(String queryStr) {
+        return dao.findPlacementTestByQuery(queryStr);
+    }
+
     public Set<PlacementTest> findAllPlacementTests() {
         return dao.findAllPlacementTests();
     }

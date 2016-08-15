@@ -20,6 +20,10 @@ public class CourseMembershipServiceImpl implements CourseMembershipService {
         return dao.findCourseMembershipByID(id);
     }
 
+    public Set<CourseMembership> findCourseMembershipsByQuery(String queryStr) {
+        return dao.findCourseMembershipsByQuery(queryStr);
+    }
+
     public Set<CourseMembership> findAllCourseMemberships() {
         return dao.findAllCourseMemberships();
     }

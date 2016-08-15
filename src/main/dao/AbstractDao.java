@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -35,6 +36,12 @@ public abstract class AbstractDao<PK extends Serializable, T extends AbstractMod
 	@SuppressWarnings("unchecked")
 	public T findByID(PK id) {
 		return (T) getSession().get(persistentClass, id);
+	}
+
+	@SuppressWarnings("unchecked")
+	public Set<T> findByQuery(String queryStr) {
+		Query query = getSession().createQuery(queryStr);
+		return new HashSet<> ( (List<T>) query.list() );
 	}
 
 	@SuppressWarnings("unchecked")

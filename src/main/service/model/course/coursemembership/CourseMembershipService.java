@@ -8,6 +8,8 @@ public interface CourseMembershipService {
 
     CourseMembership findCourseMembershipByID(String id);
 
+    Set<CourseMembership> findCourseMembershipsByQuery(String queryStr);
+
     Set<CourseMembership> findAllCourseMemberships();
 
     void saveCourseMembership(CourseMembership entity);
