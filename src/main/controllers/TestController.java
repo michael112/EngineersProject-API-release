@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -41,6 +42,16 @@ public class TestController {
 
     @Autowired
     private LocaleResolver localeResolver;
+
+    @Autowired
+    private main.service.properties.PropertyUtil propertyUtil;
+
+    @RequestMapping( value = "/getproperty", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
+    @ResponseBody
+    @PermitAll
+    public ResponseEntity<String> getProperty(@RequestHeader("Property") String property) {
+        return new ResponseEntity<String>(this.propertyUtil.getProperty(property), HttpStatus.OK);
+    }
 
     @RequestMapping( value = "/localelng", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
     @ResponseBody
