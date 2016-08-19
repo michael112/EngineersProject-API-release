@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -14,9 +14,9 @@ import main.service.model.course.courselevel.CourseLevelService;
 import main.model.course.Course;
 import main.service.model.course.course.CourseService;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class CourseLevelTest extends AbstractTest {
+public class CourseLevelTest extends AbstractModelTest {
 
     @Autowired
     private CourseLevelService courseLevelService;

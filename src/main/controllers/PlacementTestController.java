@@ -12,17 +12,21 @@ import javax.annotation.security.PermitAll;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.servlet.LocaleResolver;
 
+import org.springframework.util.Assert;
+
 import main.constants.urlconstants.PlacementTestControllerUrlConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
-
-import main.controllers.utilities.ErrorResponseController;
 
 import main.service.currentUser.CurrentUserService;
 import main.service.localetolanguage.LocaleToLanguage;
@@ -77,9 +81,6 @@ public class PlacementTestController {
     @Autowired
     private LabelsService labelsService;
 
-    @Autowired
-    private ErrorResponseController errorResponseController;
-
     @PostConstruct
     public void initialize() {
         this.localeToLanguage = new LocaleToLanguage(this.localeResolver, this.httpServletRequest);
@@ -88,33 +89,29 @@ public class PlacementTestController {
     @PermitAll
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> getPlacementTestList() {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            Set<Language> languagesWithPlacementTests = this.languageService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
-            Set<PlacementTestListJson> placementTestListJsonSet = new HashSet<>();
-            for (Language l : languagesWithPlacementTests) {
-                Set<PlacementTestResultJson> tests = new HashSet<>();
-                for (PlacementTest t : l.getPlacementTests()) {
-                    Double currentUserTestResult = getCurrentUserTestResult(currentUser, t);
-                    if (currentUserTestResult != null) {
-                        tests.add(new PlacementTestResultJson(t.getId(), currentUserTestResult));
-                    } else {
-                        tests.add(new PlacementTestResultJson(t.getId()));
-                    }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        Set<Language> languagesWithPlacementTests = this.languageService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
+        Set<PlacementTestListJson> placementTestListJsonSet = new HashSet<>();
+        for (Language l : languagesWithPlacementTests) {
+            Set<PlacementTestResultJson> tests = new HashSet<>();
+            for (PlacementTest t : l.getPlacementTests()) {
+                Double currentUserTestResult = getCurrentUserTestResult(currentUser, t);
+                if (currentUserTestResult != null) {
+                    tests.add(new PlacementTestResultJson(t.getId(), currentUserTestResult));
+                } else {
+                    tests.add(new PlacementTestResultJson(t.getId()));
                 }
-                placementTestListJsonSet.add(new PlacementTestListJson(this.localeToLanguage.getLanguageName(l), tests));
             }
-            String messageStr = this.labelsService.getLabel("placementtest.list.success");
-            HttpStatus responseStatus = HttpStatus.OK;
-            PlacementTestListResponseJson responseJson = new PlacementTestListResponseJson(placementTestListJsonSet, messageStr, responseStatus);
-            return new ResponseEntity<PlacementTestListResponseJson>(responseJson, responseStatus);
+            placementTestListJsonSet.add(new PlacementTestListJson(this.localeToLanguage.getLanguageName(l), tests));
         }
+        String messageStr = this.labelsService.getLabel("placementtest.list.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        PlacementTestListResponseJson responseJson = new PlacementTestListResponseJson(placementTestListJsonSet, messageStr, responseStatus);
+        return new ResponseEntity<PlacementTestListResponseJson>(responseJson, responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_CONTENT, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity <? extends ResponseJson> getPlacementTestContent(@PathVariable("id") String placementTestId) {
         PlacementTest test = this.placementTestService.findPlacementTestByID(placementTestId);
@@ -134,24 +131,20 @@ public class PlacementTestController {
         }
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.SOLVED_PLACEMENT_TEST, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> setSolvedPlacementTest(@RequestBody SolvedPlacementTestJson solvedPlacementTestJson) {
         // należy przetestować
 
         User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            PlacementTest placementTest = this.placementTestService.findPlacementTestByID(solvedPlacementTestJson.getId());
-            double result = calculateTestResult(solvedPlacementTestJson, placementTest);
-            PlacementTestResult placementTestResult = new PlacementTestResult(placementTest, currentUser, result);
-            this.placementTestResultService.savePlacementTestResult(placementTestResult);
-            String messageStr = this.labelsService.getLabel("placementtest.solved.success");
-            HttpStatus responseStatus = HttpStatus.OK;
-            return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
-        }
+        Assert.notNull(currentUser);
+        PlacementTest placementTest = this.placementTestService.findPlacementTestByID(solvedPlacementTestJson.getId());
+        double result = calculateTestResult(solvedPlacementTestJson, placementTest);
+        PlacementTestResult placementTestResult = new PlacementTestResult(placementTest, currentUser, result);
+        this.placementTestResultService.savePlacementTestResult(placementTestResult);
+        String messageStr = this.labelsService.getLabel("placementtest.solved.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
     }
 
     private double calculateTestResult(SolvedPlacementTestJson solvedTest, PlacementTest test) {

@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -14,9 +14,9 @@ import main.model.course.Course;
 import main.model.user.User;
 import main.model.enums.GradeScale;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class GradeTest extends AbstractTest {
+public class GradeTest extends AbstractModelTest {
 
     private Grade sampleGrade;
 

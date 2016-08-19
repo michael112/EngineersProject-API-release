@@ -53,13 +53,25 @@
 		UnanimousBased decision manager will grant access ONLY if all voters said OK.
 		ConsensusBased decision manager will let the majority decide.
 	-->
-	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.AffirmativeBased">
+	<bean id="accessDecisionManager" class="org.springframework.security.access.vote.UnanimousBased">
 		<constructor-arg>
-			<list>
-				<bean class="org.springframework.security.access.annotation.Jsr250Voter"/>  
-			</list>
+            <list>
+                <ref bean="hierarchicalJsr250Voter" />
+				<ref bean="courseMembershipRequiredVoter" />
+            </list>
 		</constructor-arg>
 	</bean>
+    <bean id="hierarchicalJsr250Voter" class="main.security.HierarchicalJsr250Voter">
+        <constructor-arg ref="roleHierarchy" />
+    </bean>
+	<bean id="roleHierarchy" class="org.springframework.security.access.hierarchicalroles.RoleHierarchyImpl">
+        <property name="hierarchy">
+            <value>
+                ROLE_ADMIN > ROLE_USER
+            </value>
+        </property>
+    </bean>
+	<bean id="courseMembershipRequiredVoter" class="main.security.coursemembership.CourseMembershipRequiredVoter" />
 
 	<bean id="clientDetailsUserService" class="org.springframework.security.oauth2.provider.client.ClientDetailsUserDetailsService">
 		<constructor-arg ref="clientDetails"/>
@@ -108,12 +120,6 @@
 					  access-token-validity="600"
 					  refresh-token-validity="7200"/>
 	</oauth:client-details-service>
-
-
-	<!--
-	Moved into spring-servlet.xml!
-	<security:global-method-security jsr250-annotations="enabled" access-decision-manager-ref="accessDecisionManager" />
-	-->
 
 	<oauth:expression-handler id="oauthExpressionHandler" />
 	<oauth:web-expression-handler id="oauthWebExpressionHandler"/>

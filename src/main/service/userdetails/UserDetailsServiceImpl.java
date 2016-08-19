@@ -1,4 +1,4 @@
-// (C) websystique
+// Based on: http://websystique.com/spring-security/spring-security-4-hibernate-annotation-example/
 
 package main.service.userdetails;
 

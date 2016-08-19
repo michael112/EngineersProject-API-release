@@ -72,7 +72,7 @@ public class TestController {
 
     @RequestMapping( value = "/useradmin", method = RequestMethod.GET, produces = "application/text-plain" )
     @ResponseBody
-    @RolesAllowed({"ADMIN", "USER"})
+    @RolesAllowed({"USER"})
     public ResponseEntity<String> methodForUserAndAdmin() {
         return new ResponseEntity<>("Uzyskano dostęp do metody dla użytkownika i administratora!", HttpStatus.OK);
     }

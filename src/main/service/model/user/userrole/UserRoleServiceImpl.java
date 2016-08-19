@@ -28,24 +28,4 @@ public class UserRoleServiceImpl implements UserRoleService {
         return dao.findAllUserRoles();
     }
 
-    /* DAO tylko do odczytu
-
-    public void saveUserRole(UserRole entity) {
-        dao.saveUserRole(entity);
-    }
-
-    public void updateUserRole(UserRole entity) {
-        dao.updateUserRole(entity);
-    }
-
-    public void deleteUserRole(UserRole entity) {
-        dao.deleteUserRole(entity);
-    }
-
-    public void deleteUserRoleByID(String id) {
-        deleteUserRole(findUserRoleByID(id));
-    }
-
-    */
-
 }

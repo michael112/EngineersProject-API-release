@@ -11,16 +11,4 @@ public interface UserRoleService {
     UserRole findUserRoleByRoleName(String roleName);
 
     Set<UserRole> findAllUserRoles();
-
-    /* DAO tylko do odczytu
-
-    void saveUserRole(UserRole entity);
-
-    void updateUserRole(UserRole entity);
-
-    void deleteUserRole(UserRole entity);
-
-    void deleteUserRoleByID(String id);
-
-    */
 }

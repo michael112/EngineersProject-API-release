@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -19,9 +19,9 @@ import main.model.course.File;
 import main.model.language.Language;
 import main.model.user.User;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class CourseTest extends AbstractTest {
+public class CourseTest extends AbstractModelTest {
 
     private Course sampleCourse;
 

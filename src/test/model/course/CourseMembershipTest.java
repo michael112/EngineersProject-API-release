@@ -1,22 +1,19 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
 import main.model.course.CourseMembership;
-import main.service.model.course.coursemembership.CourseMembershipService;
 
 import main.model.course.Course;
 import main.model.user.User;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class CourseMembershipTest extends AbstractTest {
+public class CourseMembershipTest extends AbstractModelTest {
 
     private CourseMembership sampleCourseMembership;
 

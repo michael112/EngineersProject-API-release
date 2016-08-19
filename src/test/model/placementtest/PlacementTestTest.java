@@ -1,4 +1,4 @@
-package test.placementtest;
+package test.model.placementtest;
 
 import java.util.*;
 
@@ -13,9 +13,9 @@ import main.model.placementtest.PlacementAnswer;
 import main.model.user.userprofile.PlacementTestResult;
 import main.model.language.Language;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class PlacementTestTest extends AbstractTest {
+public class PlacementTestTest extends AbstractModelTest {
 
     private PlacementTest samplePlacementTest;
 

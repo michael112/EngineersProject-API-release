@@ -1,4 +1,4 @@
-package test.user;
+package test.model.user;
 
 import java.util.*;
 
@@ -10,9 +10,9 @@ import org.junit.Test;
 import main.model.user.userrole.UserRole;
 import main.service.model.user.userrole.UserRoleService;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class UserRoleTest extends AbstractTest {
+public class UserRoleTest extends AbstractModelTest {
 
     @Autowired
     private UserRoleService userRoleService;

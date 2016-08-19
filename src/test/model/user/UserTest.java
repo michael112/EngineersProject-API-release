@@ -1,4 +1,4 @@
-package test.user;
+package test.model.user;
 
 import java.util.*;
 
@@ -18,9 +18,9 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class UserTest extends AbstractTest {
+public class UserTest extends AbstractModelTest {
 
     private User sampleUser;
 

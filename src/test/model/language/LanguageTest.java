@@ -1,4 +1,4 @@
-package test.language;
+package test.model.language;
 
 import java.util.*;
 
@@ -12,10 +12,10 @@ import main.model.language.Language;
 import main.model.language.LanguageName;
 import main.service.model.language.LanguageService;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
 public class
-LanguageTest extends AbstractTest {
+LanguageTest extends AbstractModelTest {
 
     @Autowired
     private LanguageService languageService;

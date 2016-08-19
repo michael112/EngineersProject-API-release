@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -14,9 +14,9 @@ import main.model.course.StudentGrade;
 import main.model.course.Homework;
 import main.model.course.HomeworkSolution;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class HomeworkTest extends AbstractTest {
+public class HomeworkTest extends AbstractModelTest {
 
     private Homework sampleHomework;
 

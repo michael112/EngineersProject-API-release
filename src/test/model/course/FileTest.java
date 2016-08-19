@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -10,9 +10,9 @@ import main.model.course.File;
 
 import main.model.user.User;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class FileTest extends AbstractTest {
+public class FileTest extends AbstractModelTest {
 
     private File sampleFile;
 

@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -13,9 +13,9 @@ import main.model.course.Course;
 
 import main.model.language.Language;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class CourseTypeTest extends AbstractTest {
+public class CourseTypeTest extends AbstractModelTest {
 
     /*
     @Autowired

@@ -22,6 +22,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.web.servlet.LocaleResolver;
 
+import org.springframework.util.Assert;
+
 import main.service.mail.MailService;
 
 import main.json.user.UserInfoJson;
@@ -31,8 +33,6 @@ import main.json.course.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
-
-import main.controllers.utilities.ErrorResponseController;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -88,9 +88,6 @@ public class UserController {
     @Autowired
     private MailService mailService;
 
-    @Autowired
-    private ErrorResponseController errorResponseController;
-
     @PostConstruct
     public void initialize() {
         this.localeToLanguage = new LocaleToLanguage(this.localeResolver, this.httpServletRequest);
@@ -118,20 +115,15 @@ public class UserController {
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> getUserInfo() {
         User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-			return this.errorResponseController.unauthorizedResponse();
-		}
-		else {
-            UserInfoJson userJson = userToJson(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.info.success");
-            return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
-		}
-
+        Assert.notNull(currentUser);
+        UserInfoJson userJson = userToJson(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.info.success");
+        return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
     }
 
     public UserInfoJson userToJson(User user) {
@@ -156,63 +148,51 @@ public class UserController {
         return new CourseJson(course.getId(), this.localeToLanguage.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PASSWORD, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> editUserPassword(@RequestBody EditPasswordJson editPasswordJson) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        HttpStatus responseStatus;
+        String messageStr;
+        if( !( this.passwordEncoder.matches(editPasswordJson.getOldPassword(), currentUser.getPassword()) ) ) {
+            responseStatus = HttpStatus.BAD_REQUEST;
+            messageStr = this.labelsService.getLabel("user.invalid.password");
+        }
+        else if( !( editPasswordJson.getNewPassword().equals(editPasswordJson.getNewPasswordConfirm()) ) ) {
+            responseStatus = HttpStatus.BAD_REQUEST;
+            messageStr = this.labelsService.getLabel("user.password.dont.match");
         }
         else {
-            HttpStatus responseStatus;
-            String messageStr;
-            if( !( this.passwordEncoder.matches(editPasswordJson.getOldPassword(), currentUser.getPassword()) ) ) {
-                responseStatus = HttpStatus.BAD_REQUEST;
-                messageStr = this.labelsService.getLabel("user.invalid.password");
-            }
-            else if( !( editPasswordJson.getNewPassword().equals(editPasswordJson.getNewPasswordConfirm()) ) ) {
-                responseStatus = HttpStatus.BAD_REQUEST;
-                messageStr = this.labelsService.getLabel("user.password.dont.match");
-            }
-            else {
-                currentUser.setPassword(this.passwordEncoder.encode(editPasswordJson.getNewPassword()));
-                this.userService.updateUser(currentUser);
-                responseStatus = HttpStatus.OK;
-                messageStr = this.labelsService.getLabel("user.edit.password.success");
-            }
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+            currentUser.setPassword(this.passwordEncoder.encode(editPasswordJson.getNewPassword()));
+            this.userService.updateUser(currentUser);
+            responseStatus = HttpStatus.OK;
+            messageStr = this.labelsService.getLabel("user.edit.password.success");
         }
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_EMAIL, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> showEmail() {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.showmail.success");
-            return new ResponseEntity<CurrentEmailResponseJson>(new CurrentEmailResponseJson(currentUser.getEmail(), messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.showmail.success");
+        return new ResponseEntity<CurrentEmailResponseJson>(new CurrentEmailResponseJson(currentUser.getEmail(), messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_EMAIL, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> editEmail(@RequestBody EditEmailJson editEmailJson) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            String subject = this.labelsService.getLabel("user.editmail.subject");
-            String message = getEmailMessage(currentUser, editEmailJson.getNewEmail());
-            this.mailService.sendMail(currentUser.getEmail(), subject, message);
-            String messageStr = this.labelsService.getLabel("user.editmail.success.prefix") + currentUser.getEmail() + this.labelsService.getLabel("user.editmail.success.suffix");
-            HttpStatus responseStatus = HttpStatus.OK;
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        String subject = this.labelsService.getLabel("user.editmail.subject");
+        String message = getEmailMessage(currentUser, editEmailJson.getNewEmail());
+        this.mailService.sendMail(currentUser.getEmail(), subject, message);
+        String messageStr = this.labelsService.getLabel("user.editmail.success.prefix") + currentUser.getEmail() + this.labelsService.getLabel("user.editmail.success.suffix");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     private String getEmailMessage(User currentUser, String newEmail) {
@@ -248,113 +228,85 @@ public class UserController {
         return domainURL;
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_EMAIL_CONFIRM, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> confirmEmailEdition(@RequestParam("newEmail") String newEmail) {
         User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            currentUser.setEmail(newEmail);
-            this.userService.updateUser(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelsService.getLabel("user.editmail.confirmation.success.suffix");
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+        Assert.notNull(currentUser);
+        currentUser.setEmail(newEmail);
+        this.userService.updateUser(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelsService.getLabel("user.editmail.confirmation.success.suffix");
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_ADDRESS, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> showAddress() {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.showaddress.success");
-            return new ResponseEntity<CurrentAddressResponseJson>(new CurrentAddressResponseJson(currentUser.getAddress(), messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.showaddress.success");
+        return new ResponseEntity<CurrentAddressResponseJson>(new CurrentAddressResponseJson(currentUser.getAddress(), messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADDRESS, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> editAddress(@RequestBody Address newAddress) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            currentUser.setAddress(newAddress);
-            this.userService.updateUser(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.editaddress.success");
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        currentUser.setAddress(newAddress);
+        this.userService.updateUser(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.editaddress.success");
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_PHONES, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> showPhones() {
 		User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.showphones.success");
-            return new ResponseEntity<CurrentPhonesResponseJson>(new CurrentPhonesResponseJson(currentUser.getPhone(), messageStr, responseStatus), responseStatus);
-        }
+        Assert.notNull(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.showphones.success");
+        return new ResponseEntity<CurrentPhonesResponseJson>(new CurrentPhonesResponseJson(currentUser.getPhone(), messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PHONE_LIST, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> editPhoneList(@RequestBody EditPhoneJson newPhone) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            currentUser.setPhone(newPhone.getPhone());
-            this.userService.updateUser(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.editphonelist.success");
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        currentUser.setPhone(newPhone.getPhone());
+        this.userService.updateUser(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.editphonelist.success");
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADD_PHONE, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends ResponseJson> addPhone(@RequestBody Phone newPhone) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            currentUser.addPhone(newPhone);
-            this.userService.updateUser(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.addphone.success");
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        currentUser.addPhone(newPhone);
+        this.userService.updateUser(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.addphone.success");
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    @RolesAllowed({RolesAllowedConstants.USER, RolesAllowedConstants.ADMIN})
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<? extends ResponseJson> removePhone(@RequestBody Phone phoneToRemove) {
-        User currentUser = this.currentUserService.getCurrentUser();
-        if (currentUser == null) {
-            return this.errorResponseController.unauthorizedResponse();
-        }
-        else {
-            phoneToRemove = currentUser.getPhone(phoneToRemove.getPhoneNumber());
-            currentUser.removePhone(phoneToRemove);
-            this.userService.updateUser(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelsService.getLabel("user.removephone.success");
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
-        }
+		User currentUser = this.currentUserService.getCurrentUser();
+        Assert.notNull(currentUser);
+        phoneToRemove = currentUser.getPhone(phoneToRemove.getPhoneNumber());
+        currentUser.removePhone(phoneToRemove);
+        this.userService.updateUser(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelsService.getLabel("user.removephone.success");
+        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
 }

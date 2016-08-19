@@ -47,7 +47,6 @@ public class Message extends AbstractUuidModel {
 	}
 
 	@Getter
-	@Setter
 	@ManyToMany(fetch=FetchType.EAGER)
 	@JoinTable(name = "messagesusers",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },

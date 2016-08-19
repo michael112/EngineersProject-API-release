@@ -1,4 +1,4 @@
-package test.course;
+package test.model.course;
 
 import java.util.*;
 
@@ -12,9 +12,9 @@ import main.model.course.StudentGrade;
 import main.model.course.Course;
 import main.model.course.CourseMembership;
 
-import test.AbstractTest;
+import test.model.AbstractModelTest;
 
-public class TestTest extends AbstractTest {
+public class TestTest extends AbstractModelTest {
 
     private Test sampleTest;
 
