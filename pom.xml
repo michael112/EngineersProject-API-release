@@ -23,25 +23,15 @@
 						<target>1.7</target>
 					</configuration>
 				</plugin>
-				<!--
-				<plugin>
-					<artifactId>maven-war-plugin</artifactId>
-					<version>2.4</version>
-					<configuration>
-						<warSourceDirectory>WebContent</warSourceDirectory>
-						<failOnMissingWebXml>false</failOnMissingWebXml>
-					</configuration>
-				</plugin>
-				-->
 			</plugins>
 
 		<finalName>SpringSecurityWithHibernate</finalName>
 	</build>
 
 	<properties>
-		<springframework.version>4.2.5.RELEASE</springframework.version> <!-- było 4.0.5 -->
-		<springsecurity.version>4.0.4.RELEASE</springsecurity.version> <!-- było 4.0.3 -->
-		<oauth.version>2.0.8.RELEASE</oauth.version> <!-- istnieje 2.0.9, ale ściąga commons-parent-32.pom i się zawiesza -->
+		<springframework.version>4.3.2.RELEASE</springframework.version>
+		<springsecurity.version>4.0.4.RELEASE</springsecurity.version>
+		<oauth.version>2.0.10.RELEASE</oauth.version>
 		<hibernate.version>5.1.0.Final</hibernate.version>
 		<javax.transaction.version>1.1</javax.transaction.version>
 		<mysql.connector.version>5.1.38</mysql.connector.version>
@@ -212,7 +202,6 @@
 		</dependency>
 
 		<!-- jUnit -->
-		<!-- https://mvnrepository.com/artifact/junit/junit -->
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
