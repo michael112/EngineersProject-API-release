@@ -48,6 +48,8 @@ import main.service.currentUser.CurrentUserService;
 import main.service.localetolanguage.LocaleToLanguage;
 import main.service.labels.LabelsService;
 
+import main.service.domain.DomainURIProvider;
+
 import main.json.response.ResponseJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.CurrentUserResponseJson;
@@ -79,6 +81,9 @@ public class UserController {
 
     @Autowired
     private HttpServletRequest httpServletRequest;
+
+    @Autowired
+    private DomainURIProvider domainURIProvider;
 
     private LocaleToLanguage localeToLanguage;
 
@@ -205,27 +210,10 @@ public class UserController {
         result += newEmail;
         result += this.labelsService.getLabel("user.editmail.message.part4");
         // druga opcja to wykorzystanie linka zapisanego na sztywno w pliku konfiguracyjnym
-        String confirmEmailLink = getDomainURL() + UserControllerUrlConstants.CLASS_URL + UserControllerUrlConstants.USER_EMAIL_CONFIRM + "?newEmail=" + newEmail;
+        String confirmEmailLink = this.domainURIProvider.getDomainURI() + UserControllerUrlConstants.CLASS_URL + UserControllerUrlConstants.USER_EMAIL_CONFIRM + "?newEmail=" + newEmail;
         result += confirmEmailLink;
         result += "\n";
         return result;
-    }
-
-    private String getDomainURL() {
-        String currentURL = this.httpServletRequest.getRequestURL().toString();
-
-        String http = "http://";
-        String[] parts;
-
-        if( currentURL.startsWith(http) ) {
-            parts = currentURL.substring(http.length()).split("/");
-        }
-        else {
-            parts = currentURL.split("/");
-        }
-
-        String domainURL = http + parts[0];
-        return domainURL;
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
