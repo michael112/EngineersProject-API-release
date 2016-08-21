@@ -95,7 +95,7 @@
 		<property name="tokenStore" ref="tokenStore"/>
 	</bean>
 
-	<!-- TokenJson management -->
+	<!-- Token management -->
 	<oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices" user-approval-handler-ref="userApprovalHandler">
 		<oauth:authorization-code/>
 		<oauth:implicit/>
@@ -108,8 +108,8 @@
 
 	<!-- Client Definition -->
 	<!--
-		Refresh TokenJson: 2 hours,
-		Access TokenJson: 10 minutes
+		Refresh Token: 2 hours,
+		Access Token: 10 minutes
 	-->
 	<oauth:client-details-service id="clientDetails">
 		<oauth:client client-id="${oauth.token.client}"
