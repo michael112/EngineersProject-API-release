@@ -1,11 +1,11 @@
-package main.service.localetolanguage;
+package main.util.currentlanguagename;
 
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 
 import main.model.language.Language;
 
-public class LocaleToLanguage {
+public class CurrentLanguageNameProviderImpl implements CurrentLanguageNameProvider {
 
     private HttpServletRequest httpServletRequest;
 
@@ -16,7 +16,7 @@ public class LocaleToLanguage {
         return language.getLanguageName(localeLanguageCode);
     }
 
-    public LocaleToLanguage(LocaleResolver localeResolver, HttpServletRequest httpServletRequest) {
+    public CurrentLanguageNameProviderImpl(LocaleResolver localeResolver, HttpServletRequest httpServletRequest) {
         this.localeResolver = localeResolver;
         this.httpServletRequest = httpServletRequest;
     }

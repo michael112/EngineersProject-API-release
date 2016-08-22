@@ -1,4 +1,4 @@
-package main.service.token;
+package main.util.token;
 
 public interface TokenProvider {
 

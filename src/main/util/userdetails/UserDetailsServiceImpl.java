@@ -1,6 +1,6 @@
 // Based on: http://websystique.com/spring-security/spring-security-4-hibernate-annotation-example/
 
-package main.service.userdetails;
+package main.util.userdetails;
 
 import java.util.ArrayList;
 import java.util.List;

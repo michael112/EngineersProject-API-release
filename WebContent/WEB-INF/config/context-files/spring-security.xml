@@ -24,7 +24,7 @@
 		</security:authentication-provider>
 	</security:authentication-manager>
 
-	<bean id="customUserDetailsService" class="main.service.userdetails.UserDetailsServiceImpl" />
+	<bean id="customUserDetailsService" class="main.util.userdetails.UserDetailsServiceImpl" />
 
 	<!-- Password encoder -->
 	<bean id="encoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder" />

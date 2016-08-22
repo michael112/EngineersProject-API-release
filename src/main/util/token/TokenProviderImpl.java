@@ -1,4 +1,4 @@
-package main.service.token;
+package main.util.token;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -21,9 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 
-import main.service.domain.DomainURIProvider;
+import main.util.domain.DomainURIProvider;
 
-import main.service.properties.PropertyUtil;
+import main.util.properties.PropertyProvider;
 
 import main.json.token.TokenJson;
 
@@ -34,7 +34,7 @@ public class TokenProviderImpl implements TokenProvider {
     private DomainURIProvider domainURIProvider;
 
     @Autowired
-    private PropertyUtil propertyUtil;
+    private PropertyProvider propertyProvider;
 
     private ObjectMapper objectMapper;
 
@@ -61,12 +61,12 @@ public class TokenProviderImpl implements TokenProvider {
 
     private String getTokenURI(String username, String password) {
         Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("getTokenURL", this.propertyUtil.getProperty("oauth.gettoken.url"));
-        valuesMap.put("client", this.propertyUtil.getProperty("oauth.token.client"));
+        valuesMap.put("getTokenURL", this.propertyProvider.getProperty("oauth.gettoken.url"));
+        valuesMap.put("client", this.propertyProvider.getProperty("oauth.token.client"));
         valuesMap.put("username", username);
         valuesMap.put("password", password);
         StrSubstitutor strSubstitutor = new StrSubstitutor(valuesMap);
-        String templateString = this.propertyUtil.getProperty("oauth.login.fullurl");
+        String templateString = this.propertyProvider.getProperty("oauth.login.fullurl");
 
         return this.domainURIProvider.getDomainURI() + strSubstitutor.replace(templateString);
     }

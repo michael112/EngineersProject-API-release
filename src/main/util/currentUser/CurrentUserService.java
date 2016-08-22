@@ -1,4 +1,4 @@
-package main.service.currentUser;
+package main.util.currentUser;
 
 import main.model.user.User;
 

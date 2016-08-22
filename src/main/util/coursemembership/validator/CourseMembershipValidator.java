@@ -1,4 +1,4 @@
-package main.service.coursemembership.validator;
+package main.util.coursemembership.validator;
 
 import main.model.user.User;
 import main.model.course.Course;

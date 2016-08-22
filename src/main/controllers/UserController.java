@@ -24,7 +24,7 @@ import org.springframework.web.servlet.LocaleResolver;
 
 import org.springframework.util.Assert;
 
-import main.service.mail.MailService;
+import main.util.mail.MailSender;
 
 import main.json.user.UserInfoJson;
 import main.json.user.NewUserJson;
@@ -43,12 +43,14 @@ import main.model.user.userprofile.Phone;
 import main.service.model.user.user.UserService;
 import main.service.model.user.userrole.UserRoleService;
 
-import main.service.currentUser.CurrentUserService;
+import main.util.currentUser.CurrentUserService;
 
-import main.service.localetolanguage.LocaleToLanguage;
-import main.service.labels.LabelsService;
+import main.util.labels.LabelProvider;
 
-import main.service.domain.DomainURIProviderImpl;
+import main.util.currentlanguagename.CurrentLanguageNameProvider;
+import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
+
+import main.util.domain.DomainURIProvider;
 
 import main.json.response.ResponseJson;
 import main.json.response.MessageResponseJson;
@@ -83,19 +85,19 @@ public class UserController {
     private HttpServletRequest httpServletRequest;
 
     @Autowired
-    private DomainURIProviderImpl domainURIProvider;
+    private DomainURIProvider domainURIProvider;
 
-    private LocaleToLanguage localeToLanguage;
-
-    @Autowired
-    private LabelsService labelsService;
+    private CurrentLanguageNameProvider currentLanguageNameProvider;
 
     @Autowired
-    private MailService mailService;
+    private LabelProvider labelProvider;
+
+    @Autowired
+    private MailSender mailSender;
 
     @PostConstruct
     public void initialize() {
-        this.localeToLanguage = new LocaleToLanguage(this.localeResolver, this.httpServletRequest);
+        this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
     }
 
     @PermitAll
@@ -105,17 +107,17 @@ public class UserController {
         String messageStr;
         if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelsService.getLabel("user.passwords.not.equal");
+            messageStr = this.labelProvider.getLabel("user.passwords.not.equal");
         }
         else if (!(userService.isUsernameUnique(userJson.getUsername()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelsService.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelsService.getLabel("user.already.exists.suffix");
+            messageStr = this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix");
         }
         else {
             User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleService.findUserRoleByRoleName("USER"));
             this.userService.saveUser(user);
             responseStatus = HttpStatus.OK;
-            messageStr = this.labelsService.getLabel("user.saved.prefix") + userJson.getUsername() + this.labelsService.getLabel("user.saved.suffix");
+            messageStr = this.labelProvider.getLabel("user.saved.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.saved.suffix");
         }
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
@@ -127,7 +129,7 @@ public class UserController {
         Assert.notNull(currentUser);
         UserInfoJson userJson = userToJson(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.info.success");
+        String messageStr = this.labelProvider.getLabel("user.info.success");
         return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
     }
 
@@ -146,11 +148,11 @@ public class UserController {
 
     public CourseJson studentCourseToJson(CourseMembership courseMembership) {
         Course course = courseMembership.getCourse();
-        return new CourseJson(course.getId(), this.localeToLanguage.getLanguageName(course.getLanguage()), course.getCourseLevel().getName(), courseMembership.isActive());
+        return new CourseJson(course.getId(), this.currentLanguageNameProvider.getLanguageName(course.getLanguage()), course.getCourseLevel().getName(), courseMembership.isActive());
     }
 
     public CourseJson teacherCourseToJson(Course course) {
-        return new CourseJson(course.getId(), this.localeToLanguage.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
+        return new CourseJson(course.getId(), this.currentLanguageNameProvider.getLanguageName(course.getLanguage()), course.getCourseLevel().getName());
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -162,17 +164,17 @@ public class UserController {
         String messageStr;
         if( !( this.passwordEncoder.matches(editPasswordJson.getOldPassword(), currentUser.getPassword()) ) ) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelsService.getLabel("user.invalid.password");
+            messageStr = this.labelProvider.getLabel("user.invalid.password");
         }
         else if( !( editPasswordJson.getNewPassword().equals(editPasswordJson.getNewPasswordConfirm()) ) ) {
             responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelsService.getLabel("user.password.dont.match");
+            messageStr = this.labelProvider.getLabel("user.password.dont.match");
         }
         else {
             currentUser.setPassword(this.passwordEncoder.encode(editPasswordJson.getNewPassword()));
             this.userService.updateUser(currentUser);
             responseStatus = HttpStatus.OK;
-            messageStr = this.labelsService.getLabel("user.edit.password.success");
+            messageStr = this.labelProvider.getLabel("user.edit.password.success");
         }
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
@@ -183,7 +185,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.showmail.success");
+        String messageStr = this.labelProvider.getLabel("user.showmail.success");
         return new ResponseEntity<CurrentEmailResponseJson>(new CurrentEmailResponseJson(currentUser.getEmail(), messageStr, responseStatus), responseStatus);
     }
 
@@ -192,23 +194,23 @@ public class UserController {
     public ResponseEntity<? extends ResponseJson> editEmail(@RequestBody EditEmailJson editEmailJson) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
-        String subject = this.labelsService.getLabel("user.editmail.subject");
+        String subject = this.labelProvider.getLabel("user.editmail.subject");
         String message = getEmailMessage(currentUser, editEmailJson.getNewEmail());
-        this.mailService.sendMail(currentUser.getEmail(), subject, message);
-        String messageStr = this.labelsService.getLabel("user.editmail.success.prefix") + currentUser.getEmail() + this.labelsService.getLabel("user.editmail.success.suffix");
+        this.mailSender.sendMail(currentUser.getEmail(), subject, message);
+        String messageStr = this.labelProvider.getLabel("user.editmail.success.prefix") + currentUser.getEmail() + this.labelProvider.getLabel("user.editmail.success.suffix");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     private String getEmailMessage(User currentUser, String newEmail) {
         String result = "";
-        result += this.labelsService.getLabel("user.editmail.message.part1");
+        result += this.labelProvider.getLabel("user.editmail.message.part1");
         result += currentUser.getFirstName() + " " + currentUser.getLastName();
-        result += this.labelsService.getLabel("user.editmail.message.part2");
+        result += this.labelProvider.getLabel("user.editmail.message.part2");
         result += currentUser.getEmail();
-        result += this.labelsService.getLabel("user.editmail.message.part3");
+        result += this.labelProvider.getLabel("user.editmail.message.part3");
         result += newEmail;
-        result += this.labelsService.getLabel("user.editmail.message.part4");
+        result += this.labelProvider.getLabel("user.editmail.message.part4");
         // druga opcja to wykorzystanie linka zapisanego na sztywno w pliku konfiguracyjnym
         String confirmEmailLink = this.domainURIProvider.getDomainURI() + UserControllerUrlConstants.CLASS_URL + UserControllerUrlConstants.USER_EMAIL_CONFIRM + "?newEmail=" + newEmail;
         result += confirmEmailLink;
@@ -224,7 +226,7 @@ public class UserController {
         currentUser.setEmail(newEmail);
         this.userService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelsService.getLabel("user.editmail.confirmation.success.suffix");
+        String messageStr = this.labelProvider.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelProvider.getLabel("user.editmail.confirmation.success.suffix");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
@@ -234,7 +236,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.showaddress.success");
+        String messageStr = this.labelProvider.getLabel("user.showaddress.success");
         return new ResponseEntity<CurrentAddressResponseJson>(new CurrentAddressResponseJson(currentUser.getAddress(), messageStr, responseStatus), responseStatus);
     }
 
@@ -246,7 +248,7 @@ public class UserController {
         currentUser.setAddress(newAddress);
         this.userService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.editaddress.success");
+        String messageStr = this.labelProvider.getLabel("user.editaddress.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
@@ -256,7 +258,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.showphones.success");
+        String messageStr = this.labelProvider.getLabel("user.showphones.success");
         return new ResponseEntity<CurrentPhonesResponseJson>(new CurrentPhonesResponseJson(currentUser.getPhone(), messageStr, responseStatus), responseStatus);
     }
 
@@ -268,7 +270,7 @@ public class UserController {
         currentUser.setPhone(newPhone.getPhone());
         this.userService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.editphonelist.success");
+        String messageStr = this.labelProvider.getLabel("user.editphonelist.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
@@ -280,7 +282,7 @@ public class UserController {
         currentUser.addPhone(newPhone);
         this.userService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.addphone.success");
+        String messageStr = this.labelProvider.getLabel("user.addphone.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 
@@ -293,7 +295,7 @@ public class UserController {
         currentUser.removePhone(phoneToRemove);
         this.userService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelsService.getLabel("user.removephone.success");
+        String messageStr = this.labelProvider.getLabel("user.removephone.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
     }
 

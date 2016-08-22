@@ -1,4 +1,4 @@
-package main.service.properties;
+package main.util.properties;
 
 import java.util.Properties;
 
@@ -7,7 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("propertyUtil")
-public class PropertyUtilImpl implements PropertyUtil {
+public class PropertyProviderImpl implements PropertyProvider {
     @Autowired
     private ApplicationContext appContext;
 

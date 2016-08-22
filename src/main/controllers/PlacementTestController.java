@@ -28,9 +28,11 @@ import org.springframework.util.Assert;
 import main.constants.urlconstants.PlacementTestControllerUrlConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
-import main.service.currentUser.CurrentUserService;
-import main.service.localetolanguage.LocaleToLanguage;
-import main.service.labels.LabelsService;
+import main.util.currentUser.CurrentUserService;
+import main.util.labels.LabelProvider;
+
+import main.util.currentlanguagename.CurrentLanguageNameProvider;
+import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
 import main.service.model.language.LanguageService;
 import main.service.model.placementtest.PlacementTestService;
@@ -76,14 +78,14 @@ public class PlacementTestController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    private LocaleToLanguage localeToLanguage;
+    private CurrentLanguageNameProvider currentLanguageNameProvider;
 
     @Autowired
-    private LabelsService labelsService;
+    private LabelProvider labelProvider;
 
     @PostConstruct
     public void initialize() {
-        this.localeToLanguage = new LocaleToLanguage(this.localeResolver, this.httpServletRequest);
+        this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
     }
 
     @PermitAll
@@ -103,9 +105,9 @@ public class PlacementTestController {
                     tests.add(new PlacementTestResultJson(t.getId()));
                 }
             }
-            placementTestListJsonSet.add(new PlacementTestListJson(this.localeToLanguage.getLanguageName(l), tests));
+            placementTestListJsonSet.add(new PlacementTestListJson(this.currentLanguageNameProvider.getLanguageName(l), tests));
         }
-        String messageStr = this.labelsService.getLabel("placementtest.list.success");
+        String messageStr = this.labelProvider.getLabel("placementtest.list.success");
         HttpStatus responseStatus = HttpStatus.OK;
         PlacementTestListResponseJson responseJson = new PlacementTestListResponseJson(placementTestListJsonSet, messageStr, responseStatus);
         return new ResponseEntity<PlacementTestListResponseJson>(responseJson, responseStatus);
@@ -118,14 +120,14 @@ public class PlacementTestController {
         String messageStr;
         HttpStatus responseStatus;
         if( test == null ) {
-            messageStr = this.labelsService.getLabel("placementtest.content.null");
+            messageStr = this.labelProvider.getLabel("placementtest.content.null");
             responseStatus = HttpStatus.BAD_REQUEST;
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
         }
         else {
-            messageStr = this.labelsService.getLabel("placementtest.content.success");
+            messageStr = this.labelProvider.getLabel("placementtest.content.success");
             responseStatus = HttpStatus.OK;
-            PlacementTestJson placementTestJson = new PlacementTestJson(this.localeToLanguage.getLanguageName(test.getLanguage()), test.getTasks());
+            PlacementTestJson placementTestJson = new PlacementTestJson(this.currentLanguageNameProvider.getLanguageName(test.getLanguage()), test.getTasks());
             PlacementTestContentJson placementTestContentJson = new PlacementTestContentJson(placementTestJson, messageStr, responseStatus);
             return new ResponseEntity<PlacementTestContentJson>(placementTestContentJson, responseStatus);
         }
@@ -142,7 +144,7 @@ public class PlacementTestController {
         double result = calculateTestResult(solvedPlacementTestJson, placementTest);
         PlacementTestResult placementTestResult = new PlacementTestResult(placementTest, currentUser, result);
         this.placementTestResultService.savePlacementTestResult(placementTestResult);
-        String messageStr = this.labelsService.getLabel("placementtest.solved.success");
+        String messageStr = this.labelProvider.getLabel("placementtest.solved.success");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
     }

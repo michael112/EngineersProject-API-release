@@ -1,14 +1,13 @@
-package main.service.mail;
+package main.util.mail;
 
-import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 
 import lombok.Setter;
 
-public class MailServiceImpl implements MailService {
+public class MailSenderImpl implements MailSender {
 
     @Setter
-    private MailSender mailSender;
+    private org.springframework.mail.MailSender mailSender;
 
     @Setter
     private SimpleMailMessage message;

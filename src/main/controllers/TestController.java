@@ -3,6 +3,7 @@ package main.controllers;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
+import main.util.properties.PropertyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -23,7 +24,7 @@ import javax.annotation.security.PermitAll;
 
 import main.service.model.user.user.UserService;
 import main.model.user.User;
-import main.service.mail.MailService;
+import main.util.mail.MailSender;
 
 import main.constants.urlconstants.GlobalUrlConstants;
 
@@ -35,7 +36,7 @@ public class TestController {
     private UserService userService;
 
     @Autowired
-    private MailService mailService;
+    private MailSender mailSender;
 
     @Autowired
     private HttpServletRequest httpServletRequest;
@@ -44,13 +45,13 @@ public class TestController {
     private LocaleResolver localeResolver;
 
     @Autowired
-    private main.service.properties.PropertyUtil propertyUtil;
+    private PropertyProvider propertyProvider;
 
     @RequestMapping( value = "/getproperty", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
     @ResponseBody
     @PermitAll
     public ResponseEntity<String> getProperty(@RequestHeader("Property") String property) {
-        return new ResponseEntity<String>(this.propertyUtil.getProperty(property), HttpStatus.OK);
+        return new ResponseEntity<String>(this.propertyProvider.getProperty(property), HttpStatus.OK);
     }
 
     @RequestMapping( value = "/localelng", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
@@ -122,7 +123,7 @@ public class TestController {
     @PermitAll
     @ResponseBody
     public ResponseEntity<String> sendSampleMail( @RequestParam String to, @RequestParam String title, @RequestParam String message ) {
-        mailService.sendMail(to, title, message);
+        mailSender.sendMail(to, title, message);
         return new ResponseEntity<>("", HttpStatus.OK);
     }
 

@@ -12,9 +12,9 @@ import org.springframework.security.core.Authentication;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import main.service.currentUser.CurrentUserService;
+import main.util.currentUser.CurrentUserService;
 
-import main.service.coursemembership.validator.CourseMembershipValidator;
+import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.model.user.User;
 import main.model.UuidGenerator;

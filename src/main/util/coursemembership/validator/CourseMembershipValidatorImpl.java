@@ -1,4 +1,4 @@
-package main.service.coursemembership.validator;
+package main.util.coursemembership.validator;
 
 import java.util.Set;
 

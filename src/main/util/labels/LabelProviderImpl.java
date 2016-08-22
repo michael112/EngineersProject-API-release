@@ -1,4 +1,4 @@
-package main.service.labels;
+package main.util.labels;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -9,7 +9,7 @@ import org.springframework.context.MessageSource;
 
 import lombok.Setter;
 
-public class LabelsServiceImpl implements LabelsService {
+public class LabelProviderImpl implements LabelProvider {
 
     @Autowired
     private HttpServletRequest httpServletRequest;

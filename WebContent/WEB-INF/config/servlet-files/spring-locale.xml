@@ -26,7 +26,7 @@
 		<property name="fallbackToSystemLocale" value="false"/>
 	</bean>
 
-	<bean id="labelsService" class="main.service.labels.LabelsServiceImpl">
+	<bean id="labelProvider" class="main.util.labels.LabelProviderImpl">
 		<property name="localeResolver" ref="localeResolver" />
 		<property name="messageSource" ref="messageSource" />
 	</bean>

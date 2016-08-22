@@ -1,4 +1,4 @@
-package main.service.domain;
+package main.util.domain;
 
 import javax.servlet.http.HttpServletRequest;
 

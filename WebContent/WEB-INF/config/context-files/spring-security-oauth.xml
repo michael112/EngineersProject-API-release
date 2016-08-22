@@ -11,13 +11,8 @@
        http://www.springframework.org/schema/security/oauth2
        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
 
-	<!-- Token Provider Service -->
 	<security:http pattern="${oauth.gettoken.url}" create-session="stateless" authentication-manager-ref="clientAuthenticationManager" use-expressions="false">
 		<security:intercept-url pattern="${oauth.gettoken.url}" access="IS_AUTHENTICATED_FULLY" />
-	<!-- do logout'u
-		<security:intercept-url pattern="${oauth.logout.url}" access="ROLE_USER,ROLE_ADMIN" method="GET" />
-		<security:logout invalidate-session="true" logout-url="${oauth.logout.url}" />
-		-->
 		<security:csrf disabled="true" />
 		<security:anonymous enabled="false"/>
 		<security:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
@@ -25,7 +20,6 @@
 		<security:access-denied-handler ref="oauthAccessDeniedHandler"/>
 	</security:http>
 	
-	<!-- Token Logout Service -->
 	<security:http pattern="${oauth.logout.url}" create-session="never">
 		<security:intercept-url pattern="${oauth.logout.url}" access="IS_AUTHENTICATED_FULLY" />
 		<security:logout invalidate-session="true" logout-url="${oauth.logout.url}" success-handler-ref="logoutSuccessHandler"/>
@@ -36,23 +30,19 @@
 		<security:access-denied-handler ref="oauthAccessDeniedHandler" />
 	</security:http>
 	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler" />
-
-	<bean id="oauthAuthenticationEntryPoint"
-		  class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-		<property name="realmName" value="dstest"/>
+	
+	<bean id="oauthAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		<property name="realmName" value="${oauth.domainname}"/>
 	</bean>
 
-	<bean id="clientAuthenticationEntryPoint"
-		  class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
-		<property name="realmName" value="dstest/client"/>
-		<property name="typeName" value="Basic"/>
+	<bean id="clientAuthenticationEntryPoint" class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
+		<property name="realmName" value="${oauth.domainname}/${oauth.token.client}"/>
+		<property name="typeName" value="${oauth.typename}"/>
 	</bean>
 
-	<bean id="oauthAccessDeniedHandler"
-		  class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler"/>
+	<bean id="oauthAccessDeniedHandler" class="org.springframework.security.oauth2.provider.error.OAuth2AccessDeniedHandler" />
 
-	<bean id="clientCredentialsTokenEndpointFilter"
-		  class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
+	<bean id="clientCredentialsTokenEndpointFilter" class="org.springframework.security.oauth2.provider.client.ClientCredentialsTokenEndpointFilter">
 		<property name="authenticationManager" ref="clientAuthenticationManager"/>
 	</bean>
 
@@ -103,7 +93,6 @@
 		<property name="tokenStore" ref="tokenStore"/>
 	</bean>
 
-	<!-- Token management -->
 	<oauth:authorization-server client-details-service-ref="clientDetails" token-services-ref="tokenServices" user-approval-handler-ref="userApprovalHandler">
 		<oauth:authorization-code/>
 		<oauth:implicit/>
@@ -112,13 +101,8 @@
 		<oauth:password/>
 	</oauth:authorization-server>
 
-	<oauth:resource-server id="resourceServerFilter" resource-id="dstest" token-services-ref="tokenServices"/>
+	<oauth:resource-server id="resourceServerFilter" resource-id="${oauth.domainname}" token-services-ref="tokenServices"/>
 
-	<!-- Client Definition -->
-	<!--
-		Refresh Token: 2 hours,
-		Access Token: 10 minutes
-	-->
 	<oauth:client-details-service id="clientDetails">
 		<oauth:client client-id="${oauth.token.client}"
 					  authorized-grant-types="password,authorization_code,refresh_token,implicit,redirect"

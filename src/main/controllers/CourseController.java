@@ -19,10 +19,10 @@ import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
 import main.constants.urlconstants.CourseControllerUrlConstants;
 
-import main.service.currentUser.CurrentUserService;
 import main.service.model.course.course.CourseService;
 
-import main.service.labels.LabelsService;
+import main.util.currentUser.CurrentUserService;
+import main.util.labels.LabelProvider;
 
 import main.json.response.ResponseJson;
 
@@ -32,7 +32,6 @@ import main.model.course.Course;
 import main.json.response.MessageResponseJson;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
-import main.security.coursemembership.annotations.CourseMembershipType;
 
 @RequestMapping(value = CourseControllerUrlConstants.CLASS_URL)
 @RestController
@@ -45,7 +44,7 @@ public class CourseController {
     private CourseService courseService;
 
     @Autowired
-    private LabelsService labelsService;
+    private LabelProvider labelProvider;
 
 
     @RolesAllowed(RolesAllowedConstants.USER)
