@@ -48,7 +48,7 @@ import main.service.currentUser.CurrentUserService;
 import main.service.localetolanguage.LocaleToLanguage;
 import main.service.labels.LabelsService;
 
-import main.service.domain.DomainURIProvider;
+import main.service.domain.DomainURIProviderImpl;
 
 import main.json.response.ResponseJson;
 import main.json.response.MessageResponseJson;
@@ -83,7 +83,7 @@ public class UserController {
     private HttpServletRequest httpServletRequest;
 
     @Autowired
-    private DomainURIProvider domainURIProvider;
+    private DomainURIProviderImpl domainURIProvider;
 
     private LocaleToLanguage localeToLanguage;
 

@@ -11,23 +11,31 @@
        http://www.springframework.org/schema/security/oauth2
        http://www.springframework.org/schema/security/spring-security-oauth2-2.0.xsd">
 
-	<!-- Definition of the Authentication Service -->
+	<!-- Token Provider Service -->
 	<security:http pattern="${oauth.gettoken.url}" create-session="stateless" authentication-manager-ref="clientAuthenticationManager" use-expressions="false">
-		<security:intercept-url pattern="${oauth.gettoken.url}" access="IS_AUTHENTICATED_FULLY" method="GET"/>
-		
+		<security:intercept-url pattern="${oauth.gettoken.url}" access="IS_AUTHENTICATED_FULLY" />
 	<!-- do logout'u
-		<sec:intercept-url pattern="/api/logout" access="ROLE_USER,ROLE_ADMIN" method="GET" />
-		<sec:logout invalidate-session="true" logout-url="/api/logout" />
-	-->
-
+		<security:intercept-url pattern="${oauth.logout.url}" access="ROLE_USER,ROLE_ADMIN" method="GET" />
+		<security:logout invalidate-session="true" logout-url="${oauth.logout.url}" />
+		-->
 		<security:csrf disabled="true" />
-		
 		<security:anonymous enabled="false"/>
 		<security:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
-		<!-- include this only if you need to authenticate clients via request parameters -->
 		<security:custom-filter ref="clientCredentialsTokenEndpointFilter" after="BASIC_AUTH_FILTER"/>
 		<security:access-denied-handler ref="oauthAccessDeniedHandler"/>
 	</security:http>
+	
+	<!-- Token Logout Service -->
+	<security:http pattern="${oauth.logout.url}" create-session="never">
+		<security:intercept-url pattern="${oauth.logout.url}" access="IS_AUTHENTICATED_FULLY" />
+		<security:logout invalidate-session="true" logout-url="${oauth.logout.url}" success-handler-ref="logoutSuccessHandler"/>
+		<security:csrf disabled="true" />
+		<security:anonymous enabled="false" />
+		<security:http-basic entry-point-ref="clientAuthenticationEntryPoint"/>
+		<security:custom-filter ref="resourceServerFilter" before="PRE_AUTH_FILTER" />
+		<security:access-denied-handler ref="oauthAccessDeniedHandler" />
+	</security:http>
+	<bean id="logoutSuccessHandler" class="org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler" />
 
 	<bean id="oauthAuthenticationEntryPoint"
 		  class="org.springframework.security.oauth2.provider.error.OAuth2AuthenticationEntryPoint">
