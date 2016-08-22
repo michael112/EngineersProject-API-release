@@ -4,15 +4,14 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-public class CurrentEmailResponseJson extends ResponseJson {
+public class CurrentEmailResponseJson extends AbstractResponseJson {
 
     @Getter
     private String email;
 
     public CurrentEmailResponseJson(String email, String message, HttpStatus status) {
+        super(message, status);
         this.email = email;
-        this.message = message;
-        this.setSuccess(status);
     }
 
 }

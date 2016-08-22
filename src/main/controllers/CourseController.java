@@ -24,7 +24,7 @@ import main.service.model.course.course.CourseService;
 import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 
-import main.json.response.ResponseJson;
+import main.json.response.AbstractResponseJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -50,7 +50,7 @@ public class CourseController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_INFO, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> getCourseInfo(@PathVariable("id") String courseid) {
+    public ResponseEntity<? extends AbstractResponseJson> getCourseInfo(@PathVariable("id") String courseid) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         Course course = this.courseService.findCourseByID(courseid);

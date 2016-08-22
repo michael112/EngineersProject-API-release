@@ -52,7 +52,7 @@ import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
 import main.util.domain.DomainURIProvider;
 
-import main.json.response.ResponseJson;
+import main.json.response.AbstractResponseJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.CurrentUserResponseJson;
 import main.json.response.CurrentEmailResponseJson;
@@ -102,7 +102,7 @@ public class UserController {
 
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> registerUser(@RequestBody NewUserJson userJson) {
+    public ResponseEntity<? extends AbstractResponseJson> registerUser(@RequestBody NewUserJson userJson) {
         HttpStatus responseStatus;
         String messageStr;
         if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
@@ -124,7 +124,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> getUserInfo() {
+    public ResponseEntity<? extends AbstractResponseJson> getUserInfo() {
         User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         UserInfoJson userJson = userToJson(currentUser);
@@ -157,7 +157,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PASSWORD, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> editUserPassword(@RequestBody EditPasswordJson editPasswordJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editUserPassword(@RequestBody EditPasswordJson editPasswordJson) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus;
@@ -181,7 +181,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_EMAIL, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> showEmail() {
+    public ResponseEntity<? extends AbstractResponseJson> showEmail() {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
@@ -191,7 +191,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_EMAIL, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> editEmail(@RequestBody EditEmailJson editEmailJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editEmail(@RequestBody EditEmailJson editEmailJson) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         String subject = this.labelProvider.getLabel("user.editmail.subject");
@@ -220,7 +220,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_EMAIL_CONFIRM, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> confirmEmailEdition(@RequestParam("newEmail") String newEmail) {
+    public ResponseEntity<? extends AbstractResponseJson> confirmEmailEdition(@RequestParam("newEmail") String newEmail) {
         User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setEmail(newEmail);
@@ -232,7 +232,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_ADDRESS, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> showAddress() {
+    public ResponseEntity<? extends AbstractResponseJson> showAddress() {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
@@ -242,7 +242,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADDRESS, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> editAddress(@RequestBody Address newAddress) {
+    public ResponseEntity<? extends AbstractResponseJson> editAddress(@RequestBody Address newAddress) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setAddress(newAddress);
@@ -254,7 +254,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.SHOW_USER_PHONES, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> showPhones() {
+    public ResponseEntity<? extends AbstractResponseJson> showPhones() {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
@@ -264,7 +264,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PHONE_LIST, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> editPhoneList(@RequestBody EditPhoneJson newPhone) {
+    public ResponseEntity<? extends AbstractResponseJson> editPhoneList(@RequestBody EditPhoneJson newPhone) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setPhone(newPhone.getPhone());
@@ -276,7 +276,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADD_PHONE, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> addPhone(@RequestBody Phone newPhone) {
+    public ResponseEntity<? extends AbstractResponseJson> addPhone(@RequestBody Phone newPhone) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.addPhone(newPhone);
@@ -288,7 +288,7 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> removePhone(@RequestBody Phone phoneToRemove) {
+    public ResponseEntity<? extends AbstractResponseJson> removePhone(@RequestBody Phone phoneToRemove) {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         phoneToRemove = currentUser.getPhone(phoneToRemove.getPhoneNumber());

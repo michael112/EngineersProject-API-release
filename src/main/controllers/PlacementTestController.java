@@ -43,7 +43,7 @@ import main.model.placementtest.PlacementTest;
 import main.model.user.userprofile.PlacementTestResult;
 import main.model.user.User;
 
-import main.json.response.ResponseJson;
+import main.json.response.AbstractResponseJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.PlacementTestListResponseJson;
 import main.json.response.PlacementTestContentJson;
@@ -90,7 +90,7 @@ public class PlacementTestController {
 
     @PermitAll
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> getPlacementTestList() {
+    public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         Set<Language> languagesWithPlacementTests = this.languageService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
@@ -115,7 +115,7 @@ public class PlacementTestController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_CONTENT, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity <? extends ResponseJson> getPlacementTestContent(@PathVariable("id") String placementTestId) {
+    public ResponseEntity <? extends AbstractResponseJson> getPlacementTestContent(@PathVariable("id") String placementTestId) {
         PlacementTest test = this.placementTestService.findPlacementTestByID(placementTestId);
         String messageStr;
         HttpStatus responseStatus;
@@ -135,7 +135,7 @@ public class PlacementTestController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.SOLVED_PLACEMENT_TEST, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends ResponseJson> setSolvedPlacementTest(@RequestBody SolvedPlacementTestJson solvedPlacementTestJson) {
+    public ResponseEntity<? extends AbstractResponseJson> setSolvedPlacementTest(@RequestBody SolvedPlacementTestJson solvedPlacementTestJson) {
         // należy przetestować
 
         User currentUser = this.currentUserService.getCurrentUser();

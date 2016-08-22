@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-public abstract class ResponseJson {
+public abstract class AbstractResponseJson {
 
     @Getter
     private boolean success;
@@ -13,6 +13,11 @@ public abstract class ResponseJson {
 
     protected void setSuccess(HttpStatus status) {
         this.success = (status == HttpStatus.OK);
+    }
+
+    protected AbstractResponseJson(String message, HttpStatus status) {
+        this.message = message;
+        this.setSuccess(status);
     }
 
 }

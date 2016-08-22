@@ -6,15 +6,14 @@ import lombok.Getter;
 
 import main.json.user.UserInfoJson;
 
-public class CurrentUserResponseJson extends ResponseJson {
+public class CurrentUserResponseJson extends AbstractResponseJson {
 
     @Getter
     private UserInfoJson user;
 
     public CurrentUserResponseJson(UserInfoJson user, String message, HttpStatus status) {
+        super(message, status);
         this.user = user;
-        this.message = message;
-        this.setSuccess(status);
     }
 
 

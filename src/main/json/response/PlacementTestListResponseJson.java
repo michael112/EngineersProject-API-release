@@ -8,15 +8,14 @@ import lombok.Getter;
 
 import main.json.placementtests.PlacementTestListJson;
 
-public class PlacementTestListResponseJson extends ResponseJson {
+public class PlacementTestListResponseJson extends AbstractResponseJson {
 
     @Getter
     private Set<PlacementTestListJson> placementTestListJson;
 
     public PlacementTestListResponseJson(Set<PlacementTestListJson> placementTestListJson, String message, HttpStatus status) {
+        super(message, status);
         this.placementTestListJson = placementTestListJson;
-        this.message = message;
-        this.setSuccess(status);
     }
 
 }

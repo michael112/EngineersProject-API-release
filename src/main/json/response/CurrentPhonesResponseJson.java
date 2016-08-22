@@ -8,15 +8,14 @@ import lombok.Getter;
 
 import main.model.user.userprofile.Phone;
 
-public class CurrentPhonesResponseJson extends ResponseJson {
+public class CurrentPhonesResponseJson extends AbstractResponseJson {
 
     @Getter
     private Set<Phone> phone;
 
     public CurrentPhonesResponseJson(Set<Phone> phone, String message, HttpStatus status) {
+        super(message, status);
         this.phone = phone;
-        this.message = message;
-        this.setSuccess(status);
     }
 
 }
