@@ -43,18 +43,28 @@ public class TokenProviderImpl implements TokenProvider {
         this.objectMapper = new ObjectMapper();
     }
 
-    public String getToken(String username, String password) {
+    public TokenJson getToken(String username, String password) {
         String uri = getTokenURI(username, password);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<String> httpEntity = new HttpEntity<String>("parameters", headers);
+        HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
         ResponseEntity<String> tokenResultStr = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
         try {
             TokenJson tokenResult = this.objectMapper.readValue(tokenResultStr.getBody(), TokenJson.class);
-            return tokenResult.getAccessToken();
+            return tokenResult;
         }
         catch( IOException ex ) {
+            return null;
+        }
+    }
+
+    public String getAccessToken(String username, String password) {
+        try {
+            TokenJson tokenResult = this.getToken(username, password);
+            return tokenResult.getAccessToken();
+        }
+        catch( NullPointerException ex ) {
             return null;
         }
     }
@@ -69,6 +79,16 @@ public class TokenProviderImpl implements TokenProvider {
         String templateString = this.propertyProvider.getProperty("oauth.login.fullurl");
 
         return this.domainURIProvider.getDomainURI() + strSubstitutor.replace(templateString);
+    }
+
+    public void deactivateToken(String authorizationHeader) {
+        String uri = this.domainURIProvider.getDomainURI() + this.propertyProvider.getProperty("oauth.logout.url");
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.set("Authorization", authorizationHeader);
+        HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
+        ResponseEntity<String> tokenResultStr = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
     }
 
 }
