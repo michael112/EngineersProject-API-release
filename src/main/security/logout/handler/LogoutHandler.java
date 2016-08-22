@@ -32,16 +32,11 @@ public class LogoutHandler implements LogoutSuccessHandler {
         tokenStore.removeAccessToken(accessToken);
     }
 
-    private String getToken(HttpServletRequest request) {
-        try {
-            String authHeader = request.getHeader("Authorization");
-            String[] tokenTab = authHeader.split(" ");
-            String authToken = tokenTab[1];
-            return authToken;
-        }
-        catch( NullPointerException ex) {
-            return null;
-        }
+    private String getToken(HttpServletRequest request) throws NullPointerException {
+		String authHeader = request.getHeader("Authorization");
+		String[] tokenTab = authHeader.split(" ");
+		String authToken = tokenTab[1];
+		return authToken;
     }
 
 }
