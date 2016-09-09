@@ -1,7 +1,10 @@
 package main.controllers;
 
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
@@ -9,6 +12,7 @@ import main.json.menu.AdminMenuJson;
 import main.json.menu.GuestMenuJson;
 import main.json.menu.UserMenuJson;
 import org.springframework.beans.factory.annotation.Autowired;
+
 
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.util.Assert;
 
@@ -34,6 +39,7 @@ import main.util.userdetails.UserDetailsServiceImpl;
 
 import main.model.user.User;
 import main.service.model.user.user.UserService;
+import main.model.user.userrole.UserRole;
 
 import main.json.token.TokenJson;
 
@@ -52,13 +58,17 @@ public class LoginController {
     private LabelProvider labelProvider;
 
     @Autowired
-    private UserDetailsServiceImpl userDetailsService;
-
-    @Autowired
     private RoleHierarchy roleHierarchy;
 
     @Autowired
     private UserService userService;
+
+    private UserDetailsServiceImpl userDetailsService;
+
+    @PostConstruct
+    public void initialize() {
+        this.userDetailsService = new UserDetailsServiceImpl();
+    }
 
     @PermitAll
     @RequestMapping(value = LoginControllerUrlConstants.LOGIN_USER_URL, method = RequestMethod.POST, produces = "application/json")
@@ -76,10 +86,10 @@ public class LoginController {
             String userRole = this.getUserRole(user);
             Assert.notNull(userRole);
             switch(userRole) {
-                case "USER":
+                case "ROLE_USER":
                     menu = new UserMenuJson();
                     break;
-                case "ADMIN":
+                case "ROLE_ADMIN":
                     menu = new AdminMenuJson();
                     break;
             }
@@ -96,10 +106,11 @@ public class LoginController {
 
     @SuppressWarnings("unchecked")
     private String getUserRole(User user) {
-        final String ADMIN = "ADMIN";
-        final String USER = "USER";
+        final String prefix = "ROLE_";
+        final String ADMIN = prefix + "ADMIN";
+        final String USER = prefix + "USER";
         String userRole = null;
-        Collection<GrantedAuthority> authorities = this.roleHierarchy.getReachableGrantedAuthorities((Collection<? extends GrantedAuthority>)this.userDetailsService.getGrantedAuthorities(user));
+        Collection<? extends GrantedAuthority> authorities = this.roleHierarchy.getReachableGrantedAuthorities(this.userDetailsService.getGrantedAuthorities(user));
         for( GrantedAuthority authority : authorities ) {
             if( authority.getAuthority().equals(USER) ) {
                 if( userRole == null ) {
@@ -119,7 +130,9 @@ public class LoginController {
         this.tokenProvider.deactivateToken(authorizationHeader);
         String messageStr = this.labelProvider.getLabel("logout.success");
         HttpStatus responseStatus = HttpStatus.OK;
-        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, new GuestMenuJson()), responseStatus);
+        AbstractMenuJson menu = new GuestMenuJson();
+        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, menu), responseStatus);
+        // return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, new GuestMenuJson()), responseStatus);
     }
 
 }

@@ -49,12 +49,12 @@ public class TokenProviderImpl implements TokenProvider {
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
         HttpEntity<String> httpEntity = new HttpEntity<>("parameters", headers);
-        ResponseEntity<String> tokenResultStr = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
         try {
+            ResponseEntity<String> tokenResultStr = restTemplate.exchange(uri, HttpMethod.POST, httpEntity, String.class);
             TokenJson tokenResult = this.objectMapper.readValue(tokenResultStr.getBody(), TokenJson.class);
             return tokenResult;
         }
-        catch( IOException ex ) {
+        catch( org.springframework.web.client.HttpClientErrorException | org.springframework.web.client.ResourceAccessException | IOException ex ) {
             return null;
         }
     }

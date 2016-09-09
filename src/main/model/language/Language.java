@@ -173,7 +173,7 @@ public class Language extends AbstractSinglePKModel<String> {
 		Iterator<LanguageName> iterator = this.languageNames.iterator();
 		while( iterator.hasNext() ) {
 			LanguageName element = iterator.next();
-			if( userLanguage.equals( element.getNamingLanguage().getId() ) ) {
+			if( userLanguage.equalsIgnoreCase( element.getNamingLanguage().getId() ) ) {
 				return element;
 			}
 		}
