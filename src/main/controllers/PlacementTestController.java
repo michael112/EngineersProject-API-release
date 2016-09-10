@@ -46,7 +46,7 @@ import main.model.user.User;
 import main.json.response.AbstractResponseJson;
 import main.json.response.MessageResponseJson;
 import main.json.response.PlacementTestListResponseJson;
-import main.json.response.PlacementTestContentJson;
+import main.json.response.PlacementTestContentReponseJson;
 import main.json.response.PlacementTestResultResponseJson;
 
 import main.json.placementtests.PlacementTestJson;
@@ -92,7 +92,6 @@ public class PlacementTestController {
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
-        Assert.notNull(currentUser);
         Set<Language> languagesWithPlacementTests = this.languageService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
         Set<PlacementTestListJson> placementTestListJsonSet = new HashSet<>();
         for (Language l : languagesWithPlacementTests) {
@@ -121,15 +120,15 @@ public class PlacementTestController {
         HttpStatus responseStatus;
         if( test == null ) {
             messageStr = this.labelProvider.getLabel("placementtest.content.null");
-            responseStatus = HttpStatus.BAD_REQUEST;
+            responseStatus = HttpStatus.NOT_FOUND;
             return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
         }
         else {
             messageStr = this.labelProvider.getLabel("placementtest.content.success");
             responseStatus = HttpStatus.OK;
             PlacementTestJson placementTestJson = new PlacementTestJson(this.currentLanguageNameProvider.getLanguageName(test.getLanguage()), test.getTasks());
-            PlacementTestContentJson placementTestContentJson = new PlacementTestContentJson(placementTestJson, messageStr, responseStatus);
-            return new ResponseEntity<PlacementTestContentJson>(placementTestContentJson, responseStatus);
+            PlacementTestContentReponseJson placementTestContentReponseJson = new PlacementTestContentReponseJson(placementTestJson, messageStr, responseStatus);
+            return new ResponseEntity<PlacementTestContentReponseJson>(placementTestContentReponseJson, responseStatus);
         }
     }
 

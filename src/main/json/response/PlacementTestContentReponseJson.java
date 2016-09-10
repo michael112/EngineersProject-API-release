@@ -6,12 +6,12 @@ import lombok.Getter;
 
 import main.json.placementtests.PlacementTestJson;
 
-public class PlacementTestContentJson extends AbstractResponseJson {
+public class PlacementTestContentReponseJson extends AbstractResponseJson {
 
     @Getter
     private PlacementTestJson test;
 
-    public PlacementTestContentJson(PlacementTestJson test, String message, HttpStatus status) {
+    public PlacementTestContentReponseJson(PlacementTestJson test, String message, HttpStatus status) {
         super(message, status);
         this.test = test;
     }

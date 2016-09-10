@@ -38,10 +38,34 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="placementTestService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.model.placementtest.PlacementTestService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="placementTestResultService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.model.user.placementtestresult.PlacementTestResultService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="domainURIProvider" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
 				<constructor-arg value="main.util.domain.DomainURIProvider" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="tokenProvider" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.util.token.TokenProvider" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -51,14 +75,18 @@
 		<context:exclude-filter type="regex" expression="main.service.model.user.user.UserServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.model.placementtest.PlacementTestServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.model.user.placementtestresult.PlacementTestResultServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.domain.DomainURIProvider" />
+		<context:exclude-filter type="regex" expression="main.util.token.TokenProviderImpl" />
 	</context:component-scan>
+
     <context:property-placeholder properties-ref="deployProperties" />
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" />
 	
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />
-    <import resource="file:WebContent/WEB-INF/config/context-files/spring-mail.xml" />
+    <import resource="test-context-mail.xml" />
 
 </beans>

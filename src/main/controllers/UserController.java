@@ -219,7 +219,7 @@ public class UserController {
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
-    @RequestMapping(value = UserControllerUrlConstants.USER_EMAIL_CONFIRM, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = UserControllerUrlConstants.USER_EMAIL_CONFIRM, method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> confirmEmailEdition(@RequestParam("newEmail") String newEmail) {
         User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);

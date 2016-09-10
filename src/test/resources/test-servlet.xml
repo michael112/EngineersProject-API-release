@@ -21,6 +21,6 @@
     <mvc:resources mapping="/static/**" location="/static/" />
 
     <import resource="file:WebContent/WEB-INF/config/servlet-files/spring-jackson.xml" />
-	<import resource="file:src/test/resources/spring-locale-test.xml" />
+	<import resource="file:WebContent/WEB-INF/config/servlet-files/spring-locale1.xml" />
 
 </beans>

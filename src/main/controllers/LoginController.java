@@ -1,7 +1,5 @@
 package main.controllers;
 
-import java.util.List;
-import java.util.ArrayList;
 import java.util.Collection;
 
 import javax.annotation.PostConstruct;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import org.springframework.util.Assert;
 
@@ -39,7 +36,6 @@ import main.util.userdetails.UserDetailsServiceImpl;
 
 import main.model.user.User;
 import main.service.model.user.user.UserService;
-import main.model.user.userrole.UserRole;
 
 import main.json.token.TokenJson;
 
@@ -132,7 +128,6 @@ public class LoginController {
         HttpStatus responseStatus = HttpStatus.OK;
         AbstractMenuJson menu = new GuestMenuJson();
         return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, menu), responseStatus);
-        // return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, new GuestMenuJson()), responseStatus);
     }
 
 }
