@@ -2,10 +2,14 @@ package test.controllers;
 
 import java.io.IOException;
 
+import java.util.Date;
+import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -15,6 +19,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.servlet.LocaleResolver;
 
 import org.mockito.Mockito;
 
@@ -30,10 +35,17 @@ import main.model.user.User;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
 import main.model.user.userrole.UserRole;
+import main.model.course.Course;
+import main.model.course.CourseLevel;
+import main.model.course.CourseType;
+import main.model.course.CourseActivity;
+import main.model.course.Homework;
+import main.model.course.Test;
 import main.model.enums.PhoneType;
 import main.model.UuidGenerator;
 
 import main.util.domain.DomainURIProvider;
+import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.json.token.TokenJson;
 
@@ -49,6 +61,15 @@ import main.json.placementtests.SolvedPlacementSentenceJson;
 import test.AbstractTest;
 
 public abstract class AbstractControllerTest extends AbstractTest {
+
+	public void initInsideMocks(CourseMembershipValidator courseMembershipValidatorMock, LocaleResolver localeResolverMock) {
+		Mockito.reset(courseMembershipValidatorMock);
+		Mockito.when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+		if (localeResolverMock != null) {
+			Mockito.reset(localeResolverMock);
+			Mockito.when(localeResolverMock.resolveLocale(Mockito.any(HttpServletRequest.class))).thenReturn(new Locale("en"));
+		}
+	}
 
 	public String setTestedClassURI(DomainURIProvider domainURIProviderMock, String classURI) {
 		Mockito.when( domainURIProviderMock.getDomainURI() ).thenReturn("http://localhost:8080");
@@ -90,6 +111,27 @@ public abstract class AbstractControllerTest extends AbstractTest {
 		return tokenJson;
 	}
 
+	protected Course getBasicCourse(String languageCode, String languageNameStr, String courseLevelName, String courseTypeName) {
+		Language language = getBasicLanguage(languageCode, languageNameStr);
+		CourseLevel level = new CourseLevel(courseLevelName);
+		CourseType type = new CourseType(courseTypeName, language);
+		Course result = new Course(language, level, type, new CourseActivity(new Date(2016,9,1), new Date(2016,6,30)));
+		result.setId(UuidGenerator.newUUID());
+		return result;
+	}
+
+	protected Homework getBasicHomework(Course course, Date date) {
+		Homework homework = new Homework("sample homework", date, "sample description", course);
+		homework.setId(UuidGenerator.newUUID());
+		return homework;
+	}
+
+	protected Test getBasicTest(Course course, Date date) {
+		Test test = new Test("sample test", date, "sample description", course);
+		test.setId(UuidGenerator.newUUID());
+		return test;
+	}
+
 	protected PlacementTest getBasicPlacementTest(Language language) {
 		PlacementTest placementTest = new PlacementTest(language, getBasicTasks());
 		placementTest.setId(UuidGenerator.newUUID());
@@ -129,13 +171,12 @@ public abstract class AbstractControllerTest extends AbstractTest {
 		return answers;
 	}
 
-	protected Language getBasicLanguage() {
+	protected Language getBasicLanguage(String languageCode, String languageNameStr) {
 		Language sampleLanguage = new Language();
 
 		// set language things
-		sampleLanguage.setId("DE");
-
-		LanguageName languageName = new LanguageName(sampleLanguage, new Language("EN"), "German");
+		sampleLanguage.setId(languageCode);
+		LanguageName languageNameObj = new LanguageName(sampleLanguage, languageNameStr);
 
 		return sampleLanguage;
 	}

@@ -5,12 +5,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CourseTeacherJson {
+public class CourseUserJson {
 
     @Getter
-    private String teacherID;
+    private String userID;
 
     @Getter
     private String name;
+
+    public CourseUserJson(String userID, String name) {
+        this.userID = userID;
+        this.name = name;
+    }
 
 }

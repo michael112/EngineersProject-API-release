@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.servlet.LocaleResolver;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 
@@ -24,6 +25,7 @@ import main.util.mail.MailSender;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.domain.DomainURIProvider;
+import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -47,6 +49,10 @@ public class UserControllerTest extends AbstractControllerTest {
     private DomainURIProvider domainURIProviderMock;
     @Autowired
     private MailSender mailSenderMock;
+	@Autowired
+	private CourseMembershipValidator courseMembershipValidatorMock;
+    @Autowired
+    private LocaleResolver localeResolverMock;
 
     private String testedClassURI;
 
@@ -65,6 +71,7 @@ public class UserControllerTest extends AbstractControllerTest {
         this.sampleUser = getBasicUser("sampleUser");
 
         setAuthorizationMock(this.sampleUser);
+		initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
     }
 
     @Test
@@ -84,7 +91,7 @@ public class UserControllerTest extends AbstractControllerTest {
         this.mockMvc.perform(post(this.testedClassURI + UserControllerUrlConstants.REGISTER_USER)
                 .contentType("application/json;charset=utf-8")
                 .content(objectToJsonBytes(getBasicNewUserJson(this.sampleUser, true)))
-        )
+                )
                 .andExpect( status().isOk() )
                 .andExpect( content().contentType("application/json;charset=utf-8") )
                 .andExpect(jsonPath("$.message", is(returnMessage)))

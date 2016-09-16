@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class CourseInfoTeacherJson {
+public class CourseInfoTeacherJson extends AbstractCourseInfoJson {
 
     @Getter
     private String courseID;
@@ -20,7 +20,7 @@ public class CourseInfoTeacherJson {
     private CourseTypeJson courseType;
 
     @Getter
-    private Set<CourseTeacherJson> teachers;
+    private Set<CourseUserJson> teachers;
 
     @Getter
     private Set<TestJson> incomingTests;
@@ -74,7 +74,7 @@ public class CourseInfoTeacherJson {
         this.nextLesson = new NextLessonJson(nextLessonDay, nextLessonHour);
     }
 
-    public void addTeacher(CourseTeacherJson teacher) {
+    public void addTeacher(CourseUserJson teacher) {
         this.teachers.add(teacher);
     }
 

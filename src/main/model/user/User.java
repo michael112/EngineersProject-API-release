@@ -278,6 +278,10 @@ public class User extends AbstractUuidModel {
         }
     }
 
+    public String getFullName() {
+        return this.getFirstName() + ' ' + this.getLastName();
+    }
+
     public User() {
         super();
         this.setActive(true);

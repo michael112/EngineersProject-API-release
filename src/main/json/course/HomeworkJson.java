@@ -17,4 +17,9 @@ public class HomeworkJson {
     @Getter
     private String title;
 
+    public HomeworkJson(String homeworkID, String date, String title) {
+        this.homeworkID = homeworkID;
+        this.date = date;
+        this.title = title;
+    }
 }

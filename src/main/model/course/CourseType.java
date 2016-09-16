@@ -18,6 +18,7 @@ import javax.persistence.AccessType;
 
 import lombok.Getter;
 
+import main.model.language.Language;
 import main.model.abstracts.AbstractUuidModel;
 
 @Entity
@@ -85,13 +86,19 @@ public class CourseType extends AbstractUuidModel {
 		this.courses = new HashSet<>();
 	}
 
+	public CourseType(String courseTypeName, Language naminglanguage) {
+		this();
+		CourseTypeName courseTypeNameObj = new CourseTypeName(this, naminglanguage, courseTypeName);
+		this.addCourseTypeName(courseTypeNameObj);
+	}
+
 	// zwracają nazwę typu w podanym języku
 
 	public CourseTypeName getCourseTypeNameObj( String userLanguage ) {
 		Iterator<CourseTypeName> iterator = this.courseTypeNames.iterator();
 		while( iterator.hasNext() ) {
 			CourseTypeName element = iterator.next();
-			if( userLanguage.equals( element.getNamingLanguage().getId() ) ) {
+			if( userLanguage.equalsIgnoreCase( element.getNamingLanguage().getId() ) ) {
 				return element;
 			}
 		}

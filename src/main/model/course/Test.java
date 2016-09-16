@@ -71,6 +71,7 @@ public class Test extends AbstractHomeworkOrTest {
 
 	public Test(String title, Date date, String desciption, Course course) {
 		this(course);
+		this.setTitle(title);
 		this.setDate(date);
 		this.setDescription(desciption);
 	}

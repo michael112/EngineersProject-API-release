@@ -16,4 +16,9 @@ public class TestJson {
     @Getter
     private String title;
 
+    public TestJson(String taskID, String date, String title) {
+        this.taskID = taskID;
+        this.date = date;
+        this.title = title;
+    }
 }

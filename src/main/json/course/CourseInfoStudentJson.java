@@ -5,7 +5,7 @@ import java.util.Set;
 
 import lombok.Getter;
 
-public class CourseInfoStudentJson {
+public class CourseInfoStudentJson extends AbstractCourseInfoJson {
 
     @Getter
     private Set<PaymentMessageJson> paymentMessages;
@@ -20,7 +20,7 @@ public class CourseInfoStudentJson {
     private CourseTypeJson courseType;
 
     @Getter
-    private Set<CourseTeacherJson> teachers;
+    private Set<CourseUserJson> teachers;
 
     @Getter
     private Set<TestJson> incomingTests;
@@ -79,7 +79,7 @@ public class CourseInfoStudentJson {
         this.paymentMessages.add(message);
     }
 
-    public void addTeacher(CourseTeacherJson teacher) {
+    public void addTeacher(CourseUserJson teacher) {
         this.teachers.add(teacher);
     }
 

@@ -11,9 +11,11 @@ public class MessageJson {
     private String messageID;
 
     @Getter
-    private String date;
-
-    @Getter
     private String title;
+
+    public MessageJson(String messageID, String title) {
+        this.messageID = messageID;
+        this.title = title;
+    }
 
 }

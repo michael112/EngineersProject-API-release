@@ -19,6 +19,7 @@ import main.service.model.user.user.UserService;
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.token.TokenProvider;
+import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.json.token.TokenJson;
 
@@ -42,6 +43,8 @@ public class LoginControllerTest extends AbstractControllerTest {
     private DomainURIProvider domainURIProviderMock;
     @Autowired
     private TokenProvider tokenProviderMock;
+	@Autowired
+	private CourseMembershipValidator courseMembershipValidatorMock;
 
     private String testedClassURI;
 
@@ -58,6 +61,7 @@ public class LoginControllerTest extends AbstractControllerTest {
         this.testedClassURI = setTestedClassURI(this.domainURIProviderMock, LoginControllerUrlConstants.CLASS_URL);
         this.sampleUser = getBasicUser("sampleUser");
         setAuthorizationMock(this.sampleUser);
+		initInsideMocks(this.courseMembershipValidatorMock, null);
     }
 
     @Test

@@ -20,6 +20,8 @@ import javax.persistence.AccessType;
 
 import lombok.Getter;
 
+import main.model.user.User;
+
 @Entity
 @Table(name="homeworks")
 @Access(AccessType.FIELD)
@@ -85,6 +87,14 @@ public class Homework extends AbstractHomeworkOrTest {
 	public boolean containsHomeworkSolution(HomeworkSolution solution) {
 		return this.homeworkSolutions.contains(solution);
 	}
+	public boolean containsHomeworkSolution(User user) {
+		for( HomeworkSolution solution : this.getHomeworkSolutions() ) {
+			if( solution.getUser().equals(user) ) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public Homework() {
 		super();
@@ -99,6 +109,7 @@ public class Homework extends AbstractHomeworkOrTest {
 
 	public Homework(String title, Date date, String description, Course course) {
 		this(course);
+		this.setTitle(title);
 		this.setDate(date);
 		this.setDescription(description);
 	}
