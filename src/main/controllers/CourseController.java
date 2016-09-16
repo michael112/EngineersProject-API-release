@@ -3,6 +3,8 @@ package main.controllers;
 import java.util.Set;
 import java.util.HashSet;
 
+import java.util.Calendar;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
@@ -18,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -50,7 +51,6 @@ import main.json.course.MessageJson;
 import main.json.course.CourseUserJson;
 import main.json.course.CourseListJson;
 import main.json.course.AvailableLngAndTypesJson;
-import main.json.course.search.SearchPatternJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -66,9 +66,6 @@ import main.service.model.language.LanguageService;
 import main.service.model.course.coursetype.CourseTypeService;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
-
-
-import java.util.Calendar;
 
 @RequestMapping(value = CourseControllerUrlConstants.CLASS_URL)
 @RestController
