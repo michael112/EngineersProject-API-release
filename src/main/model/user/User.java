@@ -303,15 +303,14 @@ public class User extends AbstractUuidModel {
         this.setFirstName(firstName);
         this.setLastName(lastName);
     }
-    public User(String username, String password, String email, String firstName, String lastName, boolean active) {
+    public User(String username, String password, String email, String firstName, String lastName, Address address, UserRole userRole) {
         this(username, password, email, firstName, lastName);
-        this.setActive(active);
+        this.setAddress(address);
+        this.addUserRole(userRole);
     }
 
     public User(String username, String password, String email, String firstName, String lastName, Set<Phone> phone, Address address, UserRole userRole) {
-        this(username, password, email, firstName, lastName );
+        this(username, password, email, firstName, lastName, address, userRole );
         this.setPhone(phone);
-        this.setAddress(address);
-        this.addUserRole(userRole);
     }
 }

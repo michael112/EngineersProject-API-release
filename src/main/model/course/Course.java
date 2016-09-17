@@ -283,5 +283,11 @@ public class Course extends AbstractUuidModel {
 		this(language, courseLevel, courseType);
 		this.setCourseActivity(courseActivity);
 	}
+
+	public Course(Language language, CourseLevel courseLevel, CourseType courseType, CourseActivity courseActivity, Integer maxStudents, Double price) {
+		this(language, courseLevel, courseType, courseActivity);
+		this.setMaxStudents(maxStudents);
+		this.setPrice(price);
+	}
 	
 }

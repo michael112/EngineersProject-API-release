@@ -123,6 +123,11 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.course.incomingHomeworks[0].homeworkID", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getId())))
             .andExpect(jsonPath("$.course.incomingHomeworks[0].date", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getDate().toString())))
             .andExpect(jsonPath("$.course.incomingHomeworks[0].title", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getTitle())))
+            /*
+            .andExpect(jsonPath("$.course.teacherMessages", hasSize(1))
+            .andExpect(jsonPath("$.course.teacherMessages[0].messageID", is())
+            .andExpect(jsonPath("$.course.teacherMessages[0].title", is())
+             */
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
 
@@ -168,6 +173,11 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.course.incomingHomeworks[0].homeworkID", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getId())))
             .andExpect(jsonPath("$.course.incomingHomeworks[0].date", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getDate().toString())))
             .andExpect(jsonPath("$.course.incomingHomeworks[0].title", is(((main.model.course.Homework)((this.sampleCourse.getHomeworks().toArray())[0])).getTitle())))
+            /*
+            .andExpect(jsonPath("$.course.teacherMessages", hasSize(1))
+            .andExpect(jsonPath("$.course.teacherMessages[0].messageID", is())
+            .andExpect(jsonPath("$.course.teacherMessages[0].title", is())
+             */
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
 
