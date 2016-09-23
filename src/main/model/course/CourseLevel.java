@@ -38,6 +38,11 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 		this.courses.clear();
 		if( courses != null ) {
 			this.courses.addAll(courses);
+			for( Course course : courses ) {
+				if( ( course.getCourseLevel() == null )  || ( !( course.getCourseLevel().equals(this) ) ) ) {
+					course.setCourseLevel(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addCourse(Course course) {

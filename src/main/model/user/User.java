@@ -126,6 +126,11 @@ public class User extends AbstractUuidModel {
         this.placementTest.clear();
         if( placementTest != null ) {
             this.placementTest.addAll(placementTest);
+            for( PlacementTestResult placementTestResult : placementTest ) {
+                if( ( placementTestResult.getUser() == null ) || ( !( placementTestResult.getUser().equals(this) )) ) {
+                    placementTestResult.setUser(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addPlacementTest(PlacementTestResult placementTest) {
@@ -150,6 +155,11 @@ public class User extends AbstractUuidModel {
         this.coursesAsStudent.clear();
         if( coursesAsStudent != null ) {
             this.coursesAsStudent.addAll(coursesAsStudent);
+            for( CourseMembership courseAsStudent : coursesAsStudent ) {
+                if( ( courseAsStudent.getUser() == null ) || ( !( courseAsStudent.getUser().equals(this) ) ) ) {
+                    courseAsStudent.setUser(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addCourseAsStudent(CourseMembership courseAsStudent) {
@@ -174,6 +184,11 @@ public class User extends AbstractUuidModel {
         this.myMessages.clear();
         if( myMessages != null ) {
             this.myMessages.addAll(myMessages);
+            for( Message message : myMessages ) {
+                if( ( message.getSender() == null )  || ( !( message.getSender().equals(this) ) ) ) {
+                    message.setSender(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addMyMessage(Message myMessage) {
@@ -198,6 +213,11 @@ public class User extends AbstractUuidModel {
         this.messages.clear();
         if( messages != null ) {
             this.messages.addAll(messages);
+            for( Message message : messages ) {
+                if( !( message.containsReceiver(this) ) ) {
+                    message.addReceiver(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addMessage(Message message) {
@@ -228,6 +248,11 @@ public class User extends AbstractUuidModel {
         this.taughtLanguages.clear();
         if( taughtLanguages != null ) {
             this.taughtLanguages.addAll(taughtLanguages);
+            for( Language language : taughtLanguages ) {
+                if( !( language.containsTeacher(this) ) ) {
+                    language.addTeacher(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addTaughtLanguage(Language taughtLanguage) {
@@ -258,6 +283,11 @@ public class User extends AbstractUuidModel {
         this.coursesAsTeacher.clear();
         if( coursesAsTeacher != null ) {
             this.coursesAsTeacher.addAll(coursesAsTeacher);
+            for( Course course : coursesAsTeacher ) {
+                if( !( course.containsTeacher(this) ) ) {
+                    course.addTeacher(this); // przypisanie powiązania
+                }
+            }
         }
     }
     public void addCourseAsTeacher(Course course) {

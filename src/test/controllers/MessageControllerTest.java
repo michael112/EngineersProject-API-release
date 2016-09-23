@@ -1,9 +1,5 @@
 package test.controllers;
 
-import java.util.Set;
-import java.util.HashSet;
-import java.util.Date;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -15,14 +11,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.LocaleResolver;
 
-import main.model.user.User;
-import main.model.course.Course;
-import main.model.course.CourseType;
-import main.model.language.Language;
-
 import main.service.model.course.course.CourseService;
-import main.service.model.course.coursetype.CourseTypeService;
-import main.service.model.language.LanguageService;
 
 import main.util.currentUser.CurrentUserService;
 
@@ -31,6 +20,9 @@ import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.constants.urlconstants.MessageControllerUrlConstants;
+
+import test.controllers.environment.TestEnvironment;
+import test.controllers.environment.TestEnvironmentBuilder;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
@@ -59,9 +51,7 @@ public class MessageControllerTest extends AbstractControllerTest {
 
     private String testedClassURI;
 
-    private User sampleUser;
-
-    private Course sampleCourse;
+    private TestEnvironment testEnvironment;
 
     public void setMockito() {
         reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseServiceMock);
@@ -73,10 +63,9 @@ public class MessageControllerTest extends AbstractControllerTest {
         setMockito();
         this.testedClassURI = setTestedClassURI(this.domainURIProviderMock, MessageControllerUrlConstants.CLASS_URL);
 
-        this.sampleUser = getBasicUser("sampleUser");
-        this.sampleCourse = getBasicCourse("EN", "English", "B1", "standard");
+        this.testEnvironment = TestEnvironmentBuilder.build();
+        setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
 
-        setAuthorizationMock(this.sampleUser);
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
     }
 

@@ -41,6 +41,10 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 		this.key = key;
 	}
 
+	public void setId(String namingLanguageID, String namedLanguageID) {
+		this.setId(new LanguageNameKey(namingLanguageID, namedLanguageID));
+	}
+
 	@Getter
 	@MapsId("namedLanguageID")
 	@ManyToOne(fetch=FetchType.EAGER)
@@ -92,6 +96,12 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 
 
 		public LanguageNameKey() {}
+
+		public LanguageNameKey(String namingLanguageID, String namedLanguageID) {
+			this();
+			this.setNamingLanguageID(namingLanguageID);
+			this.setNamedLanguageID(namedLanguageID);
+		}
 
 		@Override
 		public int hashCode() {

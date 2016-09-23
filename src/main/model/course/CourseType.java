@@ -33,6 +33,11 @@ public class CourseType extends AbstractUuidModel {
 		this.courseTypeNames.clear();
 		if( courseTypeNames != null ) {
 			this.courseTypeNames.addAll(courseTypeNames);
+			for( CourseTypeName courseTypeName : courseTypeNames ) {
+				if( ( courseTypeName.getCourseType() == null ) || ( !( courseTypeName.getCourseType().equals(this) ) ) ) {
+					courseTypeName.setCourseType(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addCourseTypeName(CourseTypeName courseTypeName) {
@@ -61,6 +66,11 @@ public class CourseType extends AbstractUuidModel {
 		this.courses.clear();
 		if( courses != null ) {
 			this.courses.addAll(courses);
+			for( Course course : courses ) {
+				if( ( course.getCourseType() == null ) || ( !( course.getCourseType().equals(this) ) ) ) {
+					course.setCourseType(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addCourse(Course course) {

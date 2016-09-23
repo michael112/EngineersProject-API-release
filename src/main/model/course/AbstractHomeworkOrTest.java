@@ -46,6 +46,11 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 		this.grades.clear();
 		if( grades != null ) {
 			this.grades.addAll(grades);
+			for( Grade grade : grades ) {
+				if( ( grade.getTask() == null ) || ( !( grade.getTask().equals(this) ) ) ) {
+					grade.setTask(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addGrade(Grade grade) {

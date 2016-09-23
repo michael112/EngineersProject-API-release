@@ -97,9 +97,9 @@ public class PlacementTestController {
         for (Language l : languagesWithPlacementTests) {
             Set<PlacementTestResultJson> tests = new HashSet<>();
             for (PlacementTest t : l.getPlacementTests()) {
-                Double currentUserTestResult = getCurrentUserTestResult(currentUser, t);
+                PlacementTestResult currentUserTestResult = getCurrentUserTestResult(currentUser, t);
                 if (currentUserTestResult != null) {
-                    tests.add(new PlacementTestResultJson(t.getId(), currentUserTestResult));
+                    tests.add(new PlacementTestResultJson(currentUserTestResult.getId(), currentUserTestResult.getResult()));
                 } else {
                     tests.add(new PlacementTestResultJson(t.getId()));
                 }
@@ -160,11 +160,11 @@ public class PlacementTestController {
         return result;
     }
 
-    private Double getCurrentUserTestResult(User user, PlacementTest test) {
+    private PlacementTestResult getCurrentUserTestResult(User user, PlacementTest test) {
         if( user == null ) return null;
         for( PlacementTestResult result : test.getResults() ) {
             if( result.getUser().getId().equals(user.getId()) ) {
-                return result.getResult();
+                return result;
             }
         }
 

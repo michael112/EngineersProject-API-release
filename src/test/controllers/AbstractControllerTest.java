@@ -2,7 +2,6 @@ package test.controllers;
 
 import java.io.IOException;
 
-import java.util.Date;
 import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
@@ -11,7 +10,6 @@ import java.util.HashSet;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -21,12 +19,14 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.LocaleResolver;
 
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.MvcResult;
+
 import org.mockito.Mockito;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import main.model.language.Language;
-import main.model.language.LanguageName;
 import main.model.placementtest.PlacementTest;
 import main.model.placementtest.PlacementTask;
 import main.model.placementtest.PlacementSentence;
@@ -36,11 +36,6 @@ import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
 import main.model.user.userrole.UserRole;
 import main.model.course.Course;
-import main.model.course.CourseLevel;
-import main.model.course.CourseType;
-import main.model.course.CourseActivity;
-import main.model.course.Homework;
-import main.model.course.Test;
 import main.model.enums.PhoneType;
 import main.model.UuidGenerator;
 
@@ -94,13 +89,6 @@ public abstract class AbstractControllerTest extends AbstractTest {
 		return mapper.writeValueAsBytes(object);
 	}
 
-	protected HttpHeaders getHeaders(String accessToken) {
-		HttpHeaders headers = new HttpHeaders();
-		headers.set("Authorization", "Bearer " + accessToken);
-		headers.set("Content-Type", "application/json");
-		return headers;
-	}
-
 	protected TokenJson getBasicTokenJson() {
 		TokenJson tokenJson = new TokenJson();
 		tokenJson.setAccessToken("089ad548-a237-47b7-a7cf-f73227d5e12f");
@@ -111,96 +99,6 @@ public abstract class AbstractControllerTest extends AbstractTest {
 		return tokenJson;
 	}
 
-	protected Course getBasicCourse(String languageCode, String languageNameStr, String courseLevelName, String courseTypeName) {
-		Language language = getBasicLanguage(languageCode, languageNameStr);
-		CourseLevel level = new CourseLevel(courseLevelName);
-		CourseType type = new CourseType(courseTypeName, language);
-		Course result = new Course(language, level, type, new CourseActivity(new Date(2016,9,1), new Date(2016,6,30)));
-		result.setId(UuidGenerator.newUUID());
-		return result;
-	}
-
-	protected Homework getBasicHomework(Course course, Date date) {
-		Homework homework = new Homework("sample homework", date, "sample description", course);
-		homework.setId(UuidGenerator.newUUID());
-		return homework;
-	}
-
-	protected Test getBasicTest(Course course, Date date) {
-		Test test = new Test("sample test", date, "sample description", course);
-		test.setId(UuidGenerator.newUUID());
-		return test;
-	}
-
-	protected PlacementTest getBasicPlacementTest(Language language) {
-		PlacementTest placementTest = new PlacementTest(language, getBasicTasks());
-		placementTest.setId(UuidGenerator.newUUID());
-		return placementTest;
-	}
-
-	protected PlacementTask getBasicPlacementTask() {
-		PlacementTask task = new PlacementTask("Sample command", getBasicSentences());
-		task.setId(UuidGenerator.newUUID());
-		return task;
-	}
-
-	private Set<PlacementTask> getBasicTasks() {
-		PlacementTask task = getBasicPlacementTask();
-		Set<PlacementTask> tasks = new HashSet<>();
-		tasks.add(task);
-		return tasks;
-	}
-
-	private Set<PlacementSentence> getBasicSentences() {
-		PlacementSentence sentence = new PlacementSentence("sample prefix", "sample suffix", getBasicAnswers(), "d");
-		sentence.setId(UuidGenerator.newUUID());
-		Set<PlacementSentence> sentences = new HashSet<>();
-		sentences.add(sentence);
-		return sentences;
-	}
-	private Set<PlacementAnswer> getBasicAnswers() {
-		PlacementAnswer a = new PlacementAnswer("a", "Sample answer a");
-		PlacementAnswer b = new PlacementAnswer("b", "Sample answer b");
-		PlacementAnswer c = new PlacementAnswer("c", "Sample answer c");
-		PlacementAnswer d = new PlacementAnswer("d", "Sample answer d");
-		Set<PlacementAnswer> answers = new HashSet<>();
-		answers.add(a);
-		answers.add(b);
-		answers.add(c);
-		answers.add(d);
-		return answers;
-	}
-
-	protected Language getBasicLanguage(String languageCode, String languageNameStr) {
-		Language sampleLanguage = new Language();
-
-		// set language things
-		sampleLanguage.setId(languageCode);
-		LanguageName languageNameObj = new LanguageName(sampleLanguage, languageNameStr);
-
-		return sampleLanguage;
-	}
-
-
-	private Set<Phone> getBasicUserPhones() {
-		Phone samplePhone = new Phone();
-		samplePhone.setPhoneType(main.model.enums.PhoneType.MOBILE);
-		samplePhone.setPhoneNumber("666-666-666");
-		HashSet<Phone> phones = new HashSet<>();
-		phones.add(samplePhone);
-		return phones;
-	}
-
-	private Address getBasicUserAddress() {
-		Address address = new Address();
-		address.setStreet("Bambu-Dziambu");
-		address.setHouseNumber("15");
-		address.setFlatNumber("2");
-		address.setPostCode("12-111");
-		address.setCity("Honolulu");
-		return address;
-	}
-
 	protected Address getNewAddress() {
 		Address address = new Address();
 		address.setStreet("Bambaramba");
@@ -209,30 +107,6 @@ public abstract class AbstractControllerTest extends AbstractTest {
 		address.setPostCode("18-123");
 		address.setCity("Mexico City");
 		return address;
-	}
-
-	protected User getBasicUser(String username) {
-		User sampleUser = new User();
-		sampleUser.setUsername(username);
-		sampleUser.setPassword(new BCryptPasswordEncoder().encode("password1"));
-		sampleUser.setEmail("user@gmail.com");
-		sampleUser.setUserRoles(getUserRoles());
-		sampleUser.setActive(true);
-		sampleUser.setFirstName("Mark");
-		sampleUser.setLastName("Zaworsky");
-		sampleUser.setPhone(getBasicUserPhones());
-		sampleUser.setAddress(getBasicUserAddress());
-		sampleUser.setId(UuidGenerator.newUUID());
-		return sampleUser;
-	}
-
-	protected Set<UserRole> getUserRoles() {
-		UserRole sampleRole = new UserRole();
-		sampleRole.setRoleName("USER");
-
-		HashSet<UserRole> userRoles = new HashSet<>();
-		userRoles.add(sampleRole);
-		return userRoles;
 	}
 
 	protected NewUserJson getBasicNewUserJson(User user, boolean passwordEquals) {
@@ -324,5 +198,11 @@ public abstract class AbstractControllerTest extends AbstractTest {
 			}
 		}
 		throw new NullPointerException();
+	}
+
+	protected String getResponseJson(MockMvc mockMvc, RequestBuilder requestBuilder) throws Exception {
+		MvcResult request = mockMvc.perform(requestBuilder).andReturn();
+		String content = request.getResponse().getContentAsString();
+		return content;
 	}
 }

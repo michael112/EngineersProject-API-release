@@ -23,6 +23,9 @@ import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.json.token.TokenJson;
 
+import test.controllers.environment.TestEnvironment;
+import test.controllers.environment.TestEnvironmentBuilder;
+
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -48,7 +51,7 @@ public class LoginControllerTest extends AbstractControllerTest {
 
     private String testedClassURI;
 
-    private User sampleUser;
+    private TestEnvironment testEnvironment;
 
     public void setMockito() {
         reset(userServiceMock, labelProviderMock, domainURIProviderMock, tokenProviderMock);
@@ -59,8 +62,8 @@ public class LoginControllerTest extends AbstractControllerTest {
     public void setUp() {
         setMockito();
         this.testedClassURI = setTestedClassURI(this.domainURIProviderMock, LoginControllerUrlConstants.CLASS_URL);
-        this.sampleUser = getBasicUser("sampleUser");
-        setAuthorizationMock(this.sampleUser);
+        this.testEnvironment = TestEnvironmentBuilder.build();
+        setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
 		initInsideMocks(this.courseMembershipValidatorMock, null);
     }
 
@@ -72,9 +75,11 @@ public class LoginControllerTest extends AbstractControllerTest {
 
         String returnMessage = "Login successfull!";
 
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
         when( this.tokenProviderMock.getToken(Mockito.any(String.class), Mockito.any(String.class)) ).thenReturn(token);
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
-        when( this.userServiceMock.findUserByUsername(Mockito.any(String.class)) ).thenReturn(this.sampleUser);
+        when( this.userServiceMock.findUserByUsername(Mockito.any(String.class)) ).thenReturn(sampleUser);
 
         this.mockMvc.perform(post(this.testedClassURI + LoginControllerUrlConstants.LOGIN_USER_URL + "?login=" + login + "&password=" + password)
                 .contentType("application/json;charset=utf-8")

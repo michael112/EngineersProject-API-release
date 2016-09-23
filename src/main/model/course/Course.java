@@ -109,6 +109,11 @@ public class Course extends AbstractUuidModel {
 		this.teachers.clear();
 		if( teachers != null ) {
 			this.teachers.addAll(teachers);
+			for( User teacher : teachers ) {
+				if( !( teacher.containsCourseAsTeacher(this) ) ) {
+					teacher.addCourseAsTeacher(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addTeacher(User teacher) {
@@ -136,6 +141,11 @@ public class Course extends AbstractUuidModel {
 		this.students.clear();
 		if( students != null ) {
 			this.students.addAll(students);
+			for( CourseMembership student : students ) {
+				if( ( student.getCourse() == null ) || ( !( student.getCourse().equals(this) ) ) ) {
+					student.setCourse(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addStudent(CourseMembership student) {
@@ -161,6 +171,11 @@ public class Course extends AbstractUuidModel {
 		this.tests.clear();
 		if( tests != null ) {
 			this.tests.addAll(tests);
+			for( Test test : tests ) {
+				if( ( test.getCourse() == null ) || ( !( test.getCourse().equals(this) ) ) ) {
+					test.setCourse(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addTest(Test test) {
@@ -185,6 +200,11 @@ public class Course extends AbstractUuidModel {
 		this.homeworks.clear();
 		if( homeworks != null ) {
 			this.homeworks.addAll(homeworks);
+			for( Homework homework : homeworks ) {
+				if( ( homework.getCourse() == null ) || ( !( homework.getCourse().equals(this) ) ) ) {
+					homework.setCourse(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addHomework(Homework homework) {
@@ -209,6 +229,11 @@ public class Course extends AbstractUuidModel {
 		this.messages.clear();
 		if( messages != null ) {
 			this.messages.addAll(messages);
+			for( Message message : messages ) {
+				if( ( message.getCourse() == null ) || ( !( message.getCourse().equals(this) ) ) ) {
+					message.setCourse(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addMessage(Message message) {

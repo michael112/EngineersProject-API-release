@@ -71,6 +71,11 @@ public class Homework extends AbstractHomeworkOrTest {
 		this.homeworkSolutions.clear();
 		if( solutions != null ) {
 			this.homeworkSolutions.addAll(solutions);
+			for( HomeworkSolution solution : solutions ) {
+				if( ( solution.getTask() == null ) || ( !( solution.getTask().equals(this) ) ) ) {
+					solution.setTask(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addHomeworkSolution(HomeworkSolution solution) {

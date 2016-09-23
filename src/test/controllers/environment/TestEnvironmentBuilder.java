@@ -11,6 +11,7 @@ import main.model.course.*;
 import main.model.language.*;
 import main.model.placementtest.*;
 import main.model.user.User;
+import main.model.enums.GradeScale;
 import main.model.enums.PhoneType;
 import main.model.user.userprofile.*;
 import main.model.user.userrole.UserRole;
@@ -66,13 +67,14 @@ public class TestEnvironmentBuilder {
 		PlacementTest englishPlacementTest = generatePlacementTest(english);
 		environment.addPlacementTest(englishPlacementTest);
 
-		User sampleStudent1 = generateUser("ramsay1", "ramsay1", "ramsay1@samplemail.com", "Ramsay", "Bolton", "Sample street 1", "12a", "5", "12-511", "Vdfs", user, new Phone(PhoneType.MOBILE, "666-666-666"));
+		User sampleStudent1 = generateUser("ramsay1", "ramsay1", "ramsay1@samplemail.com", "Ramsay", "Bolton", "Sample street 1", "12a", "5", "12-511", "Vdfs", user, generatePhone(PhoneType.MOBILE, "666-666-666"));
 		environment.addUser(sampleStudent1);
 
-		User sampleStudent2 = generateUser("abc", "abc", "abc@samplemail.com", "A", "BC", "Sample street 2", "80", "5", "80-520", "Vdfs", admin, new Phone(PhoneType.MOBILE, "552-222-222"));
+		User sampleStudent2 = generateUser("abc", "abc", "abc@samplemail.com", "A", "BC", "Sample street 2", "80", "5", "80-520", "Vdfs", admin, generatePhone(PhoneType.MOBILE, "552-222-222"));
 		environment.addUser(sampleStudent2);
 
-		User sampleTeacher1 = generateUser("teacher1", "teacher1", "teacher1@samplemail.com", "Teacher", "Teacher", "Sample street 2", "80", "5", "80-520", "Vdfs", user, new Phone(PhoneType.MOBILE, "625-856-926"));
+		User sampleTeacher1 = generateUser("teacher1", "teacher1", "teacher1@samplemail.com", "Teacher", "Teacher", "Sample street 2", "80", "5", "80-520", "Vdfs", user, generatePhone(PhoneType.MOBILE, "625-856-926"));
+		sampleTeacher1.addTaughtLanguage(english);
 		environment.addUser(sampleTeacher1);
 
 		PlacementTestResult englishUser1 = generatePlacementTestResult(englishPlacementTest, sampleStudent1, 80);
@@ -95,6 +97,7 @@ public class TestEnvironmentBuilder {
 		environment.addCourse(sampleEnglishCourse1);
 
 		for( CourseMembership courseMembership : sampleEnglishCourse1.getStudents() ) {
+			courseMembership.setId(UuidGenerator.newUUID());
 			environment.addCourseMembership(courseMembership);
 		}
 
@@ -106,7 +109,17 @@ public class TestEnvironmentBuilder {
 		environment.addMessage(sampleSingleMessage1);
 		environment.addMessage(sampleSingleMessage2);
 
+		Homework sampleHomework = generateHomework("sample homework1", new Date(2016,9,19), "sample description", sampleEnglishCourse1, sampleFile2, sampleFile1, sampleStudent2);
+		environment.addHomework(sampleHomework);
 
+		Test sampleTest = generateTest("sample test1", new Date(2016,9,19), "sample description", sampleEnglishCourse1, sampleStudent2, true);
+		environment.addTest(sampleTest);
+
+		Grade sampleGradeToSampleHomework = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", sampleHomework, GradeScale.PUNKTOWA, 30, 1, sampleStudent2, 18);
+		Grade sampleGradeToSampleTest = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", sampleTest, GradeScale.PUNKTOWA, 80, 1, sampleStudent1, 40);
+
+		environment.addGrade(sampleGradeToSampleHomework);
+		environment.addGrade(sampleGradeToSampleTest);
 
 		return environment;
 	}
@@ -121,18 +134,19 @@ public class TestEnvironmentBuilder {
 	private static Language generateLanguage(String languageCode, String languageNameStr) {
 		Language language = new Language(languageCode);
 		LanguageName languageNameObj = new LanguageName(language, languageNameStr);
+		languageNameObj.setId(languageCode, languageCode);
 		return language;
 	}
 
 	private static Language generateLanguage(String languageCode, String languageName, Language namingLanguage) {
 		Language language = new Language(languageCode);
 		LanguageName languageNameObj = new LanguageName(language, namingLanguage, languageName);
+		languageNameObj.setId(namingLanguage.getId(), languageCode);
 		return language;
 	}
 
 	private static CourseLevel generateCourseLevel(String courseLevelName) {
 		CourseLevel level = new CourseLevel(courseLevelName);
-		level.setId(UuidGenerator.newUUID());
 		return level;
 	}
 
@@ -140,6 +154,9 @@ public class TestEnvironmentBuilder {
 	private static CourseType generateCourseType(String courseTypeName, Language naminglanguage) {
 		CourseType type = new CourseType(courseTypeName, naminglanguage);
 		type.setId(UuidGenerator.newUUID());
+		for( CourseTypeName name : type.getCourseTypeNames() ) {
+			name.setId(UuidGenerator.newUUID());
+		}
 		return type;
 	}
 
@@ -188,6 +205,12 @@ public class TestEnvironmentBuilder {
 		return user;
 	}
 
+	private static Phone generatePhone(PhoneType phoneType, String phoneNumber) {
+		Phone phone = new Phone(phoneType, phoneNumber);
+		phone.setId(UuidGenerator.newUUID());
+		return phone;
+	}
+
 	private static PlacementTestResult generatePlacementTestResult(PlacementTest test, User user, double result) {
 		PlacementTestResult newPlacementTestResult = new PlacementTestResult(test, user, result);
 		newPlacementTestResult.setId(UuidGenerator.newUUID());
@@ -234,7 +257,38 @@ public class TestEnvironmentBuilder {
 		return generateMessage(sender, receivers, title, content, attachement, isAnnouncement, course);
 	}
 
-	private static Homework generateHomework() {return null;}
-	private static Test generateTest() {return null;}
-	private static Grade generateGrade() {return null;}
+	private static Homework generateHomework(String title, Date date, String description, Course course, File attachement, File solutionFile, User user ) {
+		Homework homework = new Homework(title, date, description, course);
+		homework.setId(UuidGenerator.newUUID());
+		homework.addAttachement(attachement);
+		// bez grade
+		HomeworkSolution homeworkSolution = new HomeworkSolution(getCourseMembership(course, user), homework, solutionFile);
+		homework.addHomeworkSolution(homeworkSolution);
+		return homework;
+	}
+
+	private static CourseMembership getCourseMembership(Course course, User user) {
+		for( CourseMembership courseMembership : course.getStudents() ) {
+			if( courseMembership.getUser().equals(user) ) {
+				return courseMembership;
+			}
+		}
+		return null;
+	}
+
+	private static Test generateTest( String title, Date date, String description, Course course, User user, boolean written ) {
+		Test test = new Test(title, date, description, course);
+		test.setId(UuidGenerator.newUUID());
+		// bez grade
+		TestSolution testSolution = new TestSolution(getCourseMembership(course, user), test, written);
+		test.addTestSolution(testSolution);
+		return test;
+	}
+	private static Grade generateGrade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, User student, double gradeValue) {
+		Grade grade = new Grade(gradedBy, course, gradeTitle, gradeDescription, task, scale, maxPoints, weight);
+		grade.setId(UuidGenerator.newUUID());
+		StudentGrade studentGrade = new StudentGrade(getCourseMembership(course, student), gradeValue, grade);
+		studentGrade.setId(UuidGenerator.newUUID());
+		return grade;
+	}
 }

@@ -38,6 +38,11 @@ public class Language extends AbstractSinglePKModel<String> {
 		this.languageNames.clear();
 		if( languageNames != null ) {
 			this.languageNames.addAll(languageNames);
+			for( LanguageName languageName : languageNames ) {
+				if( ( languageName.getNamedLanguage() == null ) || ( !( languageName.getNamedLanguage().equals(this) ) ) ) {
+					languageName.setNamedLanguage(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addLanguageName(LanguageName languageName) {
@@ -68,6 +73,11 @@ public class Language extends AbstractSinglePKModel<String> {
 		this.courses.clear();
 		if( courses != null ) {
 			this.courses.addAll(courses);
+			for( Course course : courses ) {
+				if( ( course.getLanguage() == null ) || ( !( course.getLanguage().equals(this) ) ) ) {
+					course.setLanguage(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addCourse(Course course) {
@@ -93,6 +103,11 @@ public class Language extends AbstractSinglePKModel<String> {
 		this.placementTests.clear();
 		if( placementTests != null ) {
 			this.placementTests.addAll(placementTests);
+			for( PlacementTest placementTest : placementTests ) {
+				if( ( placementTest.getLanguage() == null ) || ( !( placementTest.getLanguage().equals(this) ) ) ) {
+					placementTest.setLanguage(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addPlacementTest(PlacementTest placementTest) {
@@ -118,6 +133,11 @@ public class Language extends AbstractSinglePKModel<String> {
 		this.teachers.clear();
 		if( teachers != null ) {
 			this.teachers.addAll(teachers);
+			for( User teacher : teachers ) {
+				if( !( teacher.containsTaughtLanguage(this) ) ) {
+					teacher.addTaughtLanguage(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addTeacher(User teacher) {

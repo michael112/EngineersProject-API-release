@@ -41,6 +41,11 @@ public class Test extends AbstractHomeworkOrTest {
 		this.testSolutions.clear();
 		if( solutions != null ) {
 			this.testSolutions.addAll(solutions);
+			for( TestSolution solution : solutions ) {
+				if( ( solution.getTask() == null ) || ( !( solution.getTask().equals(this) ) ) ) {
+					solution.setTask(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addTestSolution(TestSolution solution) {

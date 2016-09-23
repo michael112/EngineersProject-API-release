@@ -102,6 +102,11 @@ public class Grade extends AbstractUuidModel {
 		this.grades.clear();
 		if( grades != null ) {
 			this.grades.addAll(grades);
+			for( StudentGrade grade : grades ) {
+				if( ( grade.getGrade() == null ) || ( !( grade.getGrade().equals(this) ) ) ) {
+					grade.setGrade(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addGrade(StudentGrade grade) {
@@ -151,11 +156,15 @@ public class Grade extends AbstractUuidModel {
 		this.setTask(task);
 	}
 
-	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, Set<StudentGrade> grades) {
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight) {
 		this(gradedBy, course, gradeTitle, scale, weight);
 		this.setGradeDescription(gradeDescription);
 		this.setTask(task);
 		this.setMaxPoints(maxPoints);
+	}
+
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, Set<StudentGrade> grades) {
+		this(gradedBy, course, gradeTitle, gradeDescription, task, scale, maxPoints, weight);
 		this.setGrades(grades);
 	}
 

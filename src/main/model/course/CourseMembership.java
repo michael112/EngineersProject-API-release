@@ -71,6 +71,11 @@ public class CourseMembership extends AbstractUuidModel {
 		this.grades.clear();
 		if( grades != null ) {
 			this.grades.addAll(grades);
+			for( StudentGrade grade : grades ) {
+				if( ( grade.getStudent() == null ) || ( !( grade.getStudent().equals(this) ) ) ) {
+					grade.setStudent(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addGrade(StudentGrade grade) {

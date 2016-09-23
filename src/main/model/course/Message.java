@@ -56,6 +56,11 @@ public class Message extends AbstractUuidModel {
 		this.receivers.clear();
 		if( receivers != null ) {
 			this.receivers.addAll(receivers);
+			for( User receiver : receivers ) {
+				if( !( receiver.containsMessage(this)) ) {
+					receiver.addMessage(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addReceiver(User receiver) {

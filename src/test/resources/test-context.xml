@@ -22,6 +22,14 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="userRoleService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.model.user.userrole.UserRoleService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="courseService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
@@ -105,6 +113,7 @@
 	<context:component-scan base-package="main.dao, main.json, main.model main.security, main.service, main.util">
 		<context:exclude-filter type="regex" expression="main.util.currentUser.CurrentUserServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.user.user.UserServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.model.user.userrole.UserRoleServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.placementtest.PlacementTestServiceImpl" />

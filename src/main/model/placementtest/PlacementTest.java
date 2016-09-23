@@ -71,6 +71,11 @@ public class PlacementTest extends AbstractUuidModel {
 		this.results.clear();
 		if( results != null ) {
 			this.results.addAll(results);
+			for( PlacementTestResult result : results ) {
+				if( ( result.getTest() == null ) || ( !( result.getTest().equals(this) ) ) ) {
+					result.setTest(this); // przypisanie powiązania
+				}
+			}
 		}
 	}
 	public void addResult(PlacementTestResult result) {
