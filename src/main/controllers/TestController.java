@@ -22,7 +22,7 @@ import org.springframework.http.HttpStatus;
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
-import main.service.model.user.user.UserService;
+import main.service.crud.user.user.UserCrudService;
 import main.model.user.User;
 import main.util.mail.MailSender;
 
@@ -33,7 +33,7 @@ import main.constants.urlconstants.GlobalUrlConstants;
 public class TestController {
 
     @Autowired
-    private UserService userService;
+    private UserCrudService userCrudService;
 
     @Autowired
     private MailSender mailSender;
@@ -100,13 +100,13 @@ public class TestController {
     @PermitAll
     @ResponseBody
     public ResponseEntity<String> editSampleUser() {
-        User bill = userService.findUserByUsername("bill");
+        User bill = userCrudService.findUserByUsername("bill");
         String billID = bill.getId();
         bill.setFirstName("Bill");
 
-        userService.updateUser(bill);
+        userCrudService.updateUser(bill);
 
-        bill = userService.findUserByID(billID);
+        bill = userCrudService.findUserByID(billID);
         return new ResponseEntity<>(bill.getFirstName(), HttpStatus.OK);
     }
 

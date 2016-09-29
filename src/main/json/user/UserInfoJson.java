@@ -5,8 +5,6 @@ import java.util.HashSet;
 
 import lombok.Getter;
 
-import main.json.course.CourseJson;
-
 public class UserInfoJson {
 
     @Getter

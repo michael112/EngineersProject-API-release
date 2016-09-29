@@ -34,9 +34,9 @@ import main.util.labels.LabelProvider;
 import main.util.currentlanguagename.CurrentLanguageNameProvider;
 import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
-import main.service.model.language.LanguageService;
-import main.service.model.placementtest.PlacementTestService;
-import main.service.model.user.placementtestresult.PlacementTestResultService;
+import main.service.crud.language.LanguageCrudService;
+import main.service.crud.placementtest.PlacementTestCrudService;
+import main.service.crud.user.placementtestresult.PlacementTestResultCrudService;
 
 import main.model.language.Language;
 import main.model.placementtest.PlacementTest;
@@ -61,13 +61,13 @@ import main.json.placementtests.SolvedPlacementSentenceJson;
 public class PlacementTestController {
 
     @Autowired
-    private PlacementTestService placementTestService;
+    private PlacementTestCrudService placementTestCrudService;
 
     @Autowired
-    private LanguageService languageService;
+    private LanguageCrudService languageCrudService;
 
     @Autowired
-    private PlacementTestResultService placementTestResultService;
+    private PlacementTestResultCrudService placementTestResultCrudService;
 
     @Autowired
     private CurrentUserService currentUserService;
@@ -92,7 +92,7 @@ public class PlacementTestController {
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
-        Set<Language> languagesWithPlacementTests = this.languageService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
+        Set<Language> languagesWithPlacementTests = this.languageCrudService.findLanguagesByQuery("from Language l where l.placementTests is not empty");
         Set<PlacementTestListJson> placementTestListJsonSet = new HashSet<>();
         for (Language l : languagesWithPlacementTests) {
             Set<PlacementTestResultJson> tests = new HashSet<>();
@@ -115,7 +115,7 @@ public class PlacementTestController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_CONTENT, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity <? extends AbstractResponseJson> getPlacementTestContent(@PathVariable("id") String placementTestId) {
-        PlacementTest test = this.placementTestService.findPlacementTestByID(placementTestId);
+        PlacementTest test = this.placementTestCrudService.findPlacementTestByID(placementTestId);
         String messageStr;
         HttpStatus responseStatus;
         if( test == null ) {
@@ -139,10 +139,10 @@ public class PlacementTestController {
 
         User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
-        PlacementTest placementTest = this.placementTestService.findPlacementTestByID(solvedPlacementTestJson.getId());
+        PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(solvedPlacementTestJson.getId());
         double result = calculateTestResult(solvedPlacementTestJson, placementTest);
         PlacementTestResult placementTestResult = new PlacementTestResult(placementTest, currentUser, result);
-        this.placementTestResultService.savePlacementTestResult(placementTestResult);
+        this.placementTestResultCrudService.savePlacementTestResult(placementTestResult);
         String messageStr = this.labelProvider.getLabel("placementtest.solved.success");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);

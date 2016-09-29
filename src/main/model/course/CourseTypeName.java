@@ -29,13 +29,16 @@ public class CourseTypeName extends AbstractUuidModel {
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
 	public void setCourseType(CourseType courseType) {
-		if( this.courseType != null ) {
-			if (this.courseType.containsCourseTypeName(this)) {
-				this.courseType.changeCourseTypeNameCourseType(this, courseType);
+		if( courseType != null ) {
+			if( this.courseType != null ) {
+				if (this.courseType.containsCourseTypeName(this)) {
+					this.courseType.changeCourseTypeNameCourseType(this, courseType);
+				}
 			}
+			this.courseType = courseType;
+			courseType.addCourseTypeName(this); // przypisanie powiązania
 		}
-		this.courseType = courseType;
-		courseType.addCourseTypeName(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter

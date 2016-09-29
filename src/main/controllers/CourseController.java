@@ -29,7 +29,7 @@ import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
 import main.constants.urlconstants.CourseControllerUrlConstants;
 
-import main.service.model.course.course.CourseService;
+import main.service.crud.course.course.CourseCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
@@ -62,8 +62,8 @@ import main.model.course.CourseMembership;
 import main.model.course.CourseType;
 import main.model.language.Language;
 
-import main.service.model.language.LanguageService;
-import main.service.model.course.coursetype.CourseTypeService;
+import main.service.crud.language.LanguageCrudService;
+import main.service.crud.course.coursetype.CourseTypeCrudService;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
 
@@ -75,7 +75,7 @@ public class CourseController {
     private CurrentUserService currentUserService;
 
     @Autowired
-    private CourseService courseService;
+    private CourseCrudService courseCrudService;
 
     @Autowired
     private LabelProvider labelProvider;
@@ -92,10 +92,10 @@ public class CourseController {
     private CurrentLanguageNameProvider currentLanguageNameProvider;
 
     @Autowired
-    private LanguageService languageService;
+    private LanguageCrudService languageCrudService;
 
     @Autowired
-    private CourseTypeService courseTypeService;
+    private CourseTypeCrudService courseTypeCrudService;
 
     @PostConstruct
     public void initialize() {
@@ -111,7 +111,7 @@ public class CourseController {
 
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
-        Course course = this.courseService.findCourseByID(courseID);
+        Course course = this.courseCrudService.findCourseByID(courseID);
         Assert.notNull(course);
 
         if( this.courseMembershipValidator.isStudent(currentUser, course) ) {
@@ -122,10 +122,13 @@ public class CourseController {
         }
         else {
             return new ResponseEntity<>(null); // this situation is impossible to appear
+            // throw ArgumentException
         }
     }
 
     private ResponseEntity<? extends AbstractResponseJson> getCourseInfoTeacher(Course course, User user) {
+        // Według Janka to może być w serwisie ;)
+
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("courseinfo.success");
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
@@ -241,7 +244,7 @@ public class CourseController {
     @CourseMembershipRequired
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_STUDENT_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getCourseStudentList(@PathVariable("id") String courseID) {
-        Course course = this.courseService.findCourseByID(courseID);
+        Course course = this.courseCrudService.findCourseByID(courseID);
         Assert.notNull(course);
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
         String courseTypeName = course.getCourseType().getCourseTypeName(this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
@@ -262,8 +265,8 @@ public class CourseController {
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> showAvailableLanguagesAndCourseTypes() {
         AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
-        Set<Language> availableLanguages = this.languageService.findAllLanguages();
-        Set<CourseType> availableCourseTypes = this.courseTypeService.findAllCourseTypes();
+        Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
+        Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
         for( Language language : availableLanguages ) {
             result.addLanguage(language.getId(), this.currentLanguageNameProvider.getLanguageName(language));
         }

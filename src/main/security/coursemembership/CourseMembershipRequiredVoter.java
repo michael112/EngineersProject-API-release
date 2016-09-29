@@ -20,7 +20,7 @@ import main.model.user.User;
 import main.model.UuidGenerator;
 
 import main.model.course.Course;
-import main.service.model.course.course.CourseService;
+import main.service.crud.course.course.CourseCrudService;
 
 public class CourseMembershipRequiredVoter implements AccessDecisionVoter<Object> {
 
@@ -28,7 +28,7 @@ public class CourseMembershipRequiredVoter implements AccessDecisionVoter<Object
     private CurrentUserService currentUserService;
 
     @Autowired
-    private CourseService courseService;
+    private CourseCrudService courseCrudService;
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidator;
@@ -80,7 +80,7 @@ public class CourseMembershipRequiredVoter implements AccessDecisionVoter<Object
             return ACCESS_ABSTAIN;
         }
 
-        Course currentCourse = this.courseService.findCourseByID(courseID);
+        Course currentCourse = this.courseCrudService.findCourseByID(courseID);
         if( currentCourse == null ) {
             return ACCESS_ABSTAIN;
         }

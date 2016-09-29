@@ -36,13 +36,16 @@ public class CourseMembership extends AbstractUuidModel {
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 	public void setCourse(Course course) {
-		if( this.course != null ) {
-			if (this.course.containsStudent(this)) {
-				this.course.changeStudentCourse(this, course);
+		if( course != null ) {
+			if (this.course != null) {
+				if (this.course.containsStudent(this)) {
+					this.course.changeStudentCourse(this, course);
+				}
 			}
+			this.course = course;
+			course.addStudent(this); // przypisanie powiązania
 		}
-		this.course = course;
-		course.addStudent(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	public void changeCourse(Course newCourse) {
@@ -55,13 +58,16 @@ public class CourseMembership extends AbstractUuidModel {
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {
-		if( this.user != null ) {
-			if (this.user.containsCourseAsStudent(this)) {
-				this.user.removeCourseAsStudent(this);
+		if( user != null ) {
+			if (this.user != null) {
+				if (this.user.containsCourseAsStudent(this)) {
+					this.user.removeCourseAsStudent(this);
+				}
 			}
+			this.user = user;
+			user.addCourseAsStudent(this); // przypisanie powiązania
 		}
-		this.user = user;
-		user.addCourseAsStudent(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter

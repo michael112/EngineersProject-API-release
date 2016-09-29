@@ -35,7 +35,7 @@ import main.util.labels.LabelProvider;
 import main.util.userdetails.UserDetailsServiceImpl;
 
 import main.model.user.User;
-import main.service.model.user.user.UserService;
+import main.service.crud.user.user.UserCrudService;
 
 import main.json.token.TokenJson;
 
@@ -57,7 +57,7 @@ public class LoginController {
     private RoleHierarchy roleHierarchy;
 
     @Autowired
-    private UserService userService;
+    private UserCrudService userCrudService;
 
     private UserDetailsServiceImpl userDetailsService;
 
@@ -77,7 +77,7 @@ public class LoginController {
             String messageStr = this.labelProvider.getLabel("login.success");
             HttpStatus responseStatus = HttpStatus.OK;
             AbstractMenuJson menu = null;
-            User user = this.userService.findUserByUsername(username);
+            User user = this.userCrudService.findUserByUsername(username);
             Assert.notNull(user);
             String userRole = this.getUserRole(user);
             Assert.notNull(userRole);

@@ -70,13 +70,13 @@ public class Grade extends AbstractUuidModel {
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
 	private AbstractHomeworkOrTest task;
 	public void setTask(AbstractHomeworkOrTest task) {
-		if( this.task != null ) {
+		if (this.task != null) {
 			if (this.task.containsGrade(this)) {
 				this.task.removeGrade(this);
 			}
 		}
 		this.task = task;
-		task.addGrade(this); // przypisanie powiązania
+		if( task != null ) task.addGrade(this); // przypisanie powiązania
 	}
 
 	@Getter
@@ -123,6 +123,17 @@ public class Grade extends AbstractUuidModel {
 	public boolean containsGrade(StudentGrade grade) {
 		return this.grades.contains(grade);
 	}
+	public boolean containsGradeForUser(User user) {
+		return getGradeForUser(user) != null;
+	}
+	public StudentGrade getGradeForUser(User user) {
+		for( StudentGrade grade : this.getGrades() ) {
+			if( grade.getStudent().getUser().equals(user) ) {
+				return grade;
+			}
+		}
+		return null;
+	}
 	
 	public Grade() {
 		super();
@@ -133,16 +144,13 @@ public class Grade extends AbstractUuidModel {
 	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale) {
 		this();
 		this.setGradedBy(gradedBy);
+		this.setGradeTitle(gradeTitle);
 		this.setCourse(course);
 		this.setScale(scale);
 	}
 
 	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale, double weight) {
-		this();
-		this.setGradedBy(gradedBy);
-		this.setGradeTitle(gradeTitle);
-		this.setCourse(course);
-		this.setScale(scale);
+		this(gradedBy, course, gradeTitle, scale);
 		this.setWeight(weight);
 	}
 	

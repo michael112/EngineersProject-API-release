@@ -37,13 +37,16 @@ public class Message extends AbstractUuidModel {
 	@JoinColumn(name="senderID", referencedColumnName="userID", nullable=false)
 	private User sender;
 	public void setSender(User sender) {
-		if( this.sender != null ) {
-			if (this.sender.containsMyMessage(this)) {
-				this.sender.removeMyMessage(this);
+		if( sender != null ) {
+			if( this.sender != null ) {
+				if (this.sender.containsMyMessage(this)) {
+					this.sender.removeMyMessage(this);
+				}
 			}
+			this.sender = sender;
+			sender.addMyMessage(this); // przypisanie powiązania
 		}
-		this.sender = sender;
-		sender.addMyMessage(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -133,7 +136,7 @@ public class Message extends AbstractUuidModel {
 			}
 		}
 		this.course = course;
-		course.addMessage(this); // przypisanie powiązania
+		if( course != null ) course.addMessage(this); // przypisanie powiązania
 	}
 
 	public Message() {

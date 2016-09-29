@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import main.service.model.user.user.UserService;
+import main.service.crud.user.user.UserCrudService;
 
 import main.model.user.User;
 
@@ -13,10 +13,10 @@ import main.model.user.User;
 public class CurrentUserServiceImpl implements CurrentUserService {
 
     @Autowired
-    private UserService userService;
+    private UserCrudService userCrudService;
 
     public User getCurrentUser() {
-        return this.userService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
+        return this.userCrudService.findUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
     }
 
 }

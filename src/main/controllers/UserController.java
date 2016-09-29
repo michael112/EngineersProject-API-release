@@ -29,7 +29,7 @@ import main.util.mail.MailSender;
 import main.json.user.UserInfoJson;
 import main.json.user.NewUserJson;
 
-import main.json.course.CourseJson;
+import main.json.user.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
@@ -40,8 +40,8 @@ import main.model.course.CourseMembership;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
 
-import main.service.model.user.user.UserService;
-import main.service.model.user.userrole.UserRoleService;
+import main.service.crud.user.user.UserCrudService;
+import main.service.crud.user.userrole.UserRoleCrudService;
 
 import main.util.currentUser.CurrentUserService;
 
@@ -68,9 +68,9 @@ import main.json.user.EditPhoneJson;
 public class UserController {
 
     @Autowired
-    private UserService userService;
+    private UserCrudService userCrudService;
     @Autowired
-    private UserRoleService userRoleService;
+    private UserRoleCrudService userRoleCrudService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -109,13 +109,13 @@ public class UserController {
             responseStatus = HttpStatus.BAD_REQUEST;
             messageStr = this.labelProvider.getLabel("user.passwords.not.equal");
         }
-        else if (!(userService.isUsernameUnique(userJson.getUsername()))) {
+        else if (!(userCrudService.isUsernameUnique(userJson.getUsername()))) {
             responseStatus = HttpStatus.BAD_REQUEST;
             messageStr = this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix");
         }
         else {
-            User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleService.findUserRoleByRoleName("USER"));
-            this.userService.saveUser(user);
+            User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleCrudService.findUserRoleByRoleName("USER"));
+            this.userCrudService.saveUser(user);
             responseStatus = HttpStatus.OK;
             messageStr = this.labelProvider.getLabel("user.saved.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.saved.suffix");
         }
@@ -172,7 +172,7 @@ public class UserController {
         }
         else {
             currentUser.setPassword(this.passwordEncoder.encode(editPasswordJson.getNewPassword()));
-            this.userService.updateUser(currentUser);
+            this.userCrudService.updateUser(currentUser);
             responseStatus = HttpStatus.OK;
             messageStr = this.labelProvider.getLabel("user.edit.password.success");
         }
@@ -224,7 +224,7 @@ public class UserController {
         User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setEmail(newEmail);
-        this.userService.updateUser(currentUser);
+        this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelProvider.getLabel("user.editmail.confirmation.success.suffix");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
@@ -246,7 +246,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setAddress(newAddress);
-        this.userService.updateUser(currentUser);
+        this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editaddress.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
@@ -268,7 +268,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.setPhone(newPhone.getPhone());
-        this.userService.updateUser(currentUser);
+        this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editphonelist.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
@@ -280,7 +280,7 @@ public class UserController {
 		User currentUser = this.currentUserService.getCurrentUser();
         Assert.notNull(currentUser);
         currentUser.addPhone(newPhone);
-        this.userService.updateUser(currentUser);
+        this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.addphone.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
@@ -293,7 +293,7 @@ public class UserController {
         Assert.notNull(currentUser);
         phoneToRemove = currentUser.getPhone(phoneToRemove.getPhoneNumber());
         currentUser.removePhone(phoneToRemove);
-        this.userService.updateUser(currentUser);
+        this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.removephone.success");
         return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);

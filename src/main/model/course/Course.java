@@ -38,13 +38,16 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
-		if( this.language != null ) {
-			if (this.language.containsCourse(this)) {
-				this.language.changeCourseLanguage(this, language);
+		if( language != null ) {
+			if (this.language != null) {
+				if (this.language.containsCourse(this)) {
+					this.language.changeCourseLanguage(this, language);
+				}
 			}
+			this.language = language;
+			language.addCourse(this); // przypisanie powiązania
 		}
-		this.language = language;
-		language.addCourse(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -52,13 +55,16 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="courseLevelName", referencedColumnName="name", nullable=false)
 	private CourseLevel courseLevel;
 	public void setCourseLevel(CourseLevel courseLevel) {
-		if( this.courseLevel != null ) {
-			if (this.courseLevel.containsCourse(this)) {
-				this.courseLevel.changeCourse(this, courseLevel);
+		if( courseLevel != null ) {
+			if (this.courseLevel != null) {
+				if (this.courseLevel.containsCourse(this)) {
+					this.courseLevel.changeCourse(this, courseLevel);
+				}
 			}
+			this.courseLevel = courseLevel;
+			courseLevel.addCourse(this); // przypisanie powiązania
 		}
-		this.courseLevel = courseLevel;
-		courseLevel.addCourse(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -66,13 +72,16 @@ public class Course extends AbstractUuidModel {
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
 	public void setCourseType(CourseType courseType) {
-		if( this.courseType != null ) {
-			if (this.courseType.containsCourse(this)) {
-				this.courseType.changeCourseCourseType(this, courseType);
+		if (courseType != null) {
+			if (this.courseType != null) {
+				if (this.courseType.containsCourse(this)) {
+					this.courseType.changeCourseCourseType(this, courseType);
+				}
 			}
+			this.courseType = courseType;
+			courseType.addCourse(this); // przypisanie powiązania
 		}
-		this.courseType = courseType;
-		courseType.addCourse(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -224,6 +233,35 @@ public class Course extends AbstractUuidModel {
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
+	private Set<Grade> grades;
+	public void setGrades(Set<Grade> grades) {
+		this.grades.clear();
+		if( grades != null ) {
+			this.grades.addAll(grades);
+			for( Grade grade : grades ) {
+				if( ( grade.getCourse() != null ) || ( !( grade.getCourse().equals(this) ) ) ) {
+					grade.setCourse(this); // przypisanie powiązania
+				}
+			}
+		}
+	}
+	public void addGrade(Grade grade) {
+		if ( !( this.grades.contains(grade) ) ) {
+			this.grades.add(grade);
+		}
+		if( grade.getCourse() != this ) {
+			grade.setCourse(this); // przypisanie powiązania
+		}
+	}
+	public void removeGrade(Grade grade) {
+		this.grades.remove(grade);
+	}
+	public boolean containsGrade(Grade grade) {
+		return this.grades.contains(grade);
+	}
+
+	@Getter
+	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Message> messages;
 	public void setMessages(Set<Message> messages) {
 		this.messages.clear();
@@ -293,6 +331,7 @@ public class Course extends AbstractUuidModel {
 		this.students = new HashSet<>();
 		this.tests = new HashSet<>();
 		this.homeworks = new HashSet<>();
+		this.grades = new HashSet<>();
 		this.messages = new HashSet<>();
 		this.attachements = new HashSet<>();
 	}

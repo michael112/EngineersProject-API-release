@@ -33,13 +33,16 @@ public class PlacementTest extends AbstractUuidModel {
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
-		if( this.language != null ) {
-			if (this.language.containsPlacementTest(this)) {
-				this.language.changePlacementTestLanguage(this, language);
+		if( language != null ) {
+			if (this.language != null) {
+				if (this.language.containsPlacementTest(this)) {
+					this.language.changePlacementTestLanguage(this, language);
+				}
 			}
+			this.language = language;
+			if (language != null) language.addPlacementTest(this); // przypisanie powiązania
 		}
-		this.language = language;
-		language.addPlacementTest(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter

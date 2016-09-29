@@ -15,17 +15,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import main.model.user.User;
-import main.service.model.user.user.UserService;
+import main.service.crud.user.user.UserCrudService;
 
 @Service("customUserDetailsService")
 public class UserDetailsServiceImpl implements org.springframework.security.core.userdetails.UserDetailsService {
 
 	@Autowired
-	private UserService userService;
+	private UserCrudService userCrudService;
 	
 	@Transactional(readOnly=true)
 	public UserDetails loadUserByUsername(String ssoId) throws UsernameNotFoundException {
-        User user = userService.findUserByUsername(ssoId);
+        User user = userCrudService.findUserByUsername(ssoId);
 		if( user == null ) {
 			throw new UsernameNotFoundException("Username not found");
 		}

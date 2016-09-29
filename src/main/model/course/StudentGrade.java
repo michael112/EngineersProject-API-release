@@ -27,13 +27,16 @@ public class StudentGrade extends AbstractUuidModel {
 	@JoinColumn(name="studentID", referencedColumnName="courseMembershipID", nullable=false)
 	private CourseMembership student;
 	public void setStudent(CourseMembership student) {
-		if( this.student != null ) {
-			if (this.student.containsGrade(this)) {
-				this.student.removeGrade(this);
+		if( student != null ) {
+			if( this.student != null ) {
+				if (this.student.containsGrade(this)) {
+					this.student.removeGrade(this);
+				}
 			}
+			this.student = student;
+			student.addGrade(this); // przypisanie powiązania
 		}
-		this.student = student;
-		student.addGrade(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -43,16 +46,19 @@ public class StudentGrade extends AbstractUuidModel {
 
 	@Getter
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="gradeID", referencedColumnName="gradeID")
+	@JoinColumn(name="gradeID", referencedColumnName="gradeID", nullable=false)
 	private Grade grade;
 	public void setGrade(Grade grade) {
-		if( this.grade != null ) {
-			if (this.grade.containsGrade(this)) {
-				this.grade.removeGrade(this);
+		if( grade != null ) {
+			if( this.grade != null ) {
+				if (this.grade.containsGrade(this)) {
+					this.grade.removeGrade(this);
+				}
 			}
+			this.grade = grade;
+			grade.addGrade(this); // przypisanie powiązania
 		}
-		this.grade = grade;
-		grade.addGrade(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	public StudentGrade() {

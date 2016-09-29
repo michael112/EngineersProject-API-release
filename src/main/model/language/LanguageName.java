@@ -51,15 +51,17 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	@JoinColumn(name="namedLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namedLanguage; //  język którego wpis dotyczy
 	public void setNamedLanguage(Language namedLanguage) {
-		// do sprawdzenia
-		if( this.namedLanguage != null ) {
-			if (this.namedLanguage.containsLanguageName(this)) {
-				this.namedLanguage.removeLanguageName(this);
+		if( namedLanguage != null ) {
+			if (this.namedLanguage != null) {
+				if (this.namedLanguage.containsLanguageName(this)) {
+					this.namedLanguage.removeLanguageName(this);
+				}
 			}
+			this.namedLanguage = namedLanguage;
+			this.key.setNamedLanguageID(namedLanguage.getId());
+			namedLanguage.addLanguageName(this); // przypisanie powiązania
 		}
-		this.namedLanguage = namedLanguage;
-		this.key.setNamedLanguageID(namedLanguage.getId());
-		namedLanguage.addLanguageName(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 	
 	@Getter
@@ -68,8 +70,11 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	@JoinColumn(name="namingLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namingLanguage; // język w którym robimy nazwę
 	public void setNamingLanguage(Language namingLanguage) {
-		this.namingLanguage = namingLanguage;
-		this.key.setNamingLanguageID(namingLanguage.getId());
+		if( namingLanguage != null ) {
+			this.namingLanguage = namingLanguage;
+			this.key.setNamingLanguageID(namingLanguage.getId());
+		}
+		else throw new IllegalArgumentException();
 	}
 
 	// double primary key: PRIMARY KEY (namedLanguageID, namingLanguageID)

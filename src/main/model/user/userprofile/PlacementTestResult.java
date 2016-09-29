@@ -22,13 +22,16 @@ public class PlacementTestResult extends AbstractUuidModel {
 	@JoinColumn(name="testID", referencedColumnName="placementTestID", nullable=false)
 	private PlacementTest test;
 	public void setTest(PlacementTest test) {
-		if( this.test != null ) {
-			if (this.test.containsResult(this)) {
-				this.test.removeResult(this);
+		if( test != null ) {
+			if (this.test != null) {
+				if (this.test.containsResult(this)) {
+					this.test.removeResult(this);
+				}
 			}
+			this.test = test;
+			test.addResult(this); // przypisanie powiązania
 		}
-		this.test = test;
-		test.addResult(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter
@@ -36,13 +39,16 @@ public class PlacementTestResult extends AbstractUuidModel {
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {
-		if( this.user != null ) {
-			if (this.user.containsPlacementTest(this)) {
-				this.user.removePlacementTest(this);
+		if( user != null ) {
+			if (this.user != null) {
+				if (this.user.containsPlacementTest(this)) {
+					this.user.removePlacementTest(this);
+				}
 			}
+			this.user = user;
+			if (user != null) user.addPlacementTest(this); // przypisanie powiązania
 		}
-		this.user = user;
-		user.addPlacementTest(this); // przypisanie powiązania
+		else throw new IllegalArgumentException();
 	}
 
 	@Getter

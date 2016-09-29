@@ -27,10 +27,16 @@ import org.springframework.util.Assert;
 
 import main.json.response.AbstractResponseJson;
 
+import main.constants.urlconstants.MessageControllerUrlConstants;
+
+
+@RequestMapping(value = MessageControllerUrlConstants.CLASS_URL)
+@RestController
 public class MessageController {
 
     /*
     // todo
+    @RequestMapping(value = MessageControllerUrlConstants.SEND_MESSAGE, method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> performRequest(@PathVariable("id") String id, @RequestParam("type") String type) {
         switch(type) {
             case "user":

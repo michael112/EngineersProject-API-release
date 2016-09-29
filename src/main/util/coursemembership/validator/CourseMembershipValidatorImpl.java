@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
 
-import main.service.model.course.coursemembership.CourseMembershipService;
+import main.service.crud.course.coursemembership.CourseMembershipCrudService;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -16,11 +16,11 @@ import main.model.course.CourseMembership;
 public class CourseMembershipValidatorImpl implements CourseMembershipValidator {
 
     @Autowired
-    private CourseMembershipService courseMembershipService;
+    private CourseMembershipCrudService courseMembershipCrudService;
 
     public boolean isStudent( User user, Course course ) {
         String query = "from CourseMembership c where c.user.id = '" + user.getId() + "' and c.course.id = '" + course.getId() + "'";
-        Set<CourseMembership> courseMembershipsOfUserAndCourse = this.courseMembershipService.findCourseMembershipsByQuery(query);
+        Set<CourseMembership> courseMembershipsOfUserAndCourse = this.courseMembershipCrudService.findCourseMembershipsByQuery(query);
         return (courseMembershipsOfUserAndCourse != null) && (courseMembershipsOfUserAndCourse.size() > 0);
     }
 
