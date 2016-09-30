@@ -12,20 +12,17 @@ import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.grade.CourseJson;
-import main.json.course.grade.student.GradeListJson;
-import main.json.course.grade.student.GradeJson;
-import main.json.course.grade.student.StudentGradeJson;
 
 @Service("gradeService")
 public class GradeServiceImpl implements GradeService {
 
-    public GradeListJson getStudentGradeList(User student, Course course) {
+    public main.json.course.grade.student.allgrades.list.GradeListJson getStudentGradeList(User student, Course course, String currentLocale) throws IllegalArgumentException {
         if( ( student == null ) || ( course == null ) ) throw new IllegalArgumentException();
-        GradeListJson result = new GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, "en"));
+        main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, currentLocale));
         for( Grade grade : course.getGrades() ) {
-            GradeJson gradeJson;
+            main.json.course.grade.student.allgrades.list.GradeJson gradeJson;
             if( grade.containsGradeForUser(student) ) {
-                gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
+                gradeJson = new main.json.course.grade.student.allgrades.list.GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
                 if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework) ) {
                     gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
@@ -33,7 +30,7 @@ public class GradeServiceImpl implements GradeService {
                     gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
                 for( StudentGrade studentGrade : grade.getGrades() ) {
-                    gradeJson.addGrade(new StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
+                    gradeJson.addGrade(new main.json.course.grade.student.allgrades.list.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
                 }
                 result.addGrade(gradeJson);
             }
@@ -45,6 +42,25 @@ public class GradeServiceImpl implements GradeService {
         CourseJson result = new CourseJson(course.getId(), course.getLanguage().getLanguageName(languageCode), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(languageCode));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        }
+        return result;
+    }
+
+    public main.json.course.grade.teacher.allgrades.list.GradeListJson getTeacherGradeList(Course course, String currentLocale) throws IllegalArgumentException {
+        if( course == null ) throw new IllegalArgumentException();
+        main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, currentLocale));
+        for( Grade grade : course.getGrades() ) {
+            main.json.course.grade.teacher.allgrades.list.GradeJson gradeJson = new main.json.course.grade.teacher.allgrades.list.GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
+            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
+                gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof main.model.course.Test ) ) {
+                gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            for( StudentGrade studentGrade : grade.getGrades() ) {
+                gradeJson.addGrade(new main.json.course.grade.teacher.allgrades.list.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
+            }
+            result.addGrade(gradeJson);
         }
         return result;
     }

@@ -1,17 +1,13 @@
-package main.json.course.grade.student;
+package main.json.course.grade.teacher.allgrades.list;
+
+import lombok.Getter;
+
+import main.json.course.grade.CourseJson;
 
 import java.util.HashSet;
 import java.util.Set;
 
-import lombok.Getter;
-
-import main.json.course.CourseUserJson;
-import main.json.course.grade.CourseJson;
-
 public class GradeListJson {
-
-    @Getter
-    private CourseUserJson student;
 
     @Getter
     private CourseJson course;
@@ -19,8 +15,7 @@ public class GradeListJson {
     @Getter
     private Set<GradeJson> grades;
 
-    public GradeListJson(CourseUserJson student, CourseJson course) {
-        this.student = student;
+    public GradeListJson(CourseJson course) {
         this.course = course;
         this.grades = new HashSet<>();
     }
@@ -34,7 +29,6 @@ public class GradeListJson {
         try {
             if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
             GradeListJson other = (GradeListJson) otherObj;
-            if( !( this.getStudent().equals(other.getStudent()) ) ) return false;
             if( !( this.getCourse().equals(other.getCourse()) ) ) return false;
             if( this.getGrades().size() != other.getGrades().size() ) return false;
             java.util.List<GradeJson> thisGrades = new java.util.ArrayList<>(this.getGrades());

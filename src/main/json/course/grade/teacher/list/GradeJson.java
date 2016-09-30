@@ -1,12 +1,11 @@
-package main.json.course.grade.student;
+package main.json.course.grade.teacher.list;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.HashSet;
 
-import lombok.Getter;
 import lombok.Setter;
+import lombok.Getter;
 
-import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 
@@ -14,9 +13,6 @@ public class GradeJson {
 
     @Getter
     private String gradeID;
-
-    @Getter
-    private CourseUserJson gradedBy;
 
     @Getter
     private String gradeTitle;
@@ -44,9 +40,8 @@ public class GradeJson {
     @Getter
     private Set<StudentGradeJson> grades;
 
-    public GradeJson(String gradeID, CourseUserJson gradedBy, String gradeTitle, String gradeDescription, String scale, Double maxPoints, Double weight) {
+    public GradeJson(String gradeID, String gradeTitle, String gradeDescription, String scale, Double maxPoints, Double weight) {
         this.gradeID = gradeID;
-        this.gradedBy = gradedBy;
         this.gradeTitle = gradeTitle;
         this.gradeDescription = gradeDescription;
         this.scale = scale;
@@ -65,7 +60,6 @@ public class GradeJson {
             if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
             GradeJson other = (GradeJson) otherObj;
             if( !( this.getGradeID().equals(other.getGradeID()) ) ) return false;
-            if( !( this.getGradedBy().equals(other.getGradedBy()) ) ) return false;
             if( !( this.getGradeTitle().equals(other.getGradeTitle()) ) ) return false;
             if( !( this.getGradeDescription().equals(other.getGradeDescription()) ) ) return false;
             if( ( this.getHomeworkFor() != null ) || ( other.getHomeworkFor() != null ) ) {

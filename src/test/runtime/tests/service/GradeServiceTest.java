@@ -16,9 +16,6 @@ import main.json.course.CourseUserJson;
 import main.json.course.grade.CourseJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
-import main.json.course.grade.student.GradeListJson;
-import main.json.course.grade.student.GradeJson;
-import main.json.course.grade.student.StudentGradeJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -52,8 +49,18 @@ public class GradeServiceTest extends AbstractServiceTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleUser2 = this.testEnvironment.getUsers().get(1);
 
-        GradeListJson expectedResult = getGradeListJson(sampleCourse, sampleUser2);
-        GradeListJson testedResult = this.gradeService.getStudentGradeList(sampleUser2, sampleCourse);
+        main.json.course.grade.student.allgrades.list.GradeListJson expectedResult = getStudentGradeListJson(sampleCourse, sampleUser2);
+        main.json.course.grade.student.allgrades.list.GradeListJson testedResult = this.gradeService.getStudentGradeList(sampleUser2, sampleCourse, "en");
+
+        Assert.assertEquals(expectedResult, testedResult);
+    }
+
+    @Test
+    public void testGetTeacherGradeList() throws Exception {
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        main.json.course.grade.teacher.allgrades.list.GradeListJson expectedResult = getTeacherGradeListJson(sampleCourse);
+        main.json.course.grade.teacher.allgrades.list.GradeListJson testedResult = this.gradeService.getTeacherGradeList(sampleCourse, "en");
 
         Assert.assertEquals(expectedResult, testedResult);
     }
@@ -66,12 +73,12 @@ public class GradeServiceTest extends AbstractServiceTest {
         return result;
     }
 
-    private GradeListJson getGradeListJson(Course course, User user) {
-        GradeListJson result = new GradeListJson(new CourseUserJson(user.getId(), user.getFullName()), getCourseJson(course, "en"));
+    private main.json.course.grade.student.allgrades.list.GradeListJson getStudentGradeListJson(Course course, User user) {
+        main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(user.getId(), user.getFullName()), getCourseJson(course, "en"));
         for( Grade grade : course.getGrades() ) {
-            GradeJson gradeJson;
+            main.json.course.grade.student.allgrades.list.GradeJson gradeJson;
             if( grade.containsGradeForUser(user) ) {
-                gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
+                gradeJson = new main.json.course.grade.student.allgrades.list.GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
                 if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
                     gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
@@ -79,10 +86,28 @@ public class GradeServiceTest extends AbstractServiceTest {
                     gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
                 for( StudentGrade studentGrade : grade.getGrades() ) {
-                    gradeJson.addGrade(new StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
+                    gradeJson.addGrade(new main.json.course.grade.student.allgrades.list.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
                 }
                 result.addGrade(gradeJson);
             }
+        }
+        return result;
+    }
+
+    private main.json.course.grade.teacher.allgrades.list.GradeListJson getTeacherGradeListJson(Course course) {
+        main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, "en"));
+        for( Grade grade : course.getGrades() ) {
+            main.json.course.grade.teacher.allgrades.list.GradeJson gradeJson = new main.json.course.grade.teacher.allgrades.list.GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
+            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
+                gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof main.model.course.Test ) ) {
+                gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            for( StudentGrade studentGrade : grade.getGrades() ) {
+                gradeJson.addGrade(new main.json.course.grade.teacher.allgrades.list.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
+            }
+            result.addGrade(gradeJson);
         }
         return result;
     }
