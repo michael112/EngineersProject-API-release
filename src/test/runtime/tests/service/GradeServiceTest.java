@@ -1,6 +1,5 @@
 package test.runtime.tests.service;
 
-import main.json.course.grade.student.StudentGradeJson;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +18,7 @@ import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.grade.student.GradeListJson;
 import main.json.course.grade.student.GradeJson;
+import main.json.course.grade.student.StudentGradeJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -81,6 +81,7 @@ public class GradeServiceTest extends AbstractServiceTest {
                 for( StudentGrade studentGrade : grade.getGrades() ) {
                     gradeJson.addGrade(new StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue()));
                 }
+                result.addGrade(gradeJson);
             }
         }
         return result;

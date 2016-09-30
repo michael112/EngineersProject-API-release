@@ -312,17 +312,23 @@ public class CourseTest extends AbstractDbTest {
     }
 
     @org.junit.Test
-    public void testUpdateRemoveGrade() {
+    public void testUpdateChangeGradeCourse() {
         Grade newGrade = getBasicGrade(this.sampleCourse);
         this.sampleCourse.addGrade(newGrade);
         this.courseCrudService.updateCourse(this.sampleCourse);
 
         Course courseDbBefore = this.courseCrudService.findCourseByID(this.sampleCourse.getId());
-        courseDbBefore.removeGrade(newGrade);
-        this.courseCrudService.updateCourse(this.sampleCourse);
 
-        Course courseDb = this.courseCrudService.findCourseByID(this.sampleCourse.getId());
-        Assert.assertEquals(false, courseDb.containsGrade(newGrade));
+        Course newCourse = getBasicCourse(false);
+        this.courseCrudService.saveCourse(newCourse);
+
+        courseDbBefore.changeGradeCourse(newGrade, newCourse);
+        this.courseCrudService.updateCourse(courseDbBefore);
+
+        Course courseDbAfter = this.courseCrudService.findCourseByID(this.sampleCourse.getId());
+        Course newCourseDbAfter = this.courseCrudService.findCourseByID(newCourse.getId());
+        Assert.assertEquals(false, courseDbAfter.containsGrade(newGrade));
+        Assert.assertEquals(true, newCourseDbAfter.containsGrade(newGrade));
     }
 
     @org.junit.Test

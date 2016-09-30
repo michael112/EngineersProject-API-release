@@ -253,11 +253,12 @@ public class Course extends AbstractUuidModel {
 			grade.setCourse(this); // przypisanie powiązania
 		}
 	}
-	public void removeGrade(Grade grade) {
-		this.grades.remove(grade);
-	}
 	public boolean containsGrade(Grade grade) {
 		return this.grades.contains(grade);
+	}
+	public void changeGradeCourse(Grade grade, Course newCourse) {
+		this.grades.remove(grade);
+		grade.setCourse(newCourse);
 	}
 
 	@Getter

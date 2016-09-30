@@ -44,10 +44,21 @@ public class Grade extends AbstractUuidModel {
 	private User gradedBy; // nauczyciel, który wystawił ocenę
 
 	@Getter
-	@Setter
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
+	public void setCourse(Course course) {
+		if( course != null ) {
+			if (this.course != null) {
+				if (this.course.containsGrade(this)) {
+					this.course.changeGradeCourse(this, course);
+				}
+			}
+			this.course = course;
+			course.addGrade(this); // przypisanie powiązania
+		}
+		else throw new IllegalArgumentException();
+	}
 
 	@Getter
 	@Setter
