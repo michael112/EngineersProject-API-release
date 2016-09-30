@@ -1,4 +1,4 @@
-package main.json.course.grade;
+package main.json.course.grade.commons;
 
 import java.util.HashSet;
 import java.util.Set;

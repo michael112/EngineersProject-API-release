@@ -4,7 +4,7 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
-import main.json.course.grade.CourseJson;
+import main.json.course.grade.commons.CourseJson;
 
 @EqualsAndHashCode
 public class GradeListJson {

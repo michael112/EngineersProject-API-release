@@ -1,4 +1,4 @@
-package main.json.course.grade.student.allgrades.list;
+package main.json.course.grade.commons;
 
 import lombok.Getter;
 

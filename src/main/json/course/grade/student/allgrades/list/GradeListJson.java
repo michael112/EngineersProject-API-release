@@ -1,34 +1,25 @@
 package main.json.course.grade.student.allgrades.list;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
 import main.json.course.CourseUserJson;
-import main.json.course.grade.CourseJson;
+import main.json.course.grade.commons.CourseJson;
+import main.json.course.grade.commons.GradeJson;
 
-@EqualsAndHashCode
-public class GradeListJson {
+@EqualsAndHashCode(callSuper=true)
+public class GradeListJson extends main.json.course.grade.commons.GradeListJson {
 
     @Getter
     private CourseUserJson student;
 
-    @Getter
-    private CourseJson course;
-
-    @Getter
-    private Set<GradeJson> grades;
-
     public GradeListJson(CourseUserJson student, CourseJson course) {
+        super(course);
         this.student = student;
-        this.course = course;
-        this.grades = new HashSet<>();
     }
 
     public void addGrade(GradeJson grade) {
-        this.grades.add(grade);
+        super.addGrade(grade);
     }
 }
