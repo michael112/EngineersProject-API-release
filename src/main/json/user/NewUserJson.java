@@ -56,31 +56,4 @@ public class NewUserJson {
     public NewUserJson() {
         this.phone = new HashSet<>();
     }
-
-    /*
-    @Override
-    public boolean equals(Object otherObj) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
-            NewUserJson other = (NewUserJson) otherObj;
-            if( !( this.getUsername().equals(other.getUsername()) ) ) return false;
-            if( !( this.getPassword().equals(other.getPassword()) ) ) return false;
-            if( !( this.getPasswordConfirm().equals(other.getPasswordConfirm()) ) ) return false;
-            if( !( this.getFirstName().equals(other.getFirstName()) ) ) return false;
-            if( !( this.getLastName().equals(other.getLastName()) ) ) return false;
-            if( !( this.getEmail().equals(other.getEmail()) ) ) return false;
-            if( this.getPhone().size() != other.getPhone().size() ) return false;
-            java.util.List<Phone> thisPhone = new java.util.ArrayList<>(this.getPhone());
-            java.util.List<Phone> otherPhone = new java.util.ArrayList<>(other.getPhone());
-            for( int i = 0; i < this.getPhone().size(); i++ ) {
-                if( !( thisPhone.get(i).equals(otherPhone.get(i)) ) ) return false;
-            }
-            if( !( this.getAddress().equals(other.getAddress()) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
-    }
-    */
 }

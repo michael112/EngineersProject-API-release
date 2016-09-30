@@ -9,7 +9,7 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseInfoTeacherJson extends AbstractCourseInfoJson {
 

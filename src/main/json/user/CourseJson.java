@@ -31,21 +31,4 @@ public class CourseJson {
         this.confirmed = confirmed;
     }
 
-    /*
-    @Override
-    public boolean equals(Object otherObj) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
-            CourseJson other = (CourseJson) otherObj;
-            if( !( this.getId().equals(other.getId()) ) ) return false;
-            if( !( this.getLanguage().equals(other.getLanguage()) ) ) return false;
-            if( !( this.getLevel().equals(other.getLevel()) ) ) return false;
-            if( !( this.getConfirmed().equals(other.getConfirmed()) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
-    }
-    */
 }

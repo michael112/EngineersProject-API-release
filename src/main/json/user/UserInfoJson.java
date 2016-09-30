@@ -39,34 +39,4 @@ public class UserInfoJson {
     public void addCourseAsTeacher(CourseJson courseAsTeacher) {
         this.coursesAsTeacher.add(courseAsTeacher);
     }
-
-    /*
-    @Override
-    public boolean equals(Object otherObj) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
-            UserInfoJson other = (UserInfoJson) otherObj;
-            if( !( this.getUserID().equals(other.getUserID()) ) ) return false;
-            if( !( this.getUsername().equals(other.getUsername()) ) ) return false;
-            if( !( this.getFirstName().equals(other.getFirstName()) ) ) return false;
-            if( !( this.getLastName().equals(other.getLastName()) ) ) return false;
-            if( this.getCoursesAsStudent().size() != other.getCoursesAsStudent().size() ) return false;
-            java.util.List<CourseJson> thisCoursesAsStudent = new java.util.ArrayList<>(this.getCoursesAsStudent());
-            java.util.List<CourseJson> otherCoursesAsStudent = new java.util.ArrayList<>(other.getCoursesAsStudent());
-            for( int i = 0; i < this.getCoursesAsStudent().size(); i++ ) {
-                if( !( thisCoursesAsStudent.get(i).equals(otherCoursesAsStudent.get(i)) ) ) return false;
-            }
-            if( this.getCoursesAsTeacher().size() != other.getCoursesAsTeacher().size() ) return false;
-            java.util.List<CourseJson> thisCoursesAsTeacher = new java.util.ArrayList<>(this.getCoursesAsTeacher());
-            java.util.List<CourseJson> otherCoursesAsTeacher = new java.util.ArrayList<>(other.getCoursesAsTeacher());
-            for( int i = 0; i < this.getCoursesAsTeacher().size(); i++ ) {
-                if( !( thisCoursesAsTeacher.get(i).equals(otherCoursesAsTeacher.get(i)) ) ) return false;
-            }
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
-    }
-    */
 }

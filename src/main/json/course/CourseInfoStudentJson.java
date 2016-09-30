@@ -7,7 +7,7 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper=true)
 public class CourseInfoStudentJson extends AbstractCourseInfoJson {
 
     @Getter
