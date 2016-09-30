@@ -5,6 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class TokenJson {
 
     @Getter
@@ -31,6 +34,7 @@ public class TokenJson {
     @Setter
     private String scope;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -47,4 +51,5 @@ public class TokenJson {
             return false;
         }
     }
+    */
 }

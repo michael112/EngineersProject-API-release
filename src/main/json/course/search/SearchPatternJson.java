@@ -3,6 +3,9 @@ package main.json.course.search;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class SearchPatternJson {
 
     @Getter
@@ -13,17 +16,4 @@ public class SearchPatternJson {
     @Setter
     private String courseType;
 
-    @Override
-    public boolean equals( Object otherObj ) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
-            SearchPatternJson other = (SearchPatternJson) otherObj;
-            if( !( this.getLanguage().equals(other.getLanguage()) ) ) return false;
-            if( !( this.getCourseType().equals(other.getCourseType()) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
-    }
 }

@@ -3,12 +3,16 @@ package main.json.user;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class EditEmailJson {
 
     @Getter
     @Setter
     private String newEmail;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -21,4 +25,5 @@ public class EditEmailJson {
             return false;
         }
     }
+    */
 }

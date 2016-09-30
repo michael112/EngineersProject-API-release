@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlacementTestResultJson {
 
@@ -22,6 +25,7 @@ public class PlacementTestResultJson {
         this.result = result;
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -35,4 +39,5 @@ public class PlacementTestResultJson {
             return false;
         }
     }
+    */
 }

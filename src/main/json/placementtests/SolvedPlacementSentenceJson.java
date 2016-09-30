@@ -3,8 +3,11 @@ package main.json.placementtests;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
 import main.model.placementtest.PlacementAnswer;
 
+@EqualsAndHashCode
 public class SolvedPlacementSentenceJson {
 
     @Getter
@@ -15,6 +18,7 @@ public class SolvedPlacementSentenceJson {
     @Setter
     private PlacementAnswer answer;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -28,4 +32,5 @@ public class SolvedPlacementSentenceJson {
             return false;
         }
     }
+    */
 }

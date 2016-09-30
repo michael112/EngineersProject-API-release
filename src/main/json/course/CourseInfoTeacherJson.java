@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseInfoTeacherJson extends AbstractCourseInfoJson {
 
@@ -92,46 +95,5 @@ public class CourseInfoTeacherJson extends AbstractCourseInfoJson {
 
     public void addTeacherMessage(MessageJson message) {
         this.teacherMessages.add(message);
-    }
-
-    @Override
-    public boolean equals(Object otherObj) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
-            CourseInfoStudentJson other = (CourseInfoStudentJson) otherObj;
-            if( !( this.getCourseID().equals(other.getCourseID()) ) ) return false;
-            if( !( this.getLanguage().equals(other.getLanguage()) ) ) return false;
-            if( !( this.getCourseLevel().equals(other.getCourseLevel()) ) ) return false;
-            if( !( this.getCourseType().equals(other.getCourseType()) ) ) return false;
-            if( this.getTeachers().size() != other.getTeachers().size() ) return false;
-            java.util.List<CourseUserJson> thisTeachers = new java.util.ArrayList<>(this.getTeachers());
-            java.util.List<CourseUserJson> otherTeachers = new java.util.ArrayList<>(other.getTeachers());
-            for( int i = 0; i < this.getTeachers().size(); i++ ) {
-                if( !( thisTeachers.get(i).equals(otherTeachers.get(i)) ) ) return false;
-            }
-            if( this.getIncomingTests().size() != other.getIncomingTests().size() ) return false;
-            java.util.List<TestJson> thisIncomingTests = new java.util.ArrayList<>(this.getIncomingTests());
-            java.util.List<TestJson> otherIncomingTests = new java.util.ArrayList<>(other.getIncomingTests());
-            for( int i = 0; i < this.getIncomingTests().size(); i++ ) {
-                if( !( thisIncomingTests.get(i).equals(otherIncomingTests.get(i)) ) ) return false;
-            }
-            if( this.getIncomingHomeworks().size() != other.getIncomingHomeworks().size() ) return false;
-            java.util.List<HomeworkJson> thisIncomingHomeworks = new java.util.ArrayList<>(this.getIncomingHomeworks());
-            java.util.List<HomeworkJson> otherIncomingHomeworks = new java.util.ArrayList<>(other.getIncomingHomeworks());
-            for( int i = 0; i < this.getIncomingHomeworks().size(); i++ ) {
-                if( !( thisIncomingHomeworks.get(i).equals(otherIncomingHomeworks.get(i)) ) ) return false;
-            }
-            if( this.getTeacherMessages().size() != other.getTeacherMessages().size() ) return false;
-            java.util.List<MessageJson> thisTeacherMessages = new java.util.ArrayList<>(this.getTeacherMessages());
-            java.util.List<MessageJson> otherTeacherMessages = new java.util.ArrayList<>(other.getTeacherMessages());
-            for( int i = 0; i < this.getTeacherMessages().size(); i++ ) {
-                if( !( thisTeacherMessages.get(i).equals(otherTeacherMessages.get(i)) ) ) return false;
-            }
-			if( !( this.getNextLesson().equals(other.getNextLesson() ) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
     }
 }

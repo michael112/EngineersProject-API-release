@@ -1,8 +1,12 @@
 package main.json.menu;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class AdminMenuJson extends AbstractMenuJson {
     // todo
 
+    /*
     @Override
     public boolean equals( Object otherObj ) {
         try {
@@ -15,4 +19,5 @@ public class AdminMenuJson extends AbstractMenuJson {
             return false;
         }
     }
+    */
 }

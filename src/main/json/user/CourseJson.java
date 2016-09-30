@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseJson {
 
@@ -28,6 +31,7 @@ public class CourseJson {
         this.confirmed = confirmed;
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -43,4 +47,5 @@ public class CourseJson {
             return false;
         }
     }
+    */
 }

@@ -3,6 +3,9 @@ package main.json.user;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class EditPasswordJson {
 
     @Getter
@@ -17,6 +20,7 @@ public class EditPasswordJson {
     @Setter
     private String newPasswordConfirm;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -31,4 +35,5 @@ public class EditPasswordJson {
             return false;
         }
     }
+    */
 }

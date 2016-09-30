@@ -4,8 +4,11 @@ import java.util.Set;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
 import main.model.placementtest.PlacementTask;
 
+@EqualsAndHashCode
 public class PlacementTestJson {
 
     @Getter
@@ -19,6 +22,7 @@ public class PlacementTestJson {
         this.tasks = tasks;
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -37,4 +41,5 @@ public class PlacementTestJson {
             return false;
         }
     }
+    */
 }

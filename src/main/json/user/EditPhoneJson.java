@@ -5,14 +5,18 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
 import main.model.user.userprofile.Phone;
 
+@EqualsAndHashCode
 public class EditPhoneJson {
 
     @Getter
     @Setter
     private Set<Phone> phone;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -30,4 +34,5 @@ public class EditPhoneJson {
             return false;
         }
     }
+    */
 }

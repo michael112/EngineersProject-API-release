@@ -5,6 +5,9 @@ import java.util.Set;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class SolvedPlacementTestJson {
 
     @Getter
@@ -15,6 +18,7 @@ public class SolvedPlacementTestJson {
     @Setter
     private Set<SolvedPlacementTaskJson> tasks;
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -33,4 +37,5 @@ public class SolvedPlacementTestJson {
             return false;
         }
     }
+    */
 }

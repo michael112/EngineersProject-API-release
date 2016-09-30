@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class TestJson {
 
@@ -20,20 +23,5 @@ public class TestJson {
         this.taskID = taskID;
         this.date = date;
         this.title = title;
-    }
-
-    @Override
-    public boolean equals( Object otherObj ) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
-            TestJson other = (TestJson) otherObj;
-            if( !( this.getTaskID().equals(other.getTaskID()) ) ) return false;
-            if( !( this.getDate().equals(other.getDate()) ) ) return false;
-            if( !( this.getTitle().equals(other.getTitle()) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
     }
 }

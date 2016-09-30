@@ -5,6 +5,9 @@ import java.util.HashSet;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class UserInfoJson {
 
     @Getter
@@ -37,6 +40,7 @@ public class UserInfoJson {
         this.coursesAsTeacher.add(courseAsTeacher);
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -64,4 +68,5 @@ public class UserInfoJson {
             return false;
         }
     }
+    */
 }

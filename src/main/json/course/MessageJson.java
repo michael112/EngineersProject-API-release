@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class MessageJson {
 
@@ -16,19 +19,5 @@ public class MessageJson {
     public MessageJson(String messageID, String title) {
         this.messageID = messageID;
         this.title = title;
-    }
-
-    @Override
-    public boolean equals( Object otherObj ) {
-        try {
-            if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
-            MessageJson other = (MessageJson) otherObj;
-            if( !( this.getMessageID().equals(other.getMessageID()) ) ) return false;
-            if( !( this.getTitle().equals(other.getTitle()) ) ) return false;
-            return true;
-        }
-        catch( NullPointerException ex ) {
-            return false;
-        }
     }
 }

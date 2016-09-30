@@ -4,6 +4,9 @@ import java.util.Set;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class PlacementTestListJson {
 
     @Getter
@@ -16,6 +19,7 @@ public class PlacementTestListJson {
         this.test = tests;
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -34,4 +38,5 @@ public class PlacementTestListJson {
             return false;
         }
     }
+    */
 }

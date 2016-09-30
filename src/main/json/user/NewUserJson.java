@@ -9,6 +9,9 @@ import main.model.user.userprofile.Phone;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class NewUserJson {
 
     @Getter
@@ -54,6 +57,7 @@ public class NewUserJson {
         this.phone = new HashSet<>();
     }
 
+    /*
     @Override
     public boolean equals(Object otherObj) {
         try {
@@ -78,4 +82,5 @@ public class NewUserJson {
             return false;
         }
     }
+    */
 }
