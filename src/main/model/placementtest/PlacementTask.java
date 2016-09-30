@@ -62,4 +62,24 @@ public class PlacementTask extends AbstractUuidModel {
 		this.setCommand(command);
 		this.setSentences(sentences);
 	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		try {
+			if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+			PlacementTask other = (PlacementTask) otherObj;
+			if( !( this.getId().equals(other.getId()) ) ) return false;
+			if( !( this.getCommand().equals(other.getCommand()) ) ) return false;
+			if( this.getSentences().size() != other.getSentences().size() ) return false;
+			java.util.List<PlacementSentence> thisSentences = new java.util.ArrayList<>(this.getSentences());
+			java.util.List<PlacementSentence> otherSentences = new java.util.ArrayList<>(other.getSentences());
+			for( int i = 0; i < this.getSentences().size(); i++ ) {
+				if( !( thisSentences.get(i).equals(otherSentences.get(i)) ) ) return false;
+			}
+			return true;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
 }

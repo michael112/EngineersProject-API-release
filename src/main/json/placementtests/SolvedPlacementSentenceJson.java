@@ -15,4 +15,17 @@ public class SolvedPlacementSentenceJson {
     @Setter
     private PlacementAnswer answer;
 
+    @Override
+    public boolean equals(Object otherObj) {
+        try {
+            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+            SolvedPlacementSentenceJson other = (SolvedPlacementSentenceJson) otherObj;
+            if( !( this.getId().equals(other.getId()) ) ) return false;
+            if( !( this.getAnswer().equals(other.getAnswer()) ) ) return false;
+            return true;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
 }

@@ -133,7 +133,7 @@ public class CourseController {
         String messageStr = this.labelProvider.getLabel("courseinfo.success");
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
         String courseTypeName = course.getCourseType().getCourseTypeName(this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
-        CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), languageName, course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+        CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
         for( User teacher : course.getTeachers() ) {
             courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
@@ -157,7 +157,7 @@ public class CourseController {
         String messageStr = this.labelProvider.getLabel("courseinfo.success");
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
         String courseTypeName = course.getCourseType().getCourseTypeName(this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
-        CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), languageName, course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+        CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
         for( User teacher : course.getTeachers() ) {
             courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
@@ -248,7 +248,7 @@ public class CourseController {
         Assert.notNull(course);
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
         String courseTypeName = course.getCourseType().getCourseTypeName(this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
-        CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseType().getId(), courseTypeName);
+        CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
         for( CourseMembership studentMembership : course.getStudents() ) {
             User student = studentMembership.getUser();
             result.addStudent(new CourseUserJson(student.getId(), student.getFullName()));

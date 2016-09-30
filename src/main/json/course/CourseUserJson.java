@@ -18,4 +18,17 @@ public class CourseUserJson {
         this.name = name;
     }
 
+    @Override
+    public boolean equals( Object otherObj ) {
+        try {
+            if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
+            CourseUserJson other = (CourseUserJson) otherObj;
+            if( !( this.getUserID().equals(other.getUserID()) ) ) return false;
+            if( !( this.getName().equals(other.getName()) ) ) return false;
+            return true;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
 }

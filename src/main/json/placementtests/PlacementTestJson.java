@@ -19,4 +19,22 @@ public class PlacementTestJson {
         this.tasks = tasks;
     }
 
+    @Override
+    public boolean equals(Object otherObj) {
+        try {
+            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+            PlacementTestJson other = (PlacementTestJson) otherObj;
+            if( !( this.getLanguage().equals(other.getLanguage()) ) ) return false;
+            if( this.getTasks().size() != other.getTasks().size() ) return false;
+            java.util.List<PlacementTask> thisTasks = new java.util.ArrayList<>(this.getTasks());
+            java.util.List<PlacementTask> otherTasks = new java.util.ArrayList<>(other.getTasks());
+            for( int i = 0; i < this.getTasks().size(); i++ ) {
+                if( !( thisTasks.get(i).equals(otherTasks.get(i)) ) ) return false;
+            }
+            return true;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
 }

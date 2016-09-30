@@ -18,4 +18,17 @@ public class LanguageJson {
         this.name = name;
     }
 
+    @Override
+    public boolean equals( Object otherObj ) {
+        try {
+            if ( !( otherObj.getClass().toString().equals(this.getClass().toString()) ) ) return false;
+            LanguageJson other = (LanguageJson) otherObj;
+            if( !( this.getId().equals(other.getId()) ) ) return false;
+            if( !( this.getName().equals(other.getName()) ) ) return false;
+            return true;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
 }

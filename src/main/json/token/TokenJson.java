@@ -31,4 +31,20 @@ public class TokenJson {
     @Setter
     private String scope;
 
+    @Override
+    public boolean equals(Object otherObj) {
+        try {
+            if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+            TokenJson other = (TokenJson) otherObj;
+            if( !( this.getAccessToken().equals(other.getAccessToken()) ) ) return false;
+            if( !( this.getTokenType().equals(other.getTokenType()) ) ) return false;
+            if( !( this.getRefreshToken().equals(other.getRefreshToken()) ) ) return false;
+            if( this.getExpiresIn() != other.getExpiresIn() ) return false;
+            if( !( this.getScope().equals(other.getScope()) ) ) return false;
+            return true;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
 }

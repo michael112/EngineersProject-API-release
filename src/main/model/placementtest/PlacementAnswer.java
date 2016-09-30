@@ -38,4 +38,19 @@ public class PlacementAnswer extends AbstractUuidModel {
 		this.setAnswerKey(answerKey);
 		this.setAnswerName(answerName);
 	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		try {
+			if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+			PlacementAnswer other = (PlacementAnswer) otherObj;
+			if( !( this.getId().equals(other.getId()) ) ) return false;
+			if( !( this.getAnswerKey().equals(other.getAnswerKey()) ) ) return false;
+			if( !( this.getAnswerName().equals(other.getAnswerName()) ) ) return false;
+			return true;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
 }

@@ -45,4 +45,24 @@ public class Address {
 
 	public Address() {}
 
+	@Override
+	public boolean equals(Object otherObj) {
+		try {
+			if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+			Address other = (Address) otherObj;
+			if( !( this.getStreet().equals(other.getStreet()) ) ) return false;
+			if( !( this.getHouseNumber().equals(other.getHouseNumber()) ) ) return false;
+			if( ( this.getFlatNumber() != null ) || ( other.getFlatNumber() != null ) ) {
+				if( !( this.getFlatNumber().equals(other.getFlatNumber()) ) ) return false;
+			}
+			if( ( this.getPostCode() != null ) || ( other.getPostCode() != null ) ) {
+				if( !( this.getPostCode().equals(other.getPostCode()) ) ) return false;
+			}
+			if( !( this.getCity().equals(other.getCity()) ) ) return false;
+			return true;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
 }

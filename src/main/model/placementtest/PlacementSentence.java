@@ -76,4 +76,25 @@ public class PlacementSentence extends AbstractUuidModel {
 		this.setCorrectAnswer(correctAnswer);
 	}
 
+	@Override
+	public boolean equals(Object otherObj) {
+		try {
+			if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+			PlacementSentence other = (PlacementSentence) otherObj;
+			if( !( this.getId().equals(other.getId()) ) ) return false;
+			if( !( this.getPrefix().equals(other.getPrefix()) ) ) return false;
+			if( !( this.getSuffix().equals(other.getSuffix()) ) ) return false;
+			if( this.getAnswers().size() != other.getAnswers().size() ) return false;
+			java.util.List<PlacementAnswer> thisAnswers = new java.util.ArrayList<>(this.getAnswers());
+			java.util.List<PlacementAnswer> otherAnswers = new java.util.ArrayList<>(other.getAnswers());
+			for( int i = 0; i < this.getAnswers().size(); i++ ) {
+				if( !( thisAnswers.get(i).equals(otherAnswers.get(i)) ) ) return false;
+			}
+			if( !( this.getCorrectAnswer().equals(other.getCorrectAnswer()) ) ) return false;
+			return true;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
 }

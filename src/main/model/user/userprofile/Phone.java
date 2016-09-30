@@ -44,4 +44,18 @@ public class Phone extends AbstractUuidModel {
 		this.setPhoneNumber(phoneNumber);
 	}
 
+	@Override
+	public boolean equals(Object otherObj) {
+		try {
+			if ( !( otherObj.getClass().toString().equals(this.getClass().toString())) ) return false;
+			Phone other = (Phone) otherObj;
+			if( !( this.getId().equals(other.getId()) ) ) return false;
+			if( !( this.getPhoneType().equals(other.getPhoneType()) ) ) return false;
+			if( !( this.getPhoneNumber().equals(other.getPhoneNumber()) ) ) return false;
+			return true;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
 }

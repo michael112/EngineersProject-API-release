@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.servlet.LocaleResolver;
 
-import main.service.controller.grade.IGradeService;
+import main.service.controller.grade.GradeService;
 
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
@@ -37,7 +37,7 @@ public class GradeServiceTest extends AbstractServiceTest {
     private LocaleResolver localeResolverMock;
 
     @Autowired
-    private IGradeService gradeService;
+    private GradeService gradeService;
 
     private TestEnvironment testEnvironment;
 
@@ -86,5 +86,4 @@ public class GradeServiceTest extends AbstractServiceTest {
         }
         return result;
     }
-
 }
