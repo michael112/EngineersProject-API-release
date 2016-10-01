@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Date;
 
-import main.service.crud.course.coursetype.CourseTypeCrudService;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,6 +25,7 @@ import main.model.course.CourseType;
 import main.model.language.Language;
 
 import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.language.LanguageCrudService;
 
 import main.util.currentUser.CurrentUserService;
@@ -34,6 +34,8 @@ import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
+import main.constants.urlconstants.CourseControllerUrlConstants;
+
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;
 
@@ -41,8 +43,6 @@ import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import main.constants.urlconstants.CourseControllerUrlConstants;
 
 public class CourseControllerTest extends AbstractControllerTest {
 
