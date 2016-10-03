@@ -20,8 +20,6 @@ import main.security.coursemembership.annotations.CourseMembershipRequired;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 import main.constants.urlconstants.GradeControllerUrlConstants;
 
-import main.controllers.error.ErrorController;
-
 import main.model.user.User;
 import main.model.course.Course;
 
@@ -36,6 +34,9 @@ import main.json.response.AbstractResponseJson;
 import main.json.response.GradeListResponseJson;
 
 import main.json.course.grade.commons.GradeListJson;
+
+import main.error.exception.HttpNotFoundException;
+import main.error.exception.HttpInternalServerErrorException;
 
 @RequestMapping(value = GradeControllerUrlConstants.CLASS_URL)
 @RestController
@@ -62,21 +63,21 @@ public class GradeController {
     @Autowired
     private GradeService gradeService;
 
-    @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.GRADE_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getGradeList(@PathVariable("courseID") String courseID) {
         String impossibleError = this.labelProvider.getLabel("error.impossible");
 
         User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) return ErrorController.throwInternalServerErrorResponse(this.labelProvider.getLabel("error.currentuser.notfound"));
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 
         Course course = this.courseCrudService.findCourseByID(courseID);
-        if( course == null ) return ErrorController.throwNotFoundResponse(this.labelProvider.getLabel("course.not.found"));
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
 
         boolean isStudent = this.courseMembershipValidator.isStudent( currentUser, course );
         boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
-        if( !( isStudent ^ isTeacher ) ) return ErrorController.throwInternalServerErrorResponse(impossibleError);
+        if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(impossibleError);
 
         String localeCode = this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage();
         GradeListJson gradeList;
@@ -86,12 +87,11 @@ public class GradeController {
         else if( isTeacher ) {
             gradeList = this.gradeService.getTeacherGradeList(course, localeCode);
         }
-        else return ErrorController.throwInternalServerErrorResponse(impossibleError);
+        else throw new HttpInternalServerErrorException(impossibleError);
 
         String messageStr = this.labelProvider.getLabel("");
         HttpStatus responseStatus = HttpStatus.OK;
         GradeListResponseJson responseJson = new GradeListResponseJson(gradeList, messageStr, responseStatus);
         return new ResponseEntity<GradeListResponseJson>(responseJson, responseStatus);
     }
-
 }

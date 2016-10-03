@@ -65,6 +65,8 @@ import main.model.language.Language;
 import main.service.crud.language.LanguageCrudService;
 import main.service.crud.course.coursetype.CourseTypeCrudService;
 
+import main.service.controller.course.CourseService;
+
 import main.security.coursemembership.annotations.CourseMembershipRequired;
 
 @RequestMapping(value = CourseControllerUrlConstants.CLASS_URL)
@@ -96,6 +98,9 @@ public class CourseController {
 
     @Autowired
     private CourseTypeCrudService courseTypeCrudService;
+
+    @Autowired
+    private CourseService courseService;
 
     @PostConstruct
     public void initialize() {
@@ -246,6 +251,7 @@ public class CourseController {
     public ResponseEntity<? extends AbstractResponseJson> getCourseStudentList(@PathVariable("id") String courseID) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         Assert.notNull(course);
+        /*
         String languageName = this.currentLanguageNameProvider.getLanguageName(course.getLanguage());
         String courseTypeName = course.getCourseType().getCourseTypeName(this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
         CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
@@ -256,6 +262,8 @@ public class CourseController {
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
+        */
+        CourseListJson result = this.courseService.getCourseStudentList(course, this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("coursestudentlist.success");
         return new ResponseEntity<CourseListResponseJson>(new CourseListResponseJson(result, messageStr, responseStatus), responseStatus);

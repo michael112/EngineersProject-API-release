@@ -117,7 +117,7 @@ public class GradeControllerTest extends AbstractControllerTest {
 
         this.mockMvc.perform(get(URL)
                 .contentType("application/json;charset=utf-8")
-        )
+                )
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=utf-8"))
                 .andExpect(jsonPath("$.message", is(returnMessage)))
