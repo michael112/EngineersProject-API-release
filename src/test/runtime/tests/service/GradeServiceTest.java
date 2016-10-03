@@ -9,8 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.LocaleResolver;
 
 import main.service.controller.grade.GradeService;
+import main.service.controller.grade.GradeServiceImpl;
 
 import main.util.coursemembership.validator.CourseMembershipValidator;
+
+import main.util.locale.LocaleCodeProvider;
 
 import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
@@ -29,14 +32,17 @@ import main.model.course.StudentGrade;
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;
 
+import static org.mockito.Mockito.*;
+
 public class GradeServiceTest extends AbstractServiceTest {
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
     @Autowired
     private LocaleResolver localeResolverMock;
-
     @Autowired
+    private LocaleCodeProvider localeCodeProviderMock;
+
     private GradeService gradeService;
 
     private TestEnvironment testEnvironment;
@@ -45,6 +51,9 @@ public class GradeServiceTest extends AbstractServiceTest {
     public void setUp() {
         this.testEnvironment = TestEnvironmentBuilder.build();
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        reset(this.localeCodeProviderMock);
+        when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
+        this.gradeService = new GradeServiceImpl(this.localeCodeProviderMock);
     }
 
     @Test
@@ -53,7 +62,7 @@ public class GradeServiceTest extends AbstractServiceTest {
         User sampleUser2 = this.testEnvironment.getUsers().get(1);
 
         main.json.course.grade.student.allgrades.list.GradeListJson expectedResult = getStudentGradeListJson(sampleCourse, sampleUser2);
-        main.json.course.grade.student.allgrades.list.GradeListJson testedResult = this.gradeService.getStudentGradeList(sampleUser2, sampleCourse, "en");
+        main.json.course.grade.student.allgrades.list.GradeListJson testedResult = this.gradeService.getStudentGradeList(sampleUser2, sampleCourse);
 
         Assert.assertEquals(expectedResult, testedResult);
     }
@@ -63,7 +72,7 @@ public class GradeServiceTest extends AbstractServiceTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 
         main.json.course.grade.teacher.allgrades.list.GradeListJson expectedResult = getTeacherGradeListJson(sampleCourse);
-        main.json.course.grade.teacher.allgrades.list.GradeListJson testedResult = this.gradeService.getTeacherGradeList(sampleCourse, "en");
+        main.json.course.grade.teacher.allgrades.list.GradeListJson testedResult = this.gradeService.getTeacherGradeList(sampleCourse);
 
         Assert.assertEquals(expectedResult, testedResult);
     }

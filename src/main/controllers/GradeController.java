@@ -2,6 +2,8 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.annotation.PostConstruct;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -24,11 +26,15 @@ import main.model.user.User;
 import main.model.course.Course;
 
 import main.service.controller.grade.GradeService;
+import main.service.controller.grade.GradeServiceImpl;
+
 import main.service.crud.course.course.CourseCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 import main.util.labels.LabelProvider;
+
+import main.util.locale.LocaleCodeProviderImpl;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.GradeListResponseJson;
@@ -60,15 +66,17 @@ public class GradeController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    @Autowired
     private GradeService gradeService;
+
+    @PostConstruct
+    public void initialize() {
+        this.gradeService = new GradeServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest));
+    }
 
     @CourseMembershipRequired
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.GRADE_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getGradeList(@PathVariable("courseID") String courseID) {
-        String impossibleError = this.labelProvider.getLabel("error.impossible");
-
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 
@@ -77,17 +85,16 @@ public class GradeController {
 
         boolean isStudent = this.courseMembershipValidator.isStudent( currentUser, course );
         boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
-        if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(impossibleError);
+        if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
 
-        String localeCode = this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage();
         GradeListJson gradeList;
         if( isStudent ) {
-            gradeList = this.gradeService.getStudentGradeList(currentUser, course, localeCode);
+            gradeList = this.gradeService.getStudentGradeList(currentUser, course);
         }
         else if( isTeacher ) {
-            gradeList = this.gradeService.getTeacherGradeList(course, localeCode);
+            gradeList = this.gradeService.getTeacherGradeList(course);
         }
-        else throw new HttpInternalServerErrorException(impossibleError);
+        else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
 
         String messageStr = this.labelProvider.getLabel("");
         HttpStatus responseStatus = HttpStatus.OK;

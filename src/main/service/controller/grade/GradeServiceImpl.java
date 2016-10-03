@@ -1,6 +1,8 @@
 package main.service.controller.grade;
 
-import org.springframework.stereotype.Service;
+import main.service.controller.AbstractService;
+
+import main.util.locale.LocaleCodeProvider;
 
 import main.model.course.Grade;
 import main.model.course.Homework;
@@ -16,12 +18,11 @@ import main.json.course.grade.commons.CourseJson;
 import main.json.course.grade.commons.GradeJson;
 import main.json.course.grade.commons.StudentGradeJson;
 
-@Service("gradeService")
-public class GradeServiceImpl implements GradeService {
+public class GradeServiceImpl extends AbstractService implements GradeService {
 
-    public main.json.course.grade.student.allgrades.list.GradeListJson getStudentGradeList(User student, Course course, String currentLocale) throws IllegalArgumentException {
+    public main.json.course.grade.student.allgrades.list.GradeListJson getStudentGradeList(User student, Course course) throws IllegalArgumentException {
         if( ( student == null ) || ( course == null ) ) throw new IllegalArgumentException();
-        main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, currentLocale));
+        main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
         for( Grade grade : course.getGrades() ) {
             GradeJson gradeJson;
             if( grade.containsGradeForUser(student) ) {
@@ -49,9 +50,9 @@ public class GradeServiceImpl implements GradeService {
         return result;
     }
 
-    public main.json.course.grade.teacher.allgrades.list.GradeListJson getTeacherGradeList(Course course, String currentLocale) throws IllegalArgumentException {
+    public main.json.course.grade.teacher.allgrades.list.GradeListJson getTeacherGradeList(Course course) throws IllegalArgumentException {
         if( course == null ) throw new IllegalArgumentException();
-        main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, currentLocale));
+        main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
         for( Grade grade : course.getGrades() ) {
             GradeJson gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
             if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
@@ -66,6 +67,10 @@ public class GradeServiceImpl implements GradeService {
             result.addGrade(gradeJson);
         }
         return result;
+    }
+
+    public GradeServiceImpl(LocaleCodeProvider localeCodeProvider) {
+        super(localeCodeProvider);
     }
 
 }
