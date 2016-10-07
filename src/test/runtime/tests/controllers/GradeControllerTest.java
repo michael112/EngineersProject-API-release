@@ -21,6 +21,8 @@ import org.apache.commons.lang3.text.StrSubstitutor;
 
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.grade.GradeCrudService;
+import main.service.crud.course.homework.HomeworkCrudService;
+import main.service.crud.course.test.TestCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.domain.DomainURIProvider;
@@ -32,6 +34,8 @@ import main.constants.urlconstants.GradeControllerUrlConstants;
 import main.model.course.Course;
 import main.model.user.User;
 import main.model.course.Grade;
+
+import main.json.course.grade.commons.NewGradeJson;
 
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;
@@ -58,6 +62,10 @@ public class GradeControllerTest extends AbstractControllerTest {
     private CourseCrudService courseCrudServiceMock;
     @Autowired
     private GradeCrudService gradeCrudServiceMock;
+    @Autowired
+    private HomeworkCrudService homeworkCrudServiceMock;
+    @Autowired
+    private TestCrudService testCrudServiceMock;
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
@@ -69,7 +77,7 @@ public class GradeControllerTest extends AbstractControllerTest {
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
-        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseCrudServiceMock, gradeCrudServiceMock);
+        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseCrudServiceMock, gradeCrudServiceMock, homeworkCrudServiceMock, testCrudServiceMock);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
@@ -157,7 +165,45 @@ public class GradeControllerTest extends AbstractControllerTest {
 
     @Test
     public void testCreateNewGrade() throws Exception {
+        String returnMessage = "";
 
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(homeworkCrudServiceMock.findHomeworkByID(Mockito.any(String.class))).thenReturn(new ArrayList<>(sampleCourse.getHomeworks()).get(0));
+        when(testCrudServiceMock.findTestByID(Mockito.any(String.class))).thenReturn(new ArrayList<>(sampleCourse.getTests()).get(0));
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+
+        doNothing().when(gradeCrudServiceMock).saveGrade(Mockito.any(Grade.class));
+
+        String URL = getClassURI(sampleCourse.getId());
+
+        this.mockMvc.perform(post(URL)
+                .contentType("application/json;charset=utf-8")
+                .content(objectToJsonBytes(generateNewGradeJson()))
+                )
+                .andExpect( status().isOk() )
+                .andExpect( content().contentType("application/json;charset=utf-8") )
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    private NewGradeJson generateNewGradeJson() {
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        NewGradeJson result = new NewGradeJson();
+        result.setCourseID(sampleCourse.getId());
+        result.setGradedByID(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId());
+        result.setGradeTitle("sample grade title");
+        result.setGradeDescription("sample grade description");
+        result.setHomeworkID(new ArrayList<>(sampleCourse.getHomeworks()).get(0).getId());
+        result.setScale("PUNKTOWA");
+        result.setMaxPoints(33.3);
+        result.setWeight(new Double(1));
+        return result;
     }
 
     @Test
