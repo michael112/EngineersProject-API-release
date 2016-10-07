@@ -91,10 +91,10 @@ public class GradeServiceTest extends AbstractServiceTest {
             GradeJson gradeJson;
             if( grade.containsGradeForUser(user) ) {
                 gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
-                if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
+                if( grade.hasHomework() ) {
                     gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
-                if( ( grade.getTask() != null ) && ( grade.getTask() instanceof main.model.course.Test ) ) {
+                if( grade.hasTest() ) {
                     gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
                 for( StudentGrade studentGrade : grade.getGrades() ) {
@@ -110,10 +110,10 @@ public class GradeServiceTest extends AbstractServiceTest {
         main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, "en"));
         for( Grade grade : course.getGrades() ) {
             GradeJson gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
-            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof Homework ) ) {
+            if( grade.hasHomework() ) {
                 gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
             }
-            if( ( grade.getTask() != null ) && ( grade.getTask() instanceof main.model.course.Test ) ) {
+            if( grade.hasTest() ) {
                 gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
             }
             for( StudentGrade studentGrade : grade.getGrades() ) {

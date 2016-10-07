@@ -14,7 +14,7 @@
 
     <bean id="courseMembershipSecurityMetadataSource" class="main.security.coursemembership.CourseMembershipSecurityMetadataSource" />
 
-    <context:component-scan base-package="main.controllers" />
+    <context:component-scan base-package="main.controllers, main.error" />
 
     <mvc:annotation-driven/>
 

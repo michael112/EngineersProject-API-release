@@ -90,11 +90,28 @@ public class Grade extends AbstractUuidModel {
 		if( task != null ) task.addGrade(this); // przypisanie powiązania
 	}
 
+	public boolean hasTask() {
+		return this.getTask() != null;
+	}
+
+	public boolean hasHomework() {
+		return ( ( this.hasTask() ) && ( this.getTask() instanceof Homework ) );
+	}
+
+	public boolean hasTest() {
+		return ( ( this.hasTask() ) && ( this.getTask() instanceof Test ) );
+	}
+
 	@Getter
-	@Setter
 	@Column(name="scale", nullable=false)
 	@Enumerated(EnumType.STRING)
 	private GradeScale scale;
+	public void setScale(GradeScale scale) {
+		this.scale = scale;
+	}
+	public void setScale(String scale) {
+		this.scale = GradeScale.valueOf(scale);
+	}
 
 	@Getter
 	@Setter
@@ -145,7 +162,7 @@ public class Grade extends AbstractUuidModel {
 		}
 		return null;
 	}
-	
+
 	public Grade() {
 		super();
 		this.grades = new HashSet<>();
@@ -159,27 +176,21 @@ public class Grade extends AbstractUuidModel {
 		this.setCourse(course);
 		this.setScale(scale);
 	}
-
-	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale, double weight) {
-		this(gradedBy, course, gradeTitle, scale);
-		this.setWeight(weight);
-	}
 	
 	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, double weight) {
-		this(gradedBy, course, gradeTitle, scale, weight);
+		this(gradedBy, course, gradeTitle, scale);
 		this.setGradeDescription(gradeDescription);
+		this.setWeight(weight);
 	}
-	
-	public Grade(User gradedBy, Course course, String gradeTitle, AbstractHomeworkOrTest task, GradeScale scale, double weight) {
-		this(gradedBy, course, gradeTitle, scale, weight);
-		this.setTask(task);
+
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, double maxPoints, double weight) {
+		this(gradedBy, course, gradeTitle, gradeDescription, scale, weight);
+		this.setMaxPoints(maxPoints);
 	}
 
 	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight) {
-		this(gradedBy, course, gradeTitle, scale, weight);
-		this.setGradeDescription(gradeDescription);
+		this(gradedBy, course, gradeTitle, gradeDescription, scale, maxPoints, weight);
 		this.setTask(task);
-		this.setMaxPoints(maxPoints);
 	}
 
 	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, Set<StudentGrade> grades) {
@@ -187,4 +198,7 @@ public class Grade extends AbstractUuidModel {
 		this.setGrades(grades);
 	}
 
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, String scale, double maxPoints, double weight) {
+		this(gradedBy, course, gradeTitle, gradeDescription, GradeScale.valueOf(scale), maxPoints, weight);
+	}
 }

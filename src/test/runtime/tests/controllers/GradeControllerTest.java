@@ -3,6 +3,8 @@ package test.runtime.tests.controllers;
 import java.util.Map;
 import java.util.HashMap;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,6 +20,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.apache.commons.lang3.text.StrSubstitutor;
 
 import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.course.grade.GradeCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.domain.DomainURIProvider;
@@ -28,6 +31,7 @@ import main.constants.urlconstants.GradeControllerUrlConstants;
 
 import main.model.course.Course;
 import main.model.user.User;
+import main.model.course.Grade;
 
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;
@@ -52,6 +56,8 @@ public class GradeControllerTest extends AbstractControllerTest {
     private CurrentUserService currentUserServiceMock;
     @Autowired
     private CourseCrudService courseCrudServiceMock;
+    @Autowired
+    private GradeCrudService gradeCrudServiceMock;
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
@@ -63,7 +69,7 @@ public class GradeControllerTest extends AbstractControllerTest {
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
-        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseCrudServiceMock);
+        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseCrudServiceMock, gradeCrudServiceMock);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
@@ -122,6 +128,66 @@ public class GradeControllerTest extends AbstractControllerTest {
                 .andExpect(content().contentType("application/json;charset=utf-8"))
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetGradeInfo() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        Grade sampleGrade = new ArrayList<>( sampleCourse.getGrades() ).get(0);
+
+        when(gradeCrudServiceMock.findGradeByID(Mockito.any(String.class))).thenReturn(sampleGrade);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+
+        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+
+        this.mockMvc.perform(get(URL)
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testCreateNewGrade() throws Exception {
+
+    }
+
+    @Test
+    public void testEditFullGrade() throws Exception {
+
+    }
+
+    @Test
+    public void testEditGradeInfo() throws Exception {
+
+    }
+
+    @Test
+    public void testEditPoints() throws Exception {
+
+    }
+
+    @Test
+    public void testEditScale() throws Exception {
+
+    }
+
+    @Test
+    public void testCreateStudentGrade() throws Exception {
+
+    }
+
+    @Test
+    public void testEditStudentGrade() throws Exception {
+
     }
 
     private String getClassURI(String courseID) {
@@ -296,6 +362,36 @@ public class GradeControllerTest extends AbstractControllerTest {
              "userID":"9a166bc0-87e5-11e6-b049-005056c00001",
              "name":"A BC"
           }
+       }
+    }
+
+    c) testGetGradeInfo:
+    {
+       "success":true,
+       "message":"",
+       "grade":{
+          "gradeID":"df50aa68-8ba1-11e6-a5f2-54ab3a01c2d0",
+          "gradedBy":{
+             "userID":"df508350-8ba1-11e6-a5f2-54ab3a01c2d0",
+             "name":"Teacher Teacher"
+          },
+          "gradeTitle":"sample grade title",
+          "gradeDescription":"sample grade description",
+          "homeworkFor":null,
+          "testFor":null,
+          "scale":"PUNKTOWA",
+          "maxPoints":30.0,
+          "weight":1.0,
+          "grades":[
+             {
+                "studentGradeID":"df50aa69-8ba1-11e6-a5f2-54ab3a01c2d0",
+                "grade":15.0,
+                "student":{
+                   "userID":"df40a4d0-8ba1-11e6-a5f2-54ab3a01c2d0",
+                   "name":"A BC"
+                }
+             }
+          ]
        }
     }
 */

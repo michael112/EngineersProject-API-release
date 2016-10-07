@@ -172,6 +172,14 @@ public class Course extends AbstractUuidModel {
 		this.students.remove(student);
 		student.setCourse(newCourse);
 	}
+	public CourseMembership getCourseMembership(User student) {
+		for( CourseMembership cm : this.getStudents() ) {
+			if( cm.getUser().getId().equals(student.getId()) ) {
+				return cm;
+			}
+		}
+		return null;
+	}
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)

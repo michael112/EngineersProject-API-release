@@ -43,6 +43,9 @@ import main.model.user.userprofile.Phone;
 import main.service.crud.user.user.UserCrudService;
 import main.service.crud.user.userrole.UserRoleCrudService;
 
+import main.service.controller.user.UserService;
+import main.service.controller.user.UserServiceImpl;
+
 import main.util.currentUser.CurrentUserService;
 
 import main.util.labels.LabelProvider;
@@ -52,8 +55,10 @@ import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
 import main.util.domain.DomainURIProvider;
 
+import main.util.locale.LocaleCodeProviderImpl;
+
 import main.json.response.AbstractResponseJson;
-import main.json.response.MessageResponseJson;
+import main.json.response.DefaultResponseJson;
 import main.json.response.CurrentUserResponseJson;
 import main.json.response.CurrentEmailResponseJson;
 import main.json.response.CurrentAddressResponseJson;
@@ -62,6 +67,9 @@ import main.json.response.CurrentPhonesResponseJson;
 import main.json.user.EditPasswordJson;
 import main.json.user.EditEmailJson;
 import main.json.user.EditPhoneJson;
+
+import main.error.exception.HttpBadRequestException;
+import main.error.exception.HttpInternalServerErrorException;
 
 @RequestMapping(value = UserControllerUrlConstants.CLASS_URL)
 @RestController
@@ -95,9 +103,12 @@ public class UserController {
     @Autowired
     private MailSender mailSender;
 
+    private UserService userService;
+
     @PostConstruct
     public void initialize() {
         this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
+        this.userService = new UserServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest), this.userCrudService, this.userRoleCrudService, this.passwordEncoder);
     }
 
     @PermitAll
@@ -106,28 +117,35 @@ public class UserController {
         HttpStatus responseStatus;
         String messageStr;
         if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
+            /*
             responseStatus = HttpStatus.BAD_REQUEST;
             messageStr = this.labelProvider.getLabel("user.passwords.not.equal");
+            */
+            throw new HttpBadRequestException(this.labelProvider.getLabel("user.passwords.not.equal"));
         }
         else if (!(userCrudService.isUsernameUnique(userJson.getUsername()))) {
+            throw new HttpBadRequestException(this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix"));
+            /*
             responseStatus = HttpStatus.BAD_REQUEST;
             messageStr = this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix");
+            */
         }
         else {
-            User user = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleCrudService.findUserRoleByRoleName("USER"));
-            this.userCrudService.saveUser(user);
+            this.userService.registerUser(userJson);
             responseStatus = HttpStatus.OK;
             messageStr = this.labelProvider.getLabel("user.saved.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.saved.suffix");
         }
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getUserInfo() {
         User currentUser = this.currentUserService.getCurrentUser();
-        Assert.notNull(currentUser);
-        UserInfoJson userJson = userToJson(currentUser);
+        // Assert.notNull(currentUser);
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+        // UserInfoJson userJson = userToJson(currentUser);
+        UserInfoJson userJson = this.userService.getUserInfo(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.info.success");
         return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
@@ -176,7 +194,7 @@ public class UserController {
             responseStatus = HttpStatus.OK;
             messageStr = this.labelProvider.getLabel("user.edit.password.success");
         }
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -199,7 +217,7 @@ public class UserController {
         this.mailSender.sendMail(currentUser.getEmail(), subject, message);
         String messageStr = this.labelProvider.getLabel("user.editmail.success.prefix") + currentUser.getEmail() + this.labelProvider.getLabel("user.editmail.success.suffix");
         HttpStatus responseStatus = HttpStatus.OK;
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     private String getEmailMessage(User currentUser, String newEmail) {
@@ -227,7 +245,7 @@ public class UserController {
         this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editmail.confirmation.success.prefix") + newEmail + this.labelProvider.getLabel("user.editmail.confirmation.success.suffix");
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -249,7 +267,7 @@ public class UserController {
         this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editaddress.success");
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -271,7 +289,7 @@ public class UserController {
         this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.editphonelist.success");
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -283,7 +301,7 @@ public class UserController {
         this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.addphone.success");
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -296,7 +314,7 @@ public class UserController {
         this.userCrudService.updateUser(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.removephone.success");
-        return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
 }

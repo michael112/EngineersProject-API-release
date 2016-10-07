@@ -38,6 +38,14 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="gradeCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.grade.GradeCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="languageCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
@@ -118,6 +126,7 @@
 		<context:exclude-filter type="regex" expression="main.service.model.user.placementtestresult.PlacementTestResultServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.course.course.CourseCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.course.coursetype.CourseTypeCrudServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.crud.course.grade.GradeCrudService" />
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.util.currentUser.CurrentUserServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.domain.DomainURIProvider" />

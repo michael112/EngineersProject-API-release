@@ -52,6 +52,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
+    /*
     @Before
     public void setUp() {
         setMockito();
@@ -62,5 +63,5 @@ public class MessageControllerTest extends AbstractControllerTest {
 
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
     }
-
+    */
 }

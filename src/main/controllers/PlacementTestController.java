@@ -44,7 +44,7 @@ import main.model.user.userprofile.PlacementTestResult;
 import main.model.user.User;
 
 import main.json.response.AbstractResponseJson;
-import main.json.response.MessageResponseJson;
+import main.json.response.DefaultResponseJson;
 import main.json.response.PlacementTestListResponseJson;
 import main.json.response.PlacementTestContentReponseJson;
 import main.json.response.PlacementTestResultResponseJson;
@@ -121,7 +121,7 @@ public class PlacementTestController {
         if( test == null ) {
             messageStr = this.labelProvider.getLabel("placementtest.content.null");
             responseStatus = HttpStatus.NOT_FOUND;
-            return new ResponseEntity<MessageResponseJson>(new MessageResponseJson(messageStr, responseStatus), responseStatus);
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
         }
         else {
             messageStr = this.labelProvider.getLabel("placementtest.content.success");
