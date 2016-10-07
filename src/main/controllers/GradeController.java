@@ -31,8 +31,13 @@ import main.model.course.Grade;
 import main.service.controller.grade.GradeService;
 import main.service.controller.grade.GradeServiceImpl;
 
+import main.service.crud.user.user.UserCrudService;
+
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.grade.GradeCrudService;
+
+import main.service.crud.course.homework.HomeworkCrudService;
+import main.service.crud.course.test.TestCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.coursemembership.validator.CourseMembershipValidator;
@@ -68,10 +73,19 @@ public class GradeController {
     private CurrentUserService currentUserService;
 
     @Autowired
+    private UserCrudService userCrudService;
+
+    @Autowired
     private CourseCrudService courseCrudService;
 
     @Autowired
     private GradeCrudService gradeCrudService;
+
+	@Autowired
+    private HomeworkCrudService homeworkCrudService;
+
+	@Autowired
+    private TestCrudService testCrudService;
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidator;
@@ -89,7 +103,7 @@ public class GradeController {
 
     @PostConstruct
     public void initialize() {
-        this.gradeService = new GradeServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest));
+        this.gradeService = new GradeServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest), this.userCrudService, this.courseCrudService, this.gradeCrudService, this.homeworkCrudService, this.testCrudService);
     }
 
     @CourseMembershipRequired

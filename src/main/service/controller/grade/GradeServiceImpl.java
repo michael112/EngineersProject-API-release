@@ -4,9 +4,11 @@ import main.service.controller.AbstractService;
 
 import main.util.locale.LocaleCodeProvider;
 
+import main.service.crud.user.user.UserCrudService;
+
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.grade.GradeCrudService;
-import main.service.crud.user.user.UserCrudService;
+
 import main.service.crud.course.homework.HomeworkCrudService;
 import main.service.crud.course.test.TestCrudService;
 
@@ -182,8 +184,13 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public GradeServiceImpl(LocaleCodeProvider localeCodeProvider) {
+    public GradeServiceImpl(LocaleCodeProvider localeCodeProvider, UserCrudService userCrudService, CourseCrudService courseCrudService, GradeCrudService gradeCrudService, HomeworkCrudService homeworkCrudService, TestCrudService testCrudService) {
         super(localeCodeProvider);
+        this.userCrudService = userCrudService;
+        this.courseCrudService = courseCrudService;
+        this.gradeCrudService = gradeCrudService;
+        this.homeworkCrudService = homeworkCrudService;
+        this.testCrudService = testCrudService;
     }
 
 }

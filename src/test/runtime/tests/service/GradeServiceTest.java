@@ -11,6 +11,14 @@ import org.springframework.web.servlet.LocaleResolver;
 import main.service.controller.grade.GradeService;
 import main.service.controller.grade.GradeServiceImpl;
 
+import main.service.crud.user.user.UserCrudService;
+
+import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.course.grade.GradeCrudService;
+
+import main.service.crud.course.homework.HomeworkCrudService;
+import main.service.crud.course.test.TestCrudService;
+
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.util.locale.LocaleCodeProvider;
@@ -45,15 +53,30 @@ public class GradeServiceTest extends AbstractServiceTest {
 
     private GradeService gradeService;
 
+    @Autowired
+    private UserCrudService userCrudServiceMock;
+
+    @Autowired
+    private CourseCrudService courseCrudServiceMock;
+
+    @Autowired
+    private GradeCrudService gradeCrudServiceMock;
+
+    @Autowired
+    private HomeworkCrudService homeworkCrudServiceMock;
+
+    @Autowired
+    private TestCrudService testCrudServiceMock;
+
     private TestEnvironment testEnvironment;
 
     @Before
     public void setUp() {
         this.testEnvironment = TestEnvironmentBuilder.build();
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
-        reset(this.localeCodeProviderMock);
+        reset(this.localeCodeProviderMock, this.userCrudServiceMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.homeworkCrudServiceMock, this.testCrudServiceMock);
         when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
-        this.gradeService = new GradeServiceImpl(this.localeCodeProviderMock);
+        this.gradeService = new GradeServiceImpl(this.localeCodeProviderMock, this.userCrudServiceMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.homeworkCrudServiceMock, this.testCrudServiceMock);
     }
 
     @Test

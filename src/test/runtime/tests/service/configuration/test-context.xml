@@ -38,6 +38,30 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="gradeCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.grade.GradeCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="homeworkCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.homework.HomeworkCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="testCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.test.TestCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="languageCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
@@ -126,6 +150,9 @@
 		<context:exclude-filter type="regex" expression="main.service.model.user.placementtestresult.PlacementTestResultServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.course.course.CourseCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.course.coursetype.CourseTypeCrudServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.crud.course.grade.GradeCrudServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.crud.course.homework.HomeworkCrudServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.crud.course.test.TestCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.locale.LocaleCodeProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.util.currentUser.CurrentUserServiceImpl" />
