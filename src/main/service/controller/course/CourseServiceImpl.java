@@ -45,71 +45,90 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     private LanguageCrudService languageCrudService;
 
     public CourseListJson getCourseStudentList(Course course, String currentLocale) {
-        if( course == null ) throw new IllegalArgumentException();
-        String languageName = course.getLanguage().getLanguageName(currentLocale);
-        String courseTypeName = course.getCourseType().getCourseTypeName(currentLocale);
-        CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
-        for( CourseMembership studentMembership : course.getStudents() ) {
-            User student = studentMembership.getUser();
-            result.addStudent(new CourseUserJson(student.getId(), student.getFullName()));
+        try {
+            String languageName = course.getLanguage().getLanguageName(currentLocale);
+            String courseTypeName = course.getCourseType().getCourseTypeName(currentLocale);
+            CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
+            for( CourseMembership studentMembership : course.getStudents() ) {
+                User student = studentMembership.getUser();
+                result.addStudent(new CourseUserJson(student.getId(), student.getFullName()));
+            }
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
         }
-        for( User teacher : course.getTeachers() ) {
-            result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        return result;
     }
 
     public CourseInfoStudentJson getCourseInfoStudent(Course course, User user) {
-        String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
-        String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
-        CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
-        for( User teacher : course.getTeachers() ) {
-            courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        try {
+            String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
+            String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
+            CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+            for( User teacher : course.getTeachers() ) {
+                courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            Set<Homework> incomingHomeworks = getIncomingHomeworks(course.getHomeworks(), user);
+            Set<Test> incomingTests = getIncomingTests(course.getTests());
+            Set<Message> teacherMessages = getTeacherMessages(course, user);
+            for( Homework homework : incomingHomeworks ) {
+                courseInfo.addIncomingHomework(new HomeworkJson(homework.getId(), homework.getDate().toString(), homework.getTitle()));
+            }
+            for( Test test : incomingTests ) {
+                courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
+            }
+            for( Message message : teacherMessages ) {
+                courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
+            }
+            return courseInfo;
         }
-        Set<Homework> incomingHomeworks = getIncomingHomeworks(course.getHomeworks(), user);
-        Set<Test> incomingTests = getIncomingTests(course.getTests());
-        Set<Message> teacherMessages = getTeacherMessages(course, user);
-        for( Homework homework : incomingHomeworks ) {
-            courseInfo.addIncomingHomework(new HomeworkJson(homework.getId(), homework.getDate().toString(), homework.getTitle()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( Test test : incomingTests ) {
-            courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
-        }
-        for( Message message : teacherMessages ) {
-            courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
-        }
-        return courseInfo;
     }
 
     public CourseInfoTeacherJson getCourseInfoTeacher(Course course, User user) {
-        String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
-        String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
-        CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
-        for( User teacher : course.getTeachers() ) {
-            courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        try {
+            String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
+            String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
+            CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+            for( User teacher : course.getTeachers() ) {
+                courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            Set<Test> incomingTests = getIncomingTests(course.getTests());
+            Set<Message> teacherMessages = getTeacherMessages(course, user);
+            for( Test test : incomingTests ) {
+                courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
+            }
+            for( Message message : teacherMessages ) {
+                courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
+            }
+            return courseInfo;
         }
-        Set<Test> incomingTests = getIncomingTests(course.getTests());
-        Set<Message> teacherMessages = getTeacherMessages(course, user);
-        for( Test test : incomingTests ) {
-            courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( Message message : teacherMessages ) {
-            courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
-        }
-        return courseInfo;
     }
 
     public AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes() {
-        AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
-        Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
-        Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
-        for( Language language : availableLanguages ) {
-            result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+        try {
+            AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
+            Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
+            Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
+            for( Language language : availableLanguages ) {
+                result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+            }
+            for( CourseType courseType : availableCourseTypes ) {
+                result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            }
+            return result;
         }
-        for( CourseType courseType : availableCourseTypes ) {
-            result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        return result;
     }
 
     private NextLessonJson getNextLesson(Course course) {

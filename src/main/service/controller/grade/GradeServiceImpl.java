@@ -52,46 +52,63 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
     private TestCrudService testCrudService;
 
     public main.json.course.grade.student.allgrades.list.GradeListJson getStudentGradeList(User student, Course course) throws IllegalArgumentException {
-        if( ( student == null ) || ( course == null ) ) throw new IllegalArgumentException();
-        main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
-        for( Grade grade : course.getGrades() ) {
-            if( grade.containsGradeForUser(student) ) {
-                result.addGrade(getGradeInfo(grade));
+        try {
+            main.json.course.grade.student.allgrades.list.GradeListJson result = new main.json.course.grade.student.allgrades.list.GradeListJson(new CourseUserJson(student.getId(), student.getFullName()), getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
+            for( Grade grade : course.getGrades() ) {
+                if( grade.containsGradeForUser(student) ) {
+                    result.addGrade(getGradeInfo(grade));
+                }
             }
+            return result;
         }
-        return result;
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private CourseJson getCourseJson(Course course, String languageCode) {
-        CourseJson result = new CourseJson(course.getId(), course.getLanguage().getLanguageName(languageCode), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(languageCode));
-        for( User teacher : course.getTeachers() ) {
-            result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        try {
+            CourseJson result = new CourseJson(course.getId(), course.getLanguage().getLanguageName(languageCode), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(languageCode));
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
         }
-        return result;
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public main.json.course.grade.teacher.allgrades.list.GradeListJson getTeacherGradeList(Course course) throws IllegalArgumentException {
-        if( course == null ) throw new IllegalArgumentException();
-        main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
-        for( Grade grade : course.getGrades() ) {
-            result.addGrade(getGradeInfo(grade));
+        try {
+            main.json.course.grade.teacher.allgrades.list.GradeListJson result = new main.json.course.grade.teacher.allgrades.list.GradeListJson(getCourseJson(course, this.localeCodeProvider.getLocaleCode()));
+            for( Grade grade : course.getGrades() ) {
+                result.addGrade(getGradeInfo(grade));
+            }
+            return result;
         }
-        return result;
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public GradeJson getGradeInfo(Grade grade) {
-        if( grade == null ) throw new IllegalArgumentException();
-        GradeJson gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
-        if( grade.hasHomework() ) {
-            gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+        try {
+            GradeJson gradeJson = new GradeJson(grade.getId(), new CourseUserJson(grade.getGradedBy().getId(), grade.getGradedBy().getFullName()), grade.getGradeTitle(), grade.getGradeDescription(), grade.getScale().name(), grade.getMaxPoints(), grade.getWeight());
+            if( grade.hasHomework() ) {
+                gradeJson.setHomeworkFor(new HomeworkJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            if( grade.hasTest() ) {
+                gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+            }
+            for( StudentGrade studentGrade : grade.getGrades() ) {
+                gradeJson.addGrade(new main.json.course.grade.commons.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue(), new CourseUserJson(studentGrade.getStudent().getUser().getId(), studentGrade.getStudent().getUser().getFullName())));
+            }
+            return gradeJson;
         }
-        if( grade.hasTest() ) {
-            gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( StudentGrade studentGrade : grade.getGrades() ) {
-            gradeJson.addGrade(new main.json.course.grade.commons.StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue(), new CourseUserJson(studentGrade.getStudent().getUser().getId(), studentGrade.getStudent().getUser().getFullName())));
-        }
-        return gradeJson;
     }
 
     public void createNewGrade(NewGradeJson newGradeJson) {

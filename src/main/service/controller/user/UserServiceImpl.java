@@ -35,25 +35,40 @@ public class UserServiceImpl extends AbstractService implements UserService {
     }
 
     public UserInfoJson getUserInfo(User user) {
-        UserInfoJson res = new UserInfoJson(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
+        try {
+            UserInfoJson res = new UserInfoJson(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
 
-        for( CourseMembership cs : user.getCoursesAsStudent() ) {
-            res.addCourseAsStudent(getStudentCourseJson(cs));
-        }
-        for( Course ct : user.getCoursesAsTeacher() ) {
-            res.addCourseAsTeacher(getTeacherCourseJson(ct));
-        }
+            for( CourseMembership cs : user.getCoursesAsStudent() ) {
+                res.addCourseAsStudent(getStudentCourseJson(cs));
+            }
+            for( Course ct : user.getCoursesAsTeacher() ) {
+                res.addCourseAsTeacher(getTeacherCourseJson(ct));
+            }
 
-        return res;
+            return res;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private CourseJson getStudentCourseJson(CourseMembership courseMembership) {
-        Course course = courseMembership.getCourse();
-        return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), courseMembership.isActive());
+        try {
+            Course course = courseMembership.getCourse();
+            return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), courseMembership.isActive());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private CourseJson getTeacherCourseJson(Course course) {
-        return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName());
+        try {
+            return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Autowired
