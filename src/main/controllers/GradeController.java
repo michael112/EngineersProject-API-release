@@ -87,19 +87,24 @@ public class GradeController {
         boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
         if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
 
-        GradeListJson gradeList;
-        if( isStudent ) {
-            gradeList = this.gradeService.getStudentGradeList(currentUser, course);
-        }
-        else if( isTeacher ) {
-            gradeList = this.gradeService.getTeacherGradeList(course);
-        }
-        else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
+        try {
+            GradeListJson gradeList;
+            if( isStudent ) {
+                gradeList = this.gradeService.getStudentGradeList(currentUser, course);
+            }
+            else if( isTeacher ) {
+                gradeList = this.gradeService.getTeacherGradeList(course);
+            }
+            else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
 
-        String messageStr = this.labelProvider.getLabel("grade.list.success");
-        HttpStatus responseStatus = HttpStatus.OK;
-        GradeListResponseJson responseJson = new GradeListResponseJson(gradeList, messageStr, responseStatus);
-        return new ResponseEntity<GradeListResponseJson>(responseJson, responseStatus);
+            String messageStr = this.labelProvider.getLabel("grade.list.success");
+            HttpStatus responseStatus = HttpStatus.OK;
+            GradeListResponseJson responseJson = new GradeListResponseJson(gradeList, messageStr, responseStatus);
+            return new ResponseEntity<GradeListResponseJson>(responseJson, responseStatus);
+        }
+        catch( IllegalArgumentException ex ) {
+            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
+        }
     }
 
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
@@ -110,10 +115,15 @@ public class GradeController {
         if( ( grade == null ) || ( !( grade.getCourse().getId().equals(courseID) ) ) ) {
             throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
         }
-        GradeJson gradeJson = this.gradeService.getGradeInfo(grade);
-        String messageStr = this.labelProvider.getLabel("grade.info.success");
-        HttpStatus responseStatus = HttpStatus.OK;
-        return new ResponseEntity<GradeInfoResponseJson>(new GradeInfoResponseJson(gradeJson, messageStr, responseStatus), responseStatus);
+        try {
+            GradeJson gradeJson = this.gradeService.getGradeInfo(grade);
+            String messageStr = this.labelProvider.getLabel("grade.info.success");
+            HttpStatus responseStatus = HttpStatus.OK;
+            return new ResponseEntity<GradeInfoResponseJson>(new GradeInfoResponseJson(gradeJson, messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalArgumentException ex ) {
+            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
+        }
     }
 
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)

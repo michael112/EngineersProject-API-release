@@ -14,7 +14,7 @@
 
     <bean id="courseMembershipSecurityMetadataSource" class="main.security.coursemembership.CourseMembershipSecurityMetadataSource" />
 
-    <context:component-scan base-package="main.controllers, main.error" />
+    <context:component-scan base-package="main.controllers, main.error, main.service.controller" />
 
     <mvc:annotation-driven/>
 
@@ -23,6 +23,5 @@
     <import resource="servlet-files/spring-jackson.xml" />
     <import resource="servlet-files/spring-locale1.xml" />
 	<import resource="servlet-files/spring-locale2.xml" />
-
 
 </beans>

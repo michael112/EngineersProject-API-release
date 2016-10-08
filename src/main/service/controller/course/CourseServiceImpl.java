@@ -114,21 +114,16 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     public AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes() {
-        try {
-            AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
-            Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
-            Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
-            for( Language language : availableLanguages ) {
-                result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
-            }
-            for( CourseType courseType : availableCourseTypes ) {
-                result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
-            }
-            return result;
+        AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
+        Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
+        Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
+        for( Language language : availableLanguages ) {
+            result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
         }
-        catch( NullPointerException ex ) {
-            throw new IllegalArgumentException();
+        for( CourseType courseType : availableCourseTypes ) {
+            result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         }
+        return result;
     }
 
     private NextLessonJson getNextLesson(Course course) {

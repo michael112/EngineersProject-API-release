@@ -6,11 +6,10 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
 
-	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service, main.util" />
+	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service.crud, main.util" />
     <context:property-placeholder properties-ref="deployProperties" />
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" />
 
-    <import resource="file:WebContent/WEB-INF/config/context-files/spring-locale.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />

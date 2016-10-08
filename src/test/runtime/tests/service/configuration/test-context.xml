@@ -142,7 +142,7 @@
 		</constructor-arg>
 	</bean>
 
-	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service, main.util">
+	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service.crud, main.util">
 		<context:exclude-filter type="regex" expression="main.service.model.user.user.UserCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.user.userrole.UserRoleCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageCrudServiceImpl" />
