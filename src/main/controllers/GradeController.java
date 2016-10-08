@@ -2,14 +2,8 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
-import javax.annotation.PostConstruct;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
-import org.springframework.web.servlet.LocaleResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,21 +23,13 @@ import main.model.course.Course;
 import main.model.course.Grade;
 
 import main.service.controller.grade.GradeService;
-import main.service.controller.grade.GradeServiceImpl;
-
-import main.service.crud.user.user.UserCrudService;
 
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.grade.GradeCrudService;
 
-import main.service.crud.course.homework.HomeworkCrudService;
-import main.service.crud.course.test.TestCrudService;
-
 import main.util.currentUser.CurrentUserService;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 import main.util.labels.LabelProvider;
-
-import main.util.locale.LocaleCodeProviderImpl;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.GradeListResponseJson;
@@ -73,19 +59,10 @@ public class GradeController {
     private CurrentUserService currentUserService;
 
     @Autowired
-    private UserCrudService userCrudService;
-
-    @Autowired
     private CourseCrudService courseCrudService;
 
     @Autowired
     private GradeCrudService gradeCrudService;
-
-	@Autowired
-    private HomeworkCrudService homeworkCrudService;
-
-	@Autowired
-    private TestCrudService testCrudService;
 
     @Autowired
     private CourseMembershipValidator courseMembershipValidator;
@@ -94,17 +71,7 @@ public class GradeController {
     private LabelProvider labelProvider;
 
     @Autowired
-    private LocaleResolver localeResolver;
-
-    @Autowired
-    private HttpServletRequest httpServletRequest;
-
     private GradeService gradeService;
-
-    @PostConstruct
-    public void initialize() {
-        this.gradeService = new GradeServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest), this.userCrudService, this.courseCrudService, this.gradeCrudService, this.homeworkCrudService, this.testCrudService);
-    }
 
     @CourseMembershipRequired
     @RolesAllowed(RolesAllowedConstants.USER)

@@ -1,9 +1,5 @@
 package main.controllers;
 
-import javax.servlet.http.HttpServletRequest;
-
-import javax.annotation.PostConstruct;
-
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
@@ -19,8 +15,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import org.springframework.web.servlet.LocaleResolver;
 
 import org.springframework.util.Assert;
 
@@ -41,21 +35,16 @@ import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
 
 import main.service.crud.user.user.UserCrudService;
-import main.service.crud.user.userrole.UserRoleCrudService;
 
 import main.service.controller.user.UserService;
-import main.service.controller.user.UserServiceImpl;
 
 import main.util.currentUser.CurrentUserService;
 
 import main.util.labels.LabelProvider;
 
 import main.util.currentlanguagename.CurrentLanguageNameProvider;
-import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
 import main.util.domain.DomainURIProvider;
-
-import main.util.locale.LocaleCodeProviderImpl;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.DefaultResponseJson;
@@ -77,8 +66,6 @@ public class UserController {
 
     @Autowired
     private UserCrudService userCrudService;
-    @Autowired
-    private UserRoleCrudService userRoleCrudService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -87,14 +74,9 @@ public class UserController {
     private CurrentUserService currentUserService;
 
     @Autowired
-    private LocaleResolver localeResolver;
-
-    @Autowired
-    private HttpServletRequest httpServletRequest;
-
-    @Autowired
     private DomainURIProvider domainURIProvider;
 
+    @Autowired
     private CurrentLanguageNameProvider currentLanguageNameProvider;
 
     @Autowired
@@ -103,13 +85,8 @@ public class UserController {
     @Autowired
     private MailSender mailSender;
 
+    @Autowired
     private UserService userService;
-
-    @PostConstruct
-    public void initialize() {
-        this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
-        this.userService = new UserServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest), this.userCrudService, this.userRoleCrudService, this.passwordEncoder);
-    }
 
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
@@ -117,18 +94,10 @@ public class UserController {
         HttpStatus responseStatus;
         String messageStr;
         if (!(userJson.getPassword().equals(userJson.getPasswordConfirm()))) {
-            /*
-            responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelProvider.getLabel("user.passwords.not.equal");
-            */
             throw new HttpBadRequestException(this.labelProvider.getLabel("user.passwords.not.equal"));
         }
         else if (!(userCrudService.isUsernameUnique(userJson.getUsername()))) {
             throw new HttpBadRequestException(this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix"));
-            /*
-            responseStatus = HttpStatus.BAD_REQUEST;
-            messageStr = this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix");
-            */
         }
         else {
             this.userService.registerUser(userJson);
@@ -142,9 +111,7 @@ public class UserController {
     @RequestMapping(value = UserControllerUrlConstants.USER_INFO, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getUserInfo() {
         User currentUser = this.currentUserService.getCurrentUser();
-        // Assert.notNull(currentUser);
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
-        // UserInfoJson userJson = userToJson(currentUser);
         UserInfoJson userJson = this.userService.getUserInfo(currentUser);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.info.success");
@@ -316,5 +283,4 @@ public class UserController {
         String messageStr = this.labelProvider.getLabel("user.removephone.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
-
 }

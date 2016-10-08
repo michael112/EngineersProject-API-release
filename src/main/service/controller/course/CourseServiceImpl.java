@@ -5,6 +5,9 @@ import java.util.HashSet;
 
 import java.util.Calendar;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import main.service.controller.AbstractService;
 
 import main.service.crud.course.coursetype.CourseTypeCrudService;
@@ -34,6 +37,7 @@ import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.MessageJson;
 
+@Service("courseService")
 public class CourseServiceImpl extends AbstractService implements CourseService {
 
     private CourseTypeCrudService courseTypeCrudService;
@@ -172,10 +176,10 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         return result;
     }
 
+    @Autowired
     public CourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseTypeCrudService courseTypeCrudService, LanguageCrudService languageCrudService) {
         super(localeCodeProvider);
         this.courseTypeCrudService = courseTypeCrudService;
         this.languageCrudService = languageCrudService;
     }
-
 }

@@ -3,8 +3,12 @@ package main.util.currentlanguagename;
 import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.servlet.LocaleResolver;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import main.model.language.Language;
 
+@Service("currentLanguageNameProvider")
 public class CurrentLanguageNameProviderImpl implements CurrentLanguageNameProvider {
 
     private HttpServletRequest httpServletRequest;
@@ -16,9 +20,9 @@ public class CurrentLanguageNameProviderImpl implements CurrentLanguageNameProvi
         return language.getLanguageName(localeLanguageCode);
     }
 
+    @Autowired
     public CurrentLanguageNameProviderImpl(LocaleResolver localeResolver, HttpServletRequest httpServletRequest) {
         this.localeResolver = localeResolver;
         this.httpServletRequest = httpServletRequest;
     }
-
 }

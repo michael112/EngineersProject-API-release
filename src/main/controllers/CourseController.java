@@ -3,8 +3,6 @@ package main.controllers;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
-import javax.annotation.PostConstruct;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -27,10 +25,6 @@ import main.service.crud.course.course.CourseCrudService;
 import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
-import main.util.currentlanguagename.CurrentLanguageNameProvider;
-import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
-
-import main.util.locale.LocaleCodeProviderImpl;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.CourseInfoResponseJson;
@@ -45,11 +39,7 @@ import main.json.course.AvailableLngAndTypesJson;
 import main.model.user.User;
 import main.model.course.Course;
 
-import main.service.crud.language.LanguageCrudService;
-import main.service.crud.course.coursetype.CourseTypeCrudService;
-
 import main.service.controller.course.CourseService;
-import main.service.controller.course.CourseServiceImpl;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
 
@@ -78,21 +68,8 @@ public class CourseController {
     @Autowired
     private HttpServletRequest httpServletRequest;
 
-    private CurrentLanguageNameProvider currentLanguageNameProvider;
-
     @Autowired
-    private LanguageCrudService languageCrudService;
-
-    @Autowired
-    private CourseTypeCrudService courseTypeCrudService;
-
     private CourseService courseService;
-
-    @PostConstruct
-    public void initialize() {
-        this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
-        this.courseService = new CourseServiceImpl(new LocaleCodeProviderImpl(this.localeResolver, this.httpServletRequest), this.courseTypeCrudService, this.languageCrudService);
-    }
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired

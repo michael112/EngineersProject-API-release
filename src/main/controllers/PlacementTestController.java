@@ -4,9 +4,6 @@ import java.util.Set;
 import java.util.HashSet;
 
 import javax.annotation.security.RolesAllowed;
-import javax.servlet.http.HttpServletRequest;
-
-import javax.annotation.PostConstruct;
 
 import javax.annotation.security.PermitAll;
 
@@ -21,8 +18,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import org.springframework.web.servlet.LocaleResolver;
-
 import org.springframework.util.Assert;
 
 import main.constants.urlconstants.PlacementTestControllerUrlConstants;
@@ -32,7 +27,6 @@ import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 
 import main.util.currentlanguagename.CurrentLanguageNameProvider;
-import main.util.currentlanguagename.CurrentLanguageNameProviderImpl;
 
 import main.service.crud.language.LanguageCrudService;
 import main.service.crud.placementtest.PlacementTestCrudService;
@@ -73,20 +67,10 @@ public class PlacementTestController {
     private CurrentUserService currentUserService;
 
     @Autowired
-    private LocaleResolver localeResolver;
-
-    @Autowired
-    private HttpServletRequest httpServletRequest;
-
     private CurrentLanguageNameProvider currentLanguageNameProvider;
 
     @Autowired
     private LabelProvider labelProvider;
-
-    @PostConstruct
-    public void initialize() {
-        this.currentLanguageNameProvider = new CurrentLanguageNameProviderImpl(this.localeResolver, this.httpServletRequest);
-    }
 
     @PermitAll
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")

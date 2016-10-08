@@ -2,6 +2,9 @@ package main.service.controller.grade;
 
 import main.service.controller.AbstractService;
 
+import org.springframework.stereotype.Service;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import main.util.locale.LocaleCodeProvider;
 
 import main.service.crud.user.user.UserCrudService;
@@ -35,6 +38,7 @@ import main.json.course.grade.teacher.edit.EditScaleJson;
 import main.json.course.grade.teacher.edit.EditPointsJson;
 import main.json.course.grade.teacher.edit.StudentGradeJson;
 
+@Service("gradeService")
 public class GradeServiceImpl extends AbstractService implements GradeService {
 
     private UserCrudService userCrudService;
@@ -184,6 +188,7 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
+    @Autowired
     public GradeServiceImpl(LocaleCodeProvider localeCodeProvider, UserCrudService userCrudService, CourseCrudService courseCrudService, GradeCrudService gradeCrudService, HomeworkCrudService homeworkCrudService, TestCrudService testCrudService) {
         super(localeCodeProvider);
         this.userCrudService = userCrudService;
@@ -192,5 +197,4 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         this.homeworkCrudService = homeworkCrudService;
         this.testCrudService = testCrudService;
     }
-
 }
