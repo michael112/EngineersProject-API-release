@@ -9,7 +9,8 @@
 	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service, main.util" />
     <context:property-placeholder properties-ref="deployProperties" />
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" />
-	
+
+    <import resource="file:WebContent/WEB-INF/config/context-files/spring-locale.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />
