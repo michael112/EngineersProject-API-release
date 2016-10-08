@@ -106,7 +106,7 @@ public class CourseController {
     public ResponseEntity<? extends AbstractResponseJson> getCourseStudentList(@PathVariable("id") String courseID) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
-        CourseListJson result = this.courseService.getCourseStudentList(course, this.localeResolver.resolveLocale(this.httpServletRequest).getLanguage());
+        CourseListJson result = this.courseService.getCourseStudentList(course);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("coursestudentlist.success");
         return new ResponseEntity<CourseListResponseJson>(new CourseListResponseJson(result, messageStr, responseStatus), responseStatus);

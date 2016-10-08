@@ -239,6 +239,10 @@ public class CourseControllerTest extends AbstractControllerTest {
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
 
+    @Test
+    public void testGetCourseStudentList() throws Exception {
+        org.junit.Assert.fail();
+    }
 
     @Test
     public void testShowAvailableLanguagesAndCourseTypes() throws Exception {

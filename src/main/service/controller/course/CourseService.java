@@ -12,7 +12,7 @@ import main.json.course.AvailableLngAndTypesJson;
 
 public interface CourseService {
 
-    CourseListJson getCourseStudentList(Course course, String currentLocale);
+    CourseListJson getCourseStudentList(Course course);
 
     CourseInfoStudentJson getCourseInfoStudent(Course course, User user);
 

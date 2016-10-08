@@ -44,10 +44,10 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     private LanguageCrudService languageCrudService;
 
-    public CourseListJson getCourseStudentList(Course course, String currentLocale) {
+    public CourseListJson getCourseStudentList(Course course) {
         try {
-            String languageName = course.getLanguage().getLanguageName(currentLocale);
-            String courseTypeName = course.getCourseType().getCourseTypeName(currentLocale);
+            String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
+            String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
             CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
             for( CourseMembership studentMembership : course.getStudents() ) {
                 User student = studentMembership.getUser();
