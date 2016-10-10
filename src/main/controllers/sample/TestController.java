@@ -1,7 +1,9 @@
-package main.controllers;
+package main.controllers.sample;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
+
+import java.io.IOException;
 
 import main.util.properties.PropertyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestPart;
+
+import org.springframework.web.multipart.MultipartFile;
 
 import org.springframework.web.servlet.LocaleResolver;
 
@@ -23,7 +28,13 @@ import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
 import main.service.crud.user.user.UserCrudService;
+
+import main.service.file.FileUploadService;
+
 import main.model.user.User;
+import main.model.course.File;
+
+import main.util.currentUser.CurrentUserService;
 import main.util.mail.MailSender;
 
 import main.constants.urlconstants.GlobalUrlConstants;
@@ -36,6 +47,9 @@ public class TestController {
     private UserCrudService userCrudService;
 
     @Autowired
+    private CurrentUserService currentUserService;
+
+    @Autowired
     private MailSender mailSender;
 
     @Autowired
@@ -46,6 +60,30 @@ public class TestController {
 
     @Autowired
     private PropertyProvider propertyProvider;
+
+    @Autowired
+    private FileUploadService fileUploadService;
+
+    @RequestMapping(value = "/uploadfile", method = RequestMethod.POST, consumes = "multipart/form-data", produces = "application/text-plain; charset=utf-8")
+    @ResponseBody
+    @RolesAllowed({"USER"})
+    public ResponseEntity<String> uploadSampleFile(@RequestPart("input") SampleInput input, @RequestPart("file") MultipartFile file) {
+        try {
+            User currentUser = this.currentUserService.getCurrentUser();
+            String directory = "D:\\my projects\\PRACA INŻYNIERSKA\\uploads\\";
+            File fileInfo = this.fileUploadService.uploadFile(file, currentUser);
+            return new ResponseEntity<String>("File uploaded successfully - id: " + fileInfo.getId() + "" + "\nString1 = " + input.getString1() + "\nString2 = " + input.getString2() + "\nInteger = " + input.getInteger() + "\nDouble = " + input.getDbl(), HttpStatus.OK);
+        }
+        catch( IllegalArgumentException ex ) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private String getExtension(MultipartFile file) {
+        String fileName = file.getOriginalFilename();
+        int indexOfDot = fileName.lastIndexOf('.');
+        return indexOfDot != -1 ? fileName.substring(indexOfDot) : "";
+    }
 
     @RequestMapping( value = "/getproperty", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )
     @ResponseBody

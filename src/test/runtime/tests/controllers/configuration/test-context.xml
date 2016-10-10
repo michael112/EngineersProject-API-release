@@ -3,8 +3,8 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xmlns:context="http://www.springframework.org/schema/context"
        xmlns:p="http://www.springframework.org/schema/p"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
-                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+                           http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<bean id="userCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
@@ -137,7 +137,6 @@
 	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service.crud, main.util">
 		<context:exclude-filter type="regex" expression="main.service.model.user.user.UserCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.user.userrole.UserRoleCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.placementtest.PlacementTestCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.user.placementtestresult.PlacementTestResultServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.model.course.course.CourseCrudServiceImpl" />
@@ -145,6 +144,7 @@
 		<context:exclude-filter type="regex" expression="main.service.crud.course.grade.GradeCrudService" />
 		<context:exclude-filter type="regex" expression="main.service.crud.course.homework.HomeworkCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.service.crud.course.test.TestCrudServiceImpl" />
+		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageCrudServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.util.currentUser.CurrentUserServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.domain.DomainURIProvider" />
@@ -153,9 +153,10 @@
 	</context:component-scan>
 
     <context:property-placeholder properties-ref="deployProperties" />
-    <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" />
-	
-    <import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
+    <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" p:fileEncoding="UTF-8" />
+
+	<import resource="file:WebContent/WEB-INF/config/context-files/spring-file.xml" />
+	<import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />
     <import resource="test-context-mail.xml" />
