@@ -58,21 +58,16 @@ public class PlacementTestController {
     @Autowired
     private LabelProvider labelProvider;
 
-    @PermitAll
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
-        try {
-            Set<PlacementTestListJson> placementTestListJsonSet = this.placementTestService.getPlacementTestList(currentUser);
-            String messageStr = this.labelProvider.getLabel("placementtest.list.success");
-            HttpStatus responseStatus = HttpStatus.OK;
-            PlacementTestListResponseJson responseJson = new PlacementTestListResponseJson(placementTestListJsonSet, messageStr, responseStatus);
-            return new ResponseEntity<PlacementTestListResponseJson>(responseJson, responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        Set<PlacementTestListJson> placementTestListJsonSet = this.placementTestService.getPlacementTestList(currentUser);
+        String messageStr = this.labelProvider.getLabel("placementtest.list.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        PlacementTestListResponseJson responseJson = new PlacementTestListResponseJson(placementTestListJsonSet, messageStr, responseStatus);
+        return new ResponseEntity<PlacementTestListResponseJson>(responseJson, responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -82,15 +77,10 @@ public class PlacementTestController {
         if( test == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("placementtest.content.null"));
         String messageStr;
         HttpStatus responseStatus;
-        try {
-            PlacementTestJson placementTestJson = this.placementTestService.getPlacementTestContent(test);
-            messageStr = this.labelProvider.getLabel("placementtest.content.success");
-            responseStatus = HttpStatus.OK;
-            return new ResponseEntity<PlacementTestContentReponseJson>(new PlacementTestContentReponseJson(placementTestJson, messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        PlacementTestJson placementTestJson = this.placementTestService.getPlacementTestContent(test);
+        messageStr = this.labelProvider.getLabel("placementtest.content.success");
+        responseStatus = HttpStatus.OK;
+        return new ResponseEntity<PlacementTestContentReponseJson>(new PlacementTestContentReponseJson(placementTestJson, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -102,14 +92,9 @@ public class PlacementTestController {
         PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(solvedPlacementTestJson.getId());
         if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("placementtest.content.null"));
 
-        try {
-            double result = this.placementTestService.setSolvedPlacementTest(currentUser, placementTest, solvedPlacementTestJson);
-            String messageStr = this.labelProvider.getLabel("placementtest.solved.success");
-            HttpStatus responseStatus = HttpStatus.OK;
-            return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        double result = this.placementTestService.setSolvedPlacementTest(currentUser, placementTest, solvedPlacementTestJson);
+        String messageStr = this.labelProvider.getLabel("placementtest.solved.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
     }
 }

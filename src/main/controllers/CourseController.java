@@ -86,23 +86,18 @@ public class CourseController {
         boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
         if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
 
-        try {
-            AbstractCourseInfoJson courseInfo;
-            if( isStudent ) {
-                courseInfo = this.courseService.getCourseInfoStudent(course, currentUser);
-            }
-            else if( isTeacher ) {
-                courseInfo = this.courseService.getCourseInfoTeacher(course, currentUser);
-            }
-            else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation is impossible to appear
+        AbstractCourseInfoJson courseInfo;
+        if( isStudent ) {
+            courseInfo = this.courseService.getCourseInfoStudent(course, currentUser);
+        }
+        else if( isTeacher ) {
+            courseInfo = this.courseService.getCourseInfoTeacher(course, currentUser);
+        }
+        else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation is impossible to appear
 
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelProvider.getLabel("courseinfo.success");
-            return new ResponseEntity<CourseInfoResponseJson>(new CourseInfoResponseJson(courseInfo, messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("courseinfo.success");
+        return new ResponseEntity<CourseInfoResponseJson>(new CourseInfoResponseJson(courseInfo, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
@@ -111,15 +106,10 @@ public class CourseController {
     public ResponseEntity<? extends AbstractResponseJson> getCourseStudentList(@PathVariable("id") String courseID) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
-        try {
-            CourseListJson result = this.courseService.getCourseStudentList(course);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelProvider.getLabel("coursestudentlist.success");
-            return new ResponseEntity<CourseListResponseJson>(new CourseListResponseJson(result, messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        CourseListJson result = this.courseService.getCourseStudentList(course);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("coursestudentlist.success");
+        return new ResponseEntity<CourseListResponseJson>(new CourseListResponseJson(result, messageStr, responseStatus), responseStatus);
     }
 
     @PermitAll

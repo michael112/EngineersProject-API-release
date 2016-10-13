@@ -1,9 +1,10 @@
 package main.controllers.sample;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.Locale;
+import java.util.List;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletRequest;
 
 import main.util.properties.PropertyProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,6 @@ public class TestController {
     public ResponseEntity<String> uploadSampleFile(@RequestPart("input") SampleInput input, @RequestPart("file") MultipartFile file) {
         try {
             User currentUser = this.currentUserService.getCurrentUser();
-            String directory = "D:\\my projects\\PRACA INŻYNIERSKA\\uploads\\";
             File fileInfo = this.fileUploadService.uploadFile(file, currentUser);
             return new ResponseEntity<String>("File uploaded successfully - id: " + fileInfo.getId() + "" + "\nString1 = " + input.getString1() + "\nString2 = " + input.getString2() + "\nInteger = " + input.getInteger() + "\nDouble = " + input.getDbl(), HttpStatus.OK);
         }
@@ -79,10 +79,24 @@ public class TestController {
         }
     }
 
-    private String getExtension(MultipartFile file) {
-        String fileName = file.getOriginalFilename();
-        int indexOfDot = fileName.lastIndexOf('.');
-        return indexOfDot != -1 ? fileName.substring(indexOfDot) : "";
+    @RequestMapping(value = "/uploadmultiplefile", method = RequestMethod.POST, consumes = "multipart/form-data", produces = "application/text-plain; charset=utf-8")
+    @ResponseBody
+    @RolesAllowed({"USER"})
+    public ResponseEntity<String> uploadMultipleFiles(@RequestPart("input") SampleInput input, @RequestPart("files") List<MultipartFile> files) {
+        try {
+            User currentUser = this.currentUserService.getCurrentUser();
+            String returnMessage = "";
+            File fileInfo;
+            for (MultipartFile file : files) {
+                fileInfo = this.fileUploadService.uploadFile(file, currentUser);
+                returnMessage += "File uploaded successfully - id: " + fileInfo.getId() + "" + "\nString1 = " + input.getString1() + "\nString2 = " + input.getString2() + "\nInteger = " + input.getInteger() + "\nDouble = " + input.getDbl();
+                returnMessage += "\n";
+            }
+            return new ResponseEntity<String>(returnMessage, HttpStatus.OK);
+        }
+        catch( IllegalArgumentException ex ) {
+            return new ResponseEntity<String>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @RequestMapping( value = "/getproperty", method = RequestMethod.GET, produces = "application/text-plain; charset=utf-8" )

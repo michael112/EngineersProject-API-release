@@ -78,15 +78,10 @@ public class UserController {
     public ResponseEntity<? extends AbstractResponseJson> getUserInfo() {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
-        try {
-            UserInfoJson userJson = this.userService.getUserInfo(currentUser);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelProvider.getLabel("user.info.success");
-            return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalArgumentException ex ) {
-            throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible")); // this situation should never appear
-        }
+        UserInfoJson userJson = this.userService.getUserInfo(currentUser);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("user.info.success");
+        return new ResponseEntity<CurrentUserResponseJson>(new CurrentUserResponseJson(userJson, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
