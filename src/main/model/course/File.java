@@ -59,4 +59,14 @@ public class File extends AbstractUuidModel {
 		this.setSender(sender);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

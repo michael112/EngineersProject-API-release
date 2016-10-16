@@ -97,4 +97,10 @@ public class PlacementSentence extends AbstractUuidModel {
 			return false;
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }

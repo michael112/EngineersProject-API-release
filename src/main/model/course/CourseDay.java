@@ -49,4 +49,14 @@ public class CourseDay extends AbstractUuidModel {
 		this.hourTo = new MyHour(hourTo, minuteTo);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

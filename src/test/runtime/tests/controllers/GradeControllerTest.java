@@ -191,6 +191,45 @@ public class GradeControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.success", is(true)));
     }
 
+    @Test
+    public void testCreateNewGradeNullPointer() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(homeworkCrudServiceMock.findHomeworkByID(Mockito.any(String.class))).thenReturn(new ArrayList<>(sampleCourse.getHomeworks()).get(0));
+        when(testCrudServiceMock.findTestByID(Mockito.any(String.class))).thenReturn(new ArrayList<>(sampleCourse.getTests()).get(0));
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+
+        doNothing().when(gradeCrudServiceMock).saveGrade(Mockito.any(Grade.class));
+
+        String URL = getClassURI(sampleCourse.getId());
+
+        NewGradeJson newGrade = generateNewGradeJson();
+        newGrade.setTestID(new ArrayList<>(sampleCourse.getTests()).get(0).getId());
+
+        /*
+        this.mockMvc.perform(post(URL)
+                .contentType("application/json;charset=utf-8")
+                .content(objectToJsonBytes(newGrade))
+        )
+                .andExpect( status().isOk() )
+                .andExpect( content().contentType("application/json;charset=utf-8") )
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+        */
+        String responseJSON = getResponseJson(this.mockMvc,
+                post(URL)
+                .contentType("application/json;charset=utf-8")
+                .content(objectToJsonBytes(newGrade))
+        );
+        int i = 1;
+    }
+
     private NewGradeJson generateNewGradeJson() {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 

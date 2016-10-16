@@ -343,4 +343,15 @@ public class User extends AbstractUuidModel {
         this(username, password, email, firstName, lastName, address, userRole );
         this.setPhone(phone);
     }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        return super.equals(otherObj);
+    }
+
 }

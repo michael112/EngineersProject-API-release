@@ -8,6 +8,10 @@ import javax.persistence.Embeddable;
 import lombok.Getter;
 import lombok.Setter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
+
 @Embeddable
 public class CourseActivity {
 

@@ -115,7 +115,7 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 		@Override
 		public boolean equals(Object obj) {
 			if( obj == null ) return false;
-			if( !(obj instanceof LanguageNameKey)) return false;
+			if( !( obj instanceof LanguageNameKey ) ) return false;
 			LanguageNameKey lnk = (LanguageNameKey)obj;
 			return ( ( lnk.getNamedLanguageID().equals(this.getNamedLanguageID()) ) && ( lnk.getNamingLanguageID().equals(this.getNamingLanguageID()) ) );
 		}
@@ -138,6 +138,11 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	public int hashCode() {
 		if( this.getId() != null ) return this.getId().hashCode();
 		else return new Integer(0).hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
 	}
 
 }

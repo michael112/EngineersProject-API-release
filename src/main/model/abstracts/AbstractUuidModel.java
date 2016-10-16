@@ -9,6 +9,10 @@ import javax.persistence.AccessType;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
+
 @MappedSuperclass
 @Access(AccessType.FIELD)
 public class AbstractUuidModel extends AbstractModel<String> {
@@ -21,6 +25,16 @@ public class AbstractUuidModel extends AbstractModel<String> {
     @Override
     public String getId() {
         return super.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        return super.equals(otherObj);
     }
 
 }

@@ -58,4 +58,10 @@ public class Phone extends AbstractUuidModel {
 			return false;
 		}
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
 }

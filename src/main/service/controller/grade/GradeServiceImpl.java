@@ -5,6 +5,8 @@ import main.service.controller.AbstractService;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.validation.ValidationException;
+
 import main.util.locale.LocaleCodeProvider;
 
 import main.service.crud.user.user.UserCrudService;
@@ -116,11 +118,14 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
             User gradedBy = this.userCrudService.findUserByID(newGradeJson.getGradedByID());
             Course course = this.courseCrudService.findCourseByID(newGradeJson.getCourseID());
             Grade grade = new Grade(gradedBy, course, newGradeJson.getGradeTitle(), newGradeJson.getGradeDescription(), newGradeJson.getScale(), newGradeJson.getMaxPoints(), newGradeJson.getWeight());
-            if( newGradeJson.hasHomework() ) {
+            boolean hasHomework = newGradeJson.hasHomework();
+            boolean hasTest = newGradeJson.hasTest();
+            if( hasHomework && hasTest ) throw new ValidationException();
+            if( hasHomework ) {
                 Homework homework = this.homeworkCrudService.findHomeworkByID(newGradeJson.getHomeworkID());
                 grade.setTask(homework);
             }
-            if( newGradeJson.hasTest() ) {
+            if( hasTest ) {
                 Test test = this.testCrudService.findTestByID(newGradeJson.getTestID());
                 grade.setTask(test);
             }

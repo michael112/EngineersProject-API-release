@@ -204,5 +204,15 @@ public class Language extends AbstractSinglePKModel<String> {
 		LanguageName result = getLanguageNameObj(userLanguage);
 		return result != null ? result.getLanguageName() : null;
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

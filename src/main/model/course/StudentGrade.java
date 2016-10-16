@@ -72,4 +72,14 @@ public class StudentGrade extends AbstractUuidModel {
 		this.setGrade(grade);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

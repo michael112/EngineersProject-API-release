@@ -362,5 +362,15 @@ public class Course extends AbstractUuidModel {
 		this.setMaxStudents(maxStudents);
 		this.setPrice(price);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

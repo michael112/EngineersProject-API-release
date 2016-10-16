@@ -4,6 +4,8 @@ import java.util.regex.Pattern;
 
 import com.eaio.uuid.UUID;
 
+import main.constants.validationconstants.ValidationConstants;
+
 public class UuidGenerator extends StringIdGenerator {
 
     @Override
@@ -16,7 +18,7 @@ public class UuidGenerator extends StringIdGenerator {
     }
 
     public static boolean isUUID(String text) {
-        Pattern p = Pattern.compile("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f\u200C\u200B]{4}-[0-9a-f]{12}$");
+        Pattern p = Pattern.compile(ValidationConstants.UUID_REGEX);
         return p.matcher(text).matches();
     }
 }

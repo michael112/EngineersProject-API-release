@@ -79,4 +79,14 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 		this.grades = new HashSet<>();
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

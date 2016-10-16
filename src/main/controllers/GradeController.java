@@ -2,6 +2,10 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
+import javax.validation.ValidationException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -119,12 +123,15 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.ADD_GRADE, method=RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> createNewGrade(@RequestBody NewGradeJson newGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> createNewGrade(@Valid @RequestBody NewGradeJson newGradeJson) {
         try {
             this.gradeService.createNewGrade(newGradeJson);
             String messageStr = this.labelProvider.getLabel("grade.create.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( ValidationException ex ) {
+            throw new HttpBadRequestException(this.labelProvider.getLabel("newgrade.homework.and.test.included"));
         }
         catch( IllegalArgumentException ex ) {
             throw new HttpBadRequestException(this.labelProvider.getLabel("grade.create.error"));

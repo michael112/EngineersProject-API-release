@@ -119,4 +119,14 @@ public class PlacementTest extends AbstractUuidModel {
 		this.setTasks(tasks);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

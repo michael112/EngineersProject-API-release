@@ -31,8 +31,12 @@ public abstract class AbstractSinglePKModel<PK extends Serializable> extends Abs
 
     @Override
     public int hashCode() {
-        if( this.getId() != null ) return this.getId().hashCode();
-        else return new Integer(0).hashCode();
+        return super.hashCode();
+    }
+
+    @Override
+    public boolean equals(Object otherObj) {
+        return super.equals(otherObj);
     }
 
 }

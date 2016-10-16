@@ -8,6 +8,10 @@ import javax.persistence.Transient;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
+
 @Embeddable
 public class MyHour {
 

@@ -6,22 +6,6 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.3.xsd
                            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
-	<bean id="userCrudService" class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg>
-			<bean class="java.lang.Class" factory-method="forName">
-				<constructor-arg value="main.service.crud.user.user.UserCrudService" />
-			</bean>
-		</constructor-arg>
-	</bean>
-
-	<bean id="userRoleCrudService" class="org.mockito.Mockito" factory-method="mock">
-		<constructor-arg>
-			<bean class="java.lang.Class" factory-method="forName">
-				<constructor-arg value="main.service.crud.user.userrole.UserRoleCrudService" />
-			</bean>
-		</constructor-arg>
-	</bean>
-
 	<bean id="courseCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
@@ -30,10 +14,34 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="courseLevelCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.courselevel.CourseLevelCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="courseMembershipCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.coursemembership.CourseMembershipCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="courseTypeCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
 				<constructor-arg value="main.service.crud.course.coursetype.CourseTypeCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="fileCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.file.FileCrudService" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -62,6 +70,14 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="messageCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.course.message.MessageCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="languageCrudService" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
@@ -82,6 +98,22 @@
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
 				<constructor-arg value="main.service.crud.user.placementtestresult.PlacementTestResultCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="userCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.user.user.UserCrudService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
+	<bean id="userRoleCrudService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.crud.user.userrole.UserRoleCrudService" />
 			</bean>
 		</constructor-arg>
 	</bean>
@@ -134,17 +166,7 @@
 		</constructor-arg>
 	</bean>
 
-	<context:component-scan base-package="main.dao, main.json, main.model, main.security, main.service.crud, main.util">
-		<context:exclude-filter type="regex" expression="main.service.model.user.user.UserCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.user.userrole.UserRoleCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.placementtest.PlacementTestCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.user.placementtestresult.PlacementTestResultServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.course.course.CourseCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.course.coursetype.CourseTypeCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.crud.course.grade.GradeCrudService" />
-		<context:exclude-filter type="regex" expression="main.service.crud.course.homework.HomeworkCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.crud.course.test.TestCrudServiceImpl" />
-		<context:exclude-filter type="regex" expression="main.service.model.language.LanguageCrudServiceImpl" />
+	<context:component-scan base-package="main.json, main.model, main.security, main.util">
 		<context:exclude-filter type="regex" expression="main.util.labels.LabelProviderImpl" />
 		<context:exclude-filter type="regex" expression="main.util.currentUser.CurrentUserServiceImpl" />
 		<context:exclude-filter type="regex" expression="main.util.domain.DomainURIProvider" />
@@ -156,7 +178,6 @@
     <bean id="deployProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean" p:location="file:WebContent/WEB-INF/resources/application.properties" p:fileEncoding="UTF-8" />
 
 	<import resource="file:WebContent/WEB-INF/config/context-files/spring-file.xml" />
-	<import resource="file:WebContent/WEB-INF/config/context-files/spring-database.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security-oauth.xml" />
     <import resource="file:WebContent/WEB-INF/config/context-files/spring-security.xml" />
     <import resource="test-context-mail.xml" />

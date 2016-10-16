@@ -87,4 +87,14 @@ public class Test extends AbstractHomeworkOrTest {
 		this.setTestSolutions(solutions);
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

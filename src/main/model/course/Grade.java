@@ -30,7 +30,6 @@ import main.model.user.User;
 
 import main.model.abstracts.AbstractUuidModel;
 
-
 @Entity
 @Table(name="grades")
 @Access(AccessType.FIELD)
@@ -116,7 +115,7 @@ public class Grade extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Column(name="maxPoints", nullable=true)
-	private double maxPoints;
+	private Double maxPoints;
 
 	@Getter
 	@Setter
@@ -183,22 +182,33 @@ public class Grade extends AbstractUuidModel {
 		this.setWeight(weight);
 	}
 
-	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, double maxPoints, double weight) {
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, Double maxPoints, double weight) {
 		this(gradedBy, course, gradeTitle, gradeDescription, scale, weight);
 		this.setMaxPoints(maxPoints);
 	}
 
-	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight) {
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, Double maxPoints, double weight) {
 		this(gradedBy, course, gradeTitle, gradeDescription, scale, maxPoints, weight);
 		this.setTask(task);
 	}
 
-	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, double maxPoints, double weight, Set<StudentGrade> grades) {
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, AbstractHomeworkOrTest task, GradeScale scale, Double maxPoints, double weight, Set<StudentGrade> grades) {
 		this(gradedBy, course, gradeTitle, gradeDescription, task, scale, maxPoints, weight);
 		this.setGrades(grades);
 	}
 
-	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, String scale, double maxPoints, double weight) {
+	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, String scale, Double maxPoints, double weight) {
 		this(gradedBy, course, gradeTitle, gradeDescription, GradeScale.valueOf(scale), maxPoints, weight);
 	}
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

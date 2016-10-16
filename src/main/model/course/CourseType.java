@@ -120,4 +120,14 @@ public class CourseType extends AbstractUuidModel {
 		return result != null ? result.getCourseTypeName() : null;
 	}
 
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }

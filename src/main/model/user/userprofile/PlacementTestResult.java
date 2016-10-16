@@ -1,6 +1,15 @@
 package main.model.user.userprofile;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
+import javax.persistence.Access;
+import javax.persistence.AccessType;
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.ManyToOne;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -74,5 +83,15 @@ public class PlacementTestResult extends AbstractUuidModel {
 		this(test, user);
 		this.setResult(result);
 	}
-	
+
+	@Override
+	public int hashCode() {
+		return super.hashCode();
+	}
+
+	@Override
+	public boolean equals(Object otherObj) {
+		return super.equals(otherObj);
+	}
+
 }
