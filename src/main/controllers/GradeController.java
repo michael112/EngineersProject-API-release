@@ -165,9 +165,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.EDIT_GRADE_INFO, method=RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editGrade(@RequestBody EditGradeInfoJson editGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody EditGradeInfoJson editGradeJson) {
         try {
-            this.gradeService.editGrade(editGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.editGrade(editGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.edit.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
@@ -180,9 +183,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.EDIT_GRADE_POINTS, method=RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editGrade(@RequestBody EditPointsJson editGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody EditPointsJson editGradeJson) {
         try {
-            this.gradeService.editGrade(editGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.editGrade(editGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.edit.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
@@ -195,9 +201,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.EDIT_GRADE_SCALE, method=RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editGrade(@RequestBody EditScaleJson editGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody EditScaleJson editGradeJson) {
         try {
-            this.gradeService.editGrade(editGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.editGrade(editGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.edit.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
@@ -210,9 +219,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.ADD_STUDENT_GRADE, method=RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> createStudentGrade(@RequestBody StudentGradeJson studentGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> createStudentGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody StudentGradeJson studentGradeJson) {
         try {
-            this.gradeService.createStudentGrade(studentGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.createStudentGrade(studentGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.create.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
@@ -225,9 +237,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.EDIT_STUDENT_GRADE, method=RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editStudentGrade(@RequestBody StudentGradeJson editStudentGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editStudentGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody StudentGradeJson editStudentGradeJson) {
         try {
-            this.gradeService.editStudentGrade(editStudentGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.editStudentGrade(editStudentGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.edit.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

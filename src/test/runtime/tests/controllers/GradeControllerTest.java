@@ -234,8 +234,6 @@ public class GradeControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 
         NewGradeJson result = new NewGradeJson();
-        result.setCourseID(sampleCourse.getId());
-        result.setGradedByID(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId());
         result.setGradeTitle("sample grade title");
         result.setGradeDescription("sample grade description");
         result.setHomeworkID(new ArrayList<>(sampleCourse.getHomeworks()).get(0).getId());

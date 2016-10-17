@@ -148,9 +148,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void editGrade(EditGradeInfoJson editGradeJson) {
+    public void editGrade(EditGradeInfoJson editGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(editGradeJson.getGradeID());
             gradeToEdit.setGradeTitle(editGradeJson.getGradeTitle());
             gradeToEdit.setGradeDescription(editGradeJson.getGradeDescription());
             this.gradeCrudService.updateGrade(gradeToEdit);
@@ -160,9 +159,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void editGrade(EditPointsJson editGradeJson) {
+    public void editGrade(EditPointsJson editGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(editGradeJson.getGradeID());
             gradeToEdit.setMaxPoints(editGradeJson.getMaxPoints());
             gradeToEdit.setWeight(editGradeJson.getWeight());
             this.gradeCrudService.updateGrade(gradeToEdit);
@@ -172,9 +170,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void editGrade(EditScaleJson editGradeJson) {
+    public void editGrade(EditScaleJson editGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(editGradeJson.getGradeID());
             gradeToEdit.setScale(editGradeJson.getScale());
             this.gradeCrudService.updateGrade(gradeToEdit);
         }
@@ -183,9 +180,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void createStudentGrade(StudentGradeJson newStudentGradeJson) {
+    public void createStudentGrade(StudentGradeJson newStudentGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(newStudentGradeJson.getGradeID());
             CourseMembership courseMembership = gradeToEdit.getCourse().getCourseMembership(this.userCrudService.findUserByID(newStudentGradeJson.getStudentID()));
             StudentGrade newStudentGrade = new StudentGrade(courseMembership, newStudentGradeJson.getGrade(), gradeToEdit);
             this.gradeCrudService.updateGrade(gradeToEdit);
@@ -195,9 +191,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void editStudentGrade(StudentGradeJson editStudentGradeJson) {
+    public void editStudentGrade(StudentGradeJson editStudentGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(editStudentGradeJson.getGradeID());
             StudentGrade studentGradeToEdit = gradeToEdit.getGradeForUser(this.userCrudService.findUserByID(editStudentGradeJson.getStudentID()));
             studentGradeToEdit.setGradeValue(editStudentGradeJson.getGrade());
             this.gradeCrudService.updateGrade(gradeToEdit);

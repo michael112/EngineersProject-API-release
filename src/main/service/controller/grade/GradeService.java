@@ -26,14 +26,14 @@ public interface GradeService {
 
     void editGrade(EditFullGradeJson editGradeJson, Grade gradeToEdit);
 
-    void editGrade(EditGradeInfoJson editGradeJson);
+    void editGrade(EditGradeInfoJson editGradeJson, Grade gradeToEdit);
 
-    void editGrade(EditPointsJson editGradeJson);
+    void editGrade(EditPointsJson editGradeJson, Grade gradeToEdit);
 
-    void editGrade(EditScaleJson editGradeJson);
+    void editGrade(EditScaleJson editGradeJson, Grade gradeToEdit);
 
-    void createStudentGrade(StudentGradeJson studentGradeJson);
+    void createStudentGrade(StudentGradeJson studentGradeJson, Grade gradeToEdit);
 
-    void editStudentGrade(StudentGradeJson editStudentGradeJson);
+    void editStudentGrade(StudentGradeJson editStudentGradeJson, Grade gradeToEdit);
 
 }

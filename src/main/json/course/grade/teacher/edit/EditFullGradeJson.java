@@ -18,7 +18,6 @@ public class EditFullGradeJson {
     @Setter
     private String gradeTitle;
 
-    @NotBlank(message = "editgrade.gradedescription.empty")
     @Getter
     @Setter
     private String gradeDescription;
@@ -29,7 +28,6 @@ public class EditFullGradeJson {
     @Setter
     private String scale;
 
-    @NotBlank(message = "editgrade.maxpoints.empty")
     @Getter
     @Setter
     private Double maxPoints;

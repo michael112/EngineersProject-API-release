@@ -1,5 +1,7 @@
 package main.json.course.grade.teacher.edit;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,12 +11,9 @@ import lombok.EqualsAndHashCode;
 public class EditPointsJson {
     @Getter
     @Setter
-    private String gradeID;
-
-    @Getter
-    @Setter
     private Double maxPoints;
 
+    @NotBlank(message = "editgrade.weight.empty")
     @Getter
     @Setter
     private Double weight;
