@@ -28,7 +28,12 @@ public abstract class AbstractModel<PK extends Serializable> implements ModelInt
         }
         else {
             AbstractModel other = this.getClass().cast(otherObj);
-            return other.getId().equals(this.getId());
+            try {
+                return other.getId().equals(this.getId());
+            }
+            catch( NullPointerException ex ) {
+                return false;
+            }
         }
     }
 
