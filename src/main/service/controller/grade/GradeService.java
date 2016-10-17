@@ -22,9 +22,9 @@ public interface GradeService {
 
     GradeJson getGradeInfo(Grade grade);
 
-    void createNewGrade(NewGradeJson newGradeJson);
+    void createNewGrade(NewGradeJson newGradeJson, Course course, User currentUser);
 
-    void editGrade(EditFullGradeJson editGradeJson);
+    void editGrade(EditFullGradeJson editGradeJson, Grade gradeToEdit);
 
     void editGrade(EditGradeInfoJson editGradeJson);
 

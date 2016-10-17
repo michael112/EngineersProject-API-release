@@ -123,9 +123,15 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.ADD_GRADE, method=RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> createNewGrade(@Valid @RequestBody NewGradeJson newGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> createNewGrade(@PathVariable("courseID") String courseID, @Valid @RequestBody NewGradeJson newGradeJson) {
         try {
-            this.gradeService.createNewGrade(newGradeJson);
+            User currentUser = this.currentUserService.getCurrentUser();
+            if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+            Course course = this.courseCrudService.findCourseByID(courseID);
+            if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+            this.gradeService.createNewGrade(newGradeJson, course, currentUser);
             String messageStr = this.labelProvider.getLabel("grade.create.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
@@ -141,9 +147,12 @@ public class GradeController {
     @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.EDIT_GRADE, method=RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editGrade(@RequestBody EditFullGradeJson editGradeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editGrade(@PathVariable("gradeID") String gradeID, @Valid @RequestBody EditFullGradeJson editGradeJson) {
         try {
-            this.gradeService.editGrade(editGradeJson);
+            Grade gradeToEdit = this.gradeCrudService.findGradeByID(gradeID);
+            if( gradeToEdit == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+
+            this.gradeService.editGrade(editGradeJson, gradeToEdit);
             String messageStr = this.labelProvider.getLabel("grade.edit.success");
             HttpStatus responseStatus = HttpStatus.OK;
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

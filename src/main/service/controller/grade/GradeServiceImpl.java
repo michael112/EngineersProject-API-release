@@ -113,11 +113,9 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void createNewGrade(NewGradeJson newGradeJson) {
+    public void createNewGrade(NewGradeJson newGradeJson, Course course, User currentUser) {
         try {
-            User gradedBy = this.userCrudService.findUserByID(newGradeJson.getGradedByID());
-            Course course = this.courseCrudService.findCourseByID(newGradeJson.getCourseID());
-            Grade grade = new Grade(gradedBy, course, newGradeJson.getGradeTitle(), newGradeJson.getGradeDescription(), newGradeJson.getScale(), newGradeJson.getMaxPoints(), newGradeJson.getWeight());
+            Grade grade = new Grade(currentUser, course, newGradeJson.getGradeTitle(), newGradeJson.getGradeDescription(), newGradeJson.getScale(), newGradeJson.getMaxPoints(), newGradeJson.getWeight());
             boolean hasHomework = newGradeJson.hasHomework();
             boolean hasTest = newGradeJson.hasTest();
             if( hasHomework && hasTest ) throw new ValidationException();
@@ -136,9 +134,8 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
         }
     }
 
-    public void editGrade(EditFullGradeJson editGradeJson) {
+    public void editGrade(EditFullGradeJson editGradeJson, Grade gradeToEdit) {
         try {
-            Grade gradeToEdit = this.gradeCrudService.findGradeByID(editGradeJson.getGradeID());
             gradeToEdit.setGradeTitle(editGradeJson.getGradeTitle());
             gradeToEdit.setGradeDescription(editGradeJson.getGradeDescription());
             gradeToEdit.setScale(editGradeJson.getScale());
