@@ -13,7 +13,7 @@ public class EditPointsJson {
     @Setter
     private Double maxPoints;
 
-    @NotBlank(message = "editgrade.weight.empty")
+    @NotBlank(message = "grade.weight.empty")
     @Getter
     @Setter
     private Double weight;

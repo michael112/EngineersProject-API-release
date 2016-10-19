@@ -1,6 +1,7 @@
 package main.json.course.grade.commons;
 
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Max;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -13,27 +14,31 @@ import main.constants.validationconstants.ValidationConstants;
 
 @EqualsAndHashCode
 public class NewGradeJson {
-    @NotBlank(message = "newgrade.gradetitle.empty")
+    @NotBlank(message = "grade.gradetitle.empty")
+    @Max(value = 50, message = "grade.gradetitle.length")
     @Getter
     @Setter
     private String gradeTitle;
 
+    @Max(value = 50, message = "grade.gradedescription.length")
     @Getter
     @Setter
     private String gradeDescription;
 
-    @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "newgrade.homeworkid.invalid")
+    @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "grade.homeworkid.invalid")
+    @Max(value = 36, message = "grade.homeworkid.length")
     @Getter
     @Setter
     private String homeworkID;
 
-    @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "newgrade.testid.invalid")
+    @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "grade.testid.invalid")
+    @Max(value = 36, message = "grade.testid.length")
     @Getter
     @Setter
     private String testID;
 
-    @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "newgrade.scale.invalid")
-    @NotBlank(message = "newgrade.scale.empty")
+    @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "grade.scale.invalid")
+    @NotBlank(message = "grade.scale.empty")
     @Getter
     @Setter
     private String scale;

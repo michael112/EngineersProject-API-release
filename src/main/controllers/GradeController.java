@@ -137,7 +137,7 @@ public class GradeController {
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
         }
         catch( ValidationException ex ) {
-            throw new HttpBadRequestException(this.labelProvider.getLabel("newgrade.homework.and.test.included"));
+            throw new HttpBadRequestException(this.labelProvider.getLabel("grade.homework.and.test.included"));
         }
         catch( IllegalArgumentException ex ) {
             throw new HttpBadRequestException(this.labelProvider.getLabel("grade.create.error"));
