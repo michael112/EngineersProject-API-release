@@ -3,28 +3,40 @@ package main.model.user.userprofile;
 import javax.persistence.Embeddable;
 import javax.persistence.Column;
 
+import javax.validation.constraints.Max;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Embeddable
 public class Address {
 
+	@NotBlank(message = "address.street.empty")
+	@Max(value = 50, message = "address.street.length")
 	@Getter
 	@Setter
 	@Column(name="addressStreet", nullable=false)
 	private String street;
+	@NotBlank(message = "address.housenumber.empty")
+	@Max(value = 5, message = "address.housenumber.length")
 	@Getter
 	@Setter
 	@Column(name="addressHouseNumber", nullable=false)
 	private String houseNumber;
+	@Max(value = 5, message = "address.flatnumber.length")
 	@Getter
 	@Setter
 	@Column(name="addressFlatNumber", nullable=true)
 	private String flatNumber;
+	@Max(value = 6, message = "address.postcode.length")
 	@Getter
 	@Setter
 	@Column(name="addressPostCode", nullable=true)
 	private String postCode;
+	@NotBlank(message = "address.city.empty")
+	@Max(value = 30, message = "address.city.length")
 	@Getter
 	@Setter
 	@Column(name="addressCity", nullable=false)

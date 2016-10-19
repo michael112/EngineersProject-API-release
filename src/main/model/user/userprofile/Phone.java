@@ -1,5 +1,11 @@
 package main.model.user.userprofile;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Max;
+
+import org.hibernate.validator.constraints.NotBlank;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
@@ -18,17 +24,24 @@ import main.model.abstracts.AbstractUuidModel;
 
 import main.model.enums.PhoneType;
 
+import main.constants.validationconstants.ValidationConstants;
+
 @Entity
 @Table(name="phones")
 @Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "phoneID")) })
 public class Phone extends AbstractUuidModel {
 
+	@Pattern(regexp = ValidationConstants.PHONE_REGEX, message = "phonetype.invalid")
+	@NotBlank(message = "phonetype.empty")
+	@Max(value = 8, message = "phonetype.length")
 	@Getter
 	@Setter
 	@Column(name="phoneType", nullable=false)
 	@Enumerated(EnumType.STRING)
 	private PhoneType phoneType;
+	@NotBlank(message = "phonenumber.empty")
+	@Size(min = ValidationConstants.PHONE_NUMBER_MIN, max = ValidationConstants.PHONE_NUMBER_MAX, message = "phonenumber.length")
 	@Getter
 	@Setter
 	@Column(name="phoneNumber", nullable=false)

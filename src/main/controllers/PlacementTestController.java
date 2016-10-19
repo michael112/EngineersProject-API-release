@@ -6,6 +6,8 @@ import javax.annotation.security.RolesAllowed;
 
 import javax.annotation.security.PermitAll;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RestController;
@@ -85,7 +87,7 @@ public class PlacementTestController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.SOLVED_PLACEMENT_TEST, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> setSolvedPlacementTest(@RequestBody SolvedPlacementTestJson solvedPlacementTestJson) {
+    public ResponseEntity<? extends AbstractResponseJson> setSolvedPlacementTest(@Valid @RequestBody SolvedPlacementTestJson solvedPlacementTestJson) {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 

@@ -7,15 +7,23 @@ import javax.persistence.MappedSuperclass;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Max;
+
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.EqualsAndHashCode;
+
+import main.constants.validationconstants.ValidationConstants;
 
 @EqualsAndHashCode
 
 @MappedSuperclass
 @Access(AccessType.FIELD)
 public class AbstractUuidModel extends AbstractModel<String> {
+
+    @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "ID.invalid")
+    @Max(value = 36, message = "ID.length")
 
     @Id
     @GenericGenerator(name = "uuid_generator", strategy = "main.model.UuidGenerator")

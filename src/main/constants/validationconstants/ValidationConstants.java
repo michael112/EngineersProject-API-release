@@ -6,4 +6,9 @@ public class ValidationConstants {
 
     public static final String PUNKOWA_SZKOLNA_REGEX = "^(PUNKTOWA|SZKOLNA)$";
 
+    public static final String PHONE_REGEX = "^MOBILE|LANDLINE$";
+
+    public static final int PHONE_NUMBER_MIN = 4;
+    public static final int PHONE_NUMBER_MAX = 20;
+
 }
