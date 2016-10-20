@@ -139,7 +139,7 @@ public class GradeControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetGradeInfo() throws Exception {
+    public void testGetGradeInfoTeacher() throws Exception {
         String returnMessage = "";
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
@@ -151,6 +151,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
 
         String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
 
@@ -161,6 +162,58 @@ public class GradeControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetGradeInfoStudentContainingGrade() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        Grade sampleGrade = new ArrayList<>( sampleCourse.getGrades() ).get(0);
+
+        when(gradeCrudServiceMock.findGradeByID(Mockito.any(String.class))).thenReturn(sampleGrade);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+
+        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+
+        this.mockMvc.perform(get(URL)
+                .contentType("application/json;charset=utf-8")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=utf-8"))
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetGradeInfoStudentNotContainingGrade() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        Grade sampleGrade = new ArrayList<>( sampleCourse.getGrades() ).get(0);
+
+        when(gradeCrudServiceMock.findGradeByID(Mockito.any(String.class))).thenReturn(sampleGrade);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(1));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+
+        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+
+        this.mockMvc.perform(get(URL)
+                .contentType("application/json;charset=utf-8")
+        )
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=utf-8"))
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(false)));
     }
 
     @Test
@@ -212,7 +265,6 @@ public class GradeControllerTest extends AbstractControllerTest {
         NewGradeJson newGrade = generateNewGradeJson();
         newGrade.setTestID(new ArrayList<>(sampleCourse.getTests()).get(0).getId());
 
-        /*
         this.mockMvc.perform(post(URL)
                 .contentType("application/json;charset=utf-8")
                 .content(objectToJsonBytes(newGrade))
@@ -221,13 +273,6 @@ public class GradeControllerTest extends AbstractControllerTest {
                 .andExpect( content().contentType("application/json;charset=utf-8") )
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
-        */
-        String responseJSON = getResponseJson(this.mockMvc,
-                post(URL)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(newGrade))
-        );
-        int i = 1;
     }
 
     private NewGradeJson generateNewGradeJson() {
@@ -448,7 +493,7 @@ public class GradeControllerTest extends AbstractControllerTest {
        }
     }
 
-    c) testGetGradeInfo:
+    c) testGetGradeInfoTeacher:
     {
        "success":true,
        "message":"",
