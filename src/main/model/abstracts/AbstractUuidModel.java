@@ -12,11 +12,7 @@ import javax.validation.constraints.Max;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import lombok.EqualsAndHashCode;
-
 import main.constants.validationconstants.ValidationConstants;
-
-@EqualsAndHashCode
 
 @MappedSuperclass
 @Access(AccessType.FIELD)

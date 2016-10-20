@@ -106,14 +106,29 @@ public class GradeController {
         return new ResponseEntity<GradeListResponseJson>(responseJson, responseStatus);
     }
 
-    @CourseMembershipRequired(type=CourseMembershipType.TEACHER)
+    @CourseMembershipRequired
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value=GradeControllerUrlConstants.GRADE_INFO, method=RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getGradeInfo(@PathVariable("courseID") String courseID, @PathVariable("gradeID") String gradeID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        boolean isStudent = this.courseMembershipValidator.isStudent( currentUser, course );
+        boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
+        if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
+
         Grade grade = this.gradeCrudService.findGradeByID(gradeID);
         if( ( grade == null ) || ( !( grade.getCourse().getId().equals(courseID) ) ) ) {
             throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
         }
+
+		if( !( isTeacher || ( isStudent && ( grade.containsGradeForUser(currentUser) ) ) ) ) {
+			throw new HttpNotFoundException(this.labelProvider.getLabel("grade.not.found"));
+		}
+
         GradeJson gradeJson = this.gradeService.getGradeInfo(grade);
         String messageStr = this.labelProvider.getLabel("grade.info.success");
         HttpStatus responseStatus = HttpStatus.OK;
