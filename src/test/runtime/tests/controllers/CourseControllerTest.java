@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Date;
 
+import org.hibernate.validator.cfg.defs.AssertFalseDef;
+import org.junit.Assert;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -290,18 +293,39 @@ public class CourseControllerTest extends AbstractControllerTest {
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
 
-    /*
     @Test
     public void testSearchCourses() throws Exception {
-        String returnMessage = "";
-
-        this.mockMvc.perform(get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SEARCH_COURSES)
-                .contentType("application/json;charset=utf-8")
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=utf-8"))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+        Assert.fail();
     }
-    */
+
+    @Test
+    public void testSignupToCourse() throws Exception {
+        Assert.fail();
+    }
+
+    @Test
+    public void testConfirmSignupToCourse() throws Exception {
+        Assert.fail();
+    }
+
+    @Test
+    public void testGetChangeGroupForm() throws Exception {
+        Assert.fail();
+    }
+
+    @Test
+    public void testChangeGroup() throws Exception {
+        Assert.fail();
+    }
+
+    @Test
+    public void testGetResignGroupForm() throws Exception {
+        Assert.fail();
+    }
+
+    @Test
+    public void testConfirmResignation() throws Exception {
+        Assert.fail();
+    }
+
 }

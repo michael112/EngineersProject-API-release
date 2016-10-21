@@ -3,6 +3,8 @@ package main.controllers;
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
@@ -38,6 +40,9 @@ import main.json.course.CourseListJson;
 import main.json.course.AvailableLngAndTypesJson;
 
 import main.json.course.search.CourseSearchPatternJson;
+import main.json.course.search.CourseJson;
+
+import main.json.course.ChangeGroupJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -45,6 +50,7 @@ import main.model.course.Course;
 import main.service.controller.course.CourseService;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
+import main.security.coursemembership.annotations.CourseMembershipType;
 
 import main.error.exception.HttpNotFoundException;
 import main.error.exception.HttpInternalServerErrorException;
@@ -126,8 +132,53 @@ public class CourseController {
 
     @PermitAll
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_SEARCH_COURSES, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> searchCourses(@RequestBody CourseSearchPatternJson searchPattern) {
+    public ResponseEntity<? extends AbstractResponseJson> searchCourses(@Valid @RequestBody CourseSearchPatternJson searchPattern) {
         // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @RequestMapping(value = CourseControllerUrlConstants.SIGNUP_TO_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json", params = "confirmed=false")
+    public ResponseEntity<? extends AbstractResponseJson> signupToCourse(@PathVariable("courseID") String courseID, @Valid @RequestBody CourseJson courseJson) {
+        // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @RequestMapping(value = CourseControllerUrlConstants.SIGNUP_TO_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json", params = "confirmed=true")
+    public ResponseEntity<? extends AbstractResponseJson> confirmSignupToCourse(@PathVariable("courseID") String courseID, @Valid @RequestBody CourseJson courseJson) {
+        // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
+    @RequestMapping(value = CourseControllerUrlConstants.CHANGE_GROUP_FORM, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getChangeGroupForm() {
+        // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
+    @RequestMapping(value = CourseControllerUrlConstants.CHANGE_GROUP, method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> changeGroup(@Valid @RequestBody ChangeGroupJson changeGroupJson) {
+        // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
+    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_FORM, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getResignGroupForm() {
+        // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
+    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_CONFIRM, method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> confirmResignation() {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 }
