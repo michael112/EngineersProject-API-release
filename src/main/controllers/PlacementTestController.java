@@ -60,11 +60,10 @@ public class PlacementTestController {
     @Autowired
     private LabelProvider labelProvider;
 
-    @RolesAllowed(RolesAllowedConstants.USER)
+    @PermitAll
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
-        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         Set<PlacementTestListJson> placementTestListJsonSet = this.placementTestService.getPlacementTestList(currentUser);
         String messageStr = this.labelProvider.getLabel("placementtest.list.success");
         HttpStatus responseStatus = HttpStatus.OK;

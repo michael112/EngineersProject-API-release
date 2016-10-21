@@ -116,12 +116,34 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 						.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTestResult.getId())))
 						.andExpect(jsonPath("$.message", is(returnMessage)))
 						.andExpect(jsonPath("$.success", is(true)));
-		/*
-		String responseJSON = getResponseJson(this.mockMvc,
-				get(this.testedClassURI + PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST)
-						.contentType("application/json;charset=utf-8")
-		);
-		*/
+
+		verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
+		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
+		verify(this.languageCrudServiceMock, times(1)).findLanguagesByQuery(Mockito.any(String.class));
+	}
+
+	@Test
+	public void testGetPlacementTestListAnonymousUser() throws Exception {
+		String returnMessage = "Placement test list returned successfully!";
+
+		List<Language> languagesWithPlacementTest = getLanguagesWithPlacementTest(this.testEnvironment.getLanguages());
+		PlacementTest samplePlacementTest = this.testEnvironment.getPlacementTests().get(0);
+
+		when( this.currentUserServiceMock.getCurrentUser() ).thenReturn(null);
+		when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+		when( this.languageCrudServiceMock.findLanguagesByQuery(Mockito.any(String.class)) ).thenReturn(new HashSet<>(languagesWithPlacementTest));
+
+		this.mockMvc.perform(get(this.testedClassURI + PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST)
+		)
+				.andExpect( status().isOk() )
+				.andExpect( content().contentType("application/json;charset=utf-8") )
+				.andExpect(jsonPath("$.placementTestListJson", hasSize(1)))
+				.andExpect(jsonPath("$.placementTestListJson[0].language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
+				.andExpect(jsonPath("$.placementTestListJson[0].test", hasSize(1)))
+				.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTest.getId())))
+				.andExpect(jsonPath("$.message", is(returnMessage)))
+				.andExpect(jsonPath("$.success", is(true)));
+
 		verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
 		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
 		verify(this.languageCrudServiceMock, times(1)).findLanguagesByQuery(Mockito.any(String.class));

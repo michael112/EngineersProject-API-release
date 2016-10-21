@@ -265,14 +265,23 @@ public class GradeControllerTest extends AbstractControllerTest {
         NewGradeJson newGrade = generateNewGradeJson();
         newGrade.setTestID(new ArrayList<>(sampleCourse.getTests()).get(0).getId());
 
+        /*
+        String responseJSON = getResponseJson(this.mockMvc,
+            post(URL)
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(newGrade))
+        );
+        int i = 1;
+        */
+
         this.mockMvc.perform(post(URL)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(newGrade))
-        )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(newGrade))
+            )
+            .andExpect( status().isBadRequest() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
     }
 
     private NewGradeJson generateNewGradeJson() {

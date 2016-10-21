@@ -5,7 +5,7 @@ import java.util.Set;
 import javax.validation.Valid;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,7 +21,7 @@ public class SolvedPlacementTestJson {
 
     @NotBlank(message = "solvedplacementtest.id.empty")
     @Pattern(regexp = ValidationConstants.UUID_REGEX, message = "solvedplacementtest.id.invalid")
-    @Max(value = 36, message = "solvedplacementtest.id.length")
+    @Size(max = 36, message = "solvedplacementtest.id.length")
     @Getter
     @Setter
     private String id;

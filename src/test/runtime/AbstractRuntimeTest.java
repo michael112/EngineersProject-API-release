@@ -47,7 +47,8 @@ import main.json.token.TokenJson;
 import main.json.user.EditPasswordJson;
 import main.json.user.NewUserJson;
 import main.json.user.EditEmailJson;
-import main.json.user.EditPhoneJson;
+import main.json.user.PhoneJson;
+import main.json.user.PhoneJsonSet;
 
 import main.json.placementtests.SolvedPlacementTestJson;
 import main.json.placementtests.SolvedPlacementTaskJson;
@@ -122,7 +123,9 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 		newUserJson.setFirstName(user.getFirstName());
 		newUserJson.setLastName(user.getLastName());
 		newUserJson.setEmail(user.getEmail());
-		newUserJson.setPhone(user.getPhone());
+		for( Phone phone : user.getPhone() ) {
+			newUserJson.addPhone(new PhoneJson(phone));
+		}
 		newUserJson.setAddress(user.getAddress());
 		return newUserJson;
 	}
@@ -147,16 +150,17 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 		return editEmailJson;
 	}
 
-	protected EditPhoneJson getBasicEditPhoneJson() {
-		EditPhoneJson editPhoneJson = new EditPhoneJson();
+	protected PhoneJsonSet getBasicEditPhoneJson() {
+		PhoneJsonSet phoneJsonSet = new PhoneJsonSet();
 		Phone phone = new Phone();
 		phone.setId(UuidGenerator.newUUID());
 		phone.setPhoneType(PhoneType.MOBILE);
 		phone.setPhoneNumber("222-555-444");
-		Set<Phone> phones = new HashSet<>();
-		phones.add(phone);
-		editPhoneJson.setPhone(phones);
-		return editPhoneJson;
+		PhoneJson phoneJson = new PhoneJson(phone);
+		Set<PhoneJson> phoneJsons = new HashSet<>();
+		phoneJsons.add(phoneJson);
+		phoneJsonSet.setPhone(phoneJsons);
+		return phoneJsonSet;
 	}
 
 	protected SolvedPlacementTestJson getBasicSolvedPlacementTestJson(PlacementTest test) {

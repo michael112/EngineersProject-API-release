@@ -1,5 +1,8 @@
 package main.service.controller.user;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -26,7 +29,8 @@ import main.json.user.NewUserJson;
 import main.json.user.UserInfoJson;
 import main.json.user.EditPasswordJson;
 import main.json.user.EditEmailJson;
-import main.json.user.EditPhoneJson;
+import main.json.user.PhoneJson;
+import main.json.user.PhoneJsonSet;
 import main.json.user.CourseJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
@@ -54,7 +58,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
             throw new IllegalArgumentException(this.labelProvider.getLabel("user.already.exists.prefix") + userJson.getUsername() + this.labelProvider.getLabel("user.already.exists.suffix"));
         }
         else {
-            User newUser = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), userJson.getPhone(), userJson.getAddress(), this.userRoleCrudService.findUserRoleByRoleName("USER"));
+            User newUser = new User(userJson.getUsername(), this.passwordEncoder.encode(userJson.getPassword()), userJson.getEmail(), userJson.getFirstName(), userJson.getLastName(), getPhoneSet(userJson.getPhone()), userJson.getAddress(), this.userRoleCrudService.findUserRoleByRoleName("USER"));
             this.userCrudService.saveUser(newUser);
         }
     }
@@ -106,19 +110,20 @@ public class UserServiceImpl extends AbstractService implements UserService {
         this.userCrudService.updateUser(currentUser);
     }
 
-    public void editPhoneList(User currentUser, EditPhoneJson newPhone) {
-        currentUser.setPhone(newPhone.getPhone());
+    public void editPhoneList(User currentUser, PhoneJsonSet newPhone) {
+        for( PhoneJson phoneJson : newPhone.getPhone() ) {
+            currentUser.addPhone(phoneJson.toObject());
+        }
         this.userCrudService.updateUser(currentUser);
     }
 
-    public void addPhone(User currentUser, Phone newPhone) {
-        currentUser.addPhone(newPhone);
+    public void addPhone(User currentUser, PhoneJson newPhone) {
+        currentUser.addPhone(newPhone.toObject());
         this.userCrudService.updateUser(currentUser);
     }
 
-    public void removePhone(User currentUser, Phone phoneToRemove) {
-        phoneToRemove = currentUser.getPhone(phoneToRemove.getPhoneNumber());
-        currentUser.removePhone(phoneToRemove);
+    public void removePhone(User currentUser, PhoneJson phoneToRemove) {
+        currentUser.removePhone(currentUser.getPhone(phoneToRemove.getPhoneNumber()));
         this.userCrudService.updateUser(currentUser);
     }
 
@@ -155,6 +160,14 @@ public class UserServiceImpl extends AbstractService implements UserService {
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
+    }
+
+    private Set<Phone> getPhoneSet(Set<PhoneJson> phoneJsonSet) {
+        Set<Phone> result = new HashSet<>();
+        for( PhoneJson phoneJson : phoneJsonSet ) {
+            result.add(phoneJson.toObject());
+        }
+        return result;
     }
 
     @Autowired

@@ -4,7 +4,7 @@ import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
 
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -20,7 +20,7 @@ import main.constants.validationconstants.ValidationConstants;
 public class StudentGradeJson {
     @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "newstudentgrade.studentID.invalid")
     @NotBlank(message = "newstudentgrade.studentID.empty")
-    @Max(value = 36, message = "newstudentgrade.studentID.length")
+    @Size(max = 36, message = "newstudentgrade.studentID.length")
     @Getter
     @Setter
     private String studentID;

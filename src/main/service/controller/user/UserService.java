@@ -2,13 +2,13 @@ package main.service.controller.user;
 
 import main.model.user.User;
 import main.model.user.userprofile.Address;
-import main.model.user.userprofile.Phone;
 
 import main.json.user.NewUserJson;
 import main.json.user.UserInfoJson;
 import main.json.user.EditPasswordJson;
 import main.json.user.EditEmailJson;
-import main.json.user.EditPhoneJson;
+import main.json.user.PhoneJson;
+import main.json.user.PhoneJsonSet;
 
 public interface UserService {
 
@@ -24,10 +24,10 @@ public interface UserService {
 
     void editAddress(User currentUser, Address newAddress);
 
-    void editPhoneList(User currentUser, EditPhoneJson newPhone);
+    void editPhoneList(User currentUser, PhoneJsonSet newPhone);
 
-    void addPhone(User currentUser, Phone newPhone);
+    void addPhone(User currentUser, PhoneJson newPhone);
 
-    void removePhone(User currentUser, Phone phoneToRemove);
+    void removePhone(User currentUser, PhoneJson phoneToRemove);
 
 }

@@ -1,5 +1,7 @@
 package test.runtime.tests.controllers;
 
+import java.util.ArrayList;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,6 +18,8 @@ import main.constants.urlconstants.UserControllerUrlConstants;
 import main.model.user.User;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
+
+import main.json.user.PhoneJson;
 
 import main.service.crud.user.user.UserCrudService;
 import main.service.crud.user.userrole.UserRoleCrudService;
@@ -447,7 +451,7 @@ public class UserControllerTest extends AbstractControllerTest {
     @Test
     public void testAddPhone() throws Exception {
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
-        Phone newPhone = (Phone) getBasicEditPhoneJson().getPhone().toArray()[0];
+        Phone newPhone = new ArrayList<>(getBasicEditPhoneJson().getPhone()).get(0).toObject();
         String returnMessage = "Phone number has been added successfully!";
 
         when( this.currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
@@ -456,7 +460,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_ADD_PHONE)
                 .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(newPhone))
+                .content(objectToJsonBytes(new PhoneJson(newPhone)))
                 )
                 .andExpect( status().isOk() )
                 .andExpect( content().contentType("application/json;charset=utf-8") )
@@ -472,7 +476,7 @@ public class UserControllerTest extends AbstractControllerTest {
     public void testRemovePhone() throws Exception {
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
 
-        Phone phoneToRemove = (Phone) getBasicEditPhoneJson().getPhone().toArray()[0];
+        Phone phoneToRemove = new ArrayList<>(getBasicEditPhoneJson().getPhone()).get(0).toObject();
         sampleUser.addPhone(phoneToRemove);
 
         String returnMessage = "Phone number has been removed successfully!";
@@ -483,7 +487,7 @@ public class UserControllerTest extends AbstractControllerTest {
 
         this.mockMvc.perform(delete(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE)
                 .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(phoneToRemove))
+                .content(objectToJsonBytes(new PhoneJson(phoneToRemove)))
         )
                 .andExpect( status().isOk() )
                 .andExpect( content().contentType("application/json;charset=utf-8") )

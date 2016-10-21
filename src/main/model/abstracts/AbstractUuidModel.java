@@ -8,7 +8,7 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,7 +19,7 @@ import main.constants.validationconstants.ValidationConstants;
 public class AbstractUuidModel extends AbstractModel<String> {
 
     @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "ID.invalid")
-    @Max(value = 36, message = "ID.length")
+    @Size(max = 36, message = "ID.length")
 
     @Id
     @GenericGenerator(name = "uuid_generator", strategy = "main.model.UuidGenerator")

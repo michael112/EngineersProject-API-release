@@ -2,7 +2,7 @@ package main.json.course.grade.teacher.edit;
 
 import javax.validation.constraints.Pattern;
 
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -17,7 +17,7 @@ import main.constants.validationconstants.ValidationConstants;
 public class EditScaleJson {
     @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "grade.scale.invalid")
     @NotBlank(message = "grade.scale.empty")
-    @Max(value = 8, message = "grade.scale.length")
+    @Size(max = 8, message = "grade.scale.length")
     @Getter
     @Setter
     private String scale;

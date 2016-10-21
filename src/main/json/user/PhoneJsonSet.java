@@ -9,14 +9,12 @@ import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
-import main.model.user.userprofile.Phone;
-
 @EqualsAndHashCode
-public class EditPhoneJson {
+public class PhoneJsonSet {
 
     @Valid
     @Getter
     @Setter
-    private Set<Phone> phone;
+    private Set<PhoneJson> phone;
 
 }

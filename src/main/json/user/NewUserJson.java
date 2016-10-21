@@ -4,55 +4,54 @@ import java.util.Set;
 import java.util.HashSet;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotBlank;
-
-import main.model.user.userprofile.Address;
-import main.model.user.userprofile.Phone;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
+import main.model.user.userprofile.Address;
+
 @EqualsAndHashCode
 public class NewUserJson {
 
     @NotBlank(message = "username.empty")
-    @Max(value = 30, message = "username.length")
+    @Size(max = 30, message = "username.length")
     @Getter
     @Setter
     private String username;
 
     @NotBlank(message = "password.empty")
-    @Max(value = 100, message = "password.length")
+    @Size(max = 100, message = "password.length")
     @Getter
     @Setter
     private String password;
 
     @NotBlank(message = "passwordconfirm.empty")
-    @Max(value = 100, message = "password.length")
+    @Size(max = 100, message = "password.length")
     @Getter
     @Setter
     private String passwordConfirm;
 
     @NotBlank(message = "firstname.empty")
-    @Max(value = 30, message = "firstname.length")
+    @Size(max = 30, message = "firstname.length")
     @Getter
     @Setter
     private String firstName;
 
     @NotBlank(message = "lastname.empty")
-    @Max(value = 30, message = "lastname.length")
+    @Size(max = 30, message = "lastname.length")
     @Getter
     @Setter
     private String lastName;
 
     @NotBlank(message = "email.empty")
     @Email(message = "email.invalid")
-    @Max(value = 50, message = "email.length")
+    @Size(max = 50, message = "email.length")
     @Getter
     @Setter
     private String email;
@@ -60,17 +59,17 @@ public class NewUserJson {
     @Valid
     @Getter
     @Setter
-    private Set<Phone> phone;
+    private Set<PhoneJson> phone;
 
     @Valid
     @Getter
     @Setter
     private Address address;
 
-    public void addPhone(Phone phone) {
+    public void addPhone(PhoneJson phone) {
         this.phone.add(phone);
     }
-    public void removePhone(Phone phone) {
+    public void removePhone(PhoneJson phone) {
         this.phone.remove(phone);
     }
 

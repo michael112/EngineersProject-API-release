@@ -1,7 +1,7 @@
 package main.json.course.grade.commons;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -15,24 +15,24 @@ import main.constants.validationconstants.ValidationConstants;
 @EqualsAndHashCode
 public class NewGradeJson {
     @NotBlank(message = "grade.gradetitle.empty")
-    @Max(value = 50, message = "grade.gradetitle.length")
+    @Size(max = 50, message = "grade.gradetitle.length")
     @Getter
     @Setter
     private String gradeTitle;
 
-    @Max(value = 50, message = "grade.gradedescription.length")
+    @Size(max = 50, message = "grade.gradedescription.length")
     @Getter
     @Setter
     private String gradeDescription;
 
     @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "grade.homeworkid.invalid")
-    @Max(value = 36, message = "grade.homeworkid.length")
+    @Size(max = 36, message = "grade.homeworkid.length")
     @Getter
     @Setter
     private String homeworkID;
 
     @Pattern(regexp=ValidationConstants.UUID_REGEX, message = "grade.testid.invalid")
-    @Max(value = 36, message = "grade.testid.length")
+    @Size(max = 36, message = "grade.testid.length")
     @Getter
     @Setter
     private String testID;

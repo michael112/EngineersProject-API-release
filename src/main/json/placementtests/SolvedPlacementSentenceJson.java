@@ -3,7 +3,7 @@ package main.json.placementtests;
 import javax.validation.Valid;
 
 import javax.validation.constraints.Pattern;
-import javax.validation.constraints.Max;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -21,7 +21,7 @@ public class SolvedPlacementSentenceJson {
 
     @NotBlank(message = "solvedplacementsentence.id.empty")
     @Pattern(regexp = ValidationConstants.UUID_REGEX, message = "solvedplacementsentence.id.invalid")
-    @Max(value = 36, message = "solvedplacementsentence.id.length")
+    @Size(max = 36, message = "solvedplacementsentence.id.length")
     @Getter
     @Setter
     private String id;
