@@ -6,7 +6,7 @@ import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class SearchPatternJson {
+public class CourseSearchPatternJson {
 
     @Getter
     @Setter

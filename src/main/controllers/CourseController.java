@@ -12,6 +12,7 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,6 +36,8 @@ import main.json.course.AbstractCourseInfoJson;
 
 import main.json.course.CourseListJson;
 import main.json.course.AvailableLngAndTypesJson;
+
+import main.json.course.search.CourseSearchPatternJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -121,11 +124,10 @@ public class CourseController {
         return new ResponseEntity<AvailableLngAndTypesResponseJson>(new AvailableLngAndTypesResponseJson(result, messageStr, responseStatus), responseStatus);
     }
 
-    /*
     @PermitAll
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_SEARCH_COURSES, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> searchCourses(@RequestBody SearchPatternJson searchPattern) {
+    public ResponseEntity<? extends AbstractResponseJson> searchCourses(@RequestBody CourseSearchPatternJson searchPattern) {
         // toDo
+        throw new org.apache.commons.lang3.NotImplementedException("");
     }
-    */
 }
