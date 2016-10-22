@@ -46,7 +46,6 @@ import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.CourseSignupJson;
 
 import main.json.course.ChangeGroupFormJson;
-import main.json.course.ChangeGroupJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -192,9 +191,16 @@ public class CourseController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = CourseControllerUrlConstants.CHANGE_GROUP, method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> changeGroup(@Valid @RequestBody ChangeGroupJson changeGroupJson) {
-        // toDo
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> changeGroup(@PathVariable("oldCourseID") String oldCourseID, @PathVariable("newCourseID") String newCourseID) {
+        Course oldCourse = this.courseCrudService.findCourseByID(oldCourseID);
+        if( oldCourse == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("oldcourse.not.found"));
+        Course newCourse = this.courseCrudService.findCourseByID(newCourseID);
+        if( newCourse == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("newcourse.not.found"));
+
+        this.courseService.changeGroup(oldCourse, newCourse);
+        String messageStr = this.labelProvider.getLabel(this.courseService.getChangeGroupMessageCode(oldCourse, newCourse));
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)

@@ -30,4 +30,8 @@ public interface CourseService {
 
     ChangeGroupFormJson getChangeGroupForm(Course course);
 
+    void changeGroup(Course oldCourse, Course newCourse);
+
+    String getChangeGroupMessageCode(Course oldCourse, Course newCourse);
+
 }

@@ -16,7 +16,7 @@ public class CourseControllerUrlConstants {
 
     public static final String CHANGE_GROUP_FORM = "/{courseID}/change";
 
-    public static final String CHANGE_GROUP = "/{courseID}/change";
+    public static final String CHANGE_GROUP = "/{oldCourseID}/change/{newCourseID}";
 
     public static final String RESIGNATION_FORM = "/{courseID}/resignation";
 
