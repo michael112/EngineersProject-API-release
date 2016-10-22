@@ -1,4 +1,4 @@
-package main.json.course.grade.commons;
+package main.json.course;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -6,9 +6,6 @@ import java.util.Set;
 import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
-
-import main.json.course.CourseUserJson;
-import main.json.course.CourseTypeJson;
 
 @EqualsAndHashCode
 public class CourseJson {

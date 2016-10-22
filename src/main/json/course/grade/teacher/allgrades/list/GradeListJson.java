@@ -2,7 +2,7 @@ package main.json.course.grade.teacher.allgrades.list;
 
 import lombok.EqualsAndHashCode;
 
-import main.json.course.grade.commons.CourseJson;
+import main.json.course.CourseJson;
 import main.json.course.grade.commons.GradeJson;
 
 @EqualsAndHashCode(callSuper=true)

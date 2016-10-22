@@ -27,13 +27,12 @@ import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 
-import main.json.course.grade.commons.CourseJson;
+import main.json.course.CourseJson;
 import main.json.course.grade.commons.GradeJson;
 import main.json.course.grade.commons.StudentGradeJson;
 
 import main.model.user.User;
 import main.model.course.Course;
-import main.model.course.Homework;
 import main.model.course.Grade;
 import main.model.course.StudentGrade;
 

@@ -6,6 +6,7 @@ import java.util.Set;
 import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
+import main.json.course.CourseJson;
 
 @EqualsAndHashCode
 public abstract class GradeListJson {

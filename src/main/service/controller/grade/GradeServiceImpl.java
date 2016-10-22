@@ -29,7 +29,7 @@ import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 
-import main.json.course.grade.commons.CourseJson;
+import main.json.course.CourseJson;
 import main.json.course.grade.commons.GradeJson;
 
 import main.json.course.grade.commons.NewGradeJson;
