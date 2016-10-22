@@ -28,6 +28,7 @@ import main.model.language.Language;
 import main.model.user.User;
 
 import main.json.course.AvailableLngAndTypesJson;
+import main.json.course.CourseSignupJson;
 import main.json.course.CourseListJson;
 import main.json.course.CourseUserJson;
 import main.json.course.CourseInfoTeacherJson;
@@ -36,6 +37,8 @@ import main.json.course.NextLessonJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.MessageJson;
+import main.json.course.ChangeGroupFormJson;
+import main.json.course.ResignGroupFormJson;
 
 @Service("courseService")
 public class CourseServiceImpl extends AbstractService implements CourseService {
@@ -124,6 +127,30 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
             result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         }
         return result;
+    }
+
+    public CourseSignupJson signupToCourse(User user, Course course) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public void confirmSignupToCourse(User user, Course course) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public ChangeGroupFormJson getChangeGroupForm(Course course) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public void changeGroup(Course oldCourse, Course newCourse) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public ResignGroupFormJson getResignGroupForm(Course course) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public void resignGroup(User user, Course course) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     private NextLessonJson getNextLesson(Course course) {
