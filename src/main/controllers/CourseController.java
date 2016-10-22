@@ -79,12 +79,6 @@ public class CourseController {
     private CourseMembershipValidator courseMembershipValidator;
 
     @Autowired
-    private LocaleResolver localeResolver;
-
-    @Autowired
-    private HttpServletRequest httpServletRequest;
-
-    @Autowired
     private CourseService courseService;
 
     @RolesAllowed(RolesAllowedConstants.USER)

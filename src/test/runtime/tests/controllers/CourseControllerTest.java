@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.HashSet;
 import java.util.Date;
 
-import org.hibernate.validator.cfg.defs.AssertFalseDef;
 import org.junit.Assert;
 
 import org.junit.Before;
@@ -140,7 +139,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         Map<String, String> nextLessonDate = getNextLessonDateStr(sampleCourse);
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
-        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourses().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
@@ -197,7 +196,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         Map<String, String> nextLessonDate = getNextLessonDateStr(sampleCourse);
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
-        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourses().get(0));
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
@@ -300,32 +299,135 @@ public class CourseControllerTest extends AbstractControllerTest {
 
     @Test
     public void testSignupToCourse() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+        when( courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(false);
+
+        this.mockMvc.perform(post(this.testedClassURI + "/signup/" + sampleCourse.getId() + "?confirmed=false")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testConfirmSignupToCourse() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+        when( courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(false);
+
+        this.mockMvc.perform(post(this.testedClassURI + "/signup/" + sampleCourse.getId() + "?confirmed=true")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testGetChangeGroupForm() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/change")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testChangeGroup() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course oldCourse = this.testEnvironment.getCourses().get(0);
+        Course newCourse = this.testEnvironment.getCourses().get(1);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(oldCourse.getId()) ).thenReturn(oldCourse);
+        when( courseCrudServiceMock.findCourseByID(newCourse.getId()) ).thenReturn(newCourse);
+
+        this.mockMvc.perform(post(this.testedClassURI + '/' + oldCourse.getId() + "/change/" + newCourse.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testGetResignGroupForm() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testConfirmResignation() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+
+        this.mockMvc.perform(post(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
 }

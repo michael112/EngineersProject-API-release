@@ -101,6 +101,10 @@ public class TestEnvironmentBuilder {
 			environment.addCourseMembership(courseMembership);
 		}
 
+		Course sampleEnglishCourse2 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,11,2), new Date(2017,7,31)), 14, 989.99, new CourseDay(5, 7,30, 11,30), sampleTeacher1, new HashSet<User>(), null);
+
+		environment.addCourse(sampleEnglishCourse2);
+
 		Message sampleCourseParticipantsMessage = generateMessage(sampleTeacher1, "sample course message 1", "sample content", sampleFile2, true, sampleEnglishCourse1);
 		Message sampleSingleMessage1 = generateMessage(sampleStudent1, sampleStudent2, "sample single message 1", "sample content", sampleFile1, false, sampleEnglishCourse1);
 		Message sampleSingleMessage2 = generateMessage(sampleStudent2, sampleStudent1, "sample single message 2", "sample content", sampleFile1, false, sampleEnglishCourse1);
