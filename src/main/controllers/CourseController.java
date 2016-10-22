@@ -29,6 +29,7 @@ import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
+import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 import main.json.response.CourseInfoResponseJson;
 import main.json.response.CourseListResponseJson;
@@ -158,9 +159,19 @@ public class CourseController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = CourseControllerUrlConstants.SIGNUP_TO_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json", params = "confirmed=true")
-    public ResponseEntity<? extends AbstractResponseJson> confirmSignupToCourse(@PathVariable("courseID") String courseID, @Valid @RequestBody CourseSignupJson courseJson) {
-        // toDo
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> confirmSignupToCourse(@PathVariable("courseID") String courseID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        if( this.courseMembershipValidator.isTeacher( currentUser, course ) ) throw new HttpBadRequestException(this.labelProvider.getLabel("teacher.signup.error"));
+
+        this.courseService.confirmSignupToCourse(currentUser, course);
+        String messageStr = this.labelProvider.getLabel("course.signup.confirmation.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)

@@ -24,4 +24,6 @@ public interface CourseService {
 
     CourseSignupJson signupToCourse(User user, Course course);
 
+    void confirmSignupToCourse(User user, Course course);
+
 }
