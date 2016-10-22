@@ -228,7 +228,16 @@ public class CourseController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_CONFIRM, method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> confirmResignation() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> confirmResignation(@PathVariable("courseID") String courseID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        this.courseService.resignGroup(currentUser, course);
+        String messageStr = this.labelProvider.getLabel("course.resign.group.confirmation.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 }

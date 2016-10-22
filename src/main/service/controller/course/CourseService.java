@@ -36,4 +36,6 @@ public interface CourseService {
 
     ResignGroupFormJson getResignGroupForm(Course course);
 
+    void resignGroup(User user, Course course);
+
 }
