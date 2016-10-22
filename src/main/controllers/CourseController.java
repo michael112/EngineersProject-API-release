@@ -35,6 +35,7 @@ import main.json.response.CourseInfoResponseJson;
 import main.json.response.CourseListResponseJson;
 import main.json.response.AvailableLngAndTypesResponseJson;
 import main.json.response.CourseSignupResponseJson;
+import main.json.response.ChangeGroupResponseJson;
 
 import main.json.course.AbstractCourseInfoJson;
 
@@ -44,6 +45,7 @@ import main.json.course.AvailableLngAndTypesJson;
 import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.CourseSignupJson;
 
+import main.json.course.ChangeGroupFormJson;
 import main.json.course.ChangeGroupJson;
 
 import main.model.user.User;
@@ -177,9 +179,14 @@ public class CourseController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = CourseControllerUrlConstants.CHANGE_GROUP_FORM, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> getChangeGroupForm() {
-        // toDo
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> getChangeGroupForm(@PathVariable("courseID") String courseID) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        ChangeGroupFormJson formJson = this.courseService.getChangeGroupForm(course);
+        String messageStr = this.labelProvider.getLabel("course.change.group.form.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<ChangeGroupResponseJson>(new ChangeGroupResponseJson(formJson, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)

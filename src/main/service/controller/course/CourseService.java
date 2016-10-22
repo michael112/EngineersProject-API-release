@@ -12,6 +12,8 @@ import main.json.course.AvailableLngAndTypesJson;
 
 import main.json.course.CourseSignupJson;
 
+import main.json.course.ChangeGroupFormJson;
+
 public interface CourseService {
 
     CourseListJson getCourseStudentList(Course course);
@@ -25,5 +27,7 @@ public interface CourseService {
     CourseSignupJson signupToCourse(User user, Course course);
 
     void confirmSignupToCourse(User user, Course course);
+
+    ChangeGroupFormJson getChangeGroupForm(Course course);
 
 }
