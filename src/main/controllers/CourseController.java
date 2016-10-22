@@ -36,6 +36,7 @@ import main.json.response.CourseListResponseJson;
 import main.json.response.AvailableLngAndTypesResponseJson;
 import main.json.response.CourseSignupResponseJson;
 import main.json.response.ChangeGroupResponseJson;
+import main.json.response.ResignGroupResponseJson;
 
 import main.json.course.AbstractCourseInfoJson;
 
@@ -46,6 +47,8 @@ import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.CourseSignupJson;
 
 import main.json.course.ChangeGroupFormJson;
+
+import main.json.course.ResignGroupFormJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -198,7 +201,13 @@ public class CourseController {
         if( newCourse == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("newcourse.not.found"));
 
         this.courseService.changeGroup(oldCourse, newCourse);
-        String messageStr = this.labelProvider.getLabel(this.courseService.getChangeGroupMessageCode(oldCourse, newCourse));
+        String messageStr;
+        if( newCourse.getPrice() > oldCourse.getPrice() ) {
+            messageStr = this.labelProvider.getLabel("course.change.paymentmessage");
+        }
+        else {
+            messageStr = this.labelProvider.getLabel("course.change.message");
+        }
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
@@ -206,9 +215,14 @@ public class CourseController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_FORM, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> getResignGroupForm() {
-        // toDo
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> getResignGroupForm(@PathVariable("courseID") String courseID) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        ResignGroupFormJson formJson = this.courseService.getResignGroupForm(course);
+        String messageStr = this.labelProvider.getLabel("course.resign.group.form.success");
+        HttpStatus responseStatus = HttpStatus.OK;
+        return new ResponseEntity<ResignGroupResponseJson>(new ResignGroupResponseJson(formJson, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)

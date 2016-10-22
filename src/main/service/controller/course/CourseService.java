@@ -14,6 +14,8 @@ import main.json.course.CourseSignupJson;
 
 import main.json.course.ChangeGroupFormJson;
 
+import main.json.course.ResignGroupFormJson;
+
 public interface CourseService {
 
     CourseListJson getCourseStudentList(Course course);
@@ -32,6 +34,6 @@ public interface CourseService {
 
     void changeGroup(Course oldCourse, Course newCourse);
 
-    String getChangeGroupMessageCode(Course oldCourse, Course newCourse);
+    ResignGroupFormJson getResignGroupForm(Course course);
 
 }

@@ -126,15 +126,6 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         return result;
     }
 
-    public String getChangeGroupMessageCode(Course oldCourse, Course newCourse) {
-        if( newCourse.getPrice() > oldCourse.getPrice() ) {
-            return "course.change.paymentmessage";
-        }
-        else {
-            return "course.change.message";
-        }
-    }
-
     private NextLessonJson getNextLesson(Course course) {
         java.util.Calendar calendar = java.util.Calendar.getInstance();
         java.util.Date today = calendar.getTime();
