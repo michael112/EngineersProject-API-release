@@ -163,6 +163,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     public ChangeGroupFormJson getChangeGroupForm(Course course) {
         try {
             ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            // przetestować
             Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("from Courses c where ( c.languageID = " + course.getLanguage().getId() + " ) and ( c.courseLevelName = " + course.getCourseLevel().getName() + " ) and ( c.courseTypeID = " + course.getCourseType().getId() + " )");
             for( Course similarCourse : similarCourses ) {
                 SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
