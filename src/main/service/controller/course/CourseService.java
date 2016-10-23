@@ -32,7 +32,7 @@ public interface CourseService {
 
     ChangeGroupFormJson getChangeGroupForm(Course course);
 
-    void changeGroup(Course oldCourse, Course newCourse);
+    void changeGroup(User user, Course oldCourse, Course newCourse);
 
     CourseJson getResignGroupForm(Course course);
 

@@ -112,10 +112,13 @@ public class CourseMembership extends AbstractUuidModel {
 	private boolean active;
 
 	@Getter
-	@Setter
 	@Type(type="org.hibernate.type.NumericBooleanType")
 	@Column(name="resignation", nullable=false)
 	private boolean resignation;
+	public void setResignation(boolean resignation) {
+		this.resignation = resignation;
+		if( resignation ) this.active = !resignation;
+	}
 
 	public CourseMembership() {
 		super();

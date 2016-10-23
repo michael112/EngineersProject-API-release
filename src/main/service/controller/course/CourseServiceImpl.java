@@ -1,5 +1,7 @@
 package main.service.controller.course;
 
+import java.util.ArrayList;
+
 import java.util.Set;
 import java.util.HashSet;
 
@@ -182,16 +184,31 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         }
     }
 
-    public void changeGroup(Course oldCourse, Course newCourse) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public void changeGroup(User user, Course oldCourse, Course newCourse) {
+        try {
+            CourseMembership cm = new ArrayList<>(this.courseMembershipCrudService.findCourseMembershipsByQuery("from CourseMembership c where ( c.userID = " + user.getId() + " ) and ( c.courseID = " + oldCourse.getId() + " )")).get(0);
+            if( !( cm.getCourse() ).equals( oldCourse ) ) throw new IllegalArgumentException();
+            cm.setCourse(newCourse);
+            cm.setMovedFrom(oldCourse);
+            cm.setActive(false);
+            this.courseMembershipCrudService.updateCourseMembership(cm);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public CourseJson getResignGroupForm(Course course) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        CourseJson result = new CourseJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        for( User teacher : course.getTeachers() ) {
+            result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        }
+        return result;
     }
 
     public void resignGroup(User user, Course course) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        CourseMembership cm = new ArrayList<>(this.courseMembershipCrudService.findCourseMembershipsByQuery("from CourseMembership c where ( c.userID = " + user.getId() + " ) and ( c.courseID = " + course.getId() + " )")).get(0);
+        cm.setResignation(true);
     }
 
     private NextLessonJson getNextLesson(Course course) {

@@ -183,12 +183,15 @@ public class CourseController {
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = CourseControllerUrlConstants.CHANGE_GROUP, method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> changeGroup(@PathVariable("oldCourseID") String oldCourseID, @PathVariable("newCourseID") String newCourseID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
         Course oldCourse = this.courseCrudService.findCourseByID(oldCourseID);
         if( oldCourse == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("oldcourse.not.found"));
         Course newCourse = this.courseCrudService.findCourseByID(newCourseID);
         if( newCourse == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("newcourse.not.found"));
 
-        this.courseService.changeGroup(oldCourse, newCourse);
+        this.courseService.changeGroup(currentUser, oldCourse, newCourse);
         String messageStr;
         if( newCourse.getPrice() > oldCourse.getPrice() ) {
             messageStr = this.labelProvider.getLabel("course.change.paymentmessage");
