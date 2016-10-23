@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.course.ChangeGroupFormJson;
+import main.json.course.changegroup.ChangeGroupFormJson;
 
 public class ChangeGroupResponseJson extends AbstractResponseJson {
 

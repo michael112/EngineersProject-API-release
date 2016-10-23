@@ -399,7 +399,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
         when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
 
-        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation")
+        this.mockMvc.perform(post(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation?confirmed=false")
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())
@@ -421,7 +421,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
         when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
 
-        this.mockMvc.perform(post(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation")
+        this.mockMvc.perform(post(this.testedClassURI + '/' + sampleCourse.getId() + "/resignation?confirmed=true")
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())

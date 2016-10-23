@@ -70,7 +70,7 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
 
     private CourseJson getCourseJson(Course course, String languageCode) {
         try {
-            CourseJson result = new CourseJson(course.getId(), course.getLanguage().getLanguageName(languageCode), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(languageCode));
+            CourseJson result = new CourseJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(languageCode), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(languageCode));
             for( User teacher : course.getTeachers() ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }

@@ -10,11 +10,11 @@ import main.json.course.CourseInfoStudentJson;
 
 import main.json.course.AvailableLngAndTypesJson;
 
+import main.json.course.CourseJson;
+
 import main.json.course.CourseSignupJson;
 
-import main.json.course.ChangeGroupFormJson;
-
-import main.json.course.ResignGroupFormJson;
+import main.json.course.changegroup.ChangeGroupFormJson;
 
 public interface CourseService {
 
@@ -26,7 +26,7 @@ public interface CourseService {
 
     AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes();
 
-    CourseSignupJson signupToCourse(User user, Course course);
+    CourseSignupJson getSignupCourseInfo(Course course);
 
     void confirmSignupToCourse(User user, Course course);
 
@@ -34,7 +34,7 @@ public interface CourseService {
 
     void changeGroup(Course oldCourse, Course newCourse);
 
-    ResignGroupFormJson getResignGroupForm(Course course);
+    CourseJson getResignGroupForm(Course course);
 
     void resignGroup(User user, Course course);
 

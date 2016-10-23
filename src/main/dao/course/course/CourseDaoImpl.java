@@ -14,6 +14,10 @@ public class CourseDaoImpl extends AbstractDao<String, Course> implements Course
         return findByID(id);
     }
 
+    public Set<Course> findCoursesByQuery(String queryStr) {
+        return findByQuery(queryStr);
+    }
+
     public Set<Course> findAllCourses() {
         return findAll();
     }

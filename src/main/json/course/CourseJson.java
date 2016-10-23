@@ -3,6 +3,8 @@ package main.json.course;
 import java.util.HashSet;
 import java.util.Set;
 
+import main.json.course.language.LanguageJson;
+
 import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
@@ -11,35 +13,26 @@ import lombok.EqualsAndHashCode;
 public class CourseJson {
 
     @Getter
-    private String courseID;
+    protected String courseID;
 
     @Getter
-    private String language;
+    protected LanguageJson language;
 
     @Getter
-    private String courseLevel;
+    protected String courseLevel;
 
     @Getter
-    private CourseTypeJson courseType;
+    protected CourseTypeJson courseType;
 
     @Getter
-    private Set<CourseUserJson> teachers;
+    protected Set<CourseUserJson> teachers;
 
-    private CourseJson(String courseID, String language, String courseLevel) {
+    public CourseJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
         this.courseID = courseID;
-        this.language = language;
+        this.language = new LanguageJson(languageID, languageName);
         this.courseLevel = courseLevel;
-        this.teachers = new HashSet<>();
-    }
-
-    public CourseJson(String courseID, String language, String courseLevel, CourseTypeJson courseType) {
-        this(courseID, language, courseLevel);
-        this.courseType = courseType;
-    }
-
-    public CourseJson(String courseID, String language, String courseLevel, String courseTypeID, String courseTypeName) {
-        this(courseID, language, courseLevel);
         this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
+        this.teachers = new HashSet<>();
     }
 
     public void addTeacher(CourseUserJson teacher) {

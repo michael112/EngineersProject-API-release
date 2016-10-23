@@ -4,14 +4,14 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.course.ResignGroupFormJson;
+import main.json.course.CourseJson;
 
 public class ResignGroupResponseJson extends AbstractResponseJson {
 
     @Getter
-    ResignGroupFormJson formJson;
+    CourseJson formJson;
 
-    public ResignGroupResponseJson(ResignGroupFormJson formJson, String message, HttpStatus status) {
+    public ResignGroupResponseJson(CourseJson formJson, String message, HttpStatus status) {
         super(message, status);
         this.formJson = formJson;
     }

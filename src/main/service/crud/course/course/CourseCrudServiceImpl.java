@@ -20,6 +20,10 @@ public class CourseCrudServiceImpl implements CourseCrudService {
         return dao.findCourseByID(id);
     }
 
+    public Set<Course> findCoursesByQuery(String queryStr) {
+        return dao.findCoursesByQuery(queryStr);
+    }
+
     public Set<Course> findAllCourses() {
         return dao.findAllCourses();
     }

@@ -5,12 +5,16 @@ import java.util.HashSet;
 
 import java.util.Calendar;
 
+import main.json.course.changegroup.DayOfCourseJson;
+import main.json.course.changegroup.SimilarGroupJson;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import main.service.controller.AbstractService;
 
+import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.coursetype.CourseTypeCrudService;
+import main.service.crud.course.coursemembership.CourseMembershipCrudService;
 import main.service.crud.language.LanguageCrudService;
 
 import main.util.locale.LocaleCodeProvider;
@@ -28,6 +32,7 @@ import main.model.language.Language;
 import main.model.user.User;
 
 import main.json.course.AvailableLngAndTypesJson;
+import main.json.course.CourseJson;
 import main.json.course.CourseSignupJson;
 import main.json.course.CourseListJson;
 import main.json.course.CourseUserJson;
@@ -37,13 +42,16 @@ import main.json.course.NextLessonJson;
 import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.MessageJson;
-import main.json.course.ChangeGroupFormJson;
-import main.json.course.ResignGroupFormJson;
+import main.json.course.changegroup.ChangeGroupFormJson;
 
 @Service("courseService")
 public class CourseServiceImpl extends AbstractService implements CourseService {
 
+    private CourseCrudService courseCrudService;
+
     private CourseTypeCrudService courseTypeCrudService;
+
+    private CourseMembershipCrudService courseMembershipCrudService;
 
     private LanguageCrudService languageCrudService;
 
@@ -129,23 +137,55 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         return result;
     }
 
-    public CourseSignupJson signupToCourse(User user, Course course) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public CourseSignupJson getSignupCourseInfo(Course course) {
+        try {
+            CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void confirmSignupToCourse(User user, Course course) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            CourseMembership cm = new CourseMembership(user, course, false);
+            this.courseMembershipCrudService.saveCourseMembership(cm);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public ChangeGroupFormJson getChangeGroupForm(Course course) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("from Courses c where ( c.languageID = " + course.getLanguage().getId() + " ) and ( c.courseLevelName = " + course.getCourseLevel().getName() + " ) and ( c.courseTypeID = " + course.getCourseType().getId() + " )");
+            for( Course similarCourse : similarCourses ) {
+                SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
+                for( CourseDay courseDay : similarCourse.getCourseDays() ) {
+                    similarGroupJson.addDayOfCourse(new DayOfCourseJson(courseDay.getDay().getDayName(), courseDay.getHourFrom().getTime()));
+                }
+                for( User teacher : course.getTeachers() ) {
+                    similarGroupJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+                }
+                result.addSimilarGroup(similarGroupJson);
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void changeGroup(Course oldCourse, Course newCourse) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
-    public ResignGroupFormJson getResignGroupForm(Course course) {
+    public CourseJson getResignGroupForm(Course course) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
@@ -218,9 +258,11 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     @Autowired
-    public CourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseTypeCrudService courseTypeCrudService, LanguageCrudService languageCrudService) {
+    public CourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, CourseTypeCrudService courseTypeCrudService, CourseMembershipCrudService courseMembershipCrudService, LanguageCrudService languageCrudService) {
         super(localeCodeProvider);
+        this.courseCrudService = courseCrudService;
         this.courseTypeCrudService = courseTypeCrudService;
+        this.courseMembershipCrudService = courseMembershipCrudService;
         this.languageCrudService = languageCrudService;
     }
 }

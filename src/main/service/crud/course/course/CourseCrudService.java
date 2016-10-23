@@ -8,6 +8,8 @@ public interface CourseCrudService {
 
     Course findCourseByID(String id);
 
+    Set<Course> findCoursesByQuery(String queryStr);
+
     Set<Course> findAllCourses();
 
     void saveCourse(Course entity);

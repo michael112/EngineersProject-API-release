@@ -5,11 +5,8 @@ import javax.annotation.security.RolesAllowed;
 
 import javax.validation.Valid;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.servlet.LocaleResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -42,13 +39,10 @@ import main.json.course.AbstractCourseInfoJson;
 
 import main.json.course.CourseListJson;
 import main.json.course.AvailableLngAndTypesJson;
-
+import main.json.course.CourseJson;
 import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.CourseSignupJson;
-
-import main.json.course.ChangeGroupFormJson;
-
-import main.json.course.ResignGroupFormJson;
+import main.json.course.changegroup.ChangeGroupFormJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -140,7 +134,7 @@ public class CourseController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = CourseControllerUrlConstants.SIGNUP_TO_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json", params = "confirmed=false")
-    public ResponseEntity<? extends AbstractResponseJson> signupToCourse(@PathVariable("courseID") String courseID) {
+    public ResponseEntity<? extends AbstractResponseJson> getSignupCourseInfo(@PathVariable("courseID") String courseID) {
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 
@@ -149,7 +143,7 @@ public class CourseController {
 
         if( this.courseMembershipValidator.isTeacher( currentUser, course ) ) throw new HttpBadRequestException(this.labelProvider.getLabel("teacher.signup.error"));
 
-        CourseSignupJson result = this.courseService.signupToCourse(currentUser, course);
+        CourseSignupJson result = this.courseService.getSignupCourseInfo(course);
         String messageStr = this.labelProvider.getLabel("course.signup.success");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<CourseSignupResponseJson>(new CourseSignupResponseJson(result, messageStr, responseStatus), responseStatus);
@@ -208,12 +202,12 @@ public class CourseController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
-    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_FORM, method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_FORM, method = RequestMethod.POST, produces = "application/json", params = "confirmed=false")
     public ResponseEntity<? extends AbstractResponseJson> getResignGroupForm(@PathVariable("courseID") String courseID) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
 
-        ResignGroupFormJson formJson = this.courseService.getResignGroupForm(course);
+        CourseJson formJson = this.courseService.getResignGroupForm(course);
         String messageStr = this.labelProvider.getLabel("course.resign.group.form.success");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<ResignGroupResponseJson>(new ResignGroupResponseJson(formJson, messageStr, responseStatus), responseStatus);
@@ -221,7 +215,7 @@ public class CourseController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
-    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_CONFIRM, method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = CourseControllerUrlConstants.RESIGNATION_CONFIRM, method = RequestMethod.POST, produces = "application/json", params = "confirmed=true")
     public ResponseEntity<? extends AbstractResponseJson> confirmResignation(@PathVariable("courseID") String courseID) {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
