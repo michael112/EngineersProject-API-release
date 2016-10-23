@@ -186,8 +186,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     public void changeGroup(User user, Course oldCourse, Course newCourse) {
         try {
-            CourseMembership cm = new ArrayList<>(this.courseMembershipCrudService.findCourseMembershipsByQuery("from CourseMembership c where ( c.userID = " + user.getId() + " ) and ( c.courseID = " + oldCourse.getId() + " )")).get(0);
-            if( !( cm.getCourse() ).equals( oldCourse ) ) throw new IllegalArgumentException();
+            CourseMembership cm = oldCourse.getCourseMembership(user);
             cm.setCourse(newCourse);
             cm.setMovedFrom(oldCourse);
             cm.setActive(false);
@@ -207,7 +206,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     public void resignGroup(User user, Course course) {
-        CourseMembership cm = new ArrayList<>(this.courseMembershipCrudService.findCourseMembershipsByQuery("from CourseMembership c where ( c.userID = " + user.getId() + " ) and ( c.courseID = " + course.getId() + " )")).get(0);
+        CourseMembership cm = course.getCourseMembership(user);
         cm.setResignation(true);
     }
 
