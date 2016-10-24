@@ -1,11 +1,16 @@
 package test.runtime.tests.controllers;
 
 import java.util.Calendar;
+import java.util.Date;
+
 import java.util.Map;
 import java.util.HashMap;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import java.util.HashSet;
-import java.util.Date;
+
 
 import org.junit.Assert;
 
@@ -21,6 +26,7 @@ import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.LocaleResolver;
 
 import main.model.user.User;
+import main.model.course.CourseMembership;
 import main.model.course.Course;
 import main.model.course.CourseDay;
 import main.model.course.CourseType;
@@ -243,7 +249,35 @@ public class CourseControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetCourseStudentList() throws Exception {
-        org.junit.Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/list")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.courseList.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.courseList.language", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.courseList.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.courseList.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.courseList.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.courseList.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.courseList.teachers[0].userID", is(new ArrayList<User>(sampleCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.courseList.teachers[0].name", is(new ArrayList<User>(sampleCourse.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.courseList.students", hasSize(2)))
+            .andExpect(jsonPath("$.courseList.students[?(@.userID == \"" + new ArrayList<CourseMembership>(sampleCourse.getStudents()).get(0).getUser().getId() + "\")][?(@.name == \"" + new ArrayList<CourseMembership>(sampleCourse.getStudents()).get(0).getUser().getFullName() + "\")]").exists())
+            .andExpect(jsonPath("$.courseList.students[?(@.userID == \"" + new ArrayList<CourseMembership>(sampleCourse.getStudents()).get(1).getUser().getId() + "\")][?(@.name == \"" + new ArrayList<CourseMembership>(sampleCourse.getStudents()).get(1).getUser().getFullName() + "\")]").exists());
     }
 
     @Test
