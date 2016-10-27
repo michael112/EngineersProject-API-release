@@ -6,8 +6,6 @@ import org.junit.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.web.servlet.LocaleResolver;
-
 import main.service.controller.grade.GradeService;
 import main.service.controller.grade.GradeServiceImpl;
 
@@ -46,8 +44,6 @@ public class GradeServiceTest extends AbstractServiceTest {
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
     @Autowired
-    private LocaleResolver localeResolverMock;
-    @Autowired
     private LocaleCodeProvider localeCodeProviderMock;
 
     private GradeService gradeService;
@@ -72,14 +68,14 @@ public class GradeServiceTest extends AbstractServiceTest {
     @Before
     public void setUp() {
         this.testEnvironment = TestEnvironmentBuilder.build();
-        initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        initInsideMocks(this.courseMembershipValidatorMock, null);
         reset(this.localeCodeProviderMock, this.userCrudServiceMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.homeworkCrudServiceMock, this.testCrudServiceMock);
         when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
         this.gradeService = new GradeServiceImpl(this.localeCodeProviderMock, this.userCrudServiceMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.homeworkCrudServiceMock, this.testCrudServiceMock);
     }
 
     @Test
-    public void testGetStudentGradeList() throws Exception {
+    public void testGetStudentGradeList() {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleUser2 = this.testEnvironment.getUsers().get(1);
 
@@ -90,7 +86,7 @@ public class GradeServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void testGetTeacherGradeList() throws Exception {
+    public void testGetTeacherGradeList() {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 
         main.json.course.grade.teacher.allgrades.list.GradeListJson expectedResult = getTeacherGradeListJson(sampleCourse);

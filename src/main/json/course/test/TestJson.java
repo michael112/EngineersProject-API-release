@@ -1,75 +1,37 @@
 package main.json.course.test;
 
-import lombok.Getter;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class TestJson {
 
+    @Size(max = 50, message = "newtest.title.size")
     @Getter
-    private String testID;
-
-    @Getter
+    @Setter
     private String title;
 
+    @Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-\\d{4}", message = "newtest.date")
     @Getter
+    @Setter
     private String date;
 
+    @Size(max = 100, message = "newtest.description.size")
     @Getter
+    @Setter
     private String description;
 
-    @Getter
-    private boolean written;
+    public TestJson() {}
 
-    @Getter
-    private boolean graded;
-
-    @Getter
-    private Double grade;
-
-    @Getter
-    private Double max;
-
-    @Getter
-    private String scale;
-
-    public TestJson(String testID, String title, String date, boolean written, boolean graded) {
-        this.testID = testID;
-        this.title = title;
-        this.date = date;
-        this.written = written;
-        this.graded = graded;
-    }
-
-    public TestJson(String testID, String title, String date, String description, boolean written, boolean graded) {
-        this(testID, title, date, written, graded);
-        this.description = description;
-    }
-
-    public TestJson(String testID, String title, String date, boolean written, boolean graded, Double grade, String scale) {
-        this(testID, title, date, written, graded);
-        this.grade = grade;
-        this.scale = scale;
-    }
-
-    public TestJson(String testID, String title, String date, String description, boolean written, boolean graded, Double grade, String scale) {
-        this(testID, title, date, written, graded);
-        this.description = description;
-        this.grade = grade;
-        this.scale = scale;
-    }
-
-    public TestJson(String testID, String title, String date, boolean written, boolean graded, Double grade, Double max, String scale) {
-        this(testID, title, date, written, graded);
-        this.grade = grade;
-        this.scale = scale;
-        this.max = max;
-    }
-
-    public TestJson(String testID, String title, String date, String description, boolean written, boolean graded, Double grade, Double max, String scale) {
-        this(testID, title, date, written, graded);
-        this.description = description;
-        this.grade = grade;
-        this.scale = scale;
-        this.max = max;
+    public TestJson(String title, String date, String description) {
+        this.setTitle(title);
+        this.setDate(date);
+        this.setDescription(description);
     }
 
 }

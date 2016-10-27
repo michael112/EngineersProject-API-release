@@ -40,7 +40,7 @@ import main.util.mail.MailSender;
 
 import main.constants.urlconstants.GlobalUrlConstants;
 
-@RestController
+@RestController(value = "sampleController")
 @RequestMapping(GlobalUrlConstants.GLOBAL_API_URL + "/test")
 public class TestController {
 

@@ -287,6 +287,7 @@ public class TestEnvironmentBuilder {
 		test.setId(UuidGenerator.newUUID());
 		// bez grade
 		TestSolution testSolution = new TestSolution(getCourseMembership(course, user), test, written);
+		testSolution.setId(UuidGenerator.newUUID());
 		test.addTestSolution(testSolution);
 		return test;
 	}

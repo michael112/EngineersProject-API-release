@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.Set;
 import java.util.HashSet;
 
+import java.util.Map;
+import java.util.HashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -24,6 +27,8 @@ import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 
 import org.mockito.Mockito;
+
+import org.apache.commons.lang3.text.StrSubstitutor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,6 +77,13 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 		String testedClassURI = domainURIProviderMock.getDomainURI() + classURI;
 		Mockito.verify(domainURIProviderMock, Mockito.times(1)).getDomainURI();
 		return testedClassURI;
+	}
+
+	public String getClassURI(String testedClassURI, String courseID) {
+		Map<String, String> valuesMap = new HashMap<>();
+		valuesMap.put("courseID", courseID);
+		StrSubstitutor strSubstitutor = new StrSubstitutor(valuesMap, "{", "}");
+		return strSubstitutor.replace(testedClassURI);
 	}
 
 	public void setAuthorizationMock(User user) {

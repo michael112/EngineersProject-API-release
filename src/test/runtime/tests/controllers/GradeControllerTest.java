@@ -1,8 +1,5 @@
 package test.runtime.tests.controllers;
 
-import java.util.Map;
-import java.util.HashMap;
-
 import java.util.ArrayList;
 
 import org.junit.Before;
@@ -16,8 +13,6 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import org.apache.commons.lang3.text.StrSubstitutor;
 
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.grade.GradeCrudService;
@@ -103,7 +98,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
 
-        String URL = getClassURI(sampleCourse.getId()) + GradeControllerUrlConstants.GRADE_LIST;
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + GradeControllerUrlConstants.GRADE_LIST;
 
         this.mockMvc.perform(get(URL)
             .contentType("application/json;charset=utf-8")
@@ -127,7 +122,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
 
-        String URL = getClassURI(sampleCourse.getId()) + GradeControllerUrlConstants.GRADE_LIST;
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + GradeControllerUrlConstants.GRADE_LIST;
 
         this.mockMvc.perform(get(URL)
                 .contentType("application/json;charset=utf-8")
@@ -153,7 +148,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
 
-        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleGrade.getId();
 
         this.mockMvc.perform(get(URL)
             .contentType("application/json;charset=utf-8")
@@ -179,7 +174,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
 
-        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleGrade.getId();
 
         this.mockMvc.perform(get(URL)
                 .contentType("application/json;charset=utf-8")
@@ -205,7 +200,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
 
-        String URL = getClassURI(sampleCourse.getId()) + '/' + sampleGrade.getId();
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleGrade.getId();
 
         this.mockMvc.perform(get(URL)
                 .contentType("application/json;charset=utf-8")
@@ -232,7 +227,7 @@ public class GradeControllerTest extends AbstractControllerTest {
 
         doNothing().when(gradeCrudServiceMock).saveGrade(Mockito.any(Grade.class));
 
-        String URL = getClassURI(sampleCourse.getId());
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId());
 
         this.mockMvc.perform(post(URL)
                 .contentType("application/json;charset=utf-8")
@@ -260,7 +255,7 @@ public class GradeControllerTest extends AbstractControllerTest {
 
         doNothing().when(gradeCrudServiceMock).saveGrade(Mockito.any(Grade.class));
 
-        String URL = getClassURI(sampleCourse.getId());
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId());
 
         NewGradeJson newGrade = generateNewGradeJson();
         newGrade.setTestID(new ArrayList<>(sampleCourse.getTests()).get(0).getId());
@@ -327,12 +322,6 @@ public class GradeControllerTest extends AbstractControllerTest {
 
     }
 
-    private String getClassURI(String courseID) {
-        Map<String, String> valuesMap = new HashMap<>();
-        valuesMap.put("courseID", courseID);
-        StrSubstitutor strSubstitutor = new StrSubstitutor(valuesMap, "{", "}");
-        return strSubstitutor.replace(this.testedClassURI);
-    }
 }
 
 /*

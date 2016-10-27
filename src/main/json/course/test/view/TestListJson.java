@@ -1,4 +1,4 @@
-package main.json.course.test;
+package main.json.course.test.view;
 
 import java.util.Set;
 import java.util.HashSet;

@@ -10,6 +10,12 @@ public class TestControllerUrlConstants {
 
     public static final String EDIT_TEST = "/{testID}";
 
+    public static final String EDIT_TEST_TITLE = "/{testID}/title";
+
+    public static final String EDIT_TEST_DATE = "/{testID}/date";
+
+    public static final String EDIT_TEST_DESCRIPTION = "/{testID}/description";
+
     public static final String DELETE_TEST = "{testID}";
 
 }

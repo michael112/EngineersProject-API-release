@@ -17,6 +17,8 @@ import javax.persistence.AccessType;
 
 import lombok.Getter;
 
+import main.model.user.User;
+
 @Entity
 @Table(name="tests")
 @Access(AccessType.FIELD)
@@ -61,6 +63,17 @@ public class Test extends AbstractHomeworkOrTest {
 	}
 	public boolean containsTestSolution(TestSolution solution) {
 		return this.testSolutions.contains(solution);
+	}
+	public TestSolution getTestSolution(User user) {
+		for( TestSolution solution : this.getTestSolutions() ) {
+			if( solution.getUser().equals(user) ) {
+				return solution;
+			}
+		}
+		return null;
+	}
+	public boolean containsTestSolution(User user) {
+		return this.getTestSolution(user) != null;
 	}
 
 
