@@ -92,7 +92,7 @@ public class TestControllerTest extends AbstractControllerTest {
     public void testGetTestList() throws Exception {
         String returnMessage = "";
 
-        User sampleUser = this.testEnvironment.getUsers().get(0);
+        User sampleUser = this.testEnvironment.getUsers().get(1);
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         main.model.course.Test sampleTest = new ArrayList<main.model.course.Test>(sampleCourse.getTests()).get(0);
@@ -138,7 +138,7 @@ public class TestControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.tests.tests[0].graded", is(sampleSolution.getGrade() != null)))
                 .andExpect(jsonPath("$.tests.tests[0].grade", is(sampleSolution.getGrade().getGradeValue())))
                 .andExpect(jsonPath("$.tests.tests[0].max", is(sampleSolution.getGrade().getGrade().getMaxPoints())))
-                .andExpect(jsonPath("$.tests.tests[0].scale", is(sampleSolution.getGrade().getGrade().getScale())))
+                .andExpect(jsonPath("$.tests.tests[0].scale", is(sampleSolution.getGrade().getGrade().getScale().name())))
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
         }

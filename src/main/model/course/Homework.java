@@ -93,12 +93,15 @@ public class Homework extends AbstractHomeworkOrTest {
 		return this.homeworkSolutions.contains(solution);
 	}
 	public boolean containsHomeworkSolution(User user) {
+		return this.getHomeworkSolution(user) != null;
+	}
+	public HomeworkSolution getHomeworkSolution(User user) {
 		for( HomeworkSolution solution : this.getHomeworkSolutions() ) {
 			if( solution.getUser().equals(user) ) {
-				return true;
+				return solution;
 			}
 		}
-		return false;
+		return null;
 	}
 	
 	public Homework() {

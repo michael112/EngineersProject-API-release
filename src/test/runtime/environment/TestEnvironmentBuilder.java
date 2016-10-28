@@ -121,7 +121,7 @@ public class TestEnvironmentBuilder {
 
 		Grade sampleGradeNoTask = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", null, GradeScale.PUNKTOWA, 30, 1, sampleStudent2, 15);
 		Grade sampleGradeToSampleHomework = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", sampleHomework, GradeScale.PUNKTOWA, 30, 1, sampleStudent2, 18);
-		Grade sampleGradeToSampleTest = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", sampleTest, GradeScale.PUNKTOWA, 80, 1, sampleStudent1, 40);
+		Grade sampleGradeToSampleTest = generateGrade(sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", sampleTest, GradeScale.PUNKTOWA, 80, 1, sampleStudent2, 40);
 
 		environment.addGrade(sampleGradeNoTask);
 		environment.addGrade(sampleGradeToSampleHomework);

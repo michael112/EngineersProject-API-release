@@ -1,13 +1,13 @@
 package main.service.controller.grade;
 
-import main.service.controller.AbstractService;
-
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.validation.ValidationException;
 
 import main.util.locale.LocaleCodeProvider;
+
+import main.service.controller.AbstractService;
 
 import main.service.crud.user.user.UserCrudService;
 

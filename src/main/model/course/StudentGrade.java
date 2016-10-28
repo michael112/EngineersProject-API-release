@@ -57,6 +57,20 @@ public class StudentGrade extends AbstractUuidModel {
 			}
 			this.grade = grade;
 			grade.addGrade(this); // przypisanie powiązania
+			if( ( grade.getTask() != null ) && ( this.getStudent() != null ) && ( this.getStudent().getUser() != null ) ) {
+				if( grade.getTask() instanceof Homework ) {
+					Homework homework = (Homework) grade.getTask();
+					if( homework.containsHomeworkSolution(this.getStudent().getUser()) ) {
+						homework.getHomeworkSolution(this.getStudent().getUser()).setGrade(this);
+					}
+				}
+				else if( grade.getTask() instanceof Test ) {
+					Test test = (Test) grade.getTask();
+					if( test.containsTestSolution(this.getStudent().getUser()) ) {
+						test.getTestSolution(this.getStudent().getUser()).setGrade(this);
+					}
+				}
+			}
 		}
 		else throw new IllegalArgumentException();
 	}
