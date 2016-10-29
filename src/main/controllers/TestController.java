@@ -55,13 +55,13 @@ public class TestController {
     private TestService testService;
 
     @Autowired
-    private CurrentUserService currentUserService;
-
-    @Autowired
     private TestCrudService testCrudService;
 
     @Autowired
     private CourseCrudService courseCrudService;
+
+    @Autowired
+    private CurrentUserService currentUserService;
 
     @Autowired
     private LabelProvider labelProvider;
