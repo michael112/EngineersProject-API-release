@@ -85,6 +85,7 @@ public class TestEnvironmentBuilder {
 
 		File sampleFile1 = generateFile("sample name 1", new Date(), "/dev/null", sampleStudent2);
 		File sampleFile2 = generateFile("sample name 2", new Date(), "/dev/null", sampleStudent1);
+		File sampleFile3 = generateFile("sample name 3", new Date(), "/dev/null", sampleTeacher1);
 
 		environment.addFile(sampleFile1);
 		environment.addFile(sampleFile2);
@@ -92,7 +93,7 @@ public class TestEnvironmentBuilder {
 		Set<User> sampleEnglishCourse1Students = new HashSet<>();
 		sampleEnglishCourse1Students.add(sampleStudent1);
 		sampleEnglishCourse1Students.add(sampleStudent2);
-		Course sampleEnglishCourse1 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,10,1), new Date(2017,6,30)), 14, 989.99, new CourseDay(5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile1);
+		Course sampleEnglishCourse1 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,10,1), new Date(2017,6,30)), 14, 989.99, new CourseDay(5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile3);
 
 		environment.addCourse(sampleEnglishCourse1);
 

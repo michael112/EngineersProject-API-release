@@ -118,6 +118,14 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="fileUploadService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.file.FileUploadService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="labelProvider" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">

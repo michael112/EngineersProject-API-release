@@ -1,5 +1,7 @@
 package test.runtime.tests.controllers;
 
+import java.util.Calendar;
+
 import java.util.ArrayList;
 
 import java.text.SimpleDateFormat;
@@ -14,8 +16,11 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.multipart.MultipartFile;
 
 import main.util.currentUser.CurrentUserService;
 
@@ -24,6 +29,8 @@ import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.constants.urlconstants.CourseAttachementControllerUrlConstants;
+
+import main.service.file.FileUploadService;
 
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.course.file.FileCrudService;
@@ -56,21 +63,23 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
     @Autowired
     private CurrentUserService currentUserServiceMock;
     @Autowired
-    private CourseCrudService courseCrudServiceMock;
-    @Autowired
-    private FileCrudService fileCrudServiceMock;
-
+    private FileUploadService fileUploadServiceMock;
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
     @Autowired
     private LocaleResolver localeResolverMock;
+
+    @Autowired
+    private CourseCrudService courseCrudServiceMock;
+    @Autowired
+    private FileCrudService fileCrudServiceMock;
 
     private String testedClassURI;
 
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
-        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, courseCrudServiceMock, fileCrudServiceMock);
+        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, fileUploadServiceMock, courseCrudServiceMock, fileCrudServiceMock);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
     }
 
@@ -140,13 +149,37 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAddAttachement() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
+        MockMultipartFile fileToUpload = new MockMultipartFile("file", "filename.txt", "text/plain", "sample text".getBytes());
+        File sampleAttachement = new File(fileToUpload.getName(), Calendar.getInstance().getTime(), "", sampleTeacher);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
+        doNothing().when(fileCrudServiceMock).saveFile(Mockito.any(File.class));
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT;
+
+
+        mockMvc.perform(MockMvcRequestBuilders.fileUpload(URL)
+            .file(fileToUpload)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
-    public void testRemoveAttachement() throws Exception {
-//        Assert.fail();
-
+    public void testRemoveAttachementWithFullRemove() throws Exception {
         String returnMessage = "";
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
@@ -155,18 +188,53 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
         when(fileCrudServiceMock.findFileByID(Mockito.any(String.class))).thenReturn(sampleAttachement);
+        doNothing().when(fileCrudServiceMock).deleteFile(Mockito.any(File.class));
+        doNothing().when(fileCrudServiceMock).saveFile(Mockito.any(File.class));
+        // when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
-        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleAttachement.getId();
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleAttachement.getId() + "?fullRemove=true";
 
-        String responseJSON = getResponseJson(this.mockMvc,
-            delete(URL)
-            .contentType("application/json;charset=utf-8")
-        );
+        try {
+            this.mockMvc.perform(delete(URL)
+                .contentType("application/json;charset=utf-8")
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=utf-8"))
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+        }
+        catch( NullPointerException ex ) {
+            Assert.fail();
+        }
+    }
+
+    @Test
+    public void testRemoveAttachement() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
+        File sampleAttachement = new ArrayList<File>(sampleCourse.getAttachements()).get(0);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+        when(fileCrudServiceMock.findFileByID(Mockito.any(String.class))).thenReturn(sampleAttachement);
+        doNothing().when(fileCrudServiceMock).deleteFile(Mockito.any(File.class));
+        doNothing().when(fileCrudServiceMock).saveFile(Mockito.any(File.class));
+        // when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleAttachement.getId() + "?fullRemove=false";
 
         try {
             this.mockMvc.perform(delete(URL)
