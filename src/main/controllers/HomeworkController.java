@@ -7,14 +7,12 @@ import javax.annotation.security.RolesAllowed;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestPart;
 
@@ -35,18 +33,9 @@ import main.service.crud.course.homework.HomeworkCrudService;
 
 import main.service.crud.course.course.CourseCrudService;
 
-import main.error.exception.HttpNotFoundException;
-import main.error.exception.HttpInternalServerErrorException;
-
 import main.json.course.homework.NewHomeworkJson;
-import main.json.course.homework.HomeworkSolutionJson;
 
-import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
-
-import main.model.user.User;
-import main.model.course.Homework;
-import main.model.course.Course;
 
 @RequestMapping(value = HomeworkControllerUrlConstants.CLASS_URL)
 @RestController
@@ -84,7 +73,7 @@ public class HomeworkController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.STUDENT)
     @RequestMapping(value = HomeworkControllerUrlConstants.SEND_SOLUTION, method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data")
-    public ResponseEntity<? extends AbstractResponseJson> sendHomeworkSolution(@PathVariable("courseID") String courseID, @PathVariable("homeworkID") String homeworkID, @RequestPart("json") @Valid HomeworkSolutionJson homeworkSolutionJson, @RequestPart(value = "attachement", required = false) MultipartFile attachement) {
+    public ResponseEntity<? extends AbstractResponseJson> sendHomeworkSolution(@PathVariable("courseID") String courseID, @PathVariable("homeworkID") String homeworkID, @RequestPart(value = "attachement", required = false) MultipartFile attachement) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 

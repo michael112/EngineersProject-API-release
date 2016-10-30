@@ -8,6 +8,8 @@ public class ValidationConstants {
 
     public static final String PHONE_REGEX = "^MOBILE|LANDLINE$";
 
+    public static final String DATE_REGEX = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-\\d{4}";
+
     public static final int PHONE_NUMBER_MIN = 4;
     public static final int PHONE_NUMBER_MAX = 20;
 

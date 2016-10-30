@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
+import main.constants.validationconstants.ValidationConstants;
+
 @EqualsAndHashCode
 public class TestJson {
 
@@ -16,7 +18,7 @@ public class TestJson {
     @Setter
     private String title;
 
-    @Pattern(regexp = "(0?[1-9]|[12][0-9]|3[01])-(0?[1-9]|1[012])-\\d{4}", message = "newtest.date")
+    @Pattern(regexp = ValidationConstants.DATE_REGEX, message = "newtest.date")
     @Getter
     @Setter
     private String date;
