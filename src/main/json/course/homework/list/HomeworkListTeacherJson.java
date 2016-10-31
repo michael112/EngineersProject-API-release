@@ -7,12 +7,11 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
-import main.json.course.CourseJson;
 import main.json.course.CourseUserJson;
 import main.json.course.HomeworkJson;
 
 @EqualsAndHashCode(callSuper = true)
-public class HomeworkListTeacherJson extends CourseJson {
+public class HomeworkListTeacherJson extends AbstractHomeworkListJson {
 
     @Getter
     private Set<HomeworkJson> homeworks;

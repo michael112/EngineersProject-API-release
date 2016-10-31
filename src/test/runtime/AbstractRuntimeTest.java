@@ -21,7 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.LocaleResolver;
-
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.MvcResult;
@@ -100,6 +100,12 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 	public static byte[] objectToJsonBytes(Object object) throws IOException {
 		ObjectMapper mapper = new ObjectMapper();
 		return mapper.writeValueAsBytes(object);
+	}
+
+	protected MediaType buildMediaType() {
+		HashMap<String, String> contentTypeParams = new HashMap<String, String>();
+		contentTypeParams.put("boundary", "265001916915724");
+		return new MediaType("multipart", "form-data", contentTypeParams);
 	}
 
 	protected TokenJson getBasicTokenJson() {
