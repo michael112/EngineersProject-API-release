@@ -103,7 +103,7 @@ public class HomeworkController {
 
         AbstractHomeworkListJson homeworkList;
         if( isStudent ) {
-            homeworkList = this.homeworkService.getHomeworkListStudent(course);
+            homeworkList = this.homeworkService.getHomeworkListStudent(course, currentUser);
         }
         else if( isTeacher ) {
             homeworkList = this.homeworkService.getHomeworkListTeacher(course);
@@ -135,7 +135,7 @@ public class HomeworkController {
 
         AbstractHomeworkInfo homeworkInfo;
         if( isStudent ) {
-            homeworkInfo = this.homeworkService.getHomeworkInfoStudent(homework);
+            homeworkInfo = this.homeworkService.getHomeworkInfoStudent(homework, currentUser);
         }
         else if( isTeacher ) {
             homeworkInfo = this.homeworkService.getHomeworkInfoTeacher(homework);
@@ -168,10 +168,13 @@ public class HomeworkController {
     @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
     @RequestMapping(value = HomeworkControllerUrlConstants.ADD_HOMEWORK, method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<? extends AbstractResponseJson> addHomework(@PathVariable("courseID") String courseID, @RequestPart("json") @Valid NewHomeworkJson newHomeworkJson, @RequestPart(value = "attachements", required = false) List<MultipartFile> attachements) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
 
-        this.homeworkService.addHomework(course, newHomeworkJson, attachements);
+        this.homeworkService.addHomework(currentUser, course, newHomeworkJson, attachements);
 
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("homework.add.success");
@@ -224,10 +227,13 @@ public class HomeworkController {
     @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
     @RequestMapping(value = HomeworkControllerUrlConstants.EDIT_HOMEWORK_ADD_ATTACHEMENT, method = RequestMethod.PUT, produces = "application/json", consumes = "multipart/form-data")
     public ResponseEntity<? extends AbstractResponseJson> editHomeworkAddAttachement(@PathVariable("courseID") String courseID, @PathVariable("homeworkID") String homeworkID, @RequestPart("attachement") MultipartFile attachement) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
         Homework homework = this.homeworkCrudService.findHomeworkByID(homeworkID);
         if( homework == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("homework.not.found"));
 
-        this.homeworkService.editHomeworkAddAttachement(homework, attachement);
+        this.homeworkService.editHomeworkAddAttachement(currentUser, homework, attachement);
 
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("homework.addattachement.success");

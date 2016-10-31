@@ -44,11 +44,6 @@ public class HomeworkInfoStudentJson extends AbstractHomeworkInfo {
         this.solutionFile = solutionFile;
     }
 
-    public HomeworkInfoStudentJson(CourseJson course, String homeworkID, String date, String title, String description, HomeworkGradeJson grade) {
-        this(course, homeworkID, date, title, description);
-        this.grade = grade;
-    }
-
     public HomeworkInfoStudentJson(CourseJson course, String homeworkID, String date, String title, String description, AttachementJson solutionFile, HomeworkGradeJson grade) {
         this(course, homeworkID, date, title, description);
         this.solutionFile = solutionFile;

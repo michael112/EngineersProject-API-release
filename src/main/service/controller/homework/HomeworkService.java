@@ -25,15 +25,15 @@ public interface HomeworkService {
 
     HomeworkListTeacherJson getHomeworkListTeacher(Course course);
 
-    HomeworkListStudentJson getHomeworkListStudent(Course course);
+    HomeworkListStudentJson getHomeworkListStudent(Course course, User student);
 
     HomeworkInfoTeacherJson getHomeworkInfoTeacher(Homework homework);
 
-    HomeworkInfoStudentJson getHomeworkInfoStudent(Homework homework);
+    HomeworkInfoStudentJson getHomeworkInfoStudent(Homework homework, User student);
 
     void sendHomeworkSolution(User student, Homework homework, MultipartFile solutionFile);
 
-    void addHomework(Course course, NewHomeworkJson homework, List<MultipartFile> attachements);
+    void addHomework(User teacher, Course course, NewHomeworkJson homework, List<MultipartFile> attachements);
 
     void editHomeworkTitle(Homework homework, EditHomeworkTitleJson editHomeworkTitleJson);
 
@@ -41,7 +41,7 @@ public interface HomeworkService {
 
     void editHomeworkDescription(Homework homeworkID, EditHomeworkDescriptionJson editHomeworkDescriptionJson);
 
-    void editHomeworkAddAttachement(Homework homework, MultipartFile attachement);
+    void editHomeworkAddAttachement(User sender, Homework homework, MultipartFile attachement);
 
     void editHomeworkRemoveAttachement(Homework homework, File attachement);
 

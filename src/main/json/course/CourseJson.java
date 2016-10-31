@@ -27,15 +27,15 @@ public class CourseJson {
     @Getter
     protected Set<CourseUserJson> teachers;
 
+    public void addTeacher(CourseUserJson teacher) {
+        this.teachers.add(teacher);
+    }
+
     public CourseJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
         this.courseID = courseID;
         this.language = new LanguageJson(languageID, languageName);
         this.courseLevel = courseLevel;
         this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
         this.teachers = new HashSet<>();
-    }
-
-    public void addTeacher(CourseUserJson teacher) {
-        this.teachers.add(teacher);
     }
 }
