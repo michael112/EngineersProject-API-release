@@ -161,11 +161,24 @@ public class Message extends AbstractUuidModel {
 		this.setAnnouncement(isAnnouncement);
 	}
 
-	public Message(User sender, Set<User> receivers, String title, String content, Set<File> attachements, boolean isAnnouncement, Course course) {
+	public Message(User sender, User receiver, String title, String content, boolean isAnnouncement) {
+		this();
+		this.setSender(sender);
+		this.addReceiver(receiver);
+		this.setTitle(title);
+		this.setContent(content);
+		this.setAnnouncement(isAnnouncement);
+	}
+
+	public Message(User sender, Set<User> receivers, String title, String content, boolean isAnnouncement, Course course) {
 		this(sender, title, content, isAnnouncement);
 		this.setReceivers(receivers);
-		this.setAttachements(attachements);
 		this.setCourse(course);
+	}
+
+	public Message(User sender, Set<User> receivers, String title, String content, Set<File> attachements, boolean isAnnouncement, Course course) {
+		this(sender, receivers, title, content, isAnnouncement, course);
+		this.setAttachements(attachements);
 	}
 
 	@Override
