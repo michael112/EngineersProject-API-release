@@ -113,7 +113,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleSender);
         when(userCrudServiceMock.findUserByID(sampleReceiver.getId())).thenReturn(sampleReceiver);
-        doNothing().when(mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class));
+        doNothing().when(mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.anyCollection());
 
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
@@ -144,7 +144,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleSender);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
-        doNothing().when(mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class));
+        doNothing().when(mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class), Mockito.anyCollection());
         when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
         doNothing().when(messageCrudServiceMock).saveMessage(Mockito.any(Message.class));
 

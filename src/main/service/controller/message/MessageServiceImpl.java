@@ -35,7 +35,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     private MessageCrudService messageCrudService;
 
     public void sendUserMessage(User sender, User receiver, NewMessageJson messageJson, List<MultipartFile> attachements) {
-        this.mailSender.sendMail(receiver.getEmail(), messageJson.getTitle(), messageJson.getContent());
+        this.mailSender.sendMail(receiver.getEmail(), messageJson.getTitle(), messageJson.getContent(), attachements);
     }
 
     public void sendGroupMessage(User sender, Course course, boolean sendStudents, boolean sendTeachers, NewMessageJson messageJson, List<MultipartFile> attachements) {
@@ -47,7 +47,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             receivers.add(teacher);
         }
         for( User receiver : receivers ) {
-            this.mailSender.sendMail(receiver.getEmail(), messageJson.getTitle(), messageJson.getContent());
+            this.mailSender.sendMail(receiver.getEmail(), messageJson.getTitle(), messageJson.getContent(), attachements);
         }
         if( messageJson.isAnnouncement() ) {
             Message message = new Message(sender, receivers, messageJson.getTitle(), messageJson.getContent(), messageJson.isAnnouncement(), course);
