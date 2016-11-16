@@ -9,7 +9,7 @@ import main.json.course.CourseListJson;
 public class CourseListResponseJson extends AbstractResponseJson {
 
     @Getter
-    CourseListJson courseList;
+    private CourseListJson courseList;
 
     public CourseListResponseJson(CourseListJson courseListJson, String message, HttpStatus status) {
         super(message, status);
