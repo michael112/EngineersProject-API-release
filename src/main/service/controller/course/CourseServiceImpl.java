@@ -1,14 +1,10 @@
 package main.service.controller.course;
 
-import java.util.ArrayList;
-
 import java.util.Set;
 import java.util.HashSet;
 
 import java.util.Calendar;
 
-import main.json.course.changegroup.DayOfCourseJson;
-import main.json.course.changegroup.SimilarGroupJson;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,6 +41,8 @@ import main.json.course.HomeworkJson;
 import main.json.course.TestJson;
 import main.json.course.MessageJson;
 import main.json.course.changegroup.ChangeGroupFormJson;
+import main.json.course.changegroup.DayOfCourseJson;
+import main.json.course.changegroup.SimilarGroupJson;
 
 @Service("courseService")
 public class CourseServiceImpl extends AbstractService implements CourseService {
