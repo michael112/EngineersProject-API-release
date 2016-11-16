@@ -37,6 +37,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             for( LanguageName languageName : language.getLanguageNames() ) {
                 languageJson.addLanguageName(languageName.getNamedLanguage().getId(), languageName.getNamingLanguage().getId(), languageName.getLanguageName());
             }
+            result.addLanguage(languageJson);
         }
         return result;
     }
@@ -67,6 +68,11 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
                 this.languageCrudService.updateLanguage(language);
             }
         }
+    }
+
+    public void addLanguageName(Language language, LanguageNameJson languageNameJson) {
+        language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+        this.languageCrudService.updateLanguage(language);
     }
 
     @Autowired

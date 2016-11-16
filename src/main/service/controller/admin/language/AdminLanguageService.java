@@ -20,4 +20,6 @@ public interface AdminLanguageService {
 
     void editSingleLanguageName(Language language, LanguageNameJson languageNameJson);
 
+    void addLanguageName(Language language, LanguageNameJson languageNameJson);
+
 }

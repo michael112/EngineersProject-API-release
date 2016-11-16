@@ -28,4 +28,9 @@ public class NewLanguageJson {
         this.languageNames = new HashSet<>();
     }
 
+    public NewLanguageJson(String languageID) {
+        this();
+        this.setLanguageID(languageID);
+    }
+
 }
