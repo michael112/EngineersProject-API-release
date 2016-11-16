@@ -1,4 +1,4 @@
-package main.json.admin;
+package main.json.admin.language.view;
 
 import java.util.Set;
 import java.util.HashSet;

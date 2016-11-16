@@ -28,11 +28,13 @@ import main.json.response.DefaultResponseJson;
 import main.json.response.AdminLanguageListResponseJson;
 import main.json.response.AbstractResponseJson;
 
-import main.json.admin.LanguageListJson;
-import main.json.admin.LanguageJson;
-import main.json.admin.LanguageNameJson;
+import main.json.admin.language.view.LanguageListJson;
 
-import main.json.admin.EditLanguageJson;
+import main.json.admin.language.NewLanguageJson;
+
+import main.json.admin.language.EditLanguageJson;
+
+import main.json.admin.language.LanguageNameJson;
 
 import main.model.language.Language;
 
@@ -61,7 +63,7 @@ public class AdminLanguageController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLanguageControllerUrlConstants.ADD_LANGUAGE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addLanguage(@RequestBody LanguageJson languageJson) {
+    public ResponseEntity<? extends AbstractResponseJson> addLanguage(@RequestBody NewLanguageJson languageJson) {
         this.adminLanguageService.addLanguage(languageJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.add.success");
@@ -95,7 +97,7 @@ public class AdminLanguageController {
     public ResponseEntity<? extends AbstractResponseJson> removeLanguage(@PathVariable("languageID") String languageID) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
         if( language == null ) throw new HttpNotFoundException("admin.language.not.found");
-        this.adminLanguageService.removeLanguage(language);
+        this.languageCrudService.deleteLanguage(language);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.remove.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

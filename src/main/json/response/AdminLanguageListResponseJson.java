@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.admin.LanguageListJson;
+import main.json.admin.language.view.LanguageListJson;
 
 public class AdminLanguageListResponseJson extends AbstractResponseJson {
 

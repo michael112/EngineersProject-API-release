@@ -2,22 +2,22 @@ package main.service.controller.admin.language;
 
 import main.model.language.Language;
 
-import main.json.admin.LanguageListJson;
-import main.json.admin.LanguageJson;
-import main.json.admin.LanguageNameJson;
+import main.json.admin.language.view.LanguageListJson;
 
-import main.json.admin.EditLanguageJson;
+import main.json.admin.language.NewLanguageJson;
+
+import main.json.admin.language.EditLanguageJson;
+
+import main.json.admin.language.LanguageNameJson;
 
 public interface AdminLanguageService {
 
     LanguageListJson getLanguageList();
 
-    void addLanguage(LanguageJson languageJson);
+    void addLanguage(NewLanguageJson languageJson);
 
     void editLanguageNames(Language language, EditLanguageJson languageJson);
 
     void editSingleLanguageName(Language language, LanguageNameJson languageNameJson);
-
-    void removeLanguage(Language language);
 
 }
