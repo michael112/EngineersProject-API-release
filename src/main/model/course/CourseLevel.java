@@ -71,6 +71,18 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 		this.setName(name);
 	}
 
+	public boolean hasActiveCourses() {
+		try {
+			for( Course course : this.getCourses() ) {
+				if( course.isActive() ) return true;
+			}
+			return false;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();

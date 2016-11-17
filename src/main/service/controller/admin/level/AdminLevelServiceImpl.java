@@ -10,6 +10,8 @@ import main.service.controller.AbstractService;
 
 import main.service.crud.course.courselevel.CourseLevelCrudService;
 
+import main.error.exception.IllegalRemovalEntityException;
+
 import main.json.admin.level.CourseLevelListJson;
 import main.json.admin.level.CourseLevelJson;
 
@@ -25,23 +27,59 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
     }
 
     public void addCourseLevel(CourseLevelJson newLevel) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            CourseLevel courseLevel = new CourseLevel(newLevel.getName());
+            this.courseLevelCrudService.saveCourseLevel(courseLevel);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public CourseLevelJson getCourseLevelInfo(CourseLevel level) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            return new CourseLevelJson(level.getName());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void swapCourseLevel(CourseLevel level1, CourseLevel level2) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            String tmpName = level1.getName();
+            level1.setName(level2.getName());
+            level2.setName(tmpName);
+            this.courseLevelCrudService.updateCourseLevel(level1);
+            this.courseLevelCrudService.updateCourseLevel(level2);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void editCourseLevel(CourseLevel level, CourseLevelJson editedLevel) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            level.setName(editedLevel.getName());
+            this.courseLevelCrudService.updateCourseLevel(level);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void removeCourseLevel(CourseLevel level) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            if( level.hasActiveCourses() ) {
+                throw new IllegalRemovalEntityException();
+            }
+            else {
+                this.courseLevelCrudService.deleteCourseLevel(level);
+            }
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Autowired

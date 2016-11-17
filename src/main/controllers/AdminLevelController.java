@@ -21,6 +21,9 @@ import main.constants.rolesallowedconstants.RolesAllowedConstants;
 import main.constants.urlconstants.AdminLevelControllerUrlConstants;
 
 import main.error.exception.HttpNotFoundException;
+import main.error.exception.HttpIllegalAccessException;
+
+import main.error.exception.IllegalRemovalEntityException;
 
 import main.service.crud.course.courselevel.CourseLevelCrudService;
 
@@ -108,10 +111,15 @@ public class AdminLevelController {
     public ResponseEntity<? extends AbstractResponseJson> removeCourseLevel(@PathVariable("courseLevelName") String courseLevelID) {
         CourseLevel level = this.courseLevelCrudService.findCourseLevelByID(courseLevelID);
         if( level == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
-        this.adminLevelService.removeCourseLevel(level);
-        HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("admin.level.remove.success");
-        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        try {
+            this.adminLevelService.removeCourseLevel(level);
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = this.labelProvider.getLabel("admin.level.remove.success");
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalRemovalEntityException ex ) {
+            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.level.remove.error"));
+        }
     }
 
 }
