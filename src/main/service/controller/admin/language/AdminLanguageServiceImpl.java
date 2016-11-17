@@ -30,49 +30,74 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
     private LanguageCrudService languageCrudService;
 
     public LanguageListJson getLanguageList() {
-        Set<Language> languages = this.languageCrudService.findAllLanguages();
-        LanguageListJson result = new LanguageListJson();
-        for( Language language : languages ) {
-            LanguageJson languageJson = new LanguageJson(language.getId());
-            for( LanguageName languageName : language.getLanguageNames() ) {
-                languageJson.addLanguageName(languageName.getNamedLanguage().getId(), languageName.getNamingLanguage().getId(), languageName.getLanguageName());
+        try {
+            Set<Language> languages = this.languageCrudService.findAllLanguages();
+            LanguageListJson result = new LanguageListJson();
+            for( Language language : languages ) {
+                LanguageJson languageJson = new LanguageJson(language.getId());
+                for( LanguageName languageName : language.getLanguageNames() ) {
+                    languageJson.addLanguageName(languageName.getNamedLanguage().getId(), languageName.getNamingLanguage().getId(), languageName.getLanguageName());
+                }
+                result.addLanguage(languageJson);
             }
-            result.addLanguage(languageJson);
+            return result;
         }
-        return result;
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void addLanguage(NewLanguageJson languageJson) {
-        Language language = new Language(languageJson.getLanguageID());
-        for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
-            language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+        try {
+            Language language = new Language(languageJson.getLanguageID());
+            for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
+                language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+            }
+            this.languageCrudService.saveLanguage(language);
         }
-        this.languageCrudService.saveLanguage(language);
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void editLanguageNames(Language language, EditLanguageJson languageJson) {
-        // erasing language name list
-        for( LanguageName languageName : language.getLanguageNames() ) {
-            language.removeLanguageName(languageName);
+        try {
+            // erasing language name list
+            for( LanguageName languageName : language.getLanguageNames() ) {
+                language.removeLanguageName(languageName);
+            }
+            for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
+                language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+            }
+            this.languageCrudService.updateLanguage(language);
         }
-        for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
-            language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        this.languageCrudService.updateLanguage(language);
     }
 
     public void editSingleLanguageName(Language language, LanguageNameJson languageNameJson) {
-        for( LanguageName languageName : language.getLanguageNames() ) {
-            if( ( languageName.getNamingLanguage().getId().equals(languageNameJson.getLanguageID()) ) && ( languageName.getNamedLanguage().getId().equals(language.getId()) ) ) {
-                languageName.setLanguageName(languageNameJson.getLanguageName());
-                this.languageCrudService.updateLanguage(language);
+        try {
+            for( LanguageName languageName : language.getLanguageNames() ) {
+                if( ( languageName.getNamingLanguage().getId().equals(languageNameJson.getLanguageID()) ) && ( languageName.getNamedLanguage().getId().equals(language.getId()) ) ) {
+                    languageName.setLanguageName(languageNameJson.getLanguageName());
+                    this.languageCrudService.updateLanguage(language);
+                }
             }
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
     }
 
     public void addLanguageName(Language language, LanguageNameJson languageNameJson) {
-        language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
-        this.languageCrudService.updateLanguage(language);
+        try {
+            language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+            this.languageCrudService.updateLanguage(language);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     @Autowired
