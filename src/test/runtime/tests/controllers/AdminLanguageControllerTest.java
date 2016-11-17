@@ -3,8 +3,6 @@ package test.runtime.tests.controllers;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,13 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.servlet.LocaleResolver;
 
 import main.util.currentUser.CurrentUserService;
 
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
-import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.constants.urlconstants.AdminLanguageControllerUrlConstants;
 
@@ -57,11 +53,6 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
     @Autowired
     private LanguageCrudService languageCrudServiceMock;
 
-    @Autowired
-    private CourseMembershipValidator courseMembershipValidatorMock;
-    @Autowired
-    private LocaleResolver localeResolverMock;
-
     private String testedClassURI;
 
     private TestEnvironment testEnvironment;
@@ -77,7 +68,6 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
         this.testedClassURI = setTestedClassURI(this.domainURIProviderMock, AdminLanguageControllerUrlConstants.CLASS_URL);
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(1)); // sampleUser 2 (admin)
-        initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
     }
 
     @Test
