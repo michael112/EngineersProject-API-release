@@ -169,7 +169,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(gradeCrudServiceMock.findGradeByID(Mockito.any(String.class))).thenReturn(sampleGrade);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
-        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(1));
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
@@ -195,7 +195,7 @@ public class GradeControllerTest extends AbstractControllerTest {
         when(gradeCrudServiceMock.findGradeByID(Mockito.any(String.class))).thenReturn(sampleGrade);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
-        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(1));
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(this.testEnvironment.getUsers().get(0));
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
