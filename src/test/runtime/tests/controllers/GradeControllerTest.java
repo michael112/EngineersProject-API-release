@@ -177,12 +177,12 @@ public class GradeControllerTest extends AbstractControllerTest {
         String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleGrade.getId();
 
         this.mockMvc.perform(get(URL)
-                .contentType("application/json;charset=utf-8")
-        )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=utf-8"))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
