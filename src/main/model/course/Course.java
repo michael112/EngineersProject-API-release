@@ -3,6 +3,9 @@ package main.model.course;
 import java.util.Set;
 import java.util.HashSet;
 
+import java.util.Calendar;
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import javax.persistence.Column;
@@ -361,6 +364,10 @@ public class Course extends AbstractUuidModel {
 		this(language, courseLevel, courseType, courseActivity);
 		this.setMaxStudents(maxStudents);
 		this.setPrice(price);
+	}
+
+	public boolean isActive() {
+		return this.getCourseActivity().getTo().before(Calendar.getInstance().getTime());
 	}
 
 	@Override

@@ -12,6 +12,8 @@ import main.service.controller.AbstractService;
 
 import main.service.crud.language.LanguageCrudService;
 
+import main.error.exception.IllegalRemovalEntityException;
+
 import main.json.admin.language.view.LanguageListJson;
 import main.json.admin.language.view.LanguageJson;
 
@@ -94,6 +96,20 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
         try {
             language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
             this.languageCrudService.updateLanguage(language);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void removeLanguage(Language language) {
+        try {
+            if( language.hasActiveCourses() ) {
+                throw new IllegalRemovalEntityException();
+            }
+            else {
+                this.languageCrudService.deleteLanguage(language);
+            }
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

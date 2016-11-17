@@ -187,6 +187,18 @@ public class Language extends AbstractSinglePKModel<String> {
 		}
 	}
 
+	public boolean hasActiveCourses() {
+		try {
+			for( Course course : this.getCourses() ) {
+				if( course.isActive() ) return true;
+			}
+			return false;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
+
 	// ===== zwracają nazwę języka w podanym języku =====
 
 	public LanguageName getLanguageNameObj( String userLanguage ) {
