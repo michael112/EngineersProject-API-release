@@ -1,5 +1,7 @@
 package main.service.controller.admin.level;
 
+import java.util.Set;
+
 import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,18 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
     private CourseLevelCrudService courseLevelCrudService;
 
     public CourseLevelListJson getCourseLevelList() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            Set<CourseLevel> courseLevels = this.courseLevelCrudService.findAllCourseLevels();
+            CourseLevelListJson result = new CourseLevelListJson();
+            for( CourseLevel level : courseLevels ) {
+                CourseLevelJson courseLevelJson = new CourseLevelJson(level.getName());
+                result.addLevel(courseLevelJson);
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void addCourseLevel(CourseLevelJson newLevel) {

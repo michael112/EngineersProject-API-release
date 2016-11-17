@@ -101,6 +101,9 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
 
         CourseLevelJson newLevelJson = new CourseLevelJson("C3");
 
+        doNothing().when(courseLevelCrudServiceMock).saveCourseLevel(Mockito.any(CourseLevel.class));
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
         this.mockMvc.perform(post(this.testedClassURI + '/' + AdminLevelControllerUrlConstants.ADD_LEVEL)
             .contentType("application/json;charset=utf-8")
             .content(objectToJsonBytes(newLevelJson))
@@ -116,6 +119,9 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         String returnMessage = "";
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
+
+        when(courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(sampleLevel);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
         this.mockMvc.perform(get(this.testedClassURI + '/' + sampleLevel.getId())
             .contentType("application/json;charset=utf-8")
@@ -134,6 +140,11 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         CourseLevel sampleLevel1 = this.testEnvironment.getCourseLevels().get(0);
         CourseLevel sampleLevel2 = this.testEnvironment.getCourseLevels().get(1);
 
+        when(courseLevelCrudServiceMock.findCourseLevelByID(sampleLevel1.getId())).thenReturn(sampleLevel1);
+        when(courseLevelCrudServiceMock.findCourseLevelByID(sampleLevel2.getId())).thenReturn(sampleLevel2);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseLevelCrudServiceMock).updateCourseLevel(Mockito.any(CourseLevel.class));
+
         this.mockMvc.perform(put(this.testedClassURI + '/' + AdminLevelControllerUrlConstants.LEVEL_SWAP + "?level1=" + sampleLevel1.getName() + "&level2=" + sampleLevel2.getName())
             .contentType("application/json;charset=utf-8")
             )
@@ -151,6 +162,10 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
 
         CourseLevelJson editLevelJson = new CourseLevelJson("A3");
 
+        when(courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(sampleLevel);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseLevelCrudServiceMock).updateCourseLevel(Mockito.any(CourseLevel.class));
+
         this.mockMvc.perform(put(this.testedClassURI + '/' + sampleLevel.getName())
             .contentType("application/json;charset=utf-8")
             .content(objectToJsonBytes(editLevelJson))
@@ -166,6 +181,10 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         String returnMessage = "";
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
+
+        when(courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(sampleLevel);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseLevelCrudServiceMock).deleteCourseLevel(Mockito.any(CourseLevel.class));
 
         this.mockMvc.perform(delete(this.testedClassURI + '/' + sampleLevel.getName())
             .contentType("application/json;charset=utf-8")
