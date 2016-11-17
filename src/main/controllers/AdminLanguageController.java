@@ -77,7 +77,7 @@ public class AdminLanguageController {
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editfull")
     public ResponseEntity<? extends AbstractResponseJson> editLanguageNames(@PathVariable("languageID") String languageID, @RequestBody EditLanguageJson languageJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
-        if( language == null ) throw new HttpNotFoundException("admin.language.not.found");
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.editLanguageNames(language, languageJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.edit.success");
@@ -88,7 +88,7 @@ public class AdminLanguageController {
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editsingle")
     public ResponseEntity<? extends AbstractResponseJson> editSingleLanguageName(@PathVariable("languageID") String languageID, @RequestBody LanguageNameJson languageNameJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
-        if( language == null ) throw new HttpNotFoundException("admin.language.not.found");
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.editSingleLanguageName(language, languageNameJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.edit.success");
@@ -99,7 +99,7 @@ public class AdminLanguageController {
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=add")
     public ResponseEntity<? extends AbstractResponseJson> addLanguageName(@PathVariable("languageID") String languageID, @RequestBody LanguageNameJson languageNameJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
-        if( language == null ) throw new HttpNotFoundException("admin.language.not.found");
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.addLanguageName(language, languageNameJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.edit.success");
@@ -110,7 +110,7 @@ public class AdminLanguageController {
     @RequestMapping(value = AdminLanguageControllerUrlConstants.REMOVE_LANGUAGE, method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> removeLanguage(@PathVariable("languageID") String languageID) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
-        if( language == null ) throw new HttpNotFoundException("admin.language.not.found");
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         try {
             this.adminLanguageService.removeLanguage(language);
             HttpStatus responseStatus = HttpStatus.OK;

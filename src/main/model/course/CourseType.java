@@ -120,6 +120,18 @@ public class CourseType extends AbstractUuidModel {
 		return result != null ? result.getCourseTypeName() : null;
 	}
 
+	public boolean hasActiveCourses() {
+		try {
+			for( Course course : this.getCourses() ) {
+				if( course.isActive() ) return true;
+			}
+			return false;
+		}
+		catch( NullPointerException ex ) {
+			return false;
+		}
+	}
+
 	@Override
 	public int hashCode() {
 		return super.hashCode();
