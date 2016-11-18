@@ -181,7 +181,6 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADD_PHONE, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    // public ResponseEntity<? extends AbstractResponseJson> addPhone(@Valid @RequestBody Phone newPhone) {
     public ResponseEntity<? extends AbstractResponseJson> addPhone(@Valid @RequestBody PhoneJson newPhone) {
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
@@ -193,7 +192,6 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json")
-    // public ResponseEntity<? extends AbstractResponseJson> removePhone(@Valid @RequestBody Phone phoneToRemove) {
     public ResponseEntity<? extends AbstractResponseJson> removePhone(@Valid @RequestBody PhoneJson phoneToRemove) {
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
