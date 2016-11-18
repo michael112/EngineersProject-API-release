@@ -103,13 +103,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(suffixLabelName) ).thenReturn(returnMessageSuffix);
 
         this.mockMvc.perform(post(this.testedClassURI + UserControllerUrlConstants.REGISTER_USER)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.userCrudServiceMock, times(1)).isUsernameUnique(Mockito.any(String.class));
         verify(this.userCrudServiceMock, times(1)).saveUser(Mockito.any(User.class));
@@ -127,13 +127,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(post(this.testedClassURI + UserControllerUrlConstants.REGISTER_USER)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, false)))
-        )
-                .andExpect( status().isBadRequest() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(false)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, false)))
+            )
+            .andExpect( status().isBadRequest() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
@@ -154,13 +154,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.userCrudServiceMock.isUsernameUnique(Mockito.any(String.class)) ).thenReturn(false);
 
         this.mockMvc.perform(post(this.testedClassURI + UserControllerUrlConstants.REGISTER_USER)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
-                )
-                .andExpect( status().isBadRequest() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(false)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
+            )
+            .andExpect( status().isBadRequest() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
 
         verify(this.userCrudServiceMock, times(1)).isUsernameUnique(Mockito.any(String.class));
         verify(this.labelProviderMock, times(1)).getLabel(suffixLabelName);
@@ -177,17 +177,17 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(get(this.testedClassURI + UserControllerUrlConstants.USER_INFO)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.user.userID", is(sampleUser.getId())))
-                .andExpect(jsonPath("$.user.username", is(sampleUser.getUsername())))
-                .andExpect(jsonPath("$.user.firstName", is(sampleUser.getFirstName())))
-                .andExpect(jsonPath("$.user.lastName", is(sampleUser.getLastName())))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicNewUserJson(sampleUser, true)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.user.userID", is(sampleUser.getId())))
+            .andExpect(jsonPath("$.user.username", is(sampleUser.getUsername())))
+            .andExpect(jsonPath("$.user.firstName", is(sampleUser.getFirstName())))
+            .andExpect(jsonPath("$.user.lastName", is(sampleUser.getLastName())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -204,13 +204,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_PASSWORD)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicEditPasswordJson("ramsay1", true)))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicEditPasswordJson("ramsay1", true)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.userCrudServiceMock, times(1)).updateUser(Mockito.any(User.class));
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -227,13 +227,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_PASSWORD)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicEditPasswordJson("password1", false)))
-                )
-                .andExpect( status().isBadRequest() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(false)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicEditPasswordJson("password1", false)))
+            )
+            .andExpect( status().isBadRequest() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -249,13 +249,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_PASSWORD)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicEditPasswordJson("password2", true)))
-        )
-                .andExpect( status().isBadRequest() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(false)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicEditPasswordJson("password2", true)))
+            )
+            .andExpect( status().isBadRequest() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -271,13 +271,13 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(get(this.testedClassURI + UserControllerUrlConstants.SHOW_USER_EMAIL)
-                .contentType("application/json;charset=utf-8")
-        )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.email", is(sampleUser.getEmail())))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.email", is(sampleUser.getEmail())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -301,13 +301,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class));
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_EMAIL)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicEditEmailJson()))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicEditEmailJson()))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.labelProviderMock, times(1)).getLabel(prefixLabelName);
         verify(this.labelProviderMock, times(1)).getLabel(suffixLabelName);
@@ -333,12 +333,12 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(post(this.testedClassURI + UserControllerUrlConstants.USER_EMAIL_CONFIRM + "?newEmail=" + newEmail)
-                .contentType("application/json;charset=utf-8")
-        )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.labelProviderMock, times(1)).getLabel(prefixLabelName);
         verify(this.labelProviderMock, times(1)).getLabel(suffixLabelName);
@@ -357,17 +357,17 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
 
         this.mockMvc.perform(get(this.testedClassURI + UserControllerUrlConstants.SHOW_USER_ADDRESS)
-                .contentType("application/json;charset=utf-8")
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.address.street", is(sampleUserAddress.getStreet())))
-                .andExpect(jsonPath("$.address.houseNumber", is(sampleUserAddress.getHouseNumber())))
-                .andExpect(jsonPath("$.address.flatNumber", is(sampleUserAddress.getFlatNumber())))
-                .andExpect(jsonPath("$.address.postCode", is(sampleUserAddress.getPostCode())))
-                .andExpect(jsonPath("$.address.city", is(sampleUserAddress.getCity())))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.address.street", is(sampleUserAddress.getStreet())))
+            .andExpect(jsonPath("$.address.houseNumber", is(sampleUserAddress.getHouseNumber())))
+            .andExpect(jsonPath("$.address.flatNumber", is(sampleUserAddress.getFlatNumber())))
+            .andExpect(jsonPath("$.address.postCode", is(sampleUserAddress.getPostCode())))
+            .andExpect(jsonPath("$.address.city", is(sampleUserAddress.getCity())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -384,13 +384,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_ADDRESS)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getNewAddress()))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getNewAddress()))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -409,15 +409,15 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         this.mockMvc.perform(get(this.testedClassURI + UserControllerUrlConstants.SHOW_USER_PHONES)
-                .contentType("application/json;charset=utf-8")
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.phone", hasSize(1)))
-                .andExpect(jsonPath("$.phone[0].phoneType", is(sampleUserPhone.getPhoneType().name())))
-                .andExpect(jsonPath("$.phone[0].phoneNumber", is(sampleUserPhone.getPhoneNumber())))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.phone", hasSize(1)))
+            .andExpect(jsonPath("$.phone[0].phoneType", is(sampleUserPhone.getPhoneType().name())))
+            .andExpect(jsonPath("$.phone[0].phoneNumber", is(sampleUserPhone.getPhoneNumber())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -434,13 +434,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_PHONE_LIST)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(getBasicEditPhoneJson()))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(getBasicEditPhoneJson()))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
 
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
@@ -459,13 +459,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(put(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_ADD_PHONE)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(new PhoneJson(newPhone)))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(new PhoneJson(newPhone)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -486,13 +486,13 @@ public class UserControllerTest extends AbstractControllerTest {
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(delete(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(new PhoneJson(phoneToRemove)))
-        )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(new PhoneJson(phoneToRemove)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
 
         verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
         verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
