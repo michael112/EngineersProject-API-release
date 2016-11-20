@@ -312,6 +312,18 @@ public class User extends AbstractUuidModel {
         return this.getFirstName() + ' ' + this.getLastName();
     }
 
+    public boolean hasActiveCourses(Language language) {
+        try {
+            for( Course course : this.getCoursesAsTeacher() ) {
+                if( ( course.getLanguage().equals(language) ) && ( course.isActive() ) ) return true;
+            }
+            return false;
+        }
+        catch( NullPointerException ex ) {
+            return false;
+        }
+    }
+
     public User() {
         super();
         this.setActive(true);

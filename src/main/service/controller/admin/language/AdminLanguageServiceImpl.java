@@ -23,8 +23,14 @@ import main.json.admin.language.EditLanguageJson;
 
 import main.json.admin.language.LanguageNameJson;
 
+import main.json.admin.language.teacher.TeacherLanguageListJson;
+
+import main.json.course.CourseUserJson;
+
 import main.model.language.Language;
 import main.model.language.LanguageName;
+
+import main.model.user.User;
 
 @Service("adminLanguageService")
 public class AdminLanguageServiceImpl extends AbstractService implements AdminLanguageService {
@@ -109,6 +115,45 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             }
             else {
                 this.languageCrudService.deleteLanguage(language);
+            }
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public TeacherLanguageListJson getTeacherLanguageList(Language language) {
+        try {
+            Set<User> teacherLanguageList = language.getTeachers();
+            TeacherLanguageListJson result = new TeacherLanguageListJson(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : teacherLanguageList ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void addTeacherLanguage(Language language, User teacher) {
+        try {
+            language.addTeacher(teacher);
+            this.languageCrudService.updateLanguage(language);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void removeTeacherLanguage(Language language, User teacher) {
+        try {
+            if( teacher.hasActiveCourses(language) ) {
+                throw new IllegalRemovalEntityException();
+            }
+            else {
+                language.removeTeacher(teacher);
+                this.languageCrudService.updateLanguage(language);
             }
         }
         catch( NullPointerException ex ) {

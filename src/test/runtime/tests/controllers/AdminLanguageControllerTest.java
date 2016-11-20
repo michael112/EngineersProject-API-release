@@ -2,6 +2,7 @@ package test.runtime.tests.controllers;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,16 +18,21 @@ import main.util.currentUser.CurrentUserService;
 
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
+import main.util.locale.LocaleCodeProvider;
 
 import main.constants.urlconstants.AdminLanguageControllerUrlConstants;
 
 import main.service.crud.language.LanguageCrudService;
+
+import main.service.crud.user.user.UserCrudService;
 
 import main.json.admin.language.NewLanguageJson;
 import main.json.admin.language.EditLanguageJson;
 import main.json.admin.language.LanguageNameJson;
 
 import main.model.language.Language;
+
+import main.model.user.User;
 
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;
@@ -49,17 +55,23 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
     private DomainURIProvider domainURIProviderMock;
     @Autowired
     private CurrentUserService currentUserServiceMock;
+    @Autowired
+    private LocaleCodeProvider localeCodeProviderMock;
 
     @Autowired
     private LanguageCrudService languageCrudServiceMock;
+
+    @Autowired
+    private UserCrudService userCrudServiceMock;
 
     private String testedClassURI;
 
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
-        reset(labelProviderMock, domainURIProviderMock, currentUserServiceMock, languageCrudServiceMock);
+        reset(labelProviderMock, domainURIProviderMock, localeCodeProviderMock, currentUserServiceMock, languageCrudServiceMock, userCrudServiceMock);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
     }
 
     @Before
@@ -201,6 +213,71 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
         this.mockMvc.perform(delete(this.testedClassURI + '/' + english.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetTeacherLanguageList() throws Exception {
+        String returnMessage = "";
+
+        Language english = this.testEnvironment.getLanguages().get(0);
+
+        when(languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(english);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + english.getId() + "/teachers")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.languageTeachers.language.id", is(english.getId())))
+            .andExpect(jsonPath("$.languageTeachers.language.name", is(english.getLanguageName("en"))))
+            .andExpect(jsonPath("$.languageTeachers.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.languageTeachers.teachers[0].userID", is(new ArrayList<>(english.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.languageTeachers.teachers[0].name", is(new ArrayList<>(english.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testAddTeacherLanguage() throws Exception {
+        String returnMessage = "";
+
+        Language english = this.testEnvironment.getLanguages().get(0);
+        User sampleTeacher = this.testEnvironment.getUsers().get(2);
+
+        when(languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(english);
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleTeacher);
+        doNothing().when(languageCrudServiceMock).updateLanguage(Mockito.any(Language.class));
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(post(this.testedClassURI + '/' + english.getId() + "/teacher/" + sampleTeacher.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testRemoveTeacherLanguage() throws Exception {
+        String returnMessage = "";
+
+        Language english = this.testEnvironment.getLanguages().get(0);
+        User sampleTeacher = this.testEnvironment.getUsers().get(2);
+
+        when(languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(english);
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleTeacher);
+        doNothing().when(languageCrudServiceMock).updateLanguage(Mockito.any(Language.class));
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(delete(this.testedClassURI + '/' + english.getId() + "/teacher/" + sampleTeacher.getId())
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())

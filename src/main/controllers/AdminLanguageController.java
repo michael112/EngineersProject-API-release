@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RestController;
 import main.util.labels.LabelProvider;
 
 import main.service.crud.language.LanguageCrudService;
+import main.service.crud.user.user.UserCrudService;
+
 import main.service.controller.admin.language.AdminLanguageService;
 
 import main.error.exception.HttpNotFoundException;
@@ -28,8 +30,9 @@ import main.constants.rolesallowedconstants.RolesAllowedConstants;
 import main.constants.urlconstants.AdminLanguageControllerUrlConstants;
 
 import main.json.response.DefaultResponseJson;
-import main.json.response.AdminLanguageListResponseJson;
 import main.json.response.AbstractResponseJson;
+import main.json.response.AdminLanguageListResponseJson;
+import main.json.response.AdminTeacherLanguageListResponseJson;
 
 import main.json.admin.language.view.LanguageListJson;
 
@@ -39,7 +42,11 @@ import main.json.admin.language.EditLanguageJson;
 
 import main.json.admin.language.LanguageNameJson;
 
+import main.json.admin.language.teacher.TeacherLanguageListJson;
+
 import main.model.language.Language;
+
+import main.model.user.User;
 
 @RequestMapping(value = AdminLanguageControllerUrlConstants.CLASS_URL)
 @RestController
@@ -50,6 +57,9 @@ public class AdminLanguageController {
 
     @Autowired
     private LanguageCrudService languageCrudService;
+
+    @Autowired
+    private UserCrudService userCrudService;
 
     @Autowired
     private AdminLanguageService adminLanguageService;
@@ -119,6 +129,49 @@ public class AdminLanguageController {
         }
         catch( IllegalRemovalEntityException ex ) {
             throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.language.remove.error"));
+        }
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminLanguageControllerUrlConstants.TEACHER_LANGUAGE_LIST, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getTeacherLanguageList(@PathVariable("languageID") String languageID) {
+        Language language = this.languageCrudService.findLanguageByID(languageID);
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
+        TeacherLanguageListJson teacherLanguageList = this.adminLanguageService.getTeacherLanguageList(language);
+        if( teacherLanguageList.getTeachers().size() <= 0 ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.teacher.list.empty"));
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.language.teacher.list.success");
+        return new ResponseEntity<AdminTeacherLanguageListResponseJson>(new AdminTeacherLanguageListResponseJson(teacherLanguageList, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminLanguageControllerUrlConstants.TEACHER_LANGUAGE_ADD, method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> addTeacherLanguage(@PathVariable("languageID") String languageID, @PathVariable("teacherID") String teacherID) {
+        Language language = this.languageCrudService.findLanguageByID(languageID);
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
+        User teacher = this.userCrudService.findUserByID(teacherID);
+        if( teacher == null ) throw new HttpNotFoundException("admin.teacher.not.found");
+        this.adminLanguageService.addTeacherLanguage(language, teacher);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.language.teacher.add.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminLanguageControllerUrlConstants.TEACHER_lANGUAGE_REMOVE, method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> removeTeacherLanguage(@PathVariable("languageID") String languageID, @PathVariable("teacherID") String teacherID) {
+        Language language = this.languageCrudService.findLanguageByID(languageID);
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
+        User teacher = this.userCrudService.findUserByID(teacherID);
+        if( teacher == null ) throw new HttpNotFoundException("admin.teacher.not.found");
+        try {
+            this.adminLanguageService.removeTeacherLanguage(language, teacher);
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = this.labelProvider.getLabel("admin.language.teacher.remove.success");
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalRemovalEntityException ex ) {
+            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.language.teacher.remove.error"));
         }
     }
 
