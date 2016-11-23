@@ -22,7 +22,7 @@ public interface AdminCourseService {
 
     CourseListJson getCourseList();
 
-    CourseInfoJson getCourseInfo();
+    CourseInfoJson getCourseInfo(Course course);
 
     void addCourse(NewCourseJson newCourseJson);
 
