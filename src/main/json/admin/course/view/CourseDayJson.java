@@ -1,34 +1,18 @@
 package main.json.admin.course.view;
 
-import lombok.Setter;
 import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode
-public class CourseDayJson {
+@EqualsAndHashCode(callSuper = true)
+public class CourseDayJson extends main.json.admin.course.CourseDayJson {
 
     @Getter
-    @Setter
-    private int day;
+    private String courseDayID;
 
-    @Getter
-    @Setter
-    private String hourFrom;
-
-    @Getter
-    @Setter
-    private String hourTo;
-
-    public CourseDayJson() {
-        super();
-    }
-
-    public CourseDayJson(int day, String hourFrom, String hourTo) {
-        this();
-        this.setDay(day);
-        this.setHourFrom(hourFrom);
-        this.setHourTo(hourTo);
+    public CourseDayJson(String courseDayID, int day, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
+        super(day, hourFrom, minuteFrom, hourTo, minuteTo);
+        this.courseDayID = courseDayID;
     }
 
 }

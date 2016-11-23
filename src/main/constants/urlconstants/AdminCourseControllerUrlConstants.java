@@ -24,6 +24,10 @@ public class AdminCourseControllerUrlConstants {
 
     public static final String EDIT_COURSE_DAYS = "/{courseID}/days";
 
+    public static final String EDIT_COURSE_ADD_COURSE_DAY = "/{courseID}/days/add";
+
+    public static final String EDIT_COURSE_REMOVE_COURSE_DAY = "/{courseID}/days/remove/{courseDayID}";
+
     public static final String EDIT_COURSE_TEACHER = "/{courseID}/teacher/{teacherID}";
 
     public static final String EDIT_COURSE_ADD_TEACHER = "/{courseID}/teacher/add/{teacherID}";

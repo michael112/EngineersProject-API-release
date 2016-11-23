@@ -4,6 +4,7 @@ import main.json.admin.course.view.CourseListJson;
 import main.json.admin.course.view.CourseInfoJson;
 
 import main.json.admin.course.NewCourseJson;
+import main.json.admin.course.CourseDayJson;
 
 import main.json.admin.course.edit.EditCourseJson;
 
@@ -16,6 +17,7 @@ import main.json.admin.course.edit.EditCoursePriceJson;
 import main.json.admin.course.edit.EditCourseTypeJson;
 
 import main.model.course.Course;
+import main.model.course.CourseDay;
 import main.model.user.User;
 
 public interface AdminCourseService {
@@ -37,6 +39,10 @@ public interface AdminCourseService {
     void editCourseActivity(Course course, EditCourseActivityJson editedCourseActivity);
 
     void editCourseDays(Course course, EditCourseDaysJson editedCourseDays);
+
+    void editCourseAddCourseDay(Course course, CourseDayJson courseDayJson);
+
+    void editCourseRemoveCourseDay(Course course, CourseDay courseDay);
 
     void editCourseTeacher(Course course, User teacher);
 

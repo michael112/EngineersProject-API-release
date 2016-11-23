@@ -45,6 +45,8 @@ import main.json.admin.course.view.CourseInfoJson;
 
 import main.json.admin.course.NewCourseJson;
 
+import main.json.admin.course.CourseDayJson;
+
 import main.json.admin.course.edit.EditCourseJson;
 
 import main.json.admin.course.edit.EditCourseActivityJson;
@@ -56,6 +58,7 @@ import main.json.admin.course.edit.EditCoursePriceJson;
 import main.json.admin.course.edit.EditCourseTypeJson;
 
 import main.model.course.Course;
+import main.model.course.CourseDay;
 import main.model.user.User;
 
 @RequestMapping(value = AdminCourseControllerUrlConstants.CLASS_URL)
@@ -115,10 +118,15 @@ public class AdminCourseController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.ADD_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> addCourse(@RequestBody NewCourseJson newCourse) {
-        this.adminCourseService.addCourse(newCourse);
-        HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("admin.course.add.success");
-        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        try {
+            this.adminCourseService.addCourse(newCourse);
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = this.labelProvider.getLabel("admin.course.add.success");
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalServiceOperationException ex ) {
+            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.course.add.error"));
+        }
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
@@ -126,10 +134,15 @@ public class AdminCourseController {
     public ResponseEntity<? extends AbstractResponseJson> editCourse(@PathVariable("courseID") String courseID, @RequestBody EditCourseJson editedCourse) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
-        this.adminCourseService.editCourse(course, editedCourse);
-        HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("admin.course.edit.success");
-        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        try {
+            this.adminCourseService.editCourse(course, editedCourse);
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = this.labelProvider.getLabel("admin.course.edit.success");
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalServiceOperationException ex ) {
+            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.course.edit.error"));
+        }
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
@@ -188,6 +201,30 @@ public class AdminCourseController {
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ADD_COURSE_DAY, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editCourseAddCourseDay(@PathVariable("courseID") String courseID, @RequestBody CourseDayJson courseDayJson) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
+        this.adminCourseService.editCourseAddCourseDay(course, courseDayJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.course.edit.days.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_REMOVE_COURSE_DAY, method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editCourseRemoveCourseDay(@PathVariable("courseID") String courseID, @PathVariable("courseDayID") String courseDayID) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
+        CourseDay courseDay = course.getCourseDay(courseDayID);
+        if( courseDay == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.day.not.found"));
+        this.adminCourseService.editCourseRemoveCourseDay(course, courseDay);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.course.edit.days.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_TEACHER, method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editCourseTeacher(@PathVariable("courseID") String courseID, @PathVariable("teacherID") String teacherID) {
         Course course = this.courseCrudService.findCourseByID(courseID);
@@ -212,10 +249,15 @@ public class AdminCourseController {
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         User teacher = this.userCrudService.findUserByID(teacherID);
         if( teacher == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.teacher.not.found"));
-        this.adminCourseService.editCourseAddTeacher(course, teacher);
-        HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("admin.course.edit.teacher.success");
-        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        try {
+            this.adminCourseService.editCourseAddTeacher(course, teacher);
+            HttpStatus responseStatus = HttpStatus.OK;
+            String messageStr = this.labelProvider.getLabel("admin.course.edit.teacher.success");
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
+        catch( IllegalServiceOperationException ex ) {
+            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.course.edit.teacher.error"));
+        }
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
@@ -225,15 +267,10 @@ public class AdminCourseController {
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         User teacher = this.userCrudService.findUserByID(teacherID);
         if( teacher == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.teacher.not.found"));
-        try {
-            this.adminCourseService.editCourseRemoveTeacher(course, teacher);
-            HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelProvider.getLabel("admin.course.edit.teacher.success");
-            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
-        }
-        catch( IllegalRemovalEntityException ex ) {
-            throw new HttpIllegalAccessException(this.labelProvider.getLabel("admin.level.remove.error"));
-        }
+        this.adminCourseService.editCourseRemoveTeacher(course, teacher);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.course.remove.teacher.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
@@ -266,7 +303,7 @@ public class AdminCourseController {
         try {
             this.adminCourseService.removeCourse(course);
             HttpStatus responseStatus = HttpStatus.OK;
-            String messageStr = this.labelProvider.getLabel("admin.course.edit.days.success");
+            String messageStr = this.labelProvider.getLabel("admin.course.remove.success");
             return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
         }
         catch( IllegalRemovalEntityException ex ) {
