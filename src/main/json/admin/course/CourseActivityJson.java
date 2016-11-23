@@ -1,4 +1,4 @@
-package main.json.admin.course.view;
+package main.json.admin.course;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -113,6 +113,14 @@ public class Course extends AbstractUuidModel {
 	public boolean containsCourseDay(CourseDay courseDay) {
 		return this.courseDays.contains(courseDay);
 	}
+	public CourseDay getCourseDay(String courseDayID) {
+		for( CourseDay courseDay : this.getCourseDays() ) {
+			if( courseDay.getId().equals(courseDayID) ) {
+				return courseDay;
+			}
+		}
+		return null;
+	}
 
 	@Getter
 	@ManyToMany(fetch=FetchType.EAGER, mappedBy="coursesAsTeacher")
