@@ -4,6 +4,8 @@ public class AdminCourseControllerUrlConstants {
 
     public static final String CLASS_URL = GlobalUrlConstants.GLOBAL_API_URL + "/admin/course";
 
+    public static final String COURSE_LIST = "/list";
+
     public static final String COURSE_INFO = "/{courseID}";
 
     public static final String AVAILABLE_CREATING_COURSE_DATA = "";
