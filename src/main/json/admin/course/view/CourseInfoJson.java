@@ -9,6 +9,8 @@ import lombok.EqualsAndHashCode;
 
 import main.json.course.CourseJson;
 
+import main.json.course.CourseUserJson;
+
 @EqualsAndHashCode(callSuper = true)
 public class CourseInfoJson extends CourseJson {
 
@@ -23,6 +25,10 @@ public class CourseInfoJson extends CourseJson {
 
     public void addCourseDay(int day, String hourFrom, String hourTo) {
         this.courseDays.add(new CourseDayJson(day, hourFrom, hourTo));
+    }
+
+    public void addTeacher(CourseUserJson teacher) {
+        super.addTeacher(teacher);
     }
 
     public CourseInfoJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName, String courseActivityFrom, String courseActivityTo, int maxStudents) {
