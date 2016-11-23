@@ -1,3 +1,3 @@
 package main.error.exception;
 
-public class IllegalRemovalEntityException extends RuntimeException {}
+public class IllegalRemovalEntityException extends IllegalServiceOperationException {}
