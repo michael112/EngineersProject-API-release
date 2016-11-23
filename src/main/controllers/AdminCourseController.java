@@ -34,6 +34,18 @@ import main.service.controller.admin.level.AdminLevelService;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 
+import main.json.admin.course.NewCourseJson;
+
+import main.json.admin.course.edit.EditCourseJson;
+
+import main.json.admin.course.edit.EditCourseActivityJson;
+import main.json.admin.course.edit.EditCourseDaysJson;
+import main.json.admin.course.edit.EditCourseLanguageJson;
+import main.json.admin.course.edit.EditCourseLevelJson;
+import main.json.admin.course.edit.EditCourseMaxStudentsJson;
+import main.json.admin.course.edit.EditCoursePriceJson;
+import main.json.admin.course.edit.EditCourseTypeJson;
+
 @RequestMapping(value = AdminCourseControllerUrlConstants.CLASS_URL)
 @RestController
 public class AdminCourseController {
@@ -64,7 +76,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.COURSE_INFO, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> getCourseInfo() {
+    public ResponseEntity<? extends AbstractResponseJson> getCourseInfo(@PathVariable("courseID") String courseID) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
@@ -76,79 +88,79 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.ADD_COURSE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addCourse() {
+    public ResponseEntity<? extends AbstractResponseJson> addCourse(@RequestBody NewCourseJson newCourse) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourse() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourse(@PathVariable("courseID") String courseID, @RequestBody EditCourseJson editedCourse) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLanguage() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLanguage(@PathVariable("courseID") String courseID, @RequestBody EditCourseLanguageJson editedCourseLanguage) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseType() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseType(@PathVariable("courseID") String courseID, @RequestBody EditCourseTypeJson editedCourseType) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_LEVEL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseID") String courseID, @RequestBody EditCourseLevelJson editedCourseLevel) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ACTIVITY, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseActivity() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseActivity(@PathVariable("courseID") String courseID, @RequestBody EditCourseActivityJson editedCourseActivity) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_DAYS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseDays() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseDays(@PathVariable("courseID") String courseID, @RequestBody EditCourseDaysJson editedCourseDays) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_TEACHER, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseTeacher() {
+    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_TEACHER, method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editCourseTeacher(@PathVariable("courseID") String courseID, @PathVariable("teacherID") String teacherID) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ADD_TEACHER, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseAddTeacher() {
+    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ADD_TEACHER, method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editCourseAddTeacher(@PathVariable("courseID") String courseID, @PathVariable("teacherID") String teacherID) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_REMOVE_TEACHER, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseRemoveTeacher() {
+    @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_REMOVE_TEACHER, method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editCourseRemoveTeacher(@PathVariable("courseID") String courseID, @PathVariable("teacherID") String teacherID) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_MAX_STUDENTS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseMaxStudents() {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseMaxStudents(@PathVariable("courseID") String courseID, @RequestBody EditCourseMaxStudentsJson editedCourseMaxStudents) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_PRICE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCoursePrice() {
+    public ResponseEntity<? extends AbstractResponseJson> editCoursePrice(@PathVariable("courseID") String courseID, @RequestBody EditCoursePriceJson editedCoursePrice) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.REMOVE_COURSE, method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> removeCourse() {
+    public ResponseEntity<? extends AbstractResponseJson> removeCourse(@PathVariable("courseID") String courseID) {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
