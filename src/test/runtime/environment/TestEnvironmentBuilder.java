@@ -77,6 +77,11 @@ public class TestEnvironmentBuilder {
 		sampleTeacher1.addTaughtLanguage(english);
 		environment.addUser(sampleTeacher1);
 
+		User sampleTeacher2 = generateUser("teacher2", "teacher2", "teacher2@samplemail.com", "Teacher2", "Teacher2", "Sample street 3", "80", "5", "80-520", "Vdfs", user, generatePhone(PhoneType.MOBILE, "625-856-926"));
+		sampleTeacher2.addTaughtLanguage(english);
+		sampleStudent2.addTaughtLanguage(german);
+		environment.addUser(sampleTeacher2);
+
 		PlacementTestResult englishUser1 = generatePlacementTestResult(englishPlacementTest, sampleStudent1, 80);
 		PlacementTestResult englishUser2 = generatePlacementTestResult(englishPlacementTest, sampleStudent2, 65.5);
 
@@ -93,7 +98,7 @@ public class TestEnvironmentBuilder {
 		Set<User> sampleEnglishCourse1Students = new HashSet<>();
 		sampleEnglishCourse1Students.add(sampleStudent1);
 		sampleEnglishCourse1Students.add(sampleStudent2);
-		Course sampleEnglishCourse1 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,10,1), new Date(2017,6,30)), 14, 989.99, new CourseDay(5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile3);
+		Course sampleEnglishCourse1 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,10,1), new Date(2017,6,30)), 14, 989.99, generateCourseDay(5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile3);
 
 		environment.addCourse(sampleEnglishCourse1);
 
@@ -102,7 +107,7 @@ public class TestEnvironmentBuilder {
 			environment.addCourseMembership(courseMembership);
 		}
 
-		Course sampleEnglishCourse2 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,11,2), new Date(2017,7,31)), 14, 989.99, new CourseDay(5, 7,30, 11,30), sampleTeacher1, new HashSet<User>(), null);
+		Course sampleEnglishCourse2 = generateCourse(english, a1, standardCourseType, new CourseActivity(new Date(2016,11,2), new Date(2017,7,31)), 14, 989.99, generateCourseDay(5, 7,30, 11,30), sampleTeacher1, new HashSet<User>(), null);
 
 		environment.addCourse(sampleEnglishCourse2);
 
@@ -165,6 +170,12 @@ public class TestEnvironmentBuilder {
 			name.setId(UuidGenerator.newUUID());
 		}
 		return type;
+	}
+
+	private static CourseDay generateCourseDay(int day, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
+		CourseDay result = new CourseDay(5, 17,30, 21,30);
+		result.setId(UuidGenerator.newUUID());
+		return result;
 	}
 
 	private static PlacementTest generatePlacementTest(Language language) {

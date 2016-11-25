@@ -305,12 +305,13 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
     }
 
     @Autowired
-    public AdminCourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, CourseTypeCrudService courseTypeCrudService, CourseLevelCrudService courseLevelCrudService, LanguageCrudService languageCrudService) {
+    public AdminCourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, CourseTypeCrudService courseTypeCrudService, CourseLevelCrudService courseLevelCrudService, LanguageCrudService languageCrudService, UserCrudService userCrudService) {
         super(localeCodeProvider);
         this.courseCrudService = courseCrudService;
         this.courseTypeCrudService = courseTypeCrudService;
         this.courseLevelCrudService = courseLevelCrudService;
         this.languageCrudService = languageCrudService;
+        this.userCrudService = userCrudService;
         this.df = new SimpleDateFormat("dd-MM-yyyy");
     }
 

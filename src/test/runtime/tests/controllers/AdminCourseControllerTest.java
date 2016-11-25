@@ -1,5 +1,9 @@
 package test.runtime.tests.controllers;
 
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+
+import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
@@ -28,6 +32,20 @@ import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.course.courselevel.CourseLevelCrudService;
 import main.service.crud.language.LanguageCrudService;
 import main.service.crud.user.user.UserCrudService;
+
+import main.json.admin.course.NewCourseJson;
+import main.json.admin.course.CourseActivityJson;
+import main.json.admin.course.CourseDayJson;
+
+import main.json.admin.course.edit.EditCourseJson;
+
+import main.json.admin.course.edit.EditCourseActivityJson;
+import main.json.admin.course.edit.EditCourseDaysJson;
+import main.json.admin.course.edit.EditCourseLanguageJson;
+import main.json.admin.course.edit.EditCourseLevelJson;
+import main.json.admin.course.edit.EditCourseMaxStudentsJson;
+import main.json.admin.course.edit.EditCoursePriceJson;
+import main.json.admin.course.edit.EditCourseTypeJson;
 
 import main.model.course.Course;
 import main.model.course.CourseDay;
@@ -92,92 +110,406 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetCourseList() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Set<Course> courses = new HashSet<>(this.testEnvironment.getCourses());
+
+        when(courseCrudServiceMock.findAllCourses()).thenReturn(courses);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + AdminCourseControllerUrlConstants.COURSE_LIST)
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testGetCourseInfo() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<>(sampleCourse.getTeachers()).get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.course.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.course.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.course.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.course.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.course.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.course.teachers[0].userID", is(sampleTeacher.getId())))
+            .andExpect(jsonPath("$.course.teachers[0].name", is(sampleTeacher.getFullName())))
+            .andExpect(jsonPath("$.course.courseActivity.dateFrom", is(df.format(sampleCourse.getCourseActivity().getFrom()))))
+            .andExpect(jsonPath("$.course.courseActivity.dateTo", is(df.format(sampleCourse.getCourseActivity().getTo()))))
+            .andExpect(jsonPath("$.course.courseDays[?(@.courseDayID == \"" + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getId() + "\" && @.day == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getDay().getDay() + " && @.hourFrom.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getHour() + " && @.hourFrom.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getMinute() + " && @.hourTo.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getHour() + " && @.hourTo.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getMinute() + ")]").exists())
+            .andExpect(jsonPath("$.course.maxStudents", is(sampleCourse.getMaxStudents())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testGetCreatingCourseData() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(languageCrudServiceMock.findAllLanguages()).thenReturn(new HashSet<>(this.testEnvironment.getLanguages()));
+        when(courseLevelCrudServiceMock.findAllCourseLevels()).thenReturn(new HashSet<>(this.testEnvironment.getCourseLevels()));
+        when(courseTypeCrudServiceMock.findAllCourseTypes()).thenReturn(new HashSet<>(this.testEnvironment.getCourseTypes()));
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + AdminCourseControllerUrlConstants.AVAILABLE_CREATING_COURSE_DATA)
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testAddCourse() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Language sampleLanguage = this.testEnvironment.getLanguages().get(0);
+        CourseType sampleCourseType = this.testEnvironment.getCourseTypes().get(0);
+        CourseLevel sampleCourseLevel = this.testEnvironment.getCourseLevels().get(0);
+
+        NewCourseJson newCourse = new NewCourseJson(sampleLanguage.getId(), sampleCourseType.getId(), sampleCourseLevel.getId(), new CourseActivityJson("01-06-2016", "31-08-2016"), 15, 0);
+        newCourse.addCourseDay(new CourseDayJson(5, 17, 20, 20, 30));
+        newCourse.addTeacher(this.testEnvironment.getUsers().get(1).getId());
+
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(this.languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getLanguages().get(0));
+        when(this.courseTypeCrudServiceMock.findCourseTypeByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseTypes().get(0));
+        when(this.courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseLevels().get(0));
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getUsers().get(2));
+        doNothing().when(courseCrudServiceMock).saveCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(post(this.testedClassURI + '/' + AdminCourseControllerUrlConstants.ADD_COURSE)
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(newCourse))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourse() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseJson editedCourse = new EditCourseJson(this.testEnvironment.getLanguages().get(1).getId(), this.testEnvironment.getCourseTypes().get(1).getId(), this.testEnvironment.getCourseLevels().get(0).getId(), new CourseActivityJson("01-06-2016", "31-08-2016"), 15, 0);
+        editedCourse.addCourseDay(new CourseDayJson(5, 17, 20, 20, 30));
+        editedCourse.addTeacher(this.testEnvironment.getUsers().get(1).getId());
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(this.languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getLanguages().get(0));
+        when(this.courseTypeCrudServiceMock.findCourseTypeByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseTypes().get(0));
+        when(this.courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseLevels().get(0));
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getUsers().get(2));
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId())
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedCourse))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseLanguage() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseLanguageJson editCourseLanguage = new EditCourseLanguageJson();
+        editCourseLanguage.setLanguageID(this.testEnvironment.getLanguages().get(1).getId());
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(this.languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getLanguages().get(0));
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/language")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseLanguage))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseType() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseTypeJson editCourseType = new EditCourseTypeJson();
+        editCourseType.setCourseTypeID(this.testEnvironment.getCourseTypes().get(1).getId());
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(this.courseTypeCrudServiceMock.findCourseTypeByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseTypes().get(0));
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/coursetype")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseType))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseLevel() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseLevelJson editCourseLevel = new EditCourseLevelJson();
+        editCourseLevel.setCourseLevelID(this.testEnvironment.getCourseLevels().get(0).getId());
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(this.courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseLevels().get(0));
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/level")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseLevel))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseActivity() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseActivityJson editCourseActivity = new EditCourseActivityJson();
+        editCourseActivity.setCourseActivity(new CourseActivityJson("01-06-2016", "31-08-2016"));
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/activity")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseActivity))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseDays() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseDaysJson editCourseDays = new EditCourseDaysJson();
+        editCourseDays.addCourseDay(new CourseDayJson(5, 17, 20, 20, 30));
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/days")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseDays))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseAddCourseDay() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        CourseDayJson courseDayJson = new CourseDayJson(5, 17, 20, 20, 30);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/days/add")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(courseDayJson))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseRemoveCourseDay() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        CourseDay courseDay = new ArrayList<>(sampleCourse.getCourseDays()).get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/days/remove/" + courseDay.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseTeacher() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<>(sampleCourse.getTeachers()).get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleTeacher);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/teacher/" + sampleTeacher.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseAddTeacher() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(1);
+        User sampleUser = this.testEnvironment.getUsers().get(3);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/teacher/add/" + sampleUser.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseRemoveTeacher() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<>(sampleCourse.getTeachers()).get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleTeacher);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/teacher/remove/" + sampleTeacher.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testEditCourseMaxStudents() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCourseMaxStudentsJson editCourseMaxStudents = new EditCourseMaxStudentsJson();
+        editCourseMaxStudents.setMaxStudents(12);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/max/students")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCourseMaxStudents))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void editCoursePrice() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        EditCoursePriceJson editCoursePriceJson = new EditCoursePriceJson();
+        editCoursePriceJson.setPrice(899.99);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/price")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editCoursePriceJson))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testRemoveCourse() throws Exception {
-        Assert.fail();
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).deleteCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(delete(this.testedClassURI + '/' + sampleCourse.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
 }
