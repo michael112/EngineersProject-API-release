@@ -227,6 +227,9 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
 
         Language english = this.testEnvironment.getLanguages().get(0);
 
+        User englishTeacher1 = new ArrayList<>(english.getTeachers()).get(0);
+        User englishTeacher2 = new ArrayList<>(english.getTeachers()).get(1);
+
         when(languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(english);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
@@ -237,15 +240,19 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.languageTeachers.language.id", is(english.getId())))
             .andExpect(jsonPath("$.languageTeachers.language.name", is(english.getLanguageName("en"))))
-            .andExpect(jsonPath("$.languageTeachers.teachers", hasSize(1)))
-            .andExpect(jsonPath("$.languageTeachers.teachers[0].userID", is(new ArrayList<>(english.getTeachers()).get(0).getId())))
-            .andExpect(jsonPath("$.languageTeachers.teachers[0].name", is(new ArrayList<>(english.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.languageTeachers.teachers", hasSize(2)))
+            .andExpect(jsonPath("$.languageTeachers.teachers[?(@.userID == \"" + englishTeacher1.getId() + "\" && @.name == \"" + englishTeacher1.getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.languageTeachers.teachers[?(@.userID == \"" + englishTeacher2.getId() + "\" && @.name == \"" + englishTeacher2.getFullName() + "\" )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
     public void testAddTeacherLanguage() throws Exception {
+
+        // NIE działa z nieznanego mi powodu (!!!)
+        // not working for unknown reasons
+
         String returnMessage = "";
 
         Language english = this.testEnvironment.getLanguages().get(0);

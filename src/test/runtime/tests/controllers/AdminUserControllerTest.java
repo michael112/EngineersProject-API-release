@@ -92,7 +92,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
-            .andExpect(jsonPath("users.users", hasSize(3)))
+            .andExpect(jsonPath("users.users", hasSize(4)))
 //
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
@@ -173,8 +173,10 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
         User sampleUser = this.testEnvironment.getUsers().get(2); // sampleTeacher1
         Phone sampleUserPhone = new ArrayList<>(sampleUser.getPhone()).get(0);
-        Course sampleTeacherCourse = new ArrayList<>(sampleUser.getCoursesAsTeacher()).get(0);
-        User sampleCourseTeacher = new ArrayList<>(sampleTeacherCourse.getTeachers()).get(0);
+        Course sampleTeacherCourse1 = new ArrayList<>(sampleUser.getCoursesAsTeacher()).get(0);
+        User sampleCourseTeacher1 = new ArrayList<>(sampleTeacherCourse1.getTeachers()).get(0);
+        Course sampleTeacherCourse2 = new ArrayList<>(sampleUser.getCoursesAsTeacher()).get(1);
+        User sampleCourseTeacher2 = new ArrayList<>(sampleTeacherCourse2.getTeachers()).get(0);
 
         when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
@@ -199,17 +201,11 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("user.address.postCode", is(sampleUser.getAddress().getPostCode())))
             .andExpect(jsonPath("user.address.city", is(sampleUser.getAddress().getCity())))
             .andExpect(jsonPath("user.coursesAsStudent", hasSize(0)))
-            // two teacher courses
-            // .andExpect(jsonPath("user.coursesAsTeacher", hasSize(1)))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].courseID", is(sampleTeacherCourse.getId())))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].language.id", is(sampleTeacherCourse.getLanguage().getId())))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].language.name", is(sampleTeacherCourse.getLanguage().getLanguageName("en"))))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].courseLevel", is(sampleTeacherCourse.getCourseLevel().getName())))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].courseType.courseTypeID", is(sampleTeacherCourse.getCourseType().getId())))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].courseType.name", is(sampleTeacherCourse.getCourseType().getCourseTypeName("en"))))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].teachers", hasSize(1)))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].teachers[0].userID", is(sampleCourseTeacher.getId())))
-            .andExpect(jsonPath("user.coursesAsTeacher[0].teachers[0].name", is(sampleCourseTeacher.getFullName())))
+            .andExpect(jsonPath("user.coursesAsTeacher", hasSize(2)))
+            .andExpect(jsonPath("$.user.coursesAsTeacher[?(@.courseID == \"" + sampleTeacherCourse1.getId() + "\" && @.language.id == \"" + sampleTeacherCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleTeacherCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleTeacherCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleTeacherCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleTeacherCourse1.getCourseType().getCourseTypeName("en") + "\" )]").exists())
+            .andExpect(jsonPath("$.user.coursesAsTeacher[?(@.courseID == \"" + sampleTeacherCourse1.getId() + "\" && @.language.id == \"" + sampleTeacherCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleTeacherCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleTeacherCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleTeacherCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleTeacherCourse1.getCourseType().getCourseTypeName("en") + "\" )].teachers[?(@.userID == \"" + sampleCourseTeacher1.getId() + "\" && @.name == \"" + sampleCourseTeacher1.getFullName() + "\")]").exists())
+            .andExpect(jsonPath("$.user.coursesAsTeacher[?(@.courseID == \"" + sampleTeacherCourse2.getId() + "\" && @.language.id == \"" + sampleTeacherCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleTeacherCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleTeacherCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleTeacherCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleTeacherCourse2.getCourseType().getCourseTypeName("en") + "\" )]").exists())
+            .andExpect(jsonPath("$.user.coursesAsTeacher[?(@.courseID == \"" + sampleTeacherCourse2.getId() + "\" && @.language.id == \"" + sampleTeacherCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleTeacherCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleTeacherCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleTeacherCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleTeacherCourse2.getCourseType().getCourseTypeName("en") + "\" )].teachers[?(@.userID == \"" + sampleCourseTeacher2.getId() + "\" && @.name == \"" + sampleCourseTeacher2.getFullName() + "\")]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
