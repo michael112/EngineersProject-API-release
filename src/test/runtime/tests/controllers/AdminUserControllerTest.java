@@ -12,6 +12,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
@@ -21,6 +22,7 @@ import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.locale.LocaleCodeProvider;
+import main.util.mail.MailSender;
 
 import main.constants.urlconstants.AdminUserControllerUrlConstants;
 
@@ -28,7 +30,10 @@ import main.service.crud.user.user.UserCrudService;
 
 import main.json.admin.user.AccountJson;
 
+import main.json.user.PhoneJson;
+
 import main.model.user.userprofile.Phone;
+import main.model.user.userprofile.Address;
 import main.model.user.User;
 import main.model.course.CourseMembership;
 import main.model.course.Course;
@@ -56,6 +61,8 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     private CurrentUserService currentUserServiceMock;
     @Autowired
     private LocaleCodeProvider localeCodeProviderMock;
+    @Autowired
+    private MailSender mailSenderMock;
 
     @Autowired
     private UserCrudService userCrudServiceMock;
@@ -65,7 +72,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
-        reset(labelProviderMock, domainURIProviderMock, localeCodeProviderMock, currentUserServiceMock, userCrudServiceMock);
+        reset(labelProviderMock, domainURIProviderMock, localeCodeProviderMock, mailSenderMock, currentUserServiceMock, userCrudServiceMock);
         this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
         when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
     }
@@ -100,12 +107,16 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAddAccount() throws Exception {
-        Assert.fail();
-
-        /*
         String returnMessage = "";
 
-        AccountJson newAccount = new AccountJson();
+        AccountJson newAccount = new AccountJson("username", "Name", "Surname", "mail@mail.pl", new Address( "dsv", "245", "3", "11-112", "fdff"));
+        PhoneJson phoneJson = new PhoneJson();
+        phoneJson.setPhoneType("MOBILE");
+        phoneJson.setPhoneNumber("323-213-231");
+        newAccount.addPhone(phoneJson);
+
+        doNothing().when(userCrudServiceMock).saveUser(Mockito.any(User.class));
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
         this.mockMvc.perform(post(this.testedClassURI + '/' + AdminUserControllerUrlConstants.ADD_ACCOUNT)
             .contentType("application/json;charset=utf-8")
@@ -115,7 +126,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
-        */
     }
 
     @Test
@@ -282,11 +292,14 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testResetUserPassword() throws Exception {
-        Assert.fail();
-        /*
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(mailSenderMock).sendMail(Mockito.any(String.class), Mockito.any(String.class), Mockito.any(String.class));
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
 
         this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/reset/password")
             .contentType("application/json;charset=utf-8")
@@ -295,7 +308,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
-        */
     }
 
     @Test

@@ -6,11 +6,17 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.transaction.annotation.Transactional;
+
 import main.util.locale.LocaleCodeProvider;
 
 import main.service.controller.AbstractService;
 
 import main.service.crud.user.user.UserCrudService;
+
+import main.util.labels.LabelProvider;
+import main.util.password.generator.RandomPasswordGenerator;
+import main.util.mail.MailSender;
 
 import main.json.admin.user.AccountJson;
 
@@ -36,6 +42,12 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
 
     private UserCrudService userCrudService;
 
+    private LabelProvider labelProvider;
+
+    private MailSender mailSender;
+
+    private RandomPasswordGenerator randomPasswordGenerator;
+
     public AccountListJson getAccountList() {
         try {
             Set<User> users = this.userCrudService.findAllUsers();
@@ -51,7 +63,22 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
     }
 
     public void addAccount(AccountJson newAccount) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            User newUser = new User();
+            newUser.setUsername(newAccount.getUsername());
+            newUser.setFirstName(newAccount.getFirstName());
+            newUser.setLastName(newAccount.getLastName());
+            newUser.setEmail(newAccount.getEMail());
+            newUser.setAddress(newAccount.getAddress());
+            for( PhoneJson phoneJson : newAccount.getPhone() ) {
+                newUser.addPhone(phoneJson.toObject());
+            }
+            this.generatePasswordAndSendMail(newUser);
+            this.userCrudService.saveUser(newUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public AccountInfoJson getAccountInfo(User user) {
@@ -133,18 +160,29 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
         }
     }
 
+    @Transactional
     public void resetUserPassword(User user) {
         try {
-            throw new org.apache.commons.lang3.NotImplementedException("");
+            this.generatePasswordAndSendMail(user);
+            this.userCrudService.updateUser(user);
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
 
+    private void generatePasswordAndSendMail(User user) {
+        user.setPassword(this.randomPasswordGenerator.generateRandomPassword());
+        String message = this.labelProvider.getLabel("password.reset.message.part1") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part2") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part3") + user.getPassword() + this.labelProvider.getLabel("password.reset.message.part4");
+        this.mailSender.sendMail(user.getEmail(), this.labelProvider.getLabel("password.reset.title"), message);
+    }
+
     @Autowired
-    public AdminUserServiceImpl(LocaleCodeProvider localeCodeProvider, UserCrudService userCrudService) {
+    public AdminUserServiceImpl(LocaleCodeProvider localeCodeProvider, LabelProvider labelProvider, MailSender mailSender, RandomPasswordGenerator randomPasswordGenerator, UserCrudService userCrudService) {
         super(localeCodeProvider);
+        this.labelProvider = labelProvider;
+        this.mailSender = mailSender;
+        this.randomPasswordGenerator = randomPasswordGenerator;
         this.userCrudService = userCrudService;
     }
 
