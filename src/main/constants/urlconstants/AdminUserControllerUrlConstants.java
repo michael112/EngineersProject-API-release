@@ -12,11 +12,27 @@ public class AdminUserControllerUrlConstants {
 
     public static final String ACCOUNT_INFO = "/{userID}";
 
-    public static final String ACCOUNT_INFO_FIELD = "/{userID}/{fieldName}";
+    public static final String ACCOUNT_INFO_USERNAME = "/{userID}/username";
+
+    public static final String ACCOUNT_INFO_NAME = "/{userID}/name";
+
+    public static final String ACCOUNT_INFO_EMAIL = "/{userID}/email";
+
+    public static final String ACCOUNT_INFO_PHONE = "/{userID}/phone/{phoneID}";
+
+    public static final String ACCOUNT_INFO_ADDRESS = "/{userID}/address";
 
     public static final String EDIT_ACCOUNT = "/{userID}";
 
-    public static final String EDIT_ACCOUNT_FIELD = "/{userID}/{fieldName}";
+    public static final String EDIT_ACCOUNT_USERNAME = "/{userID}/username";
+
+    public static final String EDIT_ACCOUNT_NAME = "/{userID}/name";
+
+    public static final String EDIT_ACCOUNT_EMAIL = "/{userID}/email";
+
+    public static final String EDIT_ACCOUNT_PHONE = "/{userID}/phone/{phoneID}";
+
+    public static final String EDIT_ACCOUNT_ADDRESS = "/{userID}/address";
 
     public static final String DEACTIVATE_ACCOUNT = "/{userID}/deactivate";
 

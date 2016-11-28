@@ -30,12 +30,23 @@ import main.json.response.AdminAccountListResponseJson;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 
-import main.json.admin.user.AbstractAccountFieldJson;
+import main.json.response.AdminAccountUsernameInfoResponseJson;
+import main.json.response.AdminAccountNameInfoResponseJson;
+import main.json.response.AdminAccountEmailInfoResponseJson;
+import main.json.response.AdminAccountPhoneInfoResponseJson;
+import main.json.response.AdminAccountAddressInfoResponseJson;
+
 import main.json.admin.user.AccountJson;
 import main.json.admin.user.view.AccountInfoJson;
 import main.json.admin.user.view.AccountListJson;
 
+import main.json.admin.user.field.UsernameJson;
+import main.json.admin.user.field.NameJson;
+import main.json.admin.user.field.EmailJson;
+import main.json.user.PhoneJson;
+
 import main.model.user.User;
+import main.model.user.userprofile.Address;
 
 @RequestMapping(value = AdminUserControllerUrlConstants.CLASS_URL)
 @RestController
@@ -81,9 +92,58 @@ public class AdminUserController {
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_FIELD, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> getFieldInfo(@PathVariable("userID") String accountID, @PathVariable("fieldName") String fieldName) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_USERNAME, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getUsernameInfo(@PathVariable("userID") String accountID) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        UsernameJson usernameJson = this.adminUserService.getUsernameInfo(account);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountUsernameInfoResponseJson>(new AdminAccountUsernameInfoResponseJson(usernameJson, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_NAME, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getNameInfo(@PathVariable("userID") String accountID) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        NameJson nameJson = this.adminUserService.getNameInfo(account);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountNameInfoResponseJson>(new AdminAccountNameInfoResponseJson(nameJson, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_EMAIL, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getEmailInfo(@PathVariable("userID") String accountID) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        EmailJson eMailJson = this.adminUserService.getEmailInfo(account);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountEmailInfoResponseJson>(new AdminAccountEmailInfoResponseJson(eMailJson, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_PHONE, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getPhoneInfo(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        PhoneJson phoneJson = this.adminUserService.getPhoneInfo(account);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountPhoneInfoResponseJson>(new AdminAccountPhoneInfoResponseJson(phoneJson, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_ADDRESS, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getAddressInfo(@PathVariable("userID") String accountID) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        Address address = this.adminUserService.getAddressInfo(account);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountAddressInfoResponseJson>(new AdminAccountAddressInfoResponseJson(address, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
@@ -98,8 +158,32 @@ public class AdminUserController {
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_FIELD, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editField(@PathVariable("userID") String accountID, @PathVariable("fieldName") String fieldName, @RequestBody AbstractAccountFieldJson fieldJson) {
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_USERNAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editUsername() {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_NAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editName() {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_EMAIL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editEmail() {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editPhone() {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADDRESS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editAddress() {
         throw new org.apache.commons.lang3.NotImplementedException("");
     }
 

@@ -29,11 +29,15 @@ import main.json.admin.user.view.CourseTeacherJson;
 import main.json.course.CourseJson;
 import main.json.course.CourseUserJson;
 
+import main.json.admin.user.field.UsernameJson;
+import main.json.admin.user.field.NameJson;
+import main.json.admin.user.field.EmailJson;
 import main.json.user.PhoneJson;
 
 import main.model.user.User;
-
 import main.model.user.userprofile.Phone;
+import main.model.user.userprofile.Address;
+
 import main.model.course.Course;
 import main.model.course.CourseMembership;
 
@@ -116,6 +120,26 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
+    }
+
+    public UsernameJson getUsernameInfo(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public NameJson getNameInfo(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public EmailJson getEmailInfo(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public PhoneJson getPhoneInfo(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public Address getAddressInfo(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     public void editAccount(User user, AccountJson editedAccount) {
