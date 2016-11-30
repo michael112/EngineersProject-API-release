@@ -1,9 +1,13 @@
 package main.controllers;
 
+import java.util.Set;
+
 import javax.annotation.security.PermitAll;
 import javax.annotation.security.RolesAllowed;
 
 import javax.validation.Valid;
+
+import javax.persistence.NoResultException;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +39,7 @@ import main.json.response.AvailableLngAndTypesResponseJson;
 import main.json.response.CourseSignupResponseJson;
 import main.json.response.ChangeGroupResponseJson;
 import main.json.response.ResignGroupResponseJson;
+import main.json.response.CourseSearchResultsResponseJson;
 
 import main.json.course.AbstractCourseInfoJson;
 
@@ -49,6 +54,7 @@ import main.model.user.User;
 import main.model.course.Course;
 
 import main.service.controller.course.CourseService;
+import main.service.search.SearchService;
 
 import main.security.coursemembership.annotations.CourseMembershipRequired;
 import main.security.coursemembership.annotations.CourseMembershipType;
@@ -75,6 +81,9 @@ public class CourseController {
 
     @Autowired
     private CourseService courseService;
+
+    @Autowired
+    private SearchService searchService;
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired
@@ -129,8 +138,17 @@ public class CourseController {
     @PermitAll
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_SEARCH_COURSES, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> searchCourses(@Valid @RequestBody CourseSearchPatternJson searchPattern) {
-        // toDo
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            Set<CourseSignupJson> results = this.searchService.seekCourses(searchPattern);
+            String messageStr = this.labelProvider.getLabel("course.search.success");
+            HttpStatus responseStatus = HttpStatus.OK;
+            return new ResponseEntity<CourseSearchResultsResponseJson>(new CourseSearchResultsResponseJson(results, messageStr, responseStatus), responseStatus);
+        }
+        catch( NoResultException ex ) {
+            String messageStr = this.labelProvider.getLabel(ex.getMessage());
+            HttpStatus responseStatus = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
