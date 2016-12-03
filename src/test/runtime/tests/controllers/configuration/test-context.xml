@@ -118,6 +118,14 @@
 		</constructor-arg>
 	</bean>
 
+	<bean id="searchService" class="org.mockito.Mockito" factory-method="mock">
+		<constructor-arg>
+			<bean class="java.lang.Class" factory-method="forName">
+				<constructor-arg value="main.service.search.SearchService" />
+			</bean>
+		</constructor-arg>
+	</bean>
+
 	<bean id="localeCodeProvider" class="org.mockito.Mockito" factory-method="mock">
 		<constructor-arg>
 			<bean class="java.lang.Class" factory-method="forName">
