@@ -123,7 +123,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
     }
 
     public void removePhone(User currentUser, PhoneJson phoneToRemove) {
-        currentUser.removePhone(currentUser.getPhone(phoneToRemove.getPhoneNumber()));
+        currentUser.removePhone(currentUser.getPhoneByNumber(phoneToRemove.getPhoneNumber()));
         this.userCrudService.updateUser(currentUser);
     }
 

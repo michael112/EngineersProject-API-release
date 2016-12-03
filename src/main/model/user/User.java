@@ -105,7 +105,15 @@ public class User extends AbstractUuidModel {
     public boolean containsPhone(Phone phone) {
         return this.phone.contains(phone);
     }
-    public Phone getPhone(String phoneNumber) {
+    public Phone getPhoneById(String phoneID) {
+        for( Phone phone : this.phone ) {
+            if( phone.getId().equals(phoneID) ) {
+                return phone;
+            }
+        }
+        return null;
+    }
+    public Phone getPhoneByNumber(String phoneNumber) {
         for( Phone phone : this.phone ) {
             if( phone.getPhoneNumber().equals(phoneNumber) ) {
                 return phone;

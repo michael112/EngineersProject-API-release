@@ -9,11 +9,11 @@ import main.json.admin.user.field.EmailJson;
 public class AdminAccountEmailInfoResponseJson extends AbstractResponseJson {
 
     @Getter
-    private EmailJson eMail;
+    private EmailJson email;
 
-    public AdminAccountEmailInfoResponseJson(EmailJson eMail, String message, HttpStatus status) {
+    public AdminAccountEmailInfoResponseJson(EmailJson email, String message, HttpStatus status) {
         super(message, status);
-        this.eMail = eMail;
+        this.email = email;
     }
 
 }

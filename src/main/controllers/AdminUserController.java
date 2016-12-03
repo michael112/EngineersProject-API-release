@@ -129,7 +129,7 @@ public class AdminUserController {
     public ResponseEntity<? extends AbstractResponseJson> getPhoneInfo(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
-        PhoneJson phoneJson = this.adminUserService.getPhoneInfo(account);
+        PhoneJson phoneJson = this.adminUserService.getPhoneInfo(account, phoneID);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.user.info.success");
         return new ResponseEntity<AdminAccountPhoneInfoResponseJson>(new AdminAccountPhoneInfoResponseJson(phoneJson, messageStr, responseStatus), responseStatus);

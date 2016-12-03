@@ -123,23 +123,52 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
     }
 
     public UsernameJson getUsernameInfo(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            return new UsernameJson(user.getUsername());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public NameJson getNameInfo(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            return new NameJson(user.getFirstName(), user.getLastName());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public EmailJson getEmailInfo(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            return new EmailJson(user.getEmail());
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
-    public PhoneJson getPhoneInfo(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public PhoneJson getPhoneInfo(User user, String phoneID) {
+        try {
+            Phone phone = user.getPhoneById(phoneID);
+            if( phone == null ) {
+                throw new IllegalArgumentException();
+            }
+            else return new PhoneJson(phone);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public Address getAddressInfo(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        try {
+            return user.getAddress();
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public void editAccount(User user, AccountJson editedAccount) {

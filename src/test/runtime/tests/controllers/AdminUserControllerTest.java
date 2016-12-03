@@ -221,8 +221,115 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetFieldInfo() throws Exception {
+    public void testGetUsernameInfo() throws Exception {
         Assert.fail();
+
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/username")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.username.username", is(sampleUser.getUsername())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetNameInfo() throws Exception {
+        Assert.fail();
+
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/name")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.name.firstName", is(sampleUser.getFirstName())))
+            .andExpect(jsonPath("$.name.lastName", is(sampleUser.getLastName())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetEmailInfo() throws Exception {
+        Assert.fail();
+
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/email")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.email.email", is(sampleUser.getEmail())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetPhoneInfo() throws Exception {
+        Assert.fail();
+
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+        Phone sampleUserPhone = new ArrayList<>(sampleUser.getPhone()).get(0);
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/phone/" + sampleUserPhone.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.phone.phoneId", is(sampleUserPhone.getId())))
+            .andExpect(jsonPath("$.phone.phoneNumber", is(sampleUserPhone.getPhoneNumber())))
+            .andExpect(jsonPath("$.phone.phoneType", is(sampleUserPhone.getPhoneType().name())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetAddressInfo() throws Exception {
+        Assert.fail();
+
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/address")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.address.address.street", is(sampleUser.getAddress().getStreet())))
+            .andExpect(jsonPath("$.address.address.houseNumber", is(sampleUser.getAddress().getHouseNumber())))
+            .andExpect(jsonPath("$.address.address.flatNumber", is(sampleUser.getAddress().getFlatNumber())))
+            .andExpect(jsonPath("$.address.address.postCode", is(sampleUser.getAddress().getPostCode())))
+            .andExpect(jsonPath("$.address.address.city", is(sampleUser.getAddress().getCity())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test

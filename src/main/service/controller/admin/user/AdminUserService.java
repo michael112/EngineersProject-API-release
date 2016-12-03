@@ -27,7 +27,7 @@ public interface AdminUserService {
 
     EmailJson getEmailInfo(User user);
 
-    PhoneJson getPhoneInfo(User user);
+    PhoneJson getPhoneInfo(User user, String phoneID);
 
     Address getAddressInfo(User user);
 

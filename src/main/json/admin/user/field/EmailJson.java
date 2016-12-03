@@ -10,15 +10,15 @@ public class EmailJson {
 
     @Setter
     @Getter
-    private String eMail;
+    private String email;
 
     public EmailJson() {
         super();
     }
 
-    public EmailJson(String eMail) {
+    public EmailJson(String email) {
         this();
-        this.setEMail(eMail);
+        this.setEmail(email);
     }
 
 }
