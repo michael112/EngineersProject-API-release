@@ -30,7 +30,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 	public Set<CourseSignupJson> seekCourses(CourseSearchPatternJson searchPattern) {
 		Set<Course> courses = this.courseCrudService.findCoursesByQuery(buildCourseSearchQuery(searchPattern));
-		try {
+			if( ( courses != null ) && ( courses.size() > 0 ) ) {
 			Set<CourseSignupJson> result = new HashSet<>();
 			for( Course course : courses ) {
 				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
@@ -41,14 +41,12 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			}
 			return result;
 		}
-		catch( NullPointerException ex ) {
-			throw new NoResultException("course.search.results.empty");
-		}
+		else throw new NoResultException("course.search.results.empty");
 	}
 
 	private String buildCourseSearchQuery(CourseSearchPatternJson searchPattern) {
 		boolean isFirst = true;
-		String query = "from Course c, CourseDay d ";
+		String query = "from Course c, CourseDay d, main.model.course.MyHour h ";
 		if( searchPattern.getLanguage() != null ) {
 			if( isFirst ) {
 				query += "where (";
@@ -57,7 +55,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( language.id = " + searchPattern.getLanguage() + " ) ";
+			query += "( language.id = \'" + searchPattern.getLanguage() + "\' ) ";
 		}
 		if( searchPattern.getCourseType() != null ) {
 			if( isFirst ) {
@@ -67,7 +65,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( courseType.id = " + searchPattern.getCourseType() + " ) ";
+			query += "( courseType.id = \'" + searchPattern.getCourseType() + "\' ) ";
 		}
 		if( searchPattern.getCourseLevel() != null ) {
 			if( isFirst ) {
@@ -77,7 +75,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( courseLevel.id = " + searchPattern.getCourseLevel() + " ) ";
+			query += "( courseLevel.id = \'" + searchPattern.getCourseLevel() + "\' ) ";
 		}
 		for(CourseDayJson courseDayJson : searchPattern.getCourseDays()) {
 			if( isFirst ) {
@@ -97,7 +95,8 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( ( d.hourFrom.hour = " + courseHourJson.getHour() + " ) and ( d.hourFrom.minute = " + courseHourJson.getMinute() + " ) and ( d.hourFrom member of c.courseDays ) ) ";
+			// query += "( ( d.hourFrom.hour = " + courseHourJson.getHour() + " ) and ( d.hourFrom.minute = " + courseHourJson.getMinute() + " ) and ( d.hourFrom member of c.courseDays ) ) ";
+			query += "( ( h.hour = " + courseHourJson.getHour() + " ) and ( h.minute = " + courseHourJson.getMinute() + " ) and ( h.hour member of d.hourFrom ) and ( h.minute member of d.hourFrom ) and ( d.hourFrom member of c.courseDays ) ) ";
 		}
 		query += ")";
 		return query;
