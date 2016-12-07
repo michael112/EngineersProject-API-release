@@ -159,32 +159,57 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_USERNAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editUsername() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> editUsername(@PathVariable("userID") String accountID, @RequestBody UsernameJson usernameJson) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.editUsername(account, usernameJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_NAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editName() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> editName(@PathVariable("userID") String accountID, @RequestBody NameJson nameJson) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.editName(account, nameJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_EMAIL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editEmail() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> editEmail(@PathVariable("userID") String accountID, @RequestBody EmailJson emailJson) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.editEmail(account, emailJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editPhone() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> editPhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID, @RequestBody PhoneJson phoneJson) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.editPhone(account, phoneID, phoneJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADDRESS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editAddress() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> editAddress(@PathVariable("userID") String accountID, @RequestBody Address address) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.editAddress(account, address);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)

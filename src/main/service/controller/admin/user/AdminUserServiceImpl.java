@@ -40,6 +40,7 @@ import main.model.user.userprofile.Address;
 
 import main.model.course.Course;
 import main.model.course.CourseMembership;
+import main.model.enums.PhoneType;
 
 @Service("adminUserService")
 public class AdminUserServiceImpl extends AbstractService implements AdminUserService {
@@ -186,6 +187,62 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
             for( PhoneJson phoneJson : editedAccount.getPhone() ) {
                 user.addPhone(phoneJson.toObject());
             }
+            this.userCrudService.updateUser(user);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void editUsername(User user, UsernameJson usernameJson) {
+        try {
+            user.setUsername(usernameJson.getUsername());
+            this.userCrudService.updateUser(user);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void editName(User user, NameJson nameJson) {
+        try {
+            user.setFirstName(nameJson.getFirstName());
+            user.setLastName(nameJson.getLastName());
+            this.userCrudService.updateUser(user);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void editEmail(User user, EmailJson emailJson) {
+        try {
+            user.setEmail(emailJson.getEmail());
+            this.userCrudService.updateUser(user);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void editPhone(User user, String phoneID, PhoneJson phoneJson) {
+        try {
+            Phone phone = user.getPhoneById(phoneID);
+            if( phone == null ) {
+                throw new IllegalArgumentException();
+            }
+            phone.setPhoneType(PhoneType.valueOf(phoneJson.getPhoneType()));
+            phone.setPhoneNumber(phoneJson.getPhoneNumber());
+            this.userCrudService.updateUser(user);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void editAddress(User user, Address address) {
+        try {
+            user.setAddress(address);
             this.userCrudService.updateUser(user);
         }
         catch( NullPointerException ex ) {

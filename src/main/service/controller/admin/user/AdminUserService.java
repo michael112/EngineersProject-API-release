@@ -33,6 +33,16 @@ public interface AdminUserService {
 
     void editAccount(User user, AccountJson editedAccount);
 
+    void editUsername(User user, UsernameJson usernameJson);
+
+    void editName(User user, NameJson nameJson);
+
+    void editEmail(User user, EmailJson emailJson);
+
+    void editPhone(User user, String phoneID, PhoneJson phoneJson);
+
+    void editAddress(User user, Address address);
+
     void deactivateAccount(User user);
 
     void activateAccount(User user);

@@ -32,6 +32,10 @@ import main.json.admin.user.AccountJson;
 
 import main.json.user.PhoneJson;
 
+import main.json.admin.user.field.UsernameJson;
+import main.json.admin.user.field.NameJson;
+import main.json.admin.user.field.EmailJson;
+
 import main.model.user.userprofile.Phone;
 import main.model.user.userprofile.Address;
 import main.model.user.User;
@@ -222,8 +226,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetUsernameInfo() throws Exception {
-        Assert.fail();
-
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
@@ -243,8 +245,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetNameInfo() throws Exception {
-        Assert.fail();
-
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
@@ -265,8 +265,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetEmailInfo() throws Exception {
-        Assert.fail();
-
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
@@ -286,8 +284,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetPhoneInfo() throws Exception {
-        Assert.fail();
-
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
@@ -310,8 +306,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
     @Test
     public void testGetAddressInfo() throws Exception {
-        Assert.fail();
-
         String returnMessage = "";
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
@@ -323,11 +317,11 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
-            .andExpect(jsonPath("$.address.address.street", is(sampleUser.getAddress().getStreet())))
-            .andExpect(jsonPath("$.address.address.houseNumber", is(sampleUser.getAddress().getHouseNumber())))
-            .andExpect(jsonPath("$.address.address.flatNumber", is(sampleUser.getAddress().getFlatNumber())))
-            .andExpect(jsonPath("$.address.address.postCode", is(sampleUser.getAddress().getPostCode())))
-            .andExpect(jsonPath("$.address.address.city", is(sampleUser.getAddress().getCity())))
+            .andExpect(jsonPath("$.address.street", is(sampleUser.getAddress().getStreet())))
+            .andExpect(jsonPath("$.address.houseNumber", is(sampleUser.getAddress().getHouseNumber())))
+            .andExpect(jsonPath("$.address.flatNumber", is(sampleUser.getAddress().getFlatNumber())))
+            .andExpect(jsonPath("$.address.postCode", is(sampleUser.getAddress().getPostCode())))
+            .andExpect(jsonPath("$.address.city", is(sampleUser.getAddress().getCity())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -355,8 +349,115 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testEditField() throws Exception {
-        Assert.fail();
+    public void testEditUsername() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        UsernameJson editedUsername = new UsernameJson("fdsfdsfd");
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/username")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedUsername))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testEditName() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        NameJson editedName = new NameJson("fdsfdsfd", "dfsdi");
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/name")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedName))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+}
+
+    @Test
+    public void testEditEmail() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        EmailJson editedEmail = new EmailJson("fdsfsif@gmail.com");
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/email")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedEmail))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testEditPhone() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+        Phone sampleUserPhone = new ArrayList<>(sampleUser.getPhone()).get(0);
+
+        PhoneJson editedPhone = new PhoneJson(sampleUserPhone);
+        editedPhone.setPhoneNumber("324-134-535");
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/phone/" + sampleUserPhone.getId())
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedPhone))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testEditAddress() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        Address editedAddress = new Address("dvdv i", "5", "155", "43-223", "sdjipfsfksd");
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/address")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editedAddress))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
