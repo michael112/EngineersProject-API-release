@@ -1,14 +1,14 @@
 package test.runtime.tests.controllers;
 
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
-
 import java.util.Set;
 import java.util.HashSet;
+
 import java.util.List;
 import java.util.ArrayList;
 
-import org.junit.Assert;
+import java.text.SimpleDateFormat;
+import java.text.DateFormat;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -49,7 +49,6 @@ import main.json.admin.course.edit.EditCourseTypeJson;
 
 import main.model.course.Course;
 import main.model.course.CourseDay;
-import main.model.course.CourseActivity;
 import main.model.course.CourseLevel;
 import main.model.course.CourseType;
 import main.model.language.Language;

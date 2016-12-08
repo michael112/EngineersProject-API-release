@@ -326,11 +326,6 @@ public class CourseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSearchCourses() throws Exception {
-        Assert.fail();
-    }
-
-    @Test
     public void testSignupToCourse() throws Exception {
         String returnMessage = "";
 

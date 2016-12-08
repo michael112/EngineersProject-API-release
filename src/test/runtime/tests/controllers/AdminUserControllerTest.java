@@ -518,11 +518,6 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.success", is(true)));
     }
 
-    @Test
-    public void testSearchUser() throws Exception {
-        Assert.fail();
-    }
-
 }
 
 /*
