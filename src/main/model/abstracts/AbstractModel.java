@@ -32,7 +32,7 @@ public abstract class AbstractModel<PK extends Serializable> implements ModelInt
                 return other.getId().equals(this.getId());
             }
             catch( NullPointerException ex ) {
-                return false;
+                return super.equals(other);
             }
         }
     }

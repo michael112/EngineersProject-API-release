@@ -8,4 +8,6 @@
     <import resource="servlet-files/spring-locale1.xml" />
     <import resource="servlet-files/spring-locale2.xml" />
 
+    <bean id="testEnvironmentDbSaver" class="test.runtime.environment.TestEnvironmentDbSaver" />
+
 </beans>

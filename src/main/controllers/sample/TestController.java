@@ -29,6 +29,7 @@ import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
 import main.service.crud.user.user.UserCrudService;
+import main.service.crud.user.userrole.UserRoleCrudService;
 
 import main.service.file.FileUploadService;
 
@@ -40,12 +41,18 @@ import main.util.mail.MailSender;
 
 import main.constants.urlconstants.GlobalUrlConstants;
 
+import test.runtime.environment.TestEnvironmentBuilder;
+import test.runtime.environment.TestEnvironmentDbSaver;
+
 @RestController(value = "sampleController")
 @RequestMapping(GlobalUrlConstants.GLOBAL_API_URL + "/test")
 public class TestController {
 
     @Autowired
     private UserCrudService userCrudService;
+
+    @Autowired
+    private UserRoleCrudService userRoleCrudService;
 
     @Autowired
     private CurrentUserService currentUserService;
@@ -64,6 +71,15 @@ public class TestController {
 
     @Autowired
     private FileUploadService fileUploadService;
+
+    @Autowired
+    private TestEnvironmentDbSaver testEnvironmentDbSaver;
+
+    @RequestMapping(value = "/loadtestenvironment", method = RequestMethod.POST)
+    @PermitAll
+    public void loadTestEnvironment() {
+        this.testEnvironmentDbSaver.saveTestEnvironment(TestEnvironmentBuilder.build(false, this.userRoleCrudService.findUserRoleByRoleName("USER"), this.userRoleCrudService.findUserRoleByRoleName("ADMIN")));
+    }
 
     @RequestMapping(value = "/uploadfile", method = RequestMethod.POST, consumes = "multipart/form-data", produces = "application/text-plain; charset=utf-8")
     @ResponseBody
