@@ -12,6 +12,8 @@ public interface UserDao {
 
 	User findUserByID(String id);
 
+	Set<User> findUsersByQuery(String queryStr);
+
 	Set<User> findAllUsers();
 
 	void saveUser(User entity);

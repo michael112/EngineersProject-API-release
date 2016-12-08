@@ -1,6 +1,10 @@
 package main.controllers;
 
+import java.util.Set;
+
 import javax.annotation.security.RolesAllowed;
+
+import javax.persistence.NoResultException;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
@@ -21,20 +25,25 @@ import main.constants.urlconstants.AdminUserControllerUrlConstants;
 
 import main.error.exception.HttpNotFoundException;
 
+import main.service.search.SearchService;
+
 import main.service.controller.admin.user.AdminUserService;
 
 import main.service.crud.user.user.UserCrudService;
 
-import main.json.response.AdminAccountInfoResponseJson;
-import main.json.response.AdminAccountListResponseJson;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
+
+import main.json.response.AdminAccountInfoResponseJson;
+import main.json.response.AdminAccountListResponseJson;
 
 import main.json.response.AdminAccountUsernameInfoResponseJson;
 import main.json.response.AdminAccountNameInfoResponseJson;
 import main.json.response.AdminAccountEmailInfoResponseJson;
 import main.json.response.AdminAccountPhoneInfoResponseJson;
 import main.json.response.AdminAccountAddressInfoResponseJson;
+
+import main.json.response.UserSearchResultsResponseJson;
 
 import main.json.admin.user.AccountJson;
 import main.json.admin.user.view.AccountInfoJson;
@@ -44,6 +53,9 @@ import main.json.admin.user.field.UsernameJson;
 import main.json.admin.user.field.NameJson;
 import main.json.admin.user.field.EmailJson;
 import main.json.user.PhoneJson;
+
+import main.json.user.UserSearchPatternJson;
+import main.json.course.CourseUserJson;
 
 import main.model.user.User;
 import main.model.user.userprofile.Address;
@@ -60,6 +72,9 @@ public class AdminUserController {
 
     @Autowired
     private AdminUserService adminUserService;
+
+    @Autowired
+    private SearchService searchService;
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_LIST, method = RequestMethod.GET, produces = "application/json")
@@ -247,8 +262,18 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.SEARCH_USER, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> searchUser() {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+    public ResponseEntity<? extends AbstractResponseJson> searchUser(@RequestBody UserSearchPatternJson searchPattern) {
+        try {
+            Set<CourseUserJson> users = this.searchService.seekUsers(searchPattern);
+            String messageStr = this.labelProvider.getLabel("user.search.success");
+            HttpStatus responseStatus = HttpStatus.OK;
+            return new ResponseEntity<UserSearchResultsResponseJson>(new UserSearchResultsResponseJson(users, messageStr, responseStatus), responseStatus);
+        }
+        catch( NoResultException ex ) {
+            String messageStr = this.labelProvider.getLabel(ex.getMessage());
+            HttpStatus responseStatus = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
     }
 
 }

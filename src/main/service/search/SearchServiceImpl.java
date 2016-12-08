@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import main.util.locale.LocaleCodeProvider;
 
 import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.user.user.UserCrudService;
 
 import main.service.controller.AbstractService;
 
@@ -19,6 +20,7 @@ import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.search.CourseDayJson;
 import main.json.course.search.CourseHourJson;
 import main.json.course.CourseUserJson;
+import main.json.user.UserSearchPatternJson;
 
 import main.model.user.User;
 import main.model.course.Course;
@@ -27,10 +29,11 @@ import main.model.course.Course;
 public class SearchServiceImpl extends AbstractService implements SearchService {
 
 	private CourseCrudService courseCrudService;
+	private UserCrudService userCrudService;
 
 	public Set<CourseSignupJson> seekCourses(CourseSearchPatternJson searchPattern) {
 		Set<Course> courses = this.courseCrudService.findCoursesByQuery(buildCourseSearchQuery(searchPattern));
-			if( ( courses != null ) && ( courses.size() > 0 ) ) {
+		if( ( courses != null ) && ( courses.size() > 0 ) ) {
 			Set<CourseSignupJson> result = new HashSet<>();
 			for( Course course : courses ) {
 				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
@@ -42,6 +45,19 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			return result;
 		}
 		else throw new NoResultException("course.search.results.empty");
+	}
+
+	public Set<CourseUserJson> seekUsers(UserSearchPatternJson searchPattern) {
+		Set<User> users = this.userCrudService.findUsersByQuery("from User u where lower(concat(u.firstName, ' ', u.lastName)) like lower('%" + searchPattern.getPattern() + "%')");
+		if( ( users != null ) && ( users.size() > 0 ) ) {
+			Set<CourseUserJson> result = new HashSet<>();
+			for( User user : users ) {
+				CourseUserJson userJson = new CourseUserJson(user.getId(), user.getFullName());
+				result.add(userJson);
+			}
+			return result;
+		}
+		else throw new NoResultException("user.search.results.empty");
 	}
 
 	private String buildCourseSearchQuery(CourseSearchPatternJson searchPattern) {
@@ -103,9 +119,10 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	}
 
 	@Autowired
-	public SearchServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService) {
+	public SearchServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, UserCrudService userCrudService) {
 		super(localeCodeProvider);
 		this.courseCrudService = courseCrudService;
+		this.userCrudService = userCrudService;
 	}
 
 }

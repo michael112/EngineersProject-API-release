@@ -1,6 +1,12 @@
 package main.controllers;
 
+import java.util.Set;
+
+import javax.persistence.NoResultException;
+
 import javax.annotation.security.RolesAllowed;
+
+import javax.validation.Valid;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +35,8 @@ import main.error.exception.IllegalServiceOperationException;
 import main.service.crud.course.course.CourseCrudService;
 import main.service.crud.user.user.UserCrudService;
 
+import main.service.search.SearchService;
+
 import main.service.controller.admin.course.AdminCourseService;
 import main.service.controller.admin.language.AdminLanguageService;
 import main.service.controller.admin.type.AdminTypeService;
@@ -37,6 +45,7 @@ import main.service.controller.admin.level.AdminLevelService;
 import main.json.response.AdminCourseListResponseJson;
 import main.json.response.AdminCourseInfoResponseJson;
 import main.json.response.AdminCreatingCourseDataResponseJson;
+import main.json.response.CourseSearchResultsResponseJson;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 
@@ -56,6 +65,9 @@ import main.json.admin.course.edit.EditCourseLevelJson;
 import main.json.admin.course.edit.EditCourseMaxStudentsJson;
 import main.json.admin.course.edit.EditCoursePriceJson;
 import main.json.admin.course.edit.EditCourseTypeJson;
+
+import main.json.course.CourseSignupJson;
+import main.json.course.search.CourseSearchPatternJson;
 
 import main.model.course.Course;
 import main.model.course.CourseDay;
@@ -86,6 +98,9 @@ public class AdminCourseController {
     @Autowired
     private AdminLevelService adminLevelService;
 
+    @Autowired
+    private SearchService searchService;
+
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.COURSE_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getCourseList() {
@@ -113,6 +128,22 @@ public class AdminCourseController {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.course.creating.data.success");
         return new ResponseEntity<AdminCreatingCourseDataResponseJson>(new AdminCreatingCourseDataResponseJson(this.adminLanguageService.getLanguageList(), this.adminLevelService.getCourseLevelList(), this.adminTypeService.getCourseTypeList(), messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminCourseControllerUrlConstants.SEARCH_COURSES, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> searchCourses(@Valid @RequestBody CourseSearchPatternJson searchPattern) {
+        try {
+            Set<CourseSignupJson> results = this.searchService.seekCourses(searchPattern);
+            String messageStr = this.labelProvider.getLabel("course.search.success");
+            HttpStatus responseStatus = HttpStatus.OK;
+            return new ResponseEntity<CourseSearchResultsResponseJson>(new CourseSearchResultsResponseJson(results, messageStr, responseStatus), responseStatus);
+        }
+        catch( NoResultException ex ) {
+            String messageStr = this.labelProvider.getLabel(ex.getMessage());
+            HttpStatus responseStatus = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+        }
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)

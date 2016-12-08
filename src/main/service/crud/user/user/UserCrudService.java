@@ -12,6 +12,8 @@ public interface UserCrudService {
 	
 	User findUserByUsername(String username);
 
+	Set<User> findUsersByQuery(String queryStr);
+
 	Set<User> findAllUsers();
 
 	void saveUser(User entity);

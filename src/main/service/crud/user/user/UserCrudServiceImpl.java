@@ -26,6 +26,10 @@ public class UserCrudServiceImpl implements UserCrudService {
 		return dao.findUserByUsername(username);
 	}
 
+	public Set<User> findUsersByQuery(String queryStr) {
+		return dao.findUsersByQuery(queryStr);
+	}
+
 	public Set<User> findAllUsers() {
 		return dao.findAllUsers();
 	}

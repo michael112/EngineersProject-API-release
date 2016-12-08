@@ -10,6 +10,8 @@ public class AdminCourseControllerUrlConstants {
 
     public static final String AVAILABLE_CREATING_COURSE_DATA = "";
 
+    public static final String SEARCH_COURSES = "/search";
+
     public static final String ADD_COURSE = "";
 
     public static final String EDIT_COURSE = "/{courseID}";

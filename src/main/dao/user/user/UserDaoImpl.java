@@ -24,6 +24,10 @@ public class UserDaoImpl extends AbstractDao<String, User> implements UserDao {
 		return findByID(id);
 	}
 
+	public Set<User> findUsersByQuery(String queryStr) {
+		return findByQuery(queryStr);
+	}
+
 	public Set<User> findAllUsers() {
 		return findAll();
 	}
