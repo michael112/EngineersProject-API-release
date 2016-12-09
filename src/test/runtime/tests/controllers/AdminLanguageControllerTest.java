@@ -249,10 +249,6 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
 
     @Test
     public void testAddTeacherLanguage() throws Exception {
-
-        // NIE działa z nieznanego mi powodu (!!!)
-        // not working for unknown reasons
-
         String returnMessage = "";
 
         Language english = this.testEnvironment.getLanguages().get(0);
