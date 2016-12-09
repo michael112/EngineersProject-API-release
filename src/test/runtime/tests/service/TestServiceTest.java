@@ -21,9 +21,8 @@ import main.util.locale.LocaleCodeProvider;
 
 import main.model.user.User;
 import main.model.course.Course;
-import main.model.course.Grade;
-import main.model.course.StudentGrade;
 
+import main.json.course.CourseUserJson;
 import main.json.course.test.view.TestJson;
 import main.json.course.test.view.TestListJson;
 
@@ -72,6 +71,9 @@ public class TestServiceTest extends AbstractServiceTest {
             for (main.model.course.Test test : sampleCourse.getTests()) {
                 solution = new ArrayList<main.model.course.TestSolution>(test.getTestSolutions()).get(0);
                 expectedResult.addTest(new TestJson(test.getId(), test.getTitle(), String.valueOf(test.getDate().getYear()) + '-' + String.valueOf(test.getDate().getMonth()) + '-' + String.valueOf(test.getDate().getDay()), test.getDescription(), solution.isWritten(), solution.getGrade() != null, solution.getGrade().getGradeValue(), solution.getGrade().getGrade().getMaxPoints(), solution.getGrade().getGrade().getScale().name()));
+            }
+            for( User teacher : sampleCourse.getTeachers() ) {
+                expectedResult.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
 
             TestListJson testedResult = this.testService.getTestList(sampleUser, sampleCourse);

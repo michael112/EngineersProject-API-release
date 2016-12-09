@@ -179,7 +179,7 @@ public class TestEnvironmentBuilder {
 	}
 
 	private static CourseDay generateCourseDay(boolean hasUUID, int day, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
-		CourseDay result = new CourseDay(5, 17,30, 21,30);
+		CourseDay result = new CourseDay(day, hourFrom,minuteFrom, hourTo,minuteTo);
 		if( hasUUID ) result.setId(UuidGenerator.newUUID());
 		return result;
 	}

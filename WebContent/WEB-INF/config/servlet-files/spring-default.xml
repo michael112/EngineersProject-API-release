@@ -20,4 +20,7 @@
 
     <mvc:resources mapping="/static/**" location="/static/" />
 
+    <!-- temporary -->
+    <bean id="testEnvironmentDbSaver" class="test.runtime.environment.TestEnvironmentDbSaver" />
+
 </beans>

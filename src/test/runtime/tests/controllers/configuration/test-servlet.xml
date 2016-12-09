@@ -7,4 +7,6 @@
     <import resource="file:WebContent/WEB-INF/config/servlet-files/spring-jackson.xml" />
 	<import resource="file:WebContent/WEB-INF/config/servlet-files/spring-locale1.xml" />
 
+    <bean id="testEnvironmentDbSaver" class="test.runtime.environment.TestEnvironmentDbSaver" />
+
 </beans>

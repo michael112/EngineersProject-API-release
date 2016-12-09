@@ -62,7 +62,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 
 	private String buildCourseSearchQuery(CourseSearchPatternJson searchPattern) {
 		boolean isFirst = true;
-		String query = "from Course c, CourseDay d, main.model.course.MyHour h ";
+		String query = "select c from Course c join c.courseDays d ";
 		if( searchPattern.getLanguage() != null ) {
 			if( isFirst ) {
 				query += "where (";
@@ -71,7 +71,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( language.id = \'" + searchPattern.getLanguage() + "\' ) ";
+			query += "( c.language.id = \'" + searchPattern.getLanguage() + "\' ) ";
 		}
 		if( searchPattern.getCourseType() != null ) {
 			if( isFirst ) {
@@ -81,7 +81,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( courseType.id = \'" + searchPattern.getCourseType() + "\' ) ";
+			query += "( c.courseType.id = \'" + searchPattern.getCourseType() + "\' ) ";
 		}
 		if( searchPattern.getCourseLevel() != null ) {
 			if( isFirst ) {
@@ -91,7 +91,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( courseLevel.id = \'" + searchPattern.getCourseLevel() + "\' ) ";
+			query += "( c.courseLevel.id = \'" + searchPattern.getCourseLevel() + "\' ) ";
 		}
 		for(CourseDayJson courseDayJson : searchPattern.getCourseDays()) {
 			if( isFirst ) {
@@ -101,7 +101,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( ( d.day.day = " + ( courseDayJson.getDay() % 7 ) + " ) and ( d.day.day member of c.courseDays ) ) ";
+			query += "( d.day.day = " + ( courseDayJson.getDay() % 7 ) + " ) ";
 		}
 		for( CourseHourJson courseHourJson : searchPattern.getCourseHours() ) {
 			if( isFirst ) {
@@ -111,8 +111,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			// query += "( ( d.hourFrom.hour = " + courseHourJson.getHour() + " ) and ( d.hourFrom.minute = " + courseHourJson.getMinute() + " ) and ( d.hourFrom member of c.courseDays ) ) ";
-			query += "( ( h.hour = " + courseHourJson.getHour() + " ) and ( h.minute = " + courseHourJson.getMinute() + " ) and ( h.hour member of d.hourFrom ) and ( h.minute member of d.hourFrom ) and ( d.hourFrom member of c.courseDays ) ) ";
+			query += "( d.hourFrom.time = \'" + courseHourJson.getHour() + ':' + courseHourJson.getMinute() + "\' ) ";
 		}
 		query += ")";
 		return query;

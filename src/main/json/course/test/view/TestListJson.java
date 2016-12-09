@@ -5,8 +5,11 @@ import java.util.HashSet;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
 import main.json.course.CourseJson;
 
+@EqualsAndHashCode(callSuper = true)
 public class TestListJson extends CourseJson {
 
     @Getter

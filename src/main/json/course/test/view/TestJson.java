@@ -2,6 +2,9 @@ package main.json.course.test.view;
 
 import lombok.Getter;
 
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode
 public class TestJson {
 
     @Getter
