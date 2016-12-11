@@ -27,6 +27,7 @@ public class CourseTypeTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleCourse = getBasicCourse(true);
         this.standardType = this.sampleCourse.getCourseType();
         this.businessType = new CourseType();
@@ -36,6 +37,11 @@ public class CourseTypeTest extends AbstractDbTest {
         this.languageCrudService.saveLanguage(this.polish);
         addCourseTypeNames(this.standardType, new CourseTypeName(this.standardType, this.english, "standard course"), new CourseTypeName(this.standardType, this.polish, "kurs standardowy"));
         addCourseTypeNames(this.businessType, new CourseTypeName(this.businessType, this.english, "business course"), new CourseTypeName(this.businessType, this.polish, "kurs biznesowy"));
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     public void addCourseTypeNames(CourseType courseType, CourseTypeName englishName, CourseTypeName polishName) {

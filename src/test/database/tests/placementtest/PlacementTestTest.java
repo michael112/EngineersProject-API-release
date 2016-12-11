@@ -21,7 +21,13 @@ public class PlacementTestTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.samplePlacementTest = getBasicPlacementTest(true);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test

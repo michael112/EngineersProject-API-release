@@ -9,6 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.jdbc.datasource.embedded.DataSourceFactory;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabase;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+
 // Password encryption import
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -168,7 +172,27 @@ public abstract class AbstractDbTest extends AbstractTest {
             protected GradeCrudService gradeCrudService;
         // </grade-fields>
 
+        @Autowired
+        protected DataSourceFactory dataSourceFactory;
+
+        protected EmbeddedDatabase embeddedDatabase;
+
     // </fields>
+
+    public void setUp() {
+        this.embeddedDatabase = new EmbeddedDatabaseBuilder()
+            .setDataSourceFactory(this.dataSourceFactory)
+            .addScript("file:db_backup/hsql/initial.sql")
+            .build();
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        try {
+            embeddedDatabase.shutdown();
+        }
+        catch( NullPointerException ex ) {}
+    }
 
     // <user-methods>
             public Set<UserRole> getUserRoles() {

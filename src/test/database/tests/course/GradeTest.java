@@ -22,7 +22,13 @@ public class GradeTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleGrade = getBasicGrade(true, true);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test

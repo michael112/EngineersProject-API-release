@@ -26,7 +26,13 @@ public class UserTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleUser = getBasicUser();
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test

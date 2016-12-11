@@ -19,6 +19,8 @@ public class LanguageTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
+
         this.english = new Language("EN");
         this.polish = new Language("PL");
         this.german = new Language("DE");
@@ -49,6 +51,11 @@ public class LanguageTest extends AbstractDbTest {
 
         this.languageCrudService.updateLanguage(english);
         this.languageCrudService.updateLanguage(polish);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test(expected = org.springframework.orm.hibernate5.HibernateSystemException.class)

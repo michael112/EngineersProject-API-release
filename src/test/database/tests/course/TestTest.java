@@ -20,7 +20,13 @@ public class TestTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleTest = getBasicTest(true);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @org.junit.Test

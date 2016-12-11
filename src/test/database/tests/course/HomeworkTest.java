@@ -22,7 +22,13 @@ public class HomeworkTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleHomework = getBasicHomework(true);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test

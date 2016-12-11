@@ -20,6 +20,8 @@ import main.service.crud.course.message.MessageCrudService;
 
 import main.json.course.message.NewMessageJson;
 
+import main.json.course.message.MessageListJson;
+
 import main.model.course.Course;
 import main.model.course.CourseMembership;
 import main.model.course.Message;
@@ -56,6 +58,14 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
             }
             this.messageCrudService.saveMessage(message);
         }
+    }
+
+    public MessageListJson getUserReceivedMessages(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
+    }
+
+    public MessageListJson getUserSendedMessages(User user) {
+        throw new org.apache.commons.lang3.NotImplementedException("");
     }
 
     public MessageServiceImpl(LocaleCodeProvider localeCodeProvider, MailSender mailSender, FileUploadService fileUploadService, MessageCrudService messageCrudService) {

@@ -19,7 +19,13 @@ public class CourseMembershipTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.sampleCourseMembership = getBasicCourseMembership(true);
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     @Test

@@ -22,9 +22,15 @@ public class CourseLevelTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         this.A1SampleCourse = getBasicCourse(true);
         this.A1 = A1SampleCourse.getCourseLevel();
         setRemainingCourseLevels();
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     public void setRemainingCourseLevels() {

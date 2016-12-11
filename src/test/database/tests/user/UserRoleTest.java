@@ -17,6 +17,16 @@ public class UserRoleTest extends AbstractDbTest {
     @Autowired
     private UserRoleCrudService userRoleCrudService;
 
+    @org.junit.Before
+    public void setUp() {
+        super.setUp();
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
+    }
+
     @Test
     public void testUserRoleSet() {
         Set<UserRole> userRoles = this.userRoleCrudService.findAllUserRoles();

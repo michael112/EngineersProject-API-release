@@ -28,7 +28,13 @@ public class CourseTest extends AbstractDbTest {
 
     @Before
     public void setUp() {
+        super.setUp();
         setCourse();
+    }
+
+    @org.junit.After
+    public void tearDown() {
+        super.tearDown();
     }
 
     public void setCourse() {
