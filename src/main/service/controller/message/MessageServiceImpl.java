@@ -19,6 +19,7 @@ import main.service.file.FileUploadService;
 import main.service.crud.course.message.MessageCrudService;
 
 import main.json.course.CourseJson;
+import main.json.course.CourseUserJson;
 
 import main.json.course.message.NewMessageJson;
 
@@ -79,7 +80,16 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
     }
 
     public MessageListJson getUserSendedMessages(User user) {
-        throw new org.apache.commons.lang3.NotImplementedException("");
+        MessageListJson messageList = new MessageListJson();
+        SenderMessageJson messageJson;
+        for( Message message : user.getMyMessages() ) {
+            if( message.getCourse() != null ) {
+                messageJson = new SenderMessageJson(new CourseUserJson(message.getSender().getId(), message.getSender().getFullName()), message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
+            }
+            else messageJson = new SenderMessageJson(new CourseUserJson(message.getSender().getId(), message.getSender().getFullName()), message.getTitle(), message.getContent(), message.isAnnouncement());
+            messageList.addMessage(messageJson);
+        }
+        return messageList;
     }
 
     public MessageServiceImpl(LocaleCodeProvider localeCodeProvider, MailSender mailSender, FileUploadService fileUploadService, MessageCrudService messageCrudService) {
