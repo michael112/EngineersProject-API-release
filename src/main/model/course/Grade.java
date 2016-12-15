@@ -175,6 +175,11 @@ public class Grade extends AbstractUuidModel {
 		this.setCourse(course);
 		this.setScale(scale);
 	}
+
+	public Grade(User gradedBy, Course course, String gradeTitle, GradeScale scale, Double maxPoints) {
+		this(gradedBy, course, gradeTitle, scale);
+		this.setMaxPoints(maxPoints);
+	}
 	
 	public Grade(User gradedBy, Course course, String gradeTitle, String gradeDescription, GradeScale scale, double weight) {
 		this(gradedBy, course, gradeTitle, scale);

@@ -412,7 +412,7 @@ public abstract class AbstractDbTest extends AbstractTest {
             return sampleGrade;
         }
         public Grade getBasicGrade(boolean register, boolean registerStudentGrade) {
-            Grade sampleGrade = new Grade(getBasicUser(), getBasicCourse(register), "sample grade title", "sample grade description", GradeScale.SZKOLNA, 1);
+            Grade sampleGrade = new Grade(getBasicUser(), getBasicCourse(register), "sample grade title", "sample grade description", GradeScale.SZKOLNA, 30.0, 1);
             if( registerStudentGrade ) {
                 CourseMembership sampleCourseMembership = new CourseMembership(sampleGrade.getGradedBy(), sampleGrade.getCourse(), true);
                 this.courseMembershipCrudService.saveCourseMembership(sampleCourseMembership);
@@ -423,7 +423,7 @@ public abstract class AbstractDbTest extends AbstractTest {
         }
         public Grade getBasicGrade(AbstractHomeworkOrTest task, boolean register) {
             User sampleUser = getBasicUser("sampleusername");
-            Grade sampleGrade = new Grade(sampleUser, task.getCourse(), "sample grade title", "sample grade description", GradeScale.SZKOLNA, 1);
+            Grade sampleGrade = new Grade(sampleUser, task.getCourse(), "sample grade title", "sample grade description", GradeScale.SZKOLNA, 30.0, 1);
             this.gradeCrudService.saveGrade(sampleGrade);
             return sampleGrade;
         }
