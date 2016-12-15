@@ -74,6 +74,9 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
                 messageJson = new ReceiverMessageJson(message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
             }
             else messageJson = new ReceiverMessageJson(message.getTitle(), message.getContent(), message.isAnnouncement());
+            for( User receiver : message.getReceivers() ) {
+                messageJson.addReceiver(new CourseUserJson(receiver.getId(), receiver.getFullName()));
+            }
             messageList.addMessage(messageJson);
         }
         return messageList;

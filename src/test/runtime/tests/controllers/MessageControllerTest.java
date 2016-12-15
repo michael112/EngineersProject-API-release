@@ -1,8 +1,8 @@
 package test.runtime.tests.controllers;
 
-import java.util.Calendar;
+import java.util.ArrayList;
 
-import org.junit.Assert;
+import java.util.Calendar;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -24,6 +24,7 @@ import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
+import main.util.locale.LocaleCodeProvider;
 import main.util.mail.MailSender;
 
 import main.constants.urlconstants.MessageControllerUrlConstants;
@@ -47,9 +48,8 @@ import test.runtime.environment.TestEnvironmentBuilder;
 
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-
-import static org.mockito.Mockito.reset;
 
 public class MessageControllerTest extends AbstractControllerTest {
 
@@ -81,6 +81,8 @@ public class MessageControllerTest extends AbstractControllerTest {
     private MessageCrudService messageCrudServiceMock;
     @Autowired
     private UserCrudService userCrudServiceMock;
+    @Autowired
+    private LocaleCodeProvider localeCodeProvider;
 
     private String testedClassURI;
 
@@ -108,7 +110,6 @@ public class MessageControllerTest extends AbstractControllerTest {
         User sampleReceiver = this.testEnvironment.getUsers().get(0);
         MockMultipartFile fileToSend = new MockMultipartFile("attachement", "filename.txt", "text/plain", "sample text".getBytes());
         MockMultipartFile newHomeworkJson = new MockMultipartFile("json", "", "application/json", objectToJsonBytes(new NewMessageJson("sample message title", "sample message content")));
-        // File sampleAttachement = new File(fileToSend.getName(), Calendar.getInstance().getTime(), "", sampleSender);
 
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleSender);
@@ -160,6 +161,59 @@ public class MessageControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetUserReceivedMessages() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+        Message sampleMessage1 = new ArrayList<>(sampleUser.getMessages()).get(0);
+        Message sampleMessage2 = new ArrayList<>(sampleUser.getMessages()).get(1);
+
+        when(localeCodeProvider.getLocaleCode()).thenReturn("en");
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
+
+        String URL = this.testedClassURI + '/' + sampleUser.getId() + "?type=received";
+
+        this.mockMvc.perform(get(URL)
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.messages.messages", hasSize(2)))
+            .andExpect(jsonPath("$.messages.messages[?( @.title == \"" + sampleMessage1.getTitle() + "\" && @.content == \"" + sampleMessage1.getContent() + "\"  && @.course.courseID == \"" + sampleMessage1.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage1.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage1.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage1.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage1.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage1.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == " + sampleMessage1.isAnnouncement() + ")]").exists())
+            .andExpect(jsonPath("$.messages.messages[?( @.title == \"" + sampleMessage1.getTitle() + "\" && @.content == \"" + sampleMessage1.getContent() + "\"  && @.course.courseID == \"" + sampleMessage1.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage1.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage1.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage1.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage1.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage1.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == " + sampleMessage1.isAnnouncement() + ")].receivers[?( @.userID == \"" + new ArrayList<>(sampleMessage1.getReceivers()).get(0).getId() + "\" && @.name == \"" + new ArrayList<>(sampleMessage1.getReceivers()).get(0).getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.messages.messages[?( @.title == \"" + sampleMessage2.getTitle() + "\" && @.content == \"" + sampleMessage2.getContent() + "\"  && @.course.courseID == \"" + sampleMessage2.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage2.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage2.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage2.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage2.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage2.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == " + sampleMessage2.isAnnouncement() + ")]").exists())
+            .andExpect(jsonPath("$.messages.messages[?( @.title == \"" + sampleMessage2.getTitle() + "\" && @.content == \"" + sampleMessage2.getContent() + "\"  && @.course.courseID == \"" + sampleMessage2.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage2.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage2.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage2.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage2.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage2.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == " + sampleMessage2.isAnnouncement() + ")].receivers[?( @.userID == \"" + new ArrayList<>(sampleMessage2.getReceivers()).get(0).getId() + "\" && @.name == \"" + new ArrayList<>(sampleMessage2.getReceivers()).get(0).getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.messages.messages[?( @.title == \"" + sampleMessage2.getTitle() + "\" && @.content == \"" + sampleMessage2.getContent() + "\"  && @.course.courseID == \"" + sampleMessage2.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage2.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage2.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage2.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage2.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage2.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == " + sampleMessage2.isAnnouncement() + ")].receivers[?( @.userID == \"" + new ArrayList<>(sampleMessage2.getReceivers()).get(1).getId() + "\" && @.name == \"" + new ArrayList<>(sampleMessage2.getReceivers()).get(1).getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testGetUserSendedMessages() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+        Message sampleMessage1 = new ArrayList<>(sampleUser.getMyMessages()).get(0);
+
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
+        when(localeCodeProvider.getLocaleCode()).thenReturn("en");
+
+        String URL = this.testedClassURI + '/' + sampleUser.getId() + "?type=sended";
+
+        this.mockMvc.perform(get(URL)
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.messages.messages", hasSize(1)))
+            .andExpect(jsonPath("$.messages.messages[?( @.sender.userID == \"" + sampleMessage1.getSender().getId() + "\" && @.sender.name == \"" + sampleMessage1.getSender().getFullName() + "\" && @.title == \"" + sampleMessage1.getTitle() + "\" && @.content == \"" + sampleMessage1.getContent() + "\"  && @.course.courseID == \"" + sampleMessage1.getCourse().getId() + "\" && @.course.language.id == \"" + sampleMessage1.getCourse().getLanguage().getId() + "\" && @.course.language.name == \"" + sampleMessage1.getCourse().getLanguage().getLanguageName("en") + "\" && @.course.courseLevel == \"" + sampleMessage1.getCourse().getCourseLevel().getName() + "\" && @.course.courseType.courseTypeID == \"" + sampleMessage1.getCourse().getCourseType().getId() + "\" && @.course.courseType.name == \"" + sampleMessage1.getCourse().getCourseType().getCourseTypeName("en") + "\" && @.announcement == "+ sampleMessage1.isAnnouncement() + " )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
