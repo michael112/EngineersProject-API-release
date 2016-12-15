@@ -1,6 +1,12 @@
 package test.database.tests.course;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Assert;
@@ -111,8 +117,10 @@ public class CourseTest extends AbstractDbTest {
         Assert.assertEquals(this.sampleCourse.getCourseLevel(), courseDb.getCourseLevel());
         Assert.assertEquals(this.sampleCourse.getCourseType(), courseDb.getCourseType());
         Assert.assertEquals(this.sampleCourse.getCourseActivity(), courseDb.getCourseActivity());
-        Assert.assertEquals(true, courseDb.getCourseDays().contains(this.sampleCourse.getCourseDays().toArray()[0]));
-        Assert.assertEquals(true, courseDb.getCourseDays().contains(this.sampleCourse.getCourseDays().toArray()[1]));
+
+        List courseDays = new ArrayList<>(this.sampleCourse.getCourseDays());
+        Assert.assertEquals(true, new HashSet<>(courseDb.getCourseDays()).contains(courseDays.get(0)));
+        Assert.assertEquals(true, new HashSet<>(courseDb.getCourseDays()).contains(courseDays.get(1)));
     }
 
     @org.junit.Test
