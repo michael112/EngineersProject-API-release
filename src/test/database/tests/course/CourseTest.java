@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Assert;
@@ -47,7 +47,7 @@ public class CourseTest extends AbstractDbTest {
         Language english = new Language("EN");
         CourseLevel A1 = new CourseLevel("A1");
         CourseType standardType = new CourseType();
-        CourseActivity sampleCourseActivity = new CourseActivity(new Date(2016,9,1), new Date(2016,6,30));
+        CourseActivity sampleCourseActivity = new CourseActivity(new LocalDate(2016,9,1), new LocalDate(2016,6,30));
         CourseDay tuesday = new CourseDay(2, 18, 0, 19, 30);
         CourseDay thursday = new CourseDay(4, 18, 0, 19, 30);
 
@@ -80,33 +80,6 @@ public class CourseTest extends AbstractDbTest {
         this.courseCrudService.deleteCourse(sampleCourse);
 
         Assert.assertNull(courseCrudService.findCourseByID(sampleCourse.getId()));
-    }
-
-    @org.junit.Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
-    public void testNullLanguage() {
-        Course sample = new Course();
-        sample.setCourseLevel(this.sampleCourse.getCourseLevel());
-        sample.setCourseType(this.sampleCourse.getCourseType());
-
-        courseCrudService.saveCourse(sample);
-    }
-
-    @org.junit.Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
-    public void testNullLevel() {
-        Course sample = new Course();
-        sample.setLanguage(this.sampleCourse.getLanguage());
-        sample.setCourseType(this.sampleCourse.getCourseType());
-        sample.setCourseActivity(this.sampleCourse.getCourseActivity());
-        courseCrudService.saveCourse(sample);
-    }
-
-    @org.junit.Test(expected = org.springframework.dao.DataIntegrityViolationException.class)
-    public void testNullType() {
-        Course sample = new Course();
-        sample.setLanguage(this.sampleCourse.getLanguage());
-        sample.setCourseLevel(this.sampleCourse.getCourseLevel());
-        sample.setCourseActivity(this.sampleCourse.getCourseActivity());
-        courseCrudService.saveCourse(sample);
     }
 
     @org.junit.Test
@@ -162,8 +135,8 @@ public class CourseTest extends AbstractDbTest {
     @org.junit.Test
     public void testUpdateCourseActivityFrom() {
         CourseActivity courseActivity = this.sampleCourse.getCourseActivity();
-        Date formerCourseActivityFrom = courseActivity.getFrom();
-        Date newCourseActivityFrom = new Date(2015,8,31);
+        LocalDate formerCourseActivityFrom = courseActivity.getFrom();
+        LocalDate newCourseActivityFrom = new LocalDate(2015,8,31);
         courseActivity.setFrom(newCourseActivityFrom);
         this.courseCrudService.updateCourse(this.sampleCourse);
 
@@ -175,8 +148,8 @@ public class CourseTest extends AbstractDbTest {
     @org.junit.Test
     public void testUpdateCourseActivityTo() {
         CourseActivity courseActivity = this.sampleCourse.getCourseActivity();
-        Date formerCourseActivityTo = courseActivity.getTo();
-        Date newCourseActivityTo = new Date(2016,7,11);
+        LocalDate formerCourseActivityTo = courseActivity.getTo();
+        LocalDate newCourseActivityTo = new LocalDate(2016,7,11);
         courseActivity.setTo(newCourseActivityTo);
         this.courseCrudService.updateCourse(this.sampleCourse);
 

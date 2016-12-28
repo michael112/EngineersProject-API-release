@@ -1,6 +1,8 @@
 package main.model.course;
 
-import java.util.Date;
+import org.joda.time.LocalDate;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
@@ -18,14 +20,16 @@ public class CourseActivity {
 	@Getter
 	@Setter
 	@Column(name="activityFrom", nullable=true)
-	private Date from;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate from;
 
 	@Getter
 	@Setter
 	@Column(name="activityTo", nullable=true)
-	private Date to;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate to;
 
-	public CourseActivity( Date fromDate, Date toDate ) {
+	public CourseActivity( LocalDate fromDate, LocalDate toDate ) {
 		this();
 		this.from = fromDate;
 		this.to = toDate;

@@ -1,6 +1,8 @@
 package main.model.course;
 
-import java.util.Date;
+import org.joda.time.DateTime;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -34,7 +36,8 @@ public class File extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Column(name="date", nullable=false)
-	private Date date;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentDateTime")
+	private DateTime date;
 
 	@Getter
 	@Setter
@@ -51,7 +54,7 @@ public class File extends AbstractUuidModel {
 		super();
 	}
 
-	public File(String name, Date date, String path, User sender) {
+	public File(String name, DateTime date, String path, User sender) {
 		this();
 		this.setName(name);
 		this.setDate(date);

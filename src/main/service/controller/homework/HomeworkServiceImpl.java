@@ -2,9 +2,8 @@ package main.service.controller.homework;
 
 import java.util.List;
 
-import java.text.SimpleDateFormat;
-
-import java.text.ParseException;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -59,7 +58,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
 
     private HomeworkCrudService homeworkCrudService;
 
-    private SimpleDateFormat dateFormat;
+    private DateTimeFormatter dateFormat;
 
     public HomeworkListTeacherJson getHomeworkListTeacher(Course course) {
         HomeworkListTeacherJson result = new HomeworkListTeacherJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
@@ -67,7 +66,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
         for( Homework homework : course.getHomeworks() ) {
-            result.addHomework(new HomeworkJson(homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle()));
+            result.addHomework(new HomeworkJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle()));
         }
         return result;
     }
@@ -83,7 +82,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
                 HomeworkSolution homeworkSolution = homework.getHomeworkSolution(student);
                 homeworkGrade = new HomeworkGradeJson(homeworkSolution.getGrade().getGrade().getScale().name(), homeworkSolution.getGrade().getGradeValue(), homeworkSolution.getGrade().getGrade().getWeight(), homeworkSolution.getGrade().getGrade().getMaxPoints());
             }
-            result.addHomework(new HomeworkWithGradeJson(homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle(), homeworkGrade));
+            result.addHomework(new HomeworkWithGradeJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homeworkGrade));
         }
         return result;
     }
@@ -93,12 +92,12 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
         for( User teacher : homework.getCourse().getTeachers() ) {
             courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
-        HomeworkInfoTeacherJson result = new HomeworkInfoTeacherJson(courseJson, homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle(), homework.getDescription());
+        HomeworkInfoTeacherJson result = new HomeworkInfoTeacherJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
         for( File attachement : homework.getAttachements() ) {
-            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.format(attachement.getDate()), attachement.getPath()));
+            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
         }
         for( HomeworkSolution solution : homework.getHomeworkSolutions() ) {
-            result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.format(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath())));
+            result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath())));
         }
         return result;
     }
@@ -111,20 +110,20 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
         HomeworkInfoStudentJson result;
         if( homework.containsHomeworkSolution(student) ) {
             HomeworkSolution solution = homework.getHomeworkSolution(student);
-            AttachementJson solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.format(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath());
+            AttachementJson solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath());
             if( solution.getGrade() != null ) {
                 StudentGrade solutionGrade = solution.getGrade();
-                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson, new HomeworkGradeJson(solutionGrade.getGrade().getScale().name(), solutionGrade.getGradeValue(), solutionGrade.getGrade().getWeight(), solutionGrade.getGrade().getMaxPoints()));
+                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson, new HomeworkGradeJson(solutionGrade.getGrade().getScale().name(), solutionGrade.getGradeValue(), solutionGrade.getGrade().getWeight(), solutionGrade.getGrade().getMaxPoints()));
             }
             else {
-                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson);
+                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson);
             }
         }
         else {
-            result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.format(homework.getDate()), homework.getTitle(), homework.getDescription());
+            result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
         }
         for( File attachement : homework.getAttachements() ) {
-            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.format(attachement.getDate()), attachement.getPath()));
+            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
         }
         return result;
     }
@@ -137,13 +136,18 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
 
     public void addHomework(User teacher, Course course, NewHomeworkJson homework, List<MultipartFile> attachements) {
         try {
-            Homework newHomework = new Homework(homework.getTitle(), this.dateFormat.parse(homework.getDate()), homework.getDescription(), course);
+            Homework newHomework = new Homework(homework.getTitle(), this.dateFormat.parseLocalDate(homework.getDate()), homework.getDescription(), course);
             for( MultipartFile file : attachements ) {
                 newHomework.addAttachement(this.fileUploadService.uploadFile(file, teacher));
             }
             this.homeworkCrudService.saveHomework(newHomework);
         }
-        catch( ParseException ex ) {}
+        catch( IllegalArgumentException ex ) {
+            throw(ex);
+        }
+        catch( UnsupportedOperationException | NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
 	}
 
     public void editHomeworkTitle(Homework homework, EditHomeworkTitleJson editHomeworkTitleJson) {
@@ -153,10 +157,15 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
 
     public void editHomeworkDate(Homework homework, EditHomeworkDateJson editHomeworkDateJson) {
         try {
-            homework.setDate(this.dateFormat.parse(editHomeworkDateJson.getDate()));
+            homework.setDate(this.dateFormat.parseLocalDate(editHomeworkDateJson.getDate()));
             this.homeworkCrudService.updateHomework(homework);
         }
-        catch( ParseException ex ) {}
+        catch( IllegalArgumentException ex ) {
+            throw(ex);
+        }
+        catch( UnsupportedOperationException | NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
 	}
 
     public void editHomeworkDescription(Homework homework, EditHomeworkDescriptionJson editHomeworkDescriptionJson) {
@@ -184,7 +193,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
         super(localeCodeProvider);
         this.fileUploadService = fileUploadService;
         this.homeworkCrudService = homeworkCrudService;
-        this.dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
 }

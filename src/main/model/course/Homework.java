@@ -1,8 +1,9 @@
 package main.model.course;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
+
+import org.joda.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -115,14 +116,14 @@ public class Homework extends AbstractHomeworkOrTest {
 		this.setCourse(course);
 	}
 
-	public Homework(String title, Date date, String description, Course course) {
+	public Homework(String title, LocalDate date, String description, Course course) {
 		this(course);
 		this.setTitle(title);
 		this.setDate(date);
 		this.setDescription(description);
 	}
 
-	public Homework(String title, Date date, String description, Set<Grade> grades, Course course, Set<File> attachements, Set<HomeworkSolution> solutions ){
+	public Homework(String title, LocalDate date, String description, Set<Grade> grades, Course course, Set<File> attachements, Set<HomeworkSolution> solutions ) {
 		this(title, date, description, course);
 		this.setAttachements(attachements);
 		this.setGrades(grades);

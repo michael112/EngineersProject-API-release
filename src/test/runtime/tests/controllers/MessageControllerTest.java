@@ -2,7 +2,7 @@ package test.runtime.tests.controllers;
 
 import java.util.ArrayList;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -140,7 +140,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         MockMultipartFile fileToSend = new MockMultipartFile("attachement", "filename.txt", "text/plain", "sample text".getBytes());
         MockMultipartFile newHomeworkJson = new MockMultipartFile("json", "", "application/json", objectToJsonBytes(new NewMessageJson("sample message title", "sample message content", true)));
-        File sampleAttachement = new File(fileToSend.getName(), Calendar.getInstance().getTime(), "", sampleSender);
+        File sampleAttachement = new File(fileToSend.getName(), new DateTime(), "", sampleSender);
 
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleSender);

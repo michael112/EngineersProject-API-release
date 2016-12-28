@@ -1,6 +1,10 @@
 package test.database;
 
-import java.util.*;
+import java.util.Set;
+import java.util.HashSet;
+
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 
 // Spring resource imports
 
@@ -291,7 +295,7 @@ public abstract class AbstractDbTest extends AbstractTest {
             Language english = setBasicLanguage(register);
             CourseLevel A1 = setBasicCourseLevel(register);
             CourseType standardType = setBasicCourseType(register);
-            Course sampleCourse = new Course(english, A1, standardType, new CourseActivity(new Date(2016,9,1), new Date(2016,6,30)));
+            Course sampleCourse = new Course(english, A1, standardType, new CourseActivity(new LocalDate(2015,9,1), new LocalDate(2016,6,30)));
             this.courseCrudService.saveCourse(sampleCourse);
             return sampleCourse;
         }
@@ -364,7 +368,7 @@ public abstract class AbstractDbTest extends AbstractTest {
     // <file-methods>
         public File getBasicFile(User sender) {
             if( sender == null ) sender = getBasicUser();
-            File sampleFile = new File("gowno.pdf", new Date(), "/files/", sender);
+            File sampleFile = new File("gowno.pdf", new DateTime(), "/files/", sender);
             this.fileService.saveFile(sampleFile);
             return sampleFile;
         }
@@ -384,7 +388,7 @@ public abstract class AbstractDbTest extends AbstractTest {
             return new HomeworkSolution(sampleCourseMembership, homework, getBasicFile(sampleCourseMembership.getUser()));
         }
         public Homework getBasicHomework(boolean register) {
-            Homework sampleHomework = new Homework("Sample homework title", new Date(2015,9,12), "Sample homework description", getBasicCourse(register));
+            Homework sampleHomework = new Homework("Sample homework title", new LocalDate(2015,9,12), "Sample homework description", getBasicCourse(register));
             sampleHomework.addHomeworkSolution(getBasicHomeworkSolution(false, sampleHomework));
             sampleHomework.addGrade(getBasicGrade(sampleHomework, false));
             this.homeworkCrudService.saveHomework(sampleHomework);
@@ -397,7 +401,7 @@ public abstract class AbstractDbTest extends AbstractTest {
             return new TestSolution(getBasicCourseMembership(register), test);
         }
         public Test getBasicTest(boolean register) {
-            Test sampleTest = new Test("Sample test title", new Date(2015,9,12), "Sample test decscription", getBasicCourse(register));
+            Test sampleTest = new Test("Sample test title", new LocalDate(2015,9,12), "Sample test decscription", getBasicCourse(register));
             sampleTest.addTestSolution(getBasicTestSolution(false, sampleTest));
             sampleTest.addGrade(getBasicGrade(sampleTest, false));
             this.testCrudService.saveTest(sampleTest);

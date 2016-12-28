@@ -1,6 +1,8 @@
 package main.service.file;
 
-import java.util.Calendar;
+import org.joda.time.DateTime;
+
+import java.sql.Timestamp;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -33,7 +35,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             File result = new File();
             result.setName(file.getOriginalFilename());
             result.setPath(directory);
-            result.setDate(Calendar.getInstance().getTime());
+            result.setDate(new DateTime(new Timestamp(System.currentTimeMillis())));
             result.setSender(sender);
             try {
                 this.fileCrudService.saveFile(result);

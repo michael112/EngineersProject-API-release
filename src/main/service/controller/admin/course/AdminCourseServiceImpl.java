@@ -2,9 +2,8 @@ package main.service.controller.admin.course;
 
 import java.util.Set;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import org.springframework.stereotype.Service;
 
@@ -53,7 +52,7 @@ import main.model.language.Language;
 @Service("adminCourseService")
 public class AdminCourseServiceImpl extends AbstractService implements AdminCourseService {
 
-    private DateFormat df;
+    private DateTimeFormatter df;
 
     private CourseCrudService courseCrudService;
 
@@ -81,7 +80,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
 
     public CourseInfoJson getCourseInfo(Course course) {
         try {
-            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.format(course.getCourseActivity().getFrom()), this.df.format(course.getCourseActivity().getTo()), course.getMaxStudents());
+            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.print(course.getCourseActivity().getFrom()), this.df.print(course.getCourseActivity().getTo()), course.getMaxStudents());
             for( CourseDay courseDay : course.getCourseDays() ) {
                 result.addCourseDay(courseDay.getId(), courseDay.getDay().getDay(), courseDay.getHourFrom().getHour(), courseDay.getHourFrom().getMinute(), courseDay.getHourTo().getHour(), courseDay.getHourTo().getMinute());
             }
@@ -101,7 +100,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setLanguage(this.languageCrudService.findLanguageByID(newCourseJson.getLanguageID()));
             course.setCourseType(this.courseTypeCrudService.findCourseTypeByID(newCourseJson.getCourseTypeID()));
             course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(newCourseJson.getCourseLevelID()));
-            course.setCourseActivity(new CourseActivity(this.df.parse(newCourseJson.getCourseActivity().getDateFrom()), this.df.parse(newCourseJson.getCourseActivity().getDateTo())));
+            course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(newCourseJson.getCourseActivity().getDateFrom()), this.df.parseLocalDate(newCourseJson.getCourseActivity().getDateTo())));
             for( CourseDayJson courseDayJson : newCourseJson.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
             }
@@ -112,7 +111,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setPrice(newCourseJson.getPrice());
             this.courseCrudService.saveCourse(course);
         }
-        catch( NullPointerException | ParseException ex ) {
+        catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
@@ -122,7 +121,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setLanguage(this.languageCrudService.findLanguageByID(editedCourse.getLanguageID()));
             course.setCourseType(this.courseTypeCrudService.findCourseTypeByID(editedCourse.getCourseTypeID()));
             course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(editedCourse.getCourseLevelID()));
-            course.setCourseActivity(new CourseActivity(this.df.parse(editedCourse.getCourseActivity().getDateFrom()), this.df.parse(editedCourse.getCourseActivity().getDateTo())));
+            course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(editedCourse.getCourseActivity().getDateFrom()), this.df.parseLocalDate(editedCourse.getCourseActivity().getDateTo())));
             // remove old course days
             for( CourseDay courseDay : course.getCourseDays() ) {
                 course.removeCourseDay(courseDay);
@@ -141,7 +140,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setPrice(editedCourse.getPrice());
             this.courseCrudService.updateCourse(course);
         }
-        catch( NullPointerException | ParseException ex ) {
+        catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
@@ -182,10 +181,10 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
 
     public void editCourseActivity(Course course, EditCourseActivityJson editedCourseActivity) {
         try {
-            course.setCourseActivity(new CourseActivity(this.df.parse(editedCourseActivity.getCourseActivity().getDateFrom()), this.df.parse(editedCourseActivity.getCourseActivity().getDateTo())));
+            course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(editedCourseActivity.getCourseActivity().getDateFrom()), this.df.parseLocalDate(editedCourseActivity.getCourseActivity().getDateTo())));
             this.courseCrudService.updateCourse(course);
         }
-        catch( NullPointerException | ParseException ex ) {
+        catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
@@ -312,7 +311,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
         this.courseLevelCrudService = courseLevelCrudService;
         this.languageCrudService = languageCrudService;
         this.userCrudService = userCrudService;
-        this.df = new SimpleDateFormat("dd-MM-yyyy");
+        this.df = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
 }

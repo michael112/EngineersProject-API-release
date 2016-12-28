@@ -1,6 +1,8 @@
 package test.database.tests.course;
 
-import java.util.*;
+import java.util.Set;
+
+import org.joda.time.DateTime;
 
 import org.junit.Before;
 import org.junit.Assert;
@@ -73,7 +75,7 @@ public class FileTest extends AbstractDbTest {
 
     @Test
     public void testUpdateDate() {
-        Date newDate = new Date(2015,9,20);
+        DateTime newDate = new DateTime();
         this.sampleFile.setDate(newDate);
         this.fileService.updateFile(this.sampleFile);
 

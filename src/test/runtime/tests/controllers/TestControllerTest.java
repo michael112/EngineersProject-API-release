@@ -2,7 +2,8 @@ package test.runtime.tests.controllers;
 
 import java.util.ArrayList;
 
-import java.text.SimpleDateFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import org.junit.Assert;
 
@@ -22,6 +23,7 @@ import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
+import main.util.locale.LocaleCodeProvider;
 
 import main.constants.urlconstants.TestControllerUrlConstants;
 
@@ -59,6 +61,8 @@ public class TestControllerTest extends AbstractControllerTest {
     @Autowired
     private DomainURIProvider domainURIProviderMock;
     @Autowired
+    private LocaleCodeProvider localeCodeProviderMock;
+    @Autowired
     private CurrentUserService currentUserServiceMock;
     @Autowired
     private CourseCrudService courseCrudServiceMock;
@@ -71,6 +75,8 @@ public class TestControllerTest extends AbstractControllerTest {
     private LocaleResolver localeResolverMock;
 
     private String testedClassURI;
+
+    private DateTimeFormatter dateFormat;
 
     private TestEnvironment testEnvironment;
 
@@ -86,6 +92,8 @@ public class TestControllerTest extends AbstractControllerTest {
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        initInsideMocks(this.localeCodeProviderMock);
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
     @Test
@@ -96,7 +104,6 @@ public class TestControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         main.model.course.Test sampleTest = new ArrayList<main.model.course.Test>(sampleCourse.getTests()).get(0);
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
         main.model.course.TestSolution sampleSolution = null;
         for( main.model.course.TestSolution solution : sampleTest.getTestSolutions() ) {
@@ -132,7 +139,7 @@ public class TestControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.tests.tests", hasSize(1)))
                 .andExpect(jsonPath("$.tests.tests[0].testID", is(sampleTest.getId())))
                 .andExpect(jsonPath("$.tests.tests[0].title", is(sampleTest.getTitle())))
-                .andExpect(jsonPath("$.tests.tests[0].date", is(dateFormat.format(sampleTest.getDate()))))
+                .andExpect(jsonPath("$.tests.tests[0].date", is(this.dateFormat.print(sampleTest.getDate()))))
                 .andExpect(jsonPath("$.tests.tests[0].description", is(sampleTest.getDescription())))
                 .andExpect(jsonPath("$.tests.tests[0].written", is(sampleSolution.isWritten())))
                 .andExpect(jsonPath("$.tests.tests[0].graded", is(sampleSolution.getGrade() != null)))

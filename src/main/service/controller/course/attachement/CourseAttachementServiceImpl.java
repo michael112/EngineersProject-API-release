@@ -1,12 +1,12 @@
 package main.service.controller.course.attachement;
 
-import java.text.SimpleDateFormat;
-
-import org.springframework.security.access.method.P;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.multipart.MultipartFile;
+
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import main.util.locale.LocaleCodeProvider;
 
@@ -35,14 +35,15 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
 
     private FileCrudService fileCrudService;
 
+    private DateTimeFormatter dateFormat;
+
     public FileInfoListJson getAttachementList(Course course) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
         FileInfoListJson result = new FileInfoListJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
         for( File attachement : course.getAttachements() ) {
-            result.addAttachement(new FileInfoJson(attachement.getId(), attachement.getName(), dateFormat.format(attachement.getDate()), attachement.getPath(), attachement.getSender().getId(), attachement.getSender().getFullName()));
+            result.addAttachement(new FileInfoJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.getSender().getId(), attachement.getSender().getFullName()));
         }
         return result;
     }
@@ -73,6 +74,7 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
         this.fileUploadService = fileUploadService;
         this.courseCrudService = courseCrudService;
         this.fileCrudService = fileCrudService;
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
 }

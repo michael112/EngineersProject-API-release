@@ -1,6 +1,8 @@
 package test.database.tests.course;
 
-import java.util.*;
+import java.util.Set;
+
+import org.joda.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Assert;
@@ -97,7 +99,7 @@ public class TestTest extends AbstractDbTest {
 
     @org.junit.Test
     public void testUpdateDate() {
-        Date newDate = new Date(2015,9,20);
+        LocalDate newDate = new LocalDate(2015,9,20);
         this.sampleTest.setDate(newDate);
         this.testCrudService.updateTest(this.sampleTest);
 

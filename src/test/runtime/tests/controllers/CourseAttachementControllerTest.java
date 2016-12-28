@@ -1,10 +1,11 @@
 package test.runtime.tests.controllers;
 
-import java.util.Calendar;
-
 import java.util.ArrayList;
 
-import java.text.SimpleDateFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
+import org.joda.time.DateTime;
 
 import org.junit.Assert;
 
@@ -76,6 +77,8 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
 
     private String testedClassURI;
 
+    private DateTimeFormatter dateParser;
+
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
@@ -90,6 +93,7 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        this.dateParser = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
     @Test
@@ -100,7 +104,6 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         File sampleAttachement = new ArrayList<File>(sampleCourse.getAttachements()).get(0);
-        SimpleDateFormat dateParser = new SimpleDateFormat("dd-MM-yyyy");
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
@@ -135,7 +138,7 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.attachements.teachers[0].name", is(sampleTeacher.getFullName())))
                 .andExpect(jsonPath("$.attachements.attachements", hasSize(1)))
                 .andExpect(jsonPath("$.attachements.attachements[0].name", is(sampleAttachement.getName())))
-                .andExpect(jsonPath("$.attachements.attachements[0].date", is(dateParser.format(sampleAttachement.getDate()))))
+                .andExpect(jsonPath("$.attachements.attachements[0].date", is(this.dateParser.print(sampleAttachement.getDate()))))
                 .andExpect(jsonPath("$.attachements.attachements[0].path", is(sampleAttachement.getPath())))
                 .andExpect(jsonPath("$.attachements.attachements[0].sender.userID", is(sampleAttachement.getSender().getId())))
                 .andExpect(jsonPath("$.attachements.attachements[0].sender.name", is(sampleAttachement.getSender().getFullName())))
@@ -154,7 +157,7 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         MockMultipartFile fileToUpload = new MockMultipartFile("file", "filename.txt", "text/plain", "sample text".getBytes());
-        File sampleAttachement = new File(fileToUpload.getName(), Calendar.getInstance().getTime(), "", sampleTeacher);
+        File sampleAttachement = new File(fileToUpload.getName(), new DateTime(), "", sampleTeacher);
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
@@ -192,7 +195,6 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         when(fileCrudServiceMock.findFileByID(Mockito.any(String.class))).thenReturn(sampleAttachement);
         doNothing().when(fileCrudServiceMock).deleteFile(Mockito.any(File.class));
         doNothing().when(fileCrudServiceMock).saveFile(Mockito.any(File.class));
-        // when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
@@ -228,7 +230,6 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         when(fileCrudServiceMock.findFileByID(Mockito.any(String.class))).thenReturn(sampleAttachement);
         doNothing().when(fileCrudServiceMock).deleteFile(Mockito.any(File.class));
         doNothing().when(fileCrudServiceMock).saveFile(Mockito.any(File.class));
-        // when(fileUploadServiceMock.uploadFile(Mockito.any(MultipartFile.class), Mockito.any(User.class))).thenReturn(sampleAttachement);
         when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
         when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);

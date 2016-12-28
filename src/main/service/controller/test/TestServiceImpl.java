@@ -1,8 +1,9 @@
 package main.service.controller.test;
 
-import java.text.SimpleDateFormat;
-import java.text.ParseException;
-import java.util.Date;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
+import org.joda.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 
@@ -32,16 +33,18 @@ public class TestServiceImpl extends AbstractService implements TestService {
 
     private TestCrudService testCrudService;
 
+    private DateTimeFormatter dateFormat;
+
     public TestListJson getTestList(User user, Course course) {
         try {
             TestListJson result = new TestListJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
             for( User teacher : course.getTeachers() ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy");
+
             String dateStr;
             for( Test test : course.getTests() ) {
-                dateStr = dateFormat.format(test.getDate());
+                dateStr = this.dateFormat.print(test.getDate());
                 if( test.containsTestSolution(user) && ( test.getTestSolution(user).getGrade() != null ) ) {
                     if( ( test.getDescription() != null ) && ( !( test.getDescription().equals("") )) ) {
                         switch( test.getTestSolution(user).getGrade().getGrade().getScale() ) {
@@ -80,26 +83,30 @@ public class TestServiceImpl extends AbstractService implements TestService {
 
     public void addTest(Course course, TestJson testJson) {
         try {
-            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
-            Date testDate = parser.parse(testJson.getDate());
+            LocalDate testDate = this.dateFormat.parseLocalDate(testJson.getDate());
             Test test = new Test(testJson.getTitle(), testDate, testJson.getDescription(), course);
             this.testCrudService.saveTest(test);
         }
-        catch( ParseException | NullPointerException ex ) {
+        catch( IllegalArgumentException ex ) {
+            throw(ex);
+        }
+        catch( UnsupportedOperationException | NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
 
     public void editTest(Test test, TestJson testJson) {
         try {
-            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
-            Date testDate = parser.parse(testJson.getDate());
+            LocalDate testDate = this.dateFormat.parseLocalDate(testJson.getDate());
             test.setTitle(testJson.getTitle());
             test.setDate(testDate);
             test.setDescription(testJson.getDescription());
             this.testCrudService.updateTest(test);
         }
-        catch( ParseException | NullPointerException ex ) {
+        catch( IllegalArgumentException ex ) {
+            throw(ex);
+        }
+        catch( UnsupportedOperationException | NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
@@ -116,12 +123,14 @@ public class TestServiceImpl extends AbstractService implements TestService {
 
     public void editTestDate(Test test, EditTestDateJson editTestDateJson){
         try {
-            SimpleDateFormat parser = new SimpleDateFormat("dd-MM-yyyy");
-            Date testDate = parser.parse(editTestDateJson.getDate());
+            LocalDate testDate = this.dateFormat.parseLocalDate(editTestDateJson.getDate());
             test.setDate(testDate);
             this.testCrudService.updateTest(test);
         }
-        catch( ParseException | NullPointerException ex ) {
+        catch( IllegalArgumentException ex ) {
+            throw(ex);
+        }
+        catch( UnsupportedOperationException | NullPointerException ex ) {
             throw new IllegalArgumentException();
         }
     }
@@ -140,6 +149,7 @@ public class TestServiceImpl extends AbstractService implements TestService {
     public TestServiceImpl(LocaleCodeProvider localeCodeProvider, TestCrudService testCrudService) {
         super(localeCodeProvider);
         this.testCrudService = testCrudService;
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
 }

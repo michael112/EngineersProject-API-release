@@ -1,8 +1,5 @@
 package test.runtime.tests.controllers;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import java.util.Map;
 import java.util.HashMap;
 
@@ -10,8 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.HashSet;
-
-import org.junit.Assert;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,6 +24,7 @@ import main.model.course.CourseMembership;
 import main.model.course.Course;
 import main.model.course.CourseDay;
 import main.model.course.CourseType;
+import main.model.course.Message;
 import main.model.language.Language;
 
 import main.service.crud.course.course.CourseCrudService;
@@ -36,6 +32,7 @@ import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.language.LanguageCrudService;
 
 import main.util.currentUser.CurrentUserService;
+import main.util.locale.LocaleCodeProvider;
 
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
@@ -60,6 +57,8 @@ public class CourseControllerTest extends AbstractControllerTest {
 
     @Autowired
     private LabelProvider labelProviderMock;
+    @Autowired
+    private LocaleCodeProvider localeCodeProvider;
     @Autowired
     private DomainURIProvider domainURIProviderMock;
     @Autowired
@@ -92,10 +91,11 @@ public class CourseControllerTest extends AbstractControllerTest {
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
 		initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        initInsideMocks(this.localeCodeProvider);
     }
 
-    private main.model.course.Message getSampleMessage(TestEnvironment environment, User user) {
-        for( main.model.course.Message message : environment.getMessages() ) {
+    private Message getSampleMessage(TestEnvironment environment, User user) {
+        for( Message message : environment.getMessages() ) {
             if( message.getSender().equals(user) ) {
                 return message;
             }
@@ -104,25 +104,22 @@ public class CourseControllerTest extends AbstractControllerTest {
     }
 
     private Map<String,String> getNextLessonDateStr(Course course) {
-        Calendar calendar = Calendar.getInstance();
-        Date today = calendar.getTime();
-        calendar.setTime(today);
+        org.joda.time.LocalDate iteratorDate = new org.joda.time.LocalDate();
 
-        Date resultDate = null;
+        org.joda.time.LocalDate resultDate = null;
         String resultHour = null;
 
         for(CourseDay courseDay : course.getCourseDays()) {
-            while ((calendar.get(Calendar.DAY_OF_WEEK) - 1) != courseDay.getDay().getDay()) {
-                calendar.add(Calendar.DATE, 1);
+            while( (iteratorDate.getDayOfWeek() - 1) != courseDay.getDay().getDay() ) {
+                iteratorDate = iteratorDate.plusDays(1);
             }
-            if( ( resultDate == null ) || ( calendar.getTime().before(resultDate) ) ) {
-                resultDate = calendar.getTime();
+            if( ( resultDate == null ) || ( iteratorDate.isBefore(resultDate) ) ) {
+                resultDate = iteratorDate;
                 resultHour = courseDay.getHourFrom().getTime();
             }
         }
         try {
-            calendar.setTime(resultDate);
-            String resultDateStr = resultDate == null ? null : String.valueOf(calendar.get(Calendar.YEAR)) + '-' + String.valueOf(calendar.get(Calendar.MONTH)) + '-' + String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            String resultDateStr = resultDate == null ? null : String.valueOf(resultDate.getYear()) + '-' + String.valueOf(resultDate.getMonthOfYear()) + '-' + String.valueOf(resultDate.getDayOfMonth());
 
             Map<String, String> result = new HashMap<>();
             result.put("resultDate", resultDateStr);
@@ -165,12 +162,6 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.course.incomingTests[0].taskID", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getId())))
                 .andExpect(jsonPath("$.course.incomingTests[0].date", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getDate().toString())))
                 .andExpect(jsonPath("$.course.incomingTests[0].title", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getTitle())))
-                /*
-                .andExpect(jsonPath("$.course.incomingHomeworks", hasSize(1)))
-                .andExpect(jsonPath("$.course.incomingHomeworks[0].homeworkID", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getId())))
-                .andExpect(jsonPath("$.course.incomingHomeworks[0].date", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getDate().toString())))
-                .andExpect(jsonPath("$.course.incomingHomeworks[0].title", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getTitle())))
-                */
                 .andExpect(jsonPath("$.course.teacherMessages", hasSize(1)))
                 .andExpect(jsonPath("$.course.teacherMessages[0].messageID", is(getSampleMessage(this.testEnvironment, sampleTeacher).getId())))
                 .andExpect(jsonPath("$.course.teacherMessages[0].title", is(getSampleMessage(this.testEnvironment, sampleTeacher).getTitle())))

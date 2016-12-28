@@ -1,8 +1,10 @@
 package test.runtime.environment;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
+
+import org.joda.time.LocalDate;
+import org.joda.time.DateTime;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
@@ -94,9 +96,15 @@ public class TestEnvironmentBuilder {
 		environment.addPlacementTestResult(englishUser1);
 		environment.addPlacementTestResult(englishUser2);
 
+		/*
 		File sampleFile1 = generateFile(hasUUID, "sample name 1", new Date(), "/dev/null", sampleStudent2);
 		File sampleFile2 = generateFile(hasUUID, "sample name 2", new Date(), "/dev/null", sampleStudent1);
 		File sampleFile3 = generateFile(hasUUID, "sample name 3", new Date(), "/dev/null", sampleTeacher1);
+		*/
+
+		File sampleFile1 = generateFile(hasUUID, "sample name 1", new DateTime(), "/dev/null", sampleStudent2);
+		File sampleFile2 = generateFile(hasUUID, "sample name 2", new DateTime(), "/dev/null", sampleStudent1);
+		File sampleFile3 = generateFile(hasUUID, "sample name 3", new DateTime(), "/dev/null", sampleTeacher1);
 
 		environment.addFile(sampleFile1);
 		environment.addFile(sampleFile2);
@@ -104,7 +112,7 @@ public class TestEnvironmentBuilder {
 		Set<User> sampleEnglishCourse1Students = new HashSet<>();
 		sampleEnglishCourse1Students.add(sampleStudent1);
 		sampleEnglishCourse1Students.add(sampleStudent2);
-		Course sampleEnglishCourse1 = generateCourse(hasUUID, english, a1, standardCourseType, new CourseActivity(new Date(2016,10,1), new Date(2017,6,30)), 14, 989.99, generateCourseDay(hasUUID, 5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile3);
+		Course sampleEnglishCourse1 = generateCourse(hasUUID, english, a1, standardCourseType, new CourseActivity(new LocalDate(2016,10,1), new LocalDate(2017,6,30)), 14, 989.99, generateCourseDay(hasUUID, 5, 17,30, 21,30), sampleTeacher1, sampleEnglishCourse1Students, sampleFile3);
 
 		environment.addCourse(sampleEnglishCourse1);
 
@@ -113,7 +121,7 @@ public class TestEnvironmentBuilder {
 			environment.addCourseMembership(courseMembership);
 		}
 
-		Course sampleEnglishCourse2 = generateCourse(hasUUID, english, a1, standardCourseType, new CourseActivity(new Date(2016,11,2), new Date(2017,7,31)), 14, 989.99, generateCourseDay(hasUUID, 5, 7,30, 11,30), sampleTeacher1, new HashSet<User>(), null);
+		Course sampleEnglishCourse2 = generateCourse(hasUUID, english, a1, standardCourseType, new CourseActivity(new LocalDate(2016,11,2), new LocalDate(2017,7,31)), 14, 989.99, generateCourseDay(hasUUID, 5, 7,30, 11,30), sampleTeacher1, new HashSet<User>(), null);
 
 		environment.addCourse(sampleEnglishCourse2);
 
@@ -125,10 +133,10 @@ public class TestEnvironmentBuilder {
 		environment.addMessage(sampleSingleMessage1);
 		environment.addMessage(sampleSingleMessage2);
 
-		Homework sampleHomework = generateHomework(hasUUID, "sample homework1", new Date(2016,9,19), "sample description", sampleEnglishCourse1, sampleFile2, sampleFile1, sampleStudent2);
+		Homework sampleHomework = generateHomework(hasUUID, "sample homework1", new LocalDate(2016,9,19), "sample description", sampleEnglishCourse1, sampleFile2, sampleFile1, sampleStudent2);
 		environment.addHomework(sampleHomework);
 
-		Test sampleTest = generateTest(hasUUID, "sample test1", new Date(2016,9,19), "sample description", sampleEnglishCourse1, sampleStudent2, true);
+		Test sampleTest = generateTest(hasUUID, "sample test1", new LocalDate(2017,6,2), "sample description", sampleEnglishCourse1, sampleStudent2, true);
 		environment.addTest(sampleTest);
 
 		Grade sampleGradeNoTask = generateGrade(hasUUID, sampleTeacher1, sampleEnglishCourse1, "sample grade title", "sample grade description", null, GradeScale.PUNKTOWA, 30, 1, sampleStudent2, 15);
@@ -241,7 +249,7 @@ public class TestEnvironmentBuilder {
 		return newPlacementTestResult;
 	}
 
-	private static File generateFile(boolean hasUUID, String name, Date date, String path, User sender) {
+	private static File generateFile(boolean hasUUID, String name, DateTime date, String path, User sender) {
 		File file = new File(name, date, path, sender);
 		if( hasUUID ) file.setId(UuidGenerator.newUUID());
 		return file;
@@ -281,7 +289,7 @@ public class TestEnvironmentBuilder {
 		return generateMessage(hasUUID, sender, receivers, title, content, attachement, isAnnouncement, course);
 	}
 
-	private static Homework generateHomework(boolean hasUUID, String title, Date date, String description, Course course, File attachement, File solutionFile, User user ) {
+	private static Homework generateHomework(boolean hasUUID, String title, LocalDate date, String description, Course course, File attachement, File solutionFile, User user ) {
 		Homework homework = new Homework(title, date, description, course);
 		if( hasUUID ) homework.setId(UuidGenerator.newUUID());
 		homework.addAttachement(attachement);
@@ -300,7 +308,7 @@ public class TestEnvironmentBuilder {
 		return null;
 	}
 
-	private static Test generateTest(boolean hasUUID, String title, Date date, String description, Course course, User user, boolean written ) {
+	private static Test generateTest(boolean hasUUID, String title, LocalDate date, String description, Course course, User user, boolean written ) {
 		Test test = new Test(title, date, description, course);
 		if( hasUUID ) test.setId(UuidGenerator.newUUID());
 		// bez grade

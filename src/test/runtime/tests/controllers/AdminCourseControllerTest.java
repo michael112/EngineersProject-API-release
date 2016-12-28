@@ -1,13 +1,12 @@
 package test.runtime.tests.controllers;
 
-import java.util.Set;
 import java.util.HashSet;
 
 import java.util.List;
 import java.util.ArrayList;
 
-import java.text.SimpleDateFormat;
-import java.text.DateFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -91,6 +90,8 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
 
     private String testedClassURI;
 
+    private DateTimeFormatter dateTimeFormatter;
+
     private TestEnvironment testEnvironment;
 
     public void setMockito() {
@@ -105,13 +106,13 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
         this.testedClassURI = setTestedClassURI(this.domainURIProviderMock, AdminCourseControllerUrlConstants.CLASS_URL);
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(1)); // sampleUser 2 (admin)
+        this.dateTimeFormatter = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
     @Test
     public void testGetCourseList() throws Exception {
         String returnMessage = "";
 
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
         List<Course> courses = this.testEnvironment.getCourses();
         Course sampleCourse1 = courses.get(0);
         User sampleTeacher1 = new ArrayList<>(sampleCourse1.getTeachers()).get(0);
@@ -129,12 +130,12 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.courses.courses", hasSize(2)))
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )]").exists())
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )].teachers[?( @.userID == \"" + sampleTeacher1.getId() + "\" && @.name == \"" + sampleTeacher1.getFullName() + "\" )]").exists())
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )].courseDays[?( @.day == " + sampleCourseDay1.getDay().getDay() + " && @.hourFrom.hour == " + sampleCourseDay1.getHourFrom().getHour() + " && @.hourFrom.minute == " + sampleCourseDay1.getHourFrom().getMinute() + " && @.hourTo.hour == " + sampleCourseDay1.getHourTo().getHour() + " && @.hourTo.minute == " + sampleCourseDay1.getHourTo().getMinute() + " && @.courseDayID == \"" + sampleCourseDay1.getId() + "\" )]").exists())
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )]").exists())
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )].teachers[?( @.userID == \"" + sampleTeacher2.getId() + "\" && @.name == \"" + sampleTeacher2.getFullName() + "\" )]").exists())
-            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + df.format(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + df.format(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )].courseDays[?( @.day == " + sampleCourseDay2.getDay().getDay() + " && @.hourFrom.hour == " + sampleCourseDay2.getHourFrom().getHour() + " && @.hourFrom.minute == " + sampleCourseDay2.getHourFrom().getMinute() + " && @.hourTo.hour == " + sampleCourseDay2.getHourTo().getHour() + " && @.hourTo.minute == " + sampleCourseDay2.getHourTo().getMinute() + " && @.courseDayID == \"" + sampleCourseDay2.getId() + "\" )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )].teachers[?( @.userID == \"" + sampleTeacher1.getId() + "\" && @.name == \"" + sampleTeacher1.getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse1.getId() + "\" && @.language.id == \"" + sampleCourse1.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse1.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse1.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse1.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse1.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse1.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse1.getMaxStudents() + " )].courseDays[?( @.day == " + sampleCourseDay1.getDay().getDay() + " && @.hourFrom.hour == " + sampleCourseDay1.getHourFrom().getHour() + " && @.hourFrom.minute == " + sampleCourseDay1.getHourFrom().getMinute() + " && @.hourTo.hour == " + sampleCourseDay1.getHourTo().getHour() + " && @.hourTo.minute == " + sampleCourseDay1.getHourTo().getMinute() + " && @.courseDayID == \"" + sampleCourseDay1.getId() + "\" )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )].teachers[?( @.userID == \"" + sampleTeacher2.getId() + "\" && @.name == \"" + sampleTeacher2.getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.courses.courses[?(@.courseID == \"" + sampleCourse2.getId() + "\" && @.language.id == \"" + sampleCourse2.getLanguage().getId() + "\" && @.language.name == \"" + sampleCourse2.getLanguage().getLanguageName("en") + "\" && @.courseLevel == \"" + sampleCourse2.getCourseLevel().getName() + "\" && @.courseType.courseTypeID == \"" + sampleCourse2.getCourseType().getId() + "\" && @.courseType.name == \"" + sampleCourse2.getCourseType().getCourseTypeName("en") + "\" && @.courseActivity.dateFrom == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getFrom()) + "\" && @.courseActivity.dateTo == \"" + this.dateTimeFormatter.print(sampleCourse2.getCourseActivity().getTo()) + "\" && @.maxStudents == " + sampleCourse2.getMaxStudents() + " )].courseDays[?( @.day == " + sampleCourseDay2.getDay().getDay() + " && @.hourFrom.hour == " + sampleCourseDay2.getHourFrom().getHour() + " && @.hourFrom.minute == " + sampleCourseDay2.getHourFrom().getMinute() + " && @.hourTo.hour == " + sampleCourseDay2.getHourTo().getHour() + " && @.hourTo.minute == " + sampleCourseDay2.getHourTo().getMinute() + " && @.courseDayID == \"" + sampleCourseDay2.getId() + "\" )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -142,8 +143,6 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
     @Test
     public void testGetCourseInfo() throws Exception {
         String returnMessage = "";
-
-        DateFormat df = new SimpleDateFormat("dd-MM-yyyy");
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<>(sampleCourse.getTeachers()).get(0);
@@ -163,8 +162,8 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.course.teachers", hasSize(1)))
             .andExpect(jsonPath("$.course.teachers[0].userID", is(sampleTeacher.getId())))
             .andExpect(jsonPath("$.course.teachers[0].name", is(sampleTeacher.getFullName())))
-            .andExpect(jsonPath("$.course.courseActivity.dateFrom", is(df.format(sampleCourse.getCourseActivity().getFrom()))))
-            .andExpect(jsonPath("$.course.courseActivity.dateTo", is(df.format(sampleCourse.getCourseActivity().getTo()))))
+            .andExpect(jsonPath("$.course.courseActivity.dateFrom", is(this.dateTimeFormatter.print(sampleCourse.getCourseActivity().getFrom()))))
+            .andExpect(jsonPath("$.course.courseActivity.dateTo", is(this.dateTimeFormatter.print(sampleCourse.getCourseActivity().getTo()))))
             .andExpect(jsonPath("$.course.courseDays[?(@.courseDayID == \"" + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getId() + "\" && @.day == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getDay().getDay() + " && @.hourFrom.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getHour() + " && @.hourFrom.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getMinute() + " && @.hourTo.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getHour() + " && @.hourTo.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getMinute() + ")]").exists())
             .andExpect(jsonPath("$.course.maxStudents", is(sampleCourse.getMaxStudents())))
             .andExpect(jsonPath("$.message", is(returnMessage)))

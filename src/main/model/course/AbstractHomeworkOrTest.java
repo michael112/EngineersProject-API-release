@@ -1,8 +1,11 @@
 package main.model.course;
 
-import java.util.Date;
 import java.util.Set;
 import java.util.HashSet;
+
+import org.joda.time.LocalDate;
+
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.OneToMany;
@@ -31,7 +34,8 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	@Getter
 	@Setter
 	@Column(name="date", nullable=true)
-	private Date date;
+	@Type(type="org.jadira.usertype.dateandtime.joda.PersistentLocalDate")
+	private LocalDate date;
 
 	@Getter
 	@Setter

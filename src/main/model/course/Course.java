@@ -3,8 +3,7 @@ package main.model.course;
 import java.util.Set;
 import java.util.HashSet;
 
-import java.util.Calendar;
-import java.util.Date;
+import org.joda.time.LocalDate;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -375,7 +374,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	public boolean isActive() {
-		return this.getCourseActivity().getTo().before(Calendar.getInstance().getTime());
+		return this.getCourseActivity().getTo().isBefore(new LocalDate());
 	}
 
 	@Override

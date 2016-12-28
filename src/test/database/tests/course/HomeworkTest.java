@@ -1,6 +1,8 @@
 package test.database.tests.course;
 
-import java.util.*;
+import java.util.Set;
+
+import org.joda.time.LocalDate;
 
 import org.junit.Before;
 import org.junit.Assert;
@@ -112,7 +114,7 @@ public class HomeworkTest extends AbstractDbTest {
 
     @Test
     public void testUpdateDate() {
-        Date newDate = new Date(2015,9,20);
+        LocalDate newDate = new LocalDate(2015,9,20);
         this.sampleHomework.setDate(newDate);
         this.homeworkCrudService.updateHomework(this.sampleHomework);
 

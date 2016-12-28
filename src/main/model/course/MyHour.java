@@ -1,6 +1,6 @@
 package main.model.course;
 
-import java.util.Date;
+import org.joda.time.LocalTime;
 
 import javax.persistence.Embeddable;
 import javax.persistence.Column;
@@ -16,7 +16,7 @@ import lombok.EqualsAndHashCode;
 public class MyHour {
 
 	@Transient
-	private Date dateHour;
+	private LocalTime dateHour;
 
 	public MyHour( int h, int m ) {
 		this();
@@ -31,15 +31,15 @@ public class MyHour {
 	}
 
 	public MyHour() {
-		this.dateHour = new Date();
+		this.dateHour = new LocalTime();
 	}
 
 	public void setHour( int h ) {
-		this.dateHour.setHours(h);
+		this.dateHour = this.dateHour.withHourOfDay(h);
 	}
 
 	public void setMinute( int m ) {
-		this.dateHour.setMinutes(m);
+		this.dateHour = this.dateHour.withMinuteOfHour(m);
 	}
 
 	public void setTime( String time ) {
@@ -52,11 +52,11 @@ public class MyHour {
 	}
 
 	public int getHour() {
-		return this.dateHour.getHours();
+		return this.dateHour.getHourOfDay();
 	}
 
 	public int getMinute() {
-		return this.dateHour.getMinutes();
+		return this.dateHour.getMinuteOfHour();
 	}
 
 	@Access(AccessType.PROPERTY)

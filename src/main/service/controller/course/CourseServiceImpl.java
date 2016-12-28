@@ -3,7 +3,7 @@ package main.service.controller.course;
 import java.util.Set;
 import java.util.HashSet;
 
-import java.util.Calendar;
+import org.joda.time.LocalDate;
 
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,25 +209,22 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     private NextLessonJson getNextLesson(Course course) {
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-        java.util.Date today = calendar.getTime();
-        calendar.setTime(today);
+        LocalDate iteratorDate = new LocalDate();
 
-        java.util.Date resultDate = null;
+        LocalDate resultDate = null;
         String resultHour = null;
 
         for(CourseDay courseDay : course.getCourseDays()) {
-            while ((calendar.get(java.util.Calendar.DAY_OF_WEEK) - 1) != courseDay.getDay().getDay()) {
-                calendar.add(java.util.Calendar.DATE, 1);
+            while( (iteratorDate.getDayOfWeek() - 1) != courseDay.getDay().getDay() ) {
+                iteratorDate = iteratorDate.plusDays(1);
             }
-            if( ( resultDate == null ) || ( calendar.getTime().before(resultDate) ) ) {
-                resultDate = calendar.getTime();
+            if( ( resultDate == null ) || ( iteratorDate.isBefore(resultDate) ) ) {
+                resultDate = iteratorDate;
                 resultHour = courseDay.getHourFrom().getTime();
             }
         }
         try {
-            calendar.setTime(resultDate);
-            String resultDateStr = resultDate == null ? null : String.valueOf(calendar.get(java.util.Calendar.YEAR)) + '-' + String.valueOf(calendar.get(java.util.Calendar.MONTH)) + '-' + String.valueOf(calendar.get(Calendar.DAY_OF_MONTH));
+            String resultDateStr = resultDate == null ? null : String.valueOf(resultDate.getYear()) + '-' + String.valueOf(resultDate.getMonthOfYear()) + '-' + String.valueOf(resultDate.getDayOfMonth());
 
             NextLessonJson result = new NextLessonJson(resultDateStr, resultHour);
 
@@ -251,10 +248,8 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     private Set<Test> getIncomingTests(Set<Test> allTests) {
         Set<Test> incomingTests = new HashSet<>();
 
-        java.util.Calendar calendar = java.util.Calendar.getInstance();
-
         for( Test test : allTests ) {
-            if( calendar.getTime().before(test.getDate()) ){
+            if( new LocalDate().isBefore(test.getDate()) ) {
                 incomingTests.add(test);
             }
         }

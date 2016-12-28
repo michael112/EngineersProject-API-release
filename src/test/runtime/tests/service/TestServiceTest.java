@@ -70,7 +70,7 @@ public class TestServiceTest extends AbstractServiceTest {
             main.model.course.TestSolution solution;
             for (main.model.course.Test test : sampleCourse.getTests()) {
                 solution = new ArrayList<main.model.course.TestSolution>(test.getTestSolutions()).get(0);
-                expectedResult.addTest(new TestJson(test.getId(), test.getTitle(), String.valueOf(test.getDate().getYear()) + '-' + String.valueOf(test.getDate().getMonth()) + '-' + String.valueOf(test.getDate().getDay()), test.getDescription(), solution.isWritten(), solution.getGrade() != null, solution.getGrade().getGradeValue(), solution.getGrade().getGrade().getMaxPoints(), solution.getGrade().getGrade().getScale().name()));
+                expectedResult.addTest(new TestJson(test.getId(), test.getTitle(), String.valueOf(test.getDate().getYear()) + '-' + String.valueOf(test.getDate().getMonthOfYear()) + '-' + String.valueOf(test.getDate().getDayOfMonth()), test.getDescription(), solution.isWritten(), solution.getGrade() != null, solution.getGrade().getGradeValue(), solution.getGrade().getGrade().getMaxPoints(), solution.getGrade().getGrade().getScale().name()));
             }
             for( User teacher : sampleCourse.getTeachers() ) {
                 expectedResult.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));

@@ -46,6 +46,7 @@ import main.model.UuidGenerator;
 
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
+import main.util.locale.LocaleCodeProvider;
 
 import main.json.token.TokenJson;
 
@@ -70,6 +71,11 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 			Mockito.reset(localeResolverMock);
 			Mockito.when(localeResolverMock.resolveLocale(Mockito.any(HttpServletRequest.class))).thenReturn(new Locale("en"));
 		}
+	}
+
+	public void initInsideMocks(LocaleCodeProvider localeCodeProvider) {
+		Mockito.reset(localeCodeProvider);
+		Mockito.when(localeCodeProvider.getLocaleCode()).thenReturn("en");
 	}
 
 	public String setTestedClassURI(DomainURIProvider domainURIProviderMock, String classURI) {
