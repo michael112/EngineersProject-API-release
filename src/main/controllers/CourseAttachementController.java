@@ -26,7 +26,6 @@ import main.service.crud.course.file.FileCrudService;
 
 import main.util.currentUser.CurrentUserService;
 import main.util.labels.LabelProvider;
-import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.DefaultResponseJson;
@@ -63,9 +62,6 @@ public class CourseAttachementController {
 
     @Autowired
     private LabelProvider labelProvider;
-
-    @Autowired
-    private CourseMembershipValidator courseMembershipValidator;
 
     @Autowired
     private CourseAttachementService courseAttachementService;
