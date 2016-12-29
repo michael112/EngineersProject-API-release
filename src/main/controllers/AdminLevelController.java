@@ -2,6 +2,8 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.HttpStatus;
 
@@ -64,7 +66,7 @@ public class AdminLevelController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLevelControllerUrlConstants.ADD_LEVEL, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addCourseLevel(@RequestBody CourseLevelJson newLevel) {
+    public ResponseEntity<? extends AbstractResponseJson> addCourseLevel(@Valid @RequestBody CourseLevelJson newLevel) {
         this.adminLevelService.addCourseLevel(newLevel);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.level.add.success");
@@ -97,7 +99,7 @@ public class AdminLevelController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLevelControllerUrlConstants.EDIT_LEVEL, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseLevelName") String courseLevelID, @RequestBody CourseLevelJson editedLevel) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseLevelName") String courseLevelID, @Valid @RequestBody CourseLevelJson editedLevel) {
         CourseLevel level = this.courseLevelCrudService.findCourseLevelByID(courseLevelID);
         if( level == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
         this.adminLevelService.editCourseLevel(level, editedLevel);
