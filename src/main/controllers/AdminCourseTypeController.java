@@ -66,7 +66,7 @@ public class AdminCourseTypeController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseTypeControllerUrlConstants.ADD_TYPE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addCourseType(@RequestBody CourseTypeJson courseTypeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> addCourseType(@Valid @RequestBody CourseTypeJson courseTypeJson) {
         this.adminTypeService.addCourseType(courseTypeJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.coursetype.add.success");
@@ -86,7 +86,7 @@ public class AdminCourseTypeController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseTypeControllerUrlConstants.EDIT_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editfull")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseTypeNames(@PathVariable("courseTypeID") String courseTypeID, @RequestBody CourseTypeJson courseTypeJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseTypeNames(@PathVariable("courseTypeID") String courseTypeID, @Valid @RequestBody CourseTypeJson courseTypeJson) {
         CourseType courseType = this.courseTypeCrudService.findCourseTypeByID(courseTypeID);
         if( courseType == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.coursetype.not.found"));
         this.adminTypeService.editCourseTypeNames(courseType, courseTypeJson);
