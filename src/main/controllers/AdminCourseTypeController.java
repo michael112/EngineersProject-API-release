@@ -2,6 +2,8 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -95,7 +97,7 @@ public class AdminCourseTypeController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseTypeControllerUrlConstants.EDIT_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editsingle")
-    public ResponseEntity<? extends AbstractResponseJson> editSingleCourseTypeName(@PathVariable("courseTypeID") String courseTypeID, @RequestBody CourseTypeNameJson courseTypeNameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editSingleCourseTypeName(@PathVariable("courseTypeID") String courseTypeID, @Valid @RequestBody CourseTypeNameJson courseTypeNameJson) {
         CourseType courseType = this.courseTypeCrudService.findCourseTypeByID(courseTypeID);
         if( courseType == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.coursetype.not.found"));
         this.adminTypeService.editSingleCourseTypeName(courseType, courseTypeNameJson);
@@ -106,7 +108,7 @@ public class AdminCourseTypeController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseTypeControllerUrlConstants.EDIT_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=add")
-    public ResponseEntity<? extends AbstractResponseJson> addCourseTypeName(@PathVariable("courseTypeID") String courseTypeID, @RequestBody CourseTypeNameJson courseTypeNameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> addCourseTypeName(@PathVariable("courseTypeID") String courseTypeID, @Valid @RequestBody CourseTypeNameJson courseTypeNameJson) {
         CourseType courseType = this.courseTypeCrudService.findCourseTypeByID(courseTypeID);
         if( courseType == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.coursetype.not.found"));
         this.adminTypeService.addCourseTypeName(courseType, courseTypeNameJson);
