@@ -78,7 +78,7 @@ public class AdminLanguageController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLanguageControllerUrlConstants.ADD_LANGUAGE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addLanguage(@RequestBody NewLanguageJson languageJson) {
+    public ResponseEntity<? extends AbstractResponseJson> addLanguage(@Valid @RequestBody NewLanguageJson languageJson) {
         this.adminLanguageService.addLanguage(languageJson);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.add.success");

@@ -11,8 +11,8 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class LanguageNameJson {
 
-    @NotBlank(message = "languagename.languageid.empty")
-    @Size(min = 2, max = 2, message = "languagename.languageid.size")
+    @NotBlank(message = "language.languageid.empty")
+    @Size(min = 2, max = 2, message = "language.languageid.size")
     @Setter
     @Getter
     private String languageID;
