@@ -49,10 +49,10 @@ public abstract class AbstractCourseJson {
     @Setter
     private Set<CourseDayJson> courseDays;
 
-    // to gówno nie daje się validować
+    @Valid
     @Getter
     @Setter
-    private Set<String> teachers; // teacherID
+    private Set<TeacherJson> teachers; // teacherID
 
     @Min(value = 1, message = "course.maxstudents.min")
     @Getter
@@ -63,8 +63,8 @@ public abstract class AbstractCourseJson {
     @Setter
     private double price;
 
-    public void addTeacher(String teacherID) {
-        this.teachers.add(teacherID);
+    public void addTeacher(TeacherJson teacher) {
+        this.teachers.add(teacher);
     }
 
     public void addCourseDay(CourseDayJson courseDayJson) {

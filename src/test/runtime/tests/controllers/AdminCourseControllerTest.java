@@ -36,6 +36,8 @@ import main.json.admin.course.NewCourseJson;
 import main.json.admin.course.CourseActivityJson;
 import main.json.admin.course.CourseDayJson;
 
+import main.json.admin.course.TeacherJson;
+
 import main.json.admin.course.edit.EditCourseJson;
 
 import main.json.admin.course.edit.EditCourseActivityJson;
@@ -198,7 +200,7 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
 
         NewCourseJson newCourse = new NewCourseJson(sampleLanguage.getId(), sampleCourseType.getId(), sampleCourseLevel.getId(), new CourseActivityJson("01-06-2016", "31-08-2016"), 15, 0);
         newCourse.addCourseDay(new CourseDayJson(5, 17, 20, 20, 30));
-        newCourse.addTeacher(this.testEnvironment.getUsers().get(1).getId());
+        newCourse.addTeacher(new TeacherJson(this.testEnvironment.getUsers().get(1).getId()));
 
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(this.languageCrudServiceMock.findLanguageByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getLanguages().get(0));
@@ -224,7 +226,7 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         EditCourseJson editedCourse = new EditCourseJson(this.testEnvironment.getLanguages().get(1).getId(), this.testEnvironment.getCourseTypes().get(1).getId(), this.testEnvironment.getCourseLevels().get(0).getId(), new CourseActivityJson("01-06-2016", "31-08-2016"), 15, 0);
         editedCourse.addCourseDay(new CourseDayJson(5, 17, 20, 20, 30));
-        editedCourse.addTeacher(this.testEnvironment.getUsers().get(1).getId());
+        editedCourse.addTeacher(new TeacherJson(this.testEnvironment.getUsers().get(1).getId()));
 
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);

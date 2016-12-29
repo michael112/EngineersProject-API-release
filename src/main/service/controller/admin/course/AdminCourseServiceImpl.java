@@ -30,6 +30,8 @@ import main.json.admin.course.NewCourseJson;
 
 import main.json.admin.course.CourseDayJson;
 
+import main.json.admin.course.TeacherJson;
+
 import main.json.admin.course.edit.EditCourseJson;
 
 import main.json.admin.course.edit.EditCourseActivityJson;
@@ -104,8 +106,8 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             for( CourseDayJson courseDayJson : newCourseJson.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
             }
-            for( String teacher : newCourseJson.getTeachers() ) {
-                this.addTeacher(course, this.userCrudService.findUserByID(teacher));
+            for( TeacherJson teacher : newCourseJson.getTeachers() ) {
+                this.addTeacher(course, this.userCrudService.findUserByID(teacher.getTeacher()));
             }
             course.setMaxStudents(newCourseJson.getMaxStudents());
             course.setPrice(newCourseJson.getPrice());
@@ -133,8 +135,8 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             for( User oldTeacher : course.getTeachers() ) {
                 course.removeTeacher(oldTeacher);
             }
-            for( String teacher : editedCourse.getTeachers() ) {
-                this.addTeacher(course, this.userCrudService.findUserByID(teacher));
+            for( TeacherJson teacher : editedCourse.getTeachers() ) {
+                this.addTeacher(course, this.userCrudService.findUserByID(teacher.getTeacher()));
             }
             course.setMaxStudents(editedCourse.getMaxStudents());
             course.setPrice(editedCourse.getPrice());
