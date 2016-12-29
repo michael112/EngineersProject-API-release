@@ -3,6 +3,8 @@ package main.json.admin.language;
 import java.util.Set;
 import java.util.HashSet;
 
+import javax.validation.Valid;
+
 import lombok.Setter;
 import lombok.Getter;
 
@@ -11,6 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class EditLanguageJson {
 
+    @Valid
     @Setter
     @Getter
     public Set<LanguageNameJson> languageNames;

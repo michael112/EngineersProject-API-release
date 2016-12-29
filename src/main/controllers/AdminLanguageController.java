@@ -87,7 +87,7 @@ public class AdminLanguageController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editfull")
-    public ResponseEntity<? extends AbstractResponseJson> editLanguageNames(@PathVariable("languageID") String languageID, @RequestBody EditLanguageJson languageJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editLanguageNames(@PathVariable("languageID") String languageID, @Valid @RequestBody EditLanguageJson languageJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
         if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.editLanguageNames(language, languageJson);
