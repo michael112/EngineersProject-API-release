@@ -3,22 +3,36 @@ package main.json.course.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
+import main.constants.validationconstants.ValidationConstants;
+
 @EqualsAndHashCode
 public class CourseSearchPatternJson {
 
+    @NotBlank(message = "course.search.languageid.empty")
+    @Size(min = 2, max = 2, message = "course.search.languageid.size")
     @Getter
     @Setter
     private String language; // id
 
+    @NotBlank(message = "course.search.coursetypeid.empty")
+    @Pattern(regexp = ValidationConstants.UUID_REGEX, message = "course.search.coursetypeid.invalid")
+    @Size(max = 36, message = "course.search.coursetypeid.length")
     @Getter
     @Setter
     private String courseType; // id
 
+    @NotBlank(message = "course.search.courselevelname.empty")
+    @Size(min = 2, max = 2, message = "course.search.courselevelname.length")
+    @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.search.courselevelname.invalid")
     @Getter
     @Setter
     private String courseLevel; // id == name
