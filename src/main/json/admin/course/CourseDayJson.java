@@ -1,5 +1,7 @@
 package main.json.admin.course;
 
+import javax.validation.Valid;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,10 +14,12 @@ public class CourseDayJson {
     @Getter
     private int day;
 
+    @Valid
     @Setter
     @Getter
     private MyHourJson hourFrom;
 
+    @Valid
     @Setter
     @Getter
     private MyHourJson hourTo;

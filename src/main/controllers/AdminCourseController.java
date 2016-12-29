@@ -162,7 +162,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourse(@PathVariable("courseID") String courseID, @RequestBody EditCourseJson editedCourse) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourse(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseJson editedCourse) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         try {
@@ -178,7 +178,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLanguage(@PathVariable("courseID") String courseID, @RequestBody EditCourseLanguageJson editedCourseLanguage) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLanguage(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseLanguageJson editedCourseLanguage) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseLanguage(course, editedCourseLanguage);
@@ -189,7 +189,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseType(@PathVariable("courseID") String courseID, @RequestBody EditCourseTypeJson editedCourseType) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseType(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseTypeJson editedCourseType) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseType(course, editedCourseType);
@@ -200,7 +200,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_LEVEL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseID") String courseID, @RequestBody EditCourseLevelJson editedCourseLevel) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseLevelJson editedCourseLevel) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseLevel(course, editedCourseLevel);
@@ -211,7 +211,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ACTIVITY, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseActivity(@PathVariable("courseID") String courseID, @RequestBody EditCourseActivityJson editedCourseActivity) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseActivity(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseActivityJson editedCourseActivity) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseActivity(course, editedCourseActivity);
@@ -222,7 +222,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_DAYS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseDays(@PathVariable("courseID") String courseID, @RequestBody EditCourseDaysJson editedCourseDays) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseDays(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseDaysJson editedCourseDays) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseDays(course, editedCourseDays);
@@ -233,7 +233,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_ADD_COURSE_DAY, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseAddCourseDay(@PathVariable("courseID") String courseID, @RequestBody CourseDayJson courseDayJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseAddCourseDay(@PathVariable("courseID") String courseID, @Valid @RequestBody CourseDayJson courseDayJson) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseAddCourseDay(course, courseDayJson);
@@ -306,7 +306,7 @@ public class AdminCourseController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseControllerUrlConstants.EDIT_COURSE_MAX_STUDENTS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseMaxStudents(@PathVariable("courseID") String courseID, @RequestBody EditCourseMaxStudentsJson editedCourseMaxStudents) {
+    public ResponseEntity<? extends AbstractResponseJson> editCourseMaxStudents(@PathVariable("courseID") String courseID, @Valid @RequestBody EditCourseMaxStudentsJson editedCourseMaxStudents) {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
         this.adminCourseService.editCourseMaxStudents(course, editedCourseMaxStudents);

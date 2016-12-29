@@ -3,38 +3,58 @@ package main.json.admin.course;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+import javax.validation.constraints.Pattern;
+import org.hibernate.validator.constraints.NotBlank;
+
 import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
+import main.constants.validationconstants.ValidationConstants;
+
 @EqualsAndHashCode
 public abstract class AbstractCourseJson {
 
+    @NotBlank(message = "course.languageid.empty")
+    @Size(min = 2, max = 2, message = "course.languageid.size")
     @Getter
     @Setter
     private String languageID;
 
+    @NotBlank(message = "course.coursetypeid.empty")
+    @Pattern(regexp = ValidationConstants.UUID_REGEX, message = "course.coursetypeid.invalid")
+    @Size(max = 36, message = "course.coursetypeid.length")
     @Getter
     @Setter
     private String courseTypeID;
 
+    @NotBlank(message = "course.courselevelname.empty")
+    @Size(min = 2, max = 2, message = "course.courselevelname.length")
+    @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.courselevelname.invalid")
     @Getter
     @Setter
     private String courseLevelID;
 
+    @Valid
     @Getter
     @Setter
     private CourseActivityJson courseActivity;
 
+    @Valid
     @Getter
     @Setter
     private Set<CourseDayJson> courseDays;
 
+    // to gówno nie daje się validować
     @Getter
     @Setter
-    private Set<String> teachers;
+    private Set<String> teachers; // teacherID
 
+    @Min(value = 1, message = "course.maxstudents.min")
     @Getter
     @Setter
     private int maxStudents;
