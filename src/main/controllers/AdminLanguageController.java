@@ -2,6 +2,8 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -96,7 +98,7 @@ public class AdminLanguageController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=editsingle")
-    public ResponseEntity<? extends AbstractResponseJson> editSingleLanguageName(@PathVariable("languageID") String languageID, @RequestBody LanguageNameJson languageNameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editSingleLanguageName(@PathVariable("languageID") String languageID, @Valid @RequestBody LanguageNameJson languageNameJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
         if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.editSingleLanguageName(language, languageNameJson);
@@ -107,7 +109,7 @@ public class AdminLanguageController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLanguageControllerUrlConstants.EDIT_LANGUAGE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=add")
-    public ResponseEntity<? extends AbstractResponseJson> addLanguageName(@PathVariable("languageID") String languageID, @RequestBody LanguageNameJson languageNameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> addLanguageName(@PathVariable("languageID") String languageID, @Valid @RequestBody LanguageNameJson languageNameJson) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
         if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
         this.adminLanguageService.addLanguageName(language, languageNameJson);
