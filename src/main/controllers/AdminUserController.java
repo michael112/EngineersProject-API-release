@@ -4,6 +4,8 @@ import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import javax.persistence.NoResultException;
 
 import org.springframework.http.ResponseEntity;
@@ -88,7 +90,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.ADD_ACCOUNT, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> addAccount(@RequestBody AccountJson newAccount) {
+    public ResponseEntity<? extends AbstractResponseJson> addAccount(@Valid @RequestBody AccountJson newAccount) {
         this.adminUserService.addAccount(newAccount);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.user.add.success");
@@ -163,7 +165,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editAccount(@PathVariable("userID") String accountID, @RequestBody AccountJson editedAccount) {
+    public ResponseEntity<? extends AbstractResponseJson> editAccount(@PathVariable("userID") String accountID, @Valid @RequestBody AccountJson editedAccount) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editAccount(account, editedAccount);
@@ -174,7 +176,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_USERNAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editUsername(@PathVariable("userID") String accountID, @RequestBody UsernameJson usernameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editUsername(@PathVariable("userID") String accountID, @Valid @RequestBody UsernameJson usernameJson) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editUsername(account, usernameJson);
@@ -185,7 +187,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_NAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editName(@PathVariable("userID") String accountID, @RequestBody NameJson nameJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editName(@PathVariable("userID") String accountID, @Valid @RequestBody NameJson nameJson) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editName(account, nameJson);
@@ -196,7 +198,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_EMAIL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editEmail(@PathVariable("userID") String accountID, @RequestBody EmailJson emailJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editEmail(@PathVariable("userID") String accountID, @Valid @RequestBody EmailJson emailJson) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editEmail(account, emailJson);
@@ -207,7 +209,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editPhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID, @RequestBody PhoneJson phoneJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editPhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID, @Valid @RequestBody PhoneJson phoneJson) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editPhone(account, phoneID, phoneJson);
@@ -218,7 +220,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADDRESS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editAddress(@PathVariable("userID") String accountID, @RequestBody Address address) {
+    public ResponseEntity<? extends AbstractResponseJson> editAddress(@PathVariable("userID") String accountID, @Valid @RequestBody Address address) {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editAddress(account, address);
@@ -262,7 +264,7 @@ public class AdminUserController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.SEARCH_USER, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> searchUser(@RequestBody UserSearchPatternJson searchPattern) {
+    public ResponseEntity<? extends AbstractResponseJson> searchUser(@Valid @RequestBody UserSearchPatternJson searchPattern) {
         try {
             Set<CourseUserJson> users = this.searchService.seekUsers(searchPattern);
             String messageStr = this.labelProvider.getLabel("user.search.success");
