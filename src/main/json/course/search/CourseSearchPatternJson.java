@@ -3,6 +3,7 @@ package main.json.course.search;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Size;
 import javax.validation.constraints.Pattern;
 import org.hibernate.validator.constraints.NotBlank;
@@ -41,6 +42,7 @@ public class CourseSearchPatternJson {
     @Setter
     private List<CourseDayJson> courseDays; // nr dnia tygodnia (modulo 7)
 
+    @Valid
     @Getter
     @Setter
     private List<CourseHourJson> courseHours; // godziny w formacie 0 .. 23 + minuty 0 .. 59
