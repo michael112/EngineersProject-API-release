@@ -333,6 +333,16 @@ public class CourseControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.course.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.course.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.course.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.course.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.course.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.course.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.course.price", is(sampleCourse.getPrice())))
+            .andExpect(jsonPath("$.course.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.course.teachers[0].userID", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.course.teachers[0].name", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getFullName())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -378,7 +388,11 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.message", is(returnMessage)))
-            .andExpect(jsonPath("$.success", is(true)));
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.formJson.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.formJson.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.formJson.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.formJson.courseType", is(sampleCourse.getCourseType().getCourseTypeName("en"))));
     }
 
     @Test
@@ -423,6 +437,15 @@ public class CourseControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.formJson.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.formJson.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.formJson.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.formJson.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.formJson.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.formJson.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.formJson.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.formJson.teachers[0].userID", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.formJson.teachers[0].name", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getFullName())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
