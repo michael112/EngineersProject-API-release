@@ -21,4 +21,13 @@ public class EditScaleJson {
     @Getter
     @Setter
     private String scale;
+
+    public EditScaleJson() {
+        super();
+    }
+
+    public EditScaleJson(String scale) {
+        this();
+        this.setScale(scale);
+    }
 }

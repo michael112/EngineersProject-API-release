@@ -21,4 +21,14 @@ public class EditGradeInfoJson {
     @Getter
     @Setter
     private String gradeDescription;
+
+    public EditGradeInfoJson() {
+        super();
+    }
+
+    public EditGradeInfoJson(String gradeTitle, String gradeDescription) {
+        this();
+        this.setGradeTitle(gradeTitle);
+        this.setGradeDescription(gradeDescription);
+    }
 }

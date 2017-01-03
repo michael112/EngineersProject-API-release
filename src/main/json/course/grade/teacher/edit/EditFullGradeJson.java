@@ -41,4 +41,17 @@ public class EditFullGradeJson {
     @Getter
     @Setter
     private Double weight;
+
+    public EditFullGradeJson() {
+        super();
+    }
+
+    public EditFullGradeJson(String gradeTitle, String gradeDescription, String scale, Double maxPoints, Double weight) {
+        this();
+        this.setGradeTitle(gradeTitle);
+        this.setGradeDescription(gradeDescription);
+        this.setScale(scale);
+        this.setMaxPoints(maxPoints);
+        this.setWeight(weight);
+    }
 }

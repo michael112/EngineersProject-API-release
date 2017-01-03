@@ -3,6 +3,7 @@ package main.json.course.grade.teacher.edit;
 import javax.validation.constraints.Pattern;
 
 import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 import javax.validation.constraints.Size;
 
@@ -27,6 +28,16 @@ public class StudentGradeJson {
 
     @Getter
     @Setter
-    @NotBlank(message = "newstudentgrade.grade.empty")
-    private double grade;
+    @NotNull(message = "newstudentgrade.grade.empty")
+    private Double grade;
+
+    public StudentGradeJson() {
+        super();
+    }
+
+    public StudentGradeJson(String studentID, Double grade) {
+        this();
+        this.setStudentID(studentID);
+        this.setGrade(grade);
+    }
 }
