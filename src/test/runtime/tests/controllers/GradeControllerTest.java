@@ -1,6 +1,9 @@
 package test.runtime.tests.controllers;
 
+import java.util.List;
 import java.util.ArrayList;
+
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,6 +25,7 @@ import main.service.crud.course.test.TestCrudService;
 import main.util.currentUser.CurrentUserService;
 import main.util.domain.DomainURIProvider;
 import main.util.labels.LabelProvider;
+import main.util.locale.LocaleCodeProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
 
 import main.constants.urlconstants.GradeControllerUrlConstants;
@@ -66,6 +70,8 @@ public class GradeControllerTest extends AbstractControllerTest {
     private CourseMembershipValidator courseMembershipValidatorMock;
     @Autowired
     private LocaleResolver localeResolverMock;
+    @Autowired
+    private LocaleCodeProvider localeCodeProviderMock;
 
     private String testedClassURI;
 
@@ -83,6 +89,27 @@ public class GradeControllerTest extends AbstractControllerTest {
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        initInsideMocks(this.localeCodeProviderMock);
+    }
+
+    private List<Grade> getGradeList(Set<Grade> gradeSet) {
+        List<Grade> result = new ArrayList<>();
+        for( Grade grade : gradeSet ) {
+            if( grade.hasHomework() ) {
+                result.add(grade);
+            }
+        }
+        for( Grade grade : gradeSet ) {
+            if( grade.hasTest() ) {
+                result.add(grade);
+            }
+        }
+        for( Grade grade : gradeSet ) {
+            if( !(grade.hasTask()) ) {
+                result.add(grade);
+            }
+        }
+        return result;
     }
 
     @Test
@@ -91,6 +118,8 @@ public class GradeControllerTest extends AbstractControllerTest {
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = this.testEnvironment.getUsers().get(2);
+
+        List<Grade> grades = getGradeList(sampleCourse.getGrades());
 
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
@@ -105,6 +134,24 @@ public class GradeControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.grades.course.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.grades.course.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.grades.course.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.grades.course.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.grades.course.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.grades.course.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.grades.course.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.grades.course.teachers[0].userID", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.grades.course.teachers[0].name", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -116,6 +163,8 @@ public class GradeControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleUser2 = this.testEnvironment.getUsers().get(1);
 
+        List<Grade> grades = getGradeList(sampleCourse.getGrades());
+
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser2);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
@@ -125,12 +174,30 @@ public class GradeControllerTest extends AbstractControllerTest {
         String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + GradeControllerUrlConstants.GRADE_LIST;
 
         this.mockMvc.perform(get(URL)
-                .contentType("application/json;charset=utf-8")
-                )
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=utf-8"))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.grades.course.courseID", is(sampleCourse.getId())))
+            .andExpect(jsonPath("$.grades.course.language.id", is(sampleCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.grades.course.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.grades.course.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.grades.course.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.grades.course.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.grades.course.teachers", hasSize(1)))
+            .andExpect(jsonPath("$.grades.course.teachers[0].userID", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.grades.course.teachers[0].name", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(0).getId() + "\" && @.gradedBy.userID == \"" + grades.get(0).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(0).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(0).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(0).getGradeDescription() + "\" && @.homeworkFor.homeworkID == \"" + grades.get(0).getTask().getId() + "\" && @.homeworkFor.date == \"" + grades.get(0).getTask().getDate().toString() + "\" && @.homeworkFor.title == \"" + grades.get(0).getTask().getTitle() + "\" && @.scale == \"" + grades.get(0).getScale().name() + "\" && @.maxPoints == \"" + grades.get(0).getMaxPoints() + "\" && @.weight == \"" + grades.get(0).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(0).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(1).getId() + "\" && @.gradedBy.userID == \"" + grades.get(1).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(1).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(1).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(1).getGradeDescription() + "\" && @.testFor.taskID == \"" + grades.get(1).getTask().getId() + "\" && @.testFor.date == \"" + grades.get(1).getTask().getDate().toString() + "\" && @.testFor.title == \"" + grades.get(1).getTask().getTitle() + "\" && @.scale == \"" + grades.get(1).getScale().name() + "\" && @.maxPoints == \"" + grades.get(1).getMaxPoints() + "\" && @.weight == \"" + grades.get(1).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(1).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )]").exists())
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )].grades", hasSize(1)))
+            .andExpect(jsonPath("$.grades.grades[?( @.gradeID == \"" + grades.get(2).getId() + "\" && @.gradedBy.userID == \"" + grades.get(2).getGradedBy().getId() + "\" && @.gradedBy.name == \"" + grades.get(2).getGradedBy().getFullName() + "\" && @.gradeTitle == \"" + grades.get(2).getGradeTitle() + "\" && @.gradeDescription == \"" + grades.get(2).getGradeDescription() + "\" && @.scale == \"" + grades.get(2).getScale().name() + "\" && @.maxPoints == \"" + grades.get(2).getMaxPoints() + "\" && @.weight == \"" + grades.get(2).getWeight() + "\" )].grades[?( @.studentGradeID == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(grades.get(2).getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
@@ -155,6 +222,19 @@ public class GradeControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.grade.gradeID", is(sampleGrade.getId())))
+            .andExpect(jsonPath("$.grade.gradedBy.userID", is(sampleGrade.getGradedBy().getId())))
+            .andExpect(jsonPath("$.grade.gradedBy.name", is(sampleGrade.getGradedBy().getFullName())))
+            .andExpect(jsonPath("$.grade.gradeTitle", is(sampleGrade.getGradeTitle())))
+            .andExpect(jsonPath("$.grade.gradeDescription", is(sampleGrade.getGradeDescription())))
+            .andExpect(jsonPath("$.grade.testFor.taskID", is(sampleGrade.getTask().getId())))
+            .andExpect(jsonPath("$.grade.testFor.date", is(sampleGrade.getTask().getDate().toString())))
+            .andExpect(jsonPath("$.grade.testFor.title", is(sampleGrade.getTask().getTitle())))
+            .andExpect(jsonPath("$.grade.scale", is(sampleGrade.getScale().name())))
+            .andExpect(jsonPath("$.grade.maxPoints", is(sampleGrade.getMaxPoints())))
+            .andExpect(jsonPath("$.grade.weight", is(sampleGrade.getWeight())))
+            .andExpect(jsonPath("$.grade.grades", hasSize(1)))
+            .andExpect(jsonPath("$.grade.grades[?( @.studentGradeID == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -181,6 +261,19 @@ public class GradeControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.grade.gradeID", is(sampleGrade.getId())))
+            .andExpect(jsonPath("$.grade.gradedBy.userID", is(sampleGrade.getGradedBy().getId())))
+            .andExpect(jsonPath("$.grade.gradedBy.name", is(sampleGrade.getGradedBy().getFullName())))
+            .andExpect(jsonPath("$.grade.gradeTitle", is(sampleGrade.getGradeTitle())))
+            .andExpect(jsonPath("$.grade.gradeDescription", is(sampleGrade.getGradeDescription())))
+            .andExpect(jsonPath("$.grade.testFor.taskID", is(sampleGrade.getTask().getId())))
+            .andExpect(jsonPath("$.grade.testFor.date", is(sampleGrade.getTask().getDate().toString())))
+            .andExpect(jsonPath("$.grade.testFor.title", is(sampleGrade.getTask().getTitle())))
+            .andExpect(jsonPath("$.grade.scale", is(sampleGrade.getScale().name())))
+            .andExpect(jsonPath("$.grade.maxPoints", is(sampleGrade.getMaxPoints())))
+            .andExpect(jsonPath("$.grade.weight", is(sampleGrade.getWeight())))
+            .andExpect(jsonPath("$.grade.grades", hasSize(1)))
+            .andExpect(jsonPath("$.grade.grades[?( @.studentGradeID == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getId() + "\" && @.grade == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getGradeValue() + "\" && @.student.userID == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getStudent().getUser().getId() + "\" && @.student.name == \"" + new ArrayList<>(sampleGrade.getGrades()).get(0).getStudent().getUser().getFullName() + "\" )]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -203,12 +296,12 @@ public class GradeControllerTest extends AbstractControllerTest {
         String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleGrade.getId();
 
         this.mockMvc.perform(get(URL)
-                .contentType("application/json;charset=utf-8")
-        )
-                .andExpect(status().isNotFound())
-                .andExpect(content().contentType("application/json;charset=utf-8"))
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(false)));
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isNotFound())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
     }
 
     @Test
@@ -230,13 +323,13 @@ public class GradeControllerTest extends AbstractControllerTest {
         String URL = getClassURI(this.testedClassURI, sampleCourse.getId());
 
         this.mockMvc.perform(post(URL)
-                .contentType("application/json;charset=utf-8")
-                .content(objectToJsonBytes(generateNewGradeJson()))
-                )
-                .andExpect( status().isOk() )
-                .andExpect( content().contentType("application/json;charset=utf-8") )
-                .andExpect(jsonPath("$.message", is(returnMessage)))
-                .andExpect(jsonPath("$.success", is(true)));
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(generateNewGradeJson()))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
@@ -259,15 +352,6 @@ public class GradeControllerTest extends AbstractControllerTest {
 
         NewGradeJson newGrade = generateNewGradeJson();
         newGrade.setTestID(new ArrayList<>(sampleCourse.getTests()).get(0).getId());
-
-        /*
-        String responseJSON = getResponseJson(this.mockMvc,
-            post(URL)
-            .contentType("application/json;charset=utf-8")
-            .content(objectToJsonBytes(newGrade))
-        );
-        int i = 1;
-        */
 
         this.mockMvc.perform(post(URL)
             .contentType("application/json;charset=utf-8")
@@ -323,201 +407,3 @@ public class GradeControllerTest extends AbstractControllerTest {
     }
 
 }
-
-/*
-    Returned JSON - please insert andExpect:
-    a) testGetGradeListTeacher:
-    {
-       "success":true,
-       "message":"",
-       "grades":{
-          "course":{
-             "courseID":"883fd730-87e3-11e6-a700-005056c00001",
-             "language":"English",
-             "courseLevel":"A1",
-             "courseType":{
-                "courseTypeID":"87a7dcf0-87e3-11e6-a700-005056c00001",
-                "name":"standard"
-             },
-             "teachers":[
-                {
-                   "userID":"883f6200-87e3-11e6-a700-005056c00001",
-                   "name":"Teacher Teacher"
-                }
-             ]
-          },
-          "grades":[
-             {
-                "gradeID":"88404c60-87e3-11e6-a700-005056c00001",
-                "gradedBy":{
-                   "userID":"883f6200-87e3-11e6-a700-005056c00001",
-                   "name":"Teacher Teacher"
-                },
-                "gradeTitle":"sample grade title",
-                "gradeDescription":"sample grade description",
-                "homeworkFor":null,
-                "testFor":null,
-                "scale":"PUNKTOWA",
-                "maxPoints":30.0,
-                "weight":1.0,
-                "grades":[
-                   {
-                      "studentGradeID":"88404c61-87e3-11e6-a700-005056c00001",
-                      "grade":15.0
-                   }
-                ]
-             },
-             {
-                "gradeID":"88404c62-87e3-11e6-a700-005056c00001",
-                "gradedBy":{
-                   "userID":"883f6200-87e3-11e6-a700-005056c00001",
-                   "name":"Teacher Teacher"
-                },
-                "gradeTitle":"sample grade title",
-                "gradeDescription":"sample grade description",
-                "homeworkFor":{
-                   "homeworkID":"883ffe40-87e3-11e6-a700-005056c00001",
-                   "date":"Thu Oct 19 00:00:00 CEST 3916",
-                   "title":"sample homework1"
-                },
-                "testFor":null,
-                "scale":"PUNKTOWA",
-                "maxPoints":30.0,
-                "weight":1.0,
-                "grades":[
-                   {
-                      "studentGradeID":"88404c63-87e3-11e6-a700-005056c00001",
-                      "grade":18.0
-                   }
-                ]
-             },
-             {
-                "gradeID":"88404c64-87e3-11e6-a700-005056c00001",
-                "gradedBy":{
-                   "userID":"883f6200-87e3-11e6-a700-005056c00001",
-                   "name":"Teacher Teacher"
-                },
-                "gradeTitle":"sample grade title",
-                "gradeDescription":"sample grade description",
-                "homeworkFor":null,
-                "testFor":{
-                   "taskID":"88402550-87e3-11e6-a700-005056c00001",
-                   "date":"Thu Oct 19 00:00:00 CEST 3916",
-                   "title":"sample test1"
-                },
-                "scale":"PUNKTOWA",
-                "maxPoints":80.0,
-                "weight":1.0,
-                "grades":[
-                   {
-                      "studentGradeID":"88404c65-87e3-11e6-a700-005056c00001",
-                      "grade":40.0
-                   }
-                ]
-             }
-          ]
-       }
-    }
-    b) testGetGradeListStudent:
-    {
-       "success":true,
-       "message":"",
-       "grades":{
-          "course":{
-             "courseID":"9a4061f0-87e5-11e6-b049-005056c00001",
-             "language":"English",
-             "courseLevel":"A1",
-             "courseType":{
-                "courseTypeID":"99c73a51-87e5-11e6-b049-005056c00001",
-                "name":"standard"
-             },
-             "teachers":[
-                {
-                   "userID":"9a3c6a50-87e5-11e6-b049-005056c00001",
-                   "name":"Teacher Teacher"
-                }
-             ]
-          },
-          "grades":[
-             {
-                "gradeID":"9a408903-87e5-11e6-b049-005056c00001",
-                "gradedBy":{
-                   "userID":"9a3c6a50-87e5-11e6-b049-005056c00001",
-                   "name":"Teacher Teacher"
-                },
-                "gradeTitle":"sample grade title",
-                "gradeDescription":"sample grade description",
-                "homeworkFor":{
-                   "homeworkID":"9a4061f6-87e5-11e6-b049-005056c00001",
-                   "date":"Thu Oct 19 00:00:00 CEST 3916",
-                   "title":"sample homework1"
-                },
-                "testFor":null,
-                "scale":"PUNKTOWA",
-                "maxPoints":30.0,
-                "weight":1.0,
-                "grades":[
-                   {
-                      "studentGradeID":"9a408904-87e5-11e6-b049-005056c00001",
-                      "grade":18.0
-                   }
-                ]
-             },
-             {
-                "gradeID":"9a408901-87e5-11e6-b049-005056c00001",
-                "gradedBy":{
-                   "userID":"9a3c6a50-87e5-11e6-b049-005056c00001",
-                   "name":"Teacher Teacher"
-                },
-                "gradeTitle":"sample grade title",
-                "gradeDescription":"sample grade description",
-                "homeworkFor":null,
-                "testFor":null,
-                "scale":"PUNKTOWA",
-                "maxPoints":30.0,
-                "weight":1.0,
-                "grades":[
-                   {
-                      "studentGradeID":"9a408902-87e5-11e6-b049-005056c00001",
-                      "grade":15.0
-                   }
-                ]
-             }
-          ],
-          "student":{
-             "userID":"9a166bc0-87e5-11e6-b049-005056c00001",
-             "name":"A BC"
-          }
-       }
-    }
-
-    c) testGetGradeInfoTeacher:
-    {
-       "success":true,
-       "message":"",
-       "grade":{
-          "gradeID":"df50aa68-8ba1-11e6-a5f2-54ab3a01c2d0",
-          "gradedBy":{
-             "userID":"df508350-8ba1-11e6-a5f2-54ab3a01c2d0",
-             "name":"Teacher Teacher"
-          },
-          "gradeTitle":"sample grade title",
-          "gradeDescription":"sample grade description",
-          "homeworkFor":null,
-          "testFor":null,
-          "scale":"PUNKTOWA",
-          "maxPoints":30.0,
-          "weight":1.0,
-          "grades":[
-             {
-                "studentGradeID":"df50aa69-8ba1-11e6-a5f2-54ab3a01c2d0",
-                "grade":15.0,
-                "student":{
-                   "userID":"df40a4d0-8ba1-11e6-a5f2-54ab3a01c2d0",
-                   "name":"A BC"
-                }
-             }
-          ]
-       }
-    }
-*/
