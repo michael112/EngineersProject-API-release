@@ -20,6 +20,6 @@ public class GradeControllerUrlConstants {
 
     public static final String EDIT_GRADE_SCALE = EDIT_GRADE + "/scale";
 
-    public static final String EDIT_STUDENT_GRADE = "{gradeID}/student";
+    public static final String EDIT_STUDENT_GRADE = "/{gradeID}/student";
 
 }
