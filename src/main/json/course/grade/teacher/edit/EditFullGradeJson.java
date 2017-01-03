@@ -3,6 +3,7 @@ package main.json.course.grade.teacher.edit;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.NotBlank;
 
 import lombok.Getter;
@@ -36,7 +37,7 @@ public class EditFullGradeJson {
     @Setter
     private Double maxPoints;
 
-    @NotBlank(message = "grade.weight.empty")
+    @NotNull(message = "grade.weight.empty")
     @Getter
     @Setter
     private Double weight;
