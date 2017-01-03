@@ -92,26 +92,6 @@ public class GradeControllerTest extends AbstractControllerTest {
         initInsideMocks(this.localeCodeProviderMock);
     }
 
-    private List<Grade> getGradeList(Set<Grade> gradeSet) {
-        List<Grade> result = new ArrayList<>();
-        for( Grade grade : gradeSet ) {
-            if( grade.hasHomework() ) {
-                result.add(grade);
-            }
-        }
-        for( Grade grade : gradeSet ) {
-            if( grade.hasTest() ) {
-                result.add(grade);
-            }
-        }
-        for( Grade grade : gradeSet ) {
-            if( !(grade.hasTask()) ) {
-                result.add(grade);
-            }
-        }
-        return result;
-    }
-
     @Test
     public void testGetGradeListTeacher() throws Exception {
         String returnMessage = "";
@@ -363,19 +343,6 @@ public class GradeControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.success", is(false)));
     }
 
-    private NewGradeJson generateNewGradeJson() {
-        Course sampleCourse = this.testEnvironment.getCourses().get(0);
-
-        NewGradeJson result = new NewGradeJson();
-        result.setGradeTitle("sample grade title");
-        result.setGradeDescription("sample grade description");
-        result.setHomeworkID(new ArrayList<>(sampleCourse.getHomeworks()).get(0).getId());
-        result.setScale("PUNKTOWA");
-        result.setMaxPoints(33.3);
-        result.setWeight(new Double(1));
-        return result;
-    }
-
     @Test
     public void testEditFullGrade() throws Exception {
 
@@ -404,6 +371,39 @@ public class GradeControllerTest extends AbstractControllerTest {
     @Test
     public void testEditStudentGrade() throws Exception {
 
+    }
+
+    private List<Grade> getGradeList(Set<Grade> gradeSet) {
+        List<Grade> result = new ArrayList<>();
+        for( Grade grade : gradeSet ) {
+            if( grade.hasHomework() ) {
+                result.add(grade);
+            }
+        }
+        for( Grade grade : gradeSet ) {
+            if( grade.hasTest() ) {
+                result.add(grade);
+            }
+        }
+        for( Grade grade : gradeSet ) {
+            if( !(grade.hasTask()) ) {
+                result.add(grade);
+            }
+        }
+        return result;
+    }
+
+    private NewGradeJson generateNewGradeJson() {
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        NewGradeJson result = new NewGradeJson();
+        result.setGradeTitle("sample grade title");
+        result.setGradeDescription("sample grade description");
+        result.setHomeworkID(new ArrayList<>(sampleCourse.getHomeworks()).get(0).getId());
+        result.setScale("PUNKTOWA");
+        result.setMaxPoints(33.3);
+        result.setWeight(new Double(1));
+        return result;
     }
 
 }
