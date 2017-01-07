@@ -93,6 +93,7 @@ public class TestEnvironmentDbSaver {
         for( Course course : testEnvironment.getCourses() ) {
             clearCourseDependencies(course);
             this.courseCrudService.saveCourse(course);
+            addTeachersToCourse(course);
         }
         for( Message message : testEnvironment.getMessages() ) {
             this.messageCrudService.saveMessage(message);
@@ -117,6 +118,13 @@ public class TestEnvironmentDbSaver {
         }
         for( Grade grade : testEnvironment.getGrades() ) {
             this.gradeCrudService.updateGrade(grade);
+        }
+    }
+
+    private void addTeachersToCourse(Course course) {
+        for( User teacher : course.getTeachers() ) {
+            teacher.addCourseAsTeacher(course);
+            this.userCrudService.updateUser(teacher);
         }
     }
 
