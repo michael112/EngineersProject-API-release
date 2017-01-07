@@ -3,10 +3,13 @@ package main.service.controller.course;
 import java.util.Set;
 import java.util.HashSet;
 
-import org.joda.time.LocalDate;
-
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.joda.time.LocalDate;
+
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 
 import main.service.controller.AbstractService;
 
@@ -55,6 +58,8 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     private LanguageCrudService languageCrudService;
 
+    private DateTimeFormatter dateFormatter;
+
     public CourseListJson getCourseStudentList(Course course) {
         try {
             String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
@@ -86,10 +91,10 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
             Set<Test> incomingTests = getIncomingTests(course.getTests());
             Set<Message> teacherMessages = getTeacherMessages(course, user);
             for( Homework homework : incomingHomeworks ) {
-                courseInfo.addIncomingHomework(new HomeworkJson(homework.getId(), homework.getDate().toString(), homework.getTitle()));
+                courseInfo.addIncomingHomework(new HomeworkJson(homework.getId(), this.dateFormatter.print(homework.getDate()), homework.getTitle()));
             }
             for( Test test : incomingTests ) {
-                courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
+                courseInfo.addIncomingTest(new TestJson(test.getId(), this.dateFormatter.print(test.getDate()), test.getTitle()));
             }
             for( Message message : teacherMessages ) {
                 courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
@@ -112,7 +117,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
             Set<Test> incomingTests = getIncomingTests(course.getTests());
             Set<Message> teacherMessages = getTeacherMessages(course, user);
             for( Test test : incomingTests ) {
-                courseInfo.addIncomingTest(new TestJson(test.getId(), test.getDate().toString(), test.getTitle()));
+                courseInfo.addIncomingTest(new TestJson(test.getId(), this.dateFormatter.print(test.getDate()), test.getTitle()));
             }
             for( Message message : teacherMessages ) {
                 courseInfo.addTeacherMessage(new MessageJson(message.getId(), message.getTitle()));
@@ -215,7 +220,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         String resultHour = null;
 
         for(CourseDay courseDay : course.getCourseDays()) {
-            while( (iteratorDate.getDayOfWeek() - 1) != courseDay.getDay().getDay() ) {
+            while( iteratorDate.getDayOfWeek() != courseDay.getDay().getDay() ) {
                 iteratorDate = iteratorDate.plusDays(1);
             }
             if( ( resultDate == null ) || ( iteratorDate.isBefore(resultDate) ) ) {
@@ -224,7 +229,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
             }
         }
         try {
-            String resultDateStr = resultDate == null ? null : String.valueOf(resultDate.getYear()) + '-' + String.valueOf(resultDate.getMonthOfYear()) + '-' + String.valueOf(resultDate.getDayOfMonth());
+            String resultDateStr = resultDate == null ? null : this.dateFormatter.print(resultDate);
 
             NextLessonJson result = new NextLessonJson(resultDateStr, resultHour);
 
@@ -274,5 +279,6 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         this.courseTypeCrudService = courseTypeCrudService;
         this.courseMembershipCrudService = courseMembershipCrudService;
         this.languageCrudService = languageCrudService;
+        this.dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy");;
     }
 }

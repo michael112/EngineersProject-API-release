@@ -19,6 +19,9 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.LocaleResolver;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
 import main.model.user.User;
 import main.model.course.CourseMembership;
 import main.model.course.Course;
@@ -75,6 +78,8 @@ public class CourseControllerTest extends AbstractControllerTest {
     @Autowired
     private LocaleResolver localeResolverMock;
 
+    private DateTimeFormatter dateFormat;
+
     private String testedClassURI;
 
     private TestEnvironment testEnvironment;
@@ -92,6 +97,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
 		initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
         initInsideMocks(this.localeCodeProvider);
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
     private Message getSampleMessage(TestEnvironment environment, User user) {
@@ -110,7 +116,7 @@ public class CourseControllerTest extends AbstractControllerTest {
         String resultHour = null;
 
         for(CourseDay courseDay : course.getCourseDays()) {
-            while( (iteratorDate.getDayOfWeek() - 1) != courseDay.getDay().getDay() ) {
+            while( iteratorDate.getDayOfWeek() != courseDay.getDay().getDay() ) {
                 iteratorDate = iteratorDate.plusDays(1);
             }
             if( ( resultDate == null ) || ( iteratorDate.isBefore(resultDate) ) ) {
@@ -119,7 +125,7 @@ public class CourseControllerTest extends AbstractControllerTest {
             }
         }
         try {
-            String resultDateStr = resultDate == null ? null : String.valueOf(resultDate.getYear()) + '-' + String.valueOf(resultDate.getMonthOfYear()) + '-' + String.valueOf(resultDate.getDayOfMonth());
+            String resultDateStr = resultDate == null ? null : this.dateFormat.print(resultDate);
 
             Map<String, String> result = new HashMap<>();
             result.put("resultDate", resultDateStr);
@@ -160,7 +166,7 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.course.teachers[0].name", is(((User)((sampleCourse.getTeachers().toArray())[0])).getFullName())))
                 .andExpect(jsonPath("$.course.incomingTests", hasSize(1)))
                 .andExpect(jsonPath("$.course.incomingTests[0].taskID", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getId())))
-                .andExpect(jsonPath("$.course.incomingTests[0].date", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getDate().toString())))
+                .andExpect(jsonPath("$.course.incomingTests[0].date", is(this.dateFormat.print(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getDate()))))
                 .andExpect(jsonPath("$.course.incomingTests[0].title", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getTitle())))
                 .andExpect(jsonPath("$.course.teacherMessages", hasSize(1)))
                 .andExpect(jsonPath("$.course.teacherMessages[0].messageID", is(getSampleMessage(this.testEnvironment, sampleTeacher).getId())))
@@ -169,17 +175,6 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.course.nextLesson.hour", is(nextLessonDate.get("resultHour"))))
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
-
-        /*
-        String responseJSON = getResponseJson(this.mockMvc,
-                get(this.testedClassURI + '/' + sampleCourse.getId())
-                .contentType("application/json;charset=utf-8")
-                );
-        */
-
-        verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
-        verify(this.courseCrudServiceMock, times(2)).findCourseByID(Mockito.any(String.class)); // it's 2 times because of CourseMembershipRequiredVoter
-        verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
 
     @Test
@@ -211,11 +206,11 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.course.teachers[0].name", is(((User)((sampleCourse.getTeachers().toArray())[0])).getFullName())))
                 .andExpect(jsonPath("$.course.incomingTests", hasSize(1)))
                 .andExpect(jsonPath("$.course.incomingTests[0].taskID", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getId())))
-                .andExpect(jsonPath("$.course.incomingTests[0].date", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getDate().toString())))
+                .andExpect(jsonPath("$.course.incomingTests[0].date", is(this.dateFormat.print(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getDate()))))
                 .andExpect(jsonPath("$.course.incomingTests[0].title", is(((main.model.course.Test)((sampleCourse.getTests().toArray())[0])).getTitle())))
                 .andExpect(jsonPath("$.course.incomingHomeworks", hasSize(1)))
                 .andExpect(jsonPath("$.course.incomingHomeworks[0].homeworkID", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getId())))
-                .andExpect(jsonPath("$.course.incomingHomeworks[0].date", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getDate().toString())))
+                .andExpect(jsonPath("$.course.incomingHomeworks[0].date", is(this.dateFormat.print(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getDate()))))
                 .andExpect(jsonPath("$.course.incomingHomeworks[0].title", is(((main.model.course.Homework)((sampleCourse.getHomeworks().toArray())[0])).getTitle())))
                 .andExpect(jsonPath("$.course.teacherMessages", hasSize(1)))
                 .andExpect(jsonPath("$.course.teacherMessages[0].messageID", is(getSampleMessage(this.testEnvironment, sampleTeacher).getId())))
@@ -224,17 +219,6 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.course.nextLesson.hour", is(nextLessonDate.get("resultHour"))))
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
-
-        /*
-        String responseJSON = getResponseJson(this.mockMvc,
-                get(this.testedClassURI + '/' + sampleCourse.getId())
-                .contentType("application/json;charset=utf-8")
-                );
-        */
-
-        verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
-        verify(this.courseCrudServiceMock, times(2)).findCourseByID(Mockito.any(String.class)); // it's 2 times because of CourseMembershipRequiredVoter
-        verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
 
     @Test
@@ -285,8 +269,8 @@ public class CourseControllerTest extends AbstractControllerTest {
 
         /*
         String responseJSON = getResponseJson(this.mockMvc,
-                get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES)
-                        .contentType("application/json;charset=utf-8")
+            get()
+            .contentType("application/json;charset=utf-8")
         );
         */
 
@@ -309,11 +293,6 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.result.types[?(@.courseTypeID == \"" + sampleAvailableCourseTypes.get(2).getId() + "\")][?(@.name == \"" + sampleAvailableCourseTypes.get(2).getCourseTypeName("EN") + "\")]").exists())
                 .andExpect(jsonPath("$.message", is(returnMessage)))
                 .andExpect(jsonPath("$.success", is(true)));
-
-        verify(this.currentUserServiceMock, times(1)).getCurrentUser(); // for CourseMembershipRequiredVoter
-        verify(this.languageCrudServiceMock, times(1)).findAllLanguages();
-        verify(this.courseTypeCrudServiceMock, times(1)).findAllCourseTypes();
-        verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
     }
 
     @Test
