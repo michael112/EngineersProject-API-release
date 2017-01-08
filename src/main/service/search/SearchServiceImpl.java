@@ -101,7 +101,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( d.day.day = " + ( courseDayJson.getDay() % 7 ) + " ) ";
+			query += "( d.day.day = " + ( ( courseDayJson.getDay() - 1 ) % 7 ) + " ) ";
 		}
 		for( CourseHourJson courseHourJson : searchPattern.getCourseHours() ) {
 			if( isFirst ) {
