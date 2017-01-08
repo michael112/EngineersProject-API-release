@@ -15,6 +15,8 @@ import javax.persistence.AccessType;
 import lombok.Getter;
 import lombok.Setter;
 
+import main.util.collection.set.HibernateSetChecker;
+
 import main.model.user.User;
 
 @Entity
@@ -32,12 +34,14 @@ public class HomeworkSolution extends AbstractSolution {
 	}
 	public void setTask(Homework task) {
 		if( this.getTask() != null ) {
-			if (this.getTask().containsHomeworkSolution(this)) {
+			if( ( HibernateSetChecker.isNotHibernateCollection(this.getTask().getHomeworkSolutions()) ) &&  (this.getTask().containsHomeworkSolution(this)) ) {
 				this.getTask().removeHomeworkSolution(this);
 			}
 		}
 		super.setTask(task);
-		task.addHomeworkSolution(this); // przypisanie powiązania
+		if( HibernateSetChecker.isNotHibernateCollection(task.getHomeworkSolutions()) ) {
+			task.addHomeworkSolution(this); // przypisanie powiązania
+		}
 	}
 
 	@Getter

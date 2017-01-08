@@ -16,6 +16,8 @@ import org.hibernate.annotations.Type;
 import lombok.Getter;
 import lombok.Setter;
 
+import main.util.collection.set.HibernateSetChecker;
+
 import main.model.user.User;
 
 @Entity
@@ -33,12 +35,14 @@ public class TestSolution extends AbstractSolution {
     }
     public void setTask(Test task) {
         if( this.getTask() != null ) {
-            if (this.getTask().containsTestSolution(this)) {
+            if( ( HibernateSetChecker.isNotHibernateCollection(this.getTask().getTestSolutions()) ) && (this.getTask().containsTestSolution(this)) ) {
                 this.getTask().removeTestSolution(this);
             }
         }
         super.setTask(task);
-        task.addTestSolution(this); // przypisanie powiązania
+        if( HibernateSetChecker.isNotHibernateCollection(task.getTestSolutions()) ) {
+            task.addTestSolution(this); // przypisanie powiązania
+        }
     }
 
     @Getter

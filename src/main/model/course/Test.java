@@ -52,7 +52,7 @@ public class Test extends AbstractHomeworkOrTest {
 		}
 	}
 	public void addTestSolution(TestSolution solution) {
-		if ( !( this.testSolutions.contains(solution) ) ) {
+		if( !( this.testSolutions.contains(solution) ) ) {
 			this.testSolutions.add(solution);
 		}
 		if( solution.getTask() != this ) {
