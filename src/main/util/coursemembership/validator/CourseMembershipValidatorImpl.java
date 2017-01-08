@@ -21,7 +21,7 @@ public class CourseMembershipValidatorImpl implements CourseMembershipValidator 
     public boolean isStudent( User user, Course course ) {
         String query = "from CourseMembership c where c.user.id = '" + user.getId() + "' and c.course.id = '" + course.getId() + "'";
         Set<CourseMembership> courseMembershipsOfUserAndCourse = this.courseMembershipCrudService.findCourseMembershipsByQuery(query);
-        return (courseMembershipsOfUserAndCourse != null) && (courseMembershipsOfUserAndCourse.size() > 0);
+        return (courseMembershipsOfUserAndCourse != null) && (courseMembershipsOfUserAndCourse.size() > 0) && (((CourseMembership)courseMembershipsOfUserAndCourse.toArray()[0]).isActive());
     }
 
     public boolean isTeacher( User user, Course course ) {
