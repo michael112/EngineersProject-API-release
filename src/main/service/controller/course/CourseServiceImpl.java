@@ -169,7 +169,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         try {
             ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
             // przetestować
-            Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("from Courses c where ( c.languageID = " + course.getLanguage().getId() + " ) and ( c.courseLevelName = " + course.getCourseLevel().getName() + " ) and ( c.courseTypeID = " + course.getCourseType().getId() + " )");
+            Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("select course from Course course join course.language language join course.courseLevel courseLevel join course.courseType courseType where ( language.id = '" + course.getLanguage().getId() + "' ) and ( courseLevel.id = '" + course.getCourseLevel().getName() + "' ) and ( courseType.id = '" + course.getCourseType().getId() + "' ) and ( course.id != '" + course.getId() + "' )");
             for( Course similarCourse : similarCourses ) {
                 SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
                 for( CourseDay courseDay : similarCourse.getCourseDays() ) {
@@ -211,6 +211,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     public void resignGroup(User user, Course course) {
         CourseMembership cm = course.getCourseMembership(user);
         cm.setResignation(true);
+        this.courseMembershipCrudService.updateCourseMembership(cm);
     }
 
     private NextLessonJson getNextLesson(Course course) {
