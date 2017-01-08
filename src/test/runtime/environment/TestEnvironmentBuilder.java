@@ -260,7 +260,7 @@ public class TestEnvironmentBuilder {
 		course.addCourseDay(courseDay);
 		course.addTeacher(teacher);
 		for( User student : students ) {
-			course.addStudent(new CourseMembership(student, course));
+			course.addStudent(new CourseMembership(student, course, true));
 		}
 		if( attachement != null ) course.addAttachement(attachement);
 		if( hasUUID ) course.setId(UuidGenerator.newUUID());
