@@ -114,7 +114,7 @@ public class TestServiceImpl extends AbstractService implements TestService {
     public void editTestTitle(Test test, EditTestTitleJson editTestTitleJson){
         try {
             test.setTitle(editTestTitleJson.getTitle());
-            this.testCrudService.saveTest(test);
+            this.testCrudService.updateTest(test);
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
