@@ -12,6 +12,8 @@ import main.service.controller.AbstractService;
 
 import main.service.crud.language.LanguageCrudService;
 
+import main.service.crud.user.user.UserCrudService;
+
 import main.error.exception.IllegalRemovalEntityException;
 
 import main.json.admin.language.view.LanguageListJson;
@@ -36,6 +38,7 @@ import main.model.user.User;
 public class AdminLanguageServiceImpl extends AbstractService implements AdminLanguageService {
 
     private LanguageCrudService languageCrudService;
+    private UserCrudService userCrudService;
 
     public LanguageListJson getLanguageList() {
         try {
@@ -75,7 +78,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
                 language.removeLanguageName(languageName);
             }
             for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
-                language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+                language.addLanguageName(new LanguageName(language, this.languageCrudService.findLanguageByID(languageNameJson.getLanguageID()), languageNameJson.getLanguageName()));
             }
             this.languageCrudService.updateLanguage(language);
         }
@@ -100,7 +103,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
 
     public void addLanguageName(Language language, LanguageNameJson languageNameJson) {
         try {
-            language.addLanguageName(new LanguageName(language, languageNameJson.getLanguageName()));
+            language.addLanguageName(new LanguageName(language, this.languageCrudService.findLanguageByID(languageNameJson.getLanguageID()), languageNameJson.getLanguageName()));
             this.languageCrudService.updateLanguage(language);
         }
         catch( NullPointerException ex ) {
@@ -139,7 +142,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
     public void addTeacherLanguage(Language language, User teacher) {
         try {
             language.addTeacher(teacher);
-            this.languageCrudService.updateLanguage(language);
+            this.userCrudService.updateUser(teacher);
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
@@ -153,7 +156,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             }
             else {
                 language.removeTeacher(teacher);
-                this.languageCrudService.updateLanguage(language);
+                this.userCrudService.updateUser(teacher);
             }
         }
         catch( NullPointerException ex ) {
@@ -162,9 +165,10 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
     }
 
     @Autowired
-    public AdminLanguageServiceImpl(LocaleCodeProvider localeCodeProvider, LanguageCrudService languageCrudService) {
+    public AdminLanguageServiceImpl(LocaleCodeProvider localeCodeProvider, LanguageCrudService languageCrudService, UserCrudService userCrudService) {
         super(localeCodeProvider);
         this.languageCrudService = languageCrudService;
+        this.userCrudService = userCrudService;
     }
 
 }

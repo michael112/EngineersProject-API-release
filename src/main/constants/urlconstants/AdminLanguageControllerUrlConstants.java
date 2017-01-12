@@ -8,9 +8,9 @@ public class AdminLanguageControllerUrlConstants {
 
     public static final String ADD_LANGUAGE = "";
 
-    public static final String EDIT_LANGUAGE = "{languageID}";
+    public static final String EDIT_LANGUAGE = "/{languageID}";
 
-    public static final String REMOVE_LANGUAGE = "{languageID}";
+    public static final String REMOVE_LANGUAGE = "/{languageID}";
 
     public static final String TEACHER_LANGUAGE_LIST = "/{languageID}/teachers";
 
