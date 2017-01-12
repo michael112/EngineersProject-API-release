@@ -26,7 +26,7 @@ public class EditFullGradeJson {
     @Setter
     private String gradeDescription;
 
-    @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "newgrade.scale.invalid")
+    @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "grade.scale.invalid")
     @NotBlank(message = "grade.scale.empty")
     @Size(max = 8, message = "grade.scale.length")
     @Getter

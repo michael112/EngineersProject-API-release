@@ -14,6 +14,7 @@ import main.constants.validationconstants.ValidationConstants;
 
 @EqualsAndHashCode
 public class NewGradeJson {
+
     @NotBlank(message = "grade.gradetitle.empty")
     @Size(max = 50, message = "grade.gradetitle.length")
     @Getter
@@ -39,6 +40,7 @@ public class NewGradeJson {
 
     @Pattern(regexp=ValidationConstants.PUNKOWA_SZKOLNA_REGEX, message = "grade.scale.invalid")
     @NotBlank(message = "grade.scale.empty")
+    @Size(max = 8, message = "grade.scale.length")
     @Getter
     @Setter
     private String scale;
