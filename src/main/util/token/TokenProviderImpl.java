@@ -21,6 +21,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import org.apache.commons.lang3.text.StrSubstitutor;
 
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
+
 import main.util.domain.DomainURIProvider;
 
 import main.util.properties.PropertyProvider;
@@ -54,7 +57,7 @@ public class TokenProviderImpl implements TokenProvider {
             TokenJson tokenResult = this.objectMapper.readValue(tokenResultStr.getBody(), TokenJson.class);
             return tokenResult;
         }
-        catch( org.springframework.web.client.HttpClientErrorException | org.springframework.web.client.ResourceAccessException | IOException ex ) {
+        catch( HttpClientErrorException | ResourceAccessException | IOException ex ) {
             return null;
         }
     }

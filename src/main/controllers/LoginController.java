@@ -122,7 +122,7 @@ public class LoginController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = LoginControllerUrlConstants.LOGOUT_USER_URL, method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<? extends LoginResponseJson> logout(@RequestHeader("Authorization") String authorizationHeader) {
+    public ResponseEntity<? extends LoginResponseJson> logout(@RequestHeader(name = "Authorization", required = false) String authorizationHeader) {
         this.tokenProvider.deactivateToken(authorizationHeader);
         String messageStr = this.labelProvider.getLabel("logout.success");
         HttpStatus responseStatus = HttpStatus.OK;
