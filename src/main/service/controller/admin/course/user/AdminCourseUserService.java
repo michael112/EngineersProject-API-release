@@ -13,6 +13,8 @@ public interface AdminCourseUserService {
 
     void suspendCourseUser(Course course, User user);
 
+    void activateCourseUser(Course course, User user);
+
     void removeCourseUser(Course course, User user);
 
     void moveCourseUser(Course previousCourse, Course newCourse, User user);

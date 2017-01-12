@@ -88,6 +88,19 @@ public class AdminCourseUserController {
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminCourseUserControllerUrlConstants.ACTIVATE_COURSE_USER, method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> activateCourseUser(@PathVariable("courseID") String courseID, @PathVariable("userID") String userID) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.not.found"));
+        User user = this.userCrudService.findUserByID(userID);
+        if( user == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.course.user.not.found"));
+        this.adminCourseUserService.activateCourseUser(course, user);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.course.user.activate.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminCourseUserControllerUrlConstants.REMOVE_COURSE_USER, method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> removeCourseUser(@PathVariable("courseID") String courseID, @PathVariable("userID") String userID) {
         Course course = this.courseCrudService.findCourseByID(courseID);

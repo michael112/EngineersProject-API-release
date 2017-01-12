@@ -10,6 +10,8 @@ public class AdminCourseUserControllerUrlConstants {
 
     public static final String SUSPEND_COURSE_USER = "/{userID}/suspend";
 
+    public static final String ACTIVATE_COURSE_USER = "/{userID}/activate";
+
     public static final String REMOVE_COURSE_USER = "/{userID}/remove";
 
     public static final String MOVE_USER_GROUP = "/{userID}/change/{newCourseID}";

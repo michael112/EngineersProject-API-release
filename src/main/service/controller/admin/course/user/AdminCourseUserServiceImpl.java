@@ -73,6 +73,17 @@ public class AdminCourseUserServiceImpl extends AbstractService implements Admin
         }
     }
 
+    public void activateCourseUser(Course course, User user) {
+        try {
+            CourseMembership cm = course.getCourseMembership(user);
+            cm.setActive(true);
+            this.courseMembershipCrudService.updateCourseMembership(cm);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public void removeCourseUser(Course course, User user) {
         try {
             CourseMembership cm = course.getCourseMembership(user);
