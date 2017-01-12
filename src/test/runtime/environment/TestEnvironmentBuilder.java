@@ -96,12 +96,6 @@ public class TestEnvironmentBuilder {
 		environment.addPlacementTestResult(englishUser1);
 		environment.addPlacementTestResult(englishUser2);
 
-		/*
-		File sampleFile1 = generateFile(hasUUID, "sample name 1", new Date(), "/dev/null", sampleStudent2);
-		File sampleFile2 = generateFile(hasUUID, "sample name 2", new Date(), "/dev/null", sampleStudent1);
-		File sampleFile3 = generateFile(hasUUID, "sample name 3", new Date(), "/dev/null", sampleTeacher1);
-		*/
-
 		File sampleFile1 = generateFile(hasUUID, "sample name 1", new DateTime(), "/dev/null", sampleStudent2);
 		File sampleFile2 = generateFile(hasUUID, "sample name 2", new DateTime(), "/dev/null", sampleStudent1);
 		File sampleFile3 = generateFile(hasUUID, "sample name 3", new DateTime(), "/dev/null", sampleTeacher1);
