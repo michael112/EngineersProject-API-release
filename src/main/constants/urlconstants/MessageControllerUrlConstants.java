@@ -6,6 +6,6 @@ public class MessageControllerUrlConstants {
 
     public static final String SEND_MESSAGE = "send";
 
-    public static final String USER_MESSAGES = "{userID}";
+    public static final String USER_MESSAGES = "";
 
 }

@@ -97,7 +97,7 @@ public class MessageController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = MessageControllerUrlConstants.USER_MESSAGES, method = RequestMethod.GET, produces = "application/json", params = "type=received")
-    public ResponseEntity<? extends AbstractResponseJson> getUserReceivedMessages(@PathVariable("userID") String userID) {
+    public ResponseEntity<? extends AbstractResponseJson> getUserReceivedMessages() {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 
@@ -109,7 +109,7 @@ public class MessageController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = MessageControllerUrlConstants.USER_MESSAGES, method = RequestMethod.GET, produces = "application/json", params = "type=sended")
-    public ResponseEntity<? extends AbstractResponseJson> getUserSendedMessages(@PathVariable("userID") String userID) {
+    public ResponseEntity<? extends AbstractResponseJson> getUserSendedMessages() {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 
