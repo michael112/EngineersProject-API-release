@@ -35,7 +35,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import main.model.placementtest.PlacementTest;
 import main.model.placementtest.PlacementTask;
 import main.model.placementtest.PlacementSentence;
-import main.model.placementtest.PlacementAnswer;
 import main.model.user.User;
 import main.model.user.userprofile.Address;
 import main.model.user.userprofile.Phone;
@@ -211,21 +210,12 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 			try {
 				SolvedPlacementSentenceJson solvedPlacementSentence = new SolvedPlacementSentenceJson();
 				solvedPlacementSentence.setId(sentence.getId());
-				solvedPlacementSentence.setAnswer(getAnswer(sentence.getAnswers(), "b"));
+				solvedPlacementSentence.setAnswer("b");
 				solvedPlacementSentences.add(solvedPlacementSentence);
 			}
 			catch(NullPointerException ex) {}
 		}
 		return solvedPlacementSentences;
-	}
-
-	private PlacementAnswer getAnswer(Set<PlacementAnswer> answersSet, String answerKey) throws NullPointerException {
-		for( PlacementAnswer answer : answersSet ) {
-			if( answer.getAnswerKey().equalsIgnoreCase(answerKey) ) {
-				return answer;
-			}
-		}
-		throw new NullPointerException();
 	}
 
 	protected String getResponseJson(MockMvc mockMvc, RequestBuilder requestBuilder) throws Exception {

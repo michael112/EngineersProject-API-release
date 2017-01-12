@@ -1,7 +1,5 @@
 package main.json.placementtests;
 
-import javax.validation.Valid;
-
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -11,8 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
-
-import main.model.placementtest.PlacementAnswer;
 
 import main.constants.validationconstants.ValidationConstants;
 
@@ -26,9 +22,10 @@ public class SolvedPlacementSentenceJson {
     @Setter
     private String id;
 
-    @Valid
+    @NotBlank(message = "solvedplacementanswer.empty")
+    @Size(max = 1, message = "solvedplacementanswer.length")
     @Getter
     @Setter
-    private PlacementAnswer answer;
+    private String answer;
 
 }

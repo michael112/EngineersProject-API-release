@@ -8,9 +8,6 @@ import javax.persistence.AttributeOverrides;
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 
-import javax.validation.constraints.Size;
-import org.hibernate.validator.constraints.NotBlank;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -22,15 +19,11 @@ import main.model.abstracts.AbstractUuidModel;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "placementAnswerID")) })
 public class PlacementAnswer extends AbstractUuidModel {
 
-	@NotBlank(message = "solvedplacementanswer.answerkey.empty")
-	@Size(max = 1, message = "solvedplacementanswer.answerkey.length")
 	@Getter
 	@Setter
 	@Column(name="answerKey", nullable=false)
 	private String answerKey;
 
-	@NotBlank(message = "solvedplacementanswer.answername.empty")
-	@Size(max = 30, message = "solvedplacementanswer.answername.length")
 	@Getter
 	@Setter
 	@Column(name="answerName", nullable=false)

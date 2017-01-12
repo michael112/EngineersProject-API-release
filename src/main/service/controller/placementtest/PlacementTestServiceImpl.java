@@ -84,7 +84,7 @@ public class PlacementTestServiceImpl extends AbstractService implements Placeme
         double result = 0;
         for( SolvedPlacementTaskJson task : solvedTest.getTasks() ) {
             for( SolvedPlacementSentenceJson sentence : task.getSentences() ) {
-                if( sentence.getAnswer().getAnswerKey().equals(test.getSentence(sentence.getId()).getCorrectAnswer()) ) {
+                if( sentence.getAnswer().equals(test.getSentence(sentence.getId()).getCorrectAnswer()) ) {
                     result++;
                 }
             }
