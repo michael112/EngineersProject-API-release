@@ -2,6 +2,8 @@ package main.service.controller.admin.course;
 
 import java.util.Set;
 
+import java.util.Iterator;
+
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
 
@@ -128,8 +130,10 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(editedCourse.getCourseLevelID()));
             course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(editedCourse.getCourseActivity().getDateFrom()), this.df.parseLocalDate(editedCourse.getCourseActivity().getDateTo())));
             // remove old course days
-            for( CourseDay courseDay : course.getCourseDays() ) {
-                course.removeCourseDay(courseDay);
+            Iterator<CourseDay> cdIter = course.getCourseDays().iterator();
+            while( cdIter.hasNext() ) {
+                cdIter.next();
+                cdIter.remove();
             }
             for( CourseDayJson courseDayJson : editedCourse.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
@@ -137,9 +141,12 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             // remove teachers
             for( User oldTeacher : course.getTeachers() ) {
                 course.removeTeacher(oldTeacher);
+                this.userCrudService.updateUser(oldTeacher);
             }
             for( TeacherJson teacher : editedCourse.getTeachers() ) {
-                this.addTeacher(course, this.userCrudService.findUserByID(teacher.getTeacher()));
+                User teacherEntity = this.userCrudService.findUserByID(teacher.getTeacher());
+                this.addTeacher(course, teacherEntity);
+                this.userCrudService.updateUser(teacherEntity);
             }
             course.setMaxStudents(editedCourse.getMaxStudents());
             course.setPrice(editedCourse.getPrice());
