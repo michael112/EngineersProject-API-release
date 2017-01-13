@@ -25,8 +25,11 @@ import main.constants.urlconstants.AdminCourseTypeControllerUrlConstants;
 import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.language.LanguageCrudService;
 
-import main.json.admin.type.CourseTypeJson;
 import main.json.admin.type.CourseTypeNameJson;
+
+import main.json.admin.type.CourseTypeJson;
+import main.json.admin.type.NewCourseTypeJson;
+import main.json.admin.type.EditCourseTypeJson;
 
 import main.model.UuidGenerator;
 
@@ -105,7 +108,7 @@ public class AdminTypeControllerTest extends AbstractControllerTest {
     public void testAddCourseType() throws Exception {
         String returnMessage = "";
 
-        CourseTypeJson newTypeJson = new CourseTypeJson(UuidGenerator.newUUID());
+        NewCourseTypeJson newTypeJson = new NewCourseTypeJson();
         newTypeJson.addName("EN", "individual");
         newTypeJson.addName("PL", "indywidualny");
 
@@ -151,7 +154,7 @@ public class AdminTypeControllerTest extends AbstractControllerTest {
 
         CourseType sampleCourseType = this.testEnvironment.getCourseTypes().get(0);
 
-        CourseTypeJson editTypeJson = new CourseTypeJson(sampleCourseType.getId());
+        EditCourseTypeJson editTypeJson = new EditCourseTypeJson(sampleCourseType.getId());
         editTypeJson.addName("EN", "individual");
         editTypeJson.addName("PL", "indywidualny");
 

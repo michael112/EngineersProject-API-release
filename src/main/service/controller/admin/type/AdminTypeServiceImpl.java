@@ -17,8 +17,11 @@ import main.error.exception.IllegalRemovalEntityException;
 
 import main.json.admin.type.view.CourseTypeListJson;
 
-import main.json.admin.type.CourseTypeJson;
 import main.json.admin.type.CourseTypeNameJson;
+
+import main.json.admin.type.CourseTypeJson;
+import main.json.admin.type.NewCourseTypeJson;
+import main.json.admin.type.EditCourseTypeJson;
 
 import main.model.course.CourseType;
 import main.model.course.CourseTypeName;
@@ -44,7 +47,7 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
-    public void addCourseType(CourseTypeJson courseTypeJson) {
+    public void addCourseType(NewCourseTypeJson courseTypeJson) {
         try {
             CourseType newCourseType = new CourseType();
             for( CourseTypeNameJson courseTypeNameJson : courseTypeJson.getNamesInLanguages() ) {
@@ -70,7 +73,7 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
-    public void editCourseTypeNames(CourseType courseType, CourseTypeJson courseTypeJson) {
+    public void editCourseTypeNames(CourseType courseType, EditCourseTypeJson courseTypeJson) {
         try {
             // erasing course type name list
             for( CourseTypeName courseTypeName : courseType.getCourseTypeNames() ) {
