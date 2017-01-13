@@ -1,19 +1,21 @@
-package main.json.admin.type;
+package main.json.admin.type.view.multilang;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.validation.Valid;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
+import main.json.admin.type.CourseTypeNameJson;
 
 @EqualsAndHashCode
-public class NewCourseTypeJson {
+public class CourseTypeJson {
 
-    @Valid
+    @Setter
+    @Getter
+    private String id;
+
     @Setter
     @Getter
     private Set<CourseTypeNameJson> namesInLanguages;
@@ -22,9 +24,15 @@ public class NewCourseTypeJson {
         this.namesInLanguages.add(new CourseTypeNameJson(language, name));
     }
 
-    public NewCourseTypeJson() {
+    public CourseTypeJson() {
         super();
+        this.setId(null);
         this.namesInLanguages = new HashSet<>();
+    }
+
+    public CourseTypeJson(String id) {
+        this();
+        this.setId(id);
     }
 
 }

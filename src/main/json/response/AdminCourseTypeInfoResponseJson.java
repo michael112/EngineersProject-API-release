@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.admin.type.CourseTypeJson;
+import main.json.admin.type.view.multilang.CourseTypeJson;
 
 public class AdminCourseTypeInfoResponseJson extends AbstractResponseJson {
 

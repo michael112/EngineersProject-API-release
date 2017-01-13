@@ -1,4 +1,4 @@
-package main.json.admin.type.view;
+package main.json.admin.type.view.onelang;
 
 import lombok.Getter;
 

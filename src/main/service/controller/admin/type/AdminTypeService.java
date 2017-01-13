@@ -5,8 +5,6 @@ import main.json.admin.type.view.CourseTypeListJson;
 import main.json.admin.type.CourseTypeNameJson;
 
 import main.json.admin.type.CourseTypeJson;
-import main.json.admin.type.NewCourseTypeJson;
-import main.json.admin.type.EditCourseTypeJson;
 
 import main.model.course.CourseType;
 
@@ -14,11 +12,11 @@ public interface AdminTypeService {
 
     CourseTypeListJson getCourseTypeList();
 
-    void addCourseType(NewCourseTypeJson courseTypeJson);
+    void addCourseType(CourseTypeJson courseTypeJson);
 
-    CourseTypeJson getCourseTypeInfo(CourseType courseType);
+    main.json.admin.type.view.multilang.CourseTypeJson getCourseTypeInfo(CourseType courseType);
 
-    void editCourseTypeNames(CourseType courseType, EditCourseTypeJson courseTypeJson);
+    void editCourseTypeNames(CourseType courseType, CourseTypeJson courseTypeJson);
 
     void editSingleCourseTypeName(CourseType courseType, CourseTypeNameJson courseTypeNameJson);
 

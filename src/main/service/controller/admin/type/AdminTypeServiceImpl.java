@@ -20,8 +20,6 @@ import main.json.admin.type.view.CourseTypeListJson;
 import main.json.admin.type.CourseTypeNameJson;
 
 import main.json.admin.type.CourseTypeJson;
-import main.json.admin.type.NewCourseTypeJson;
-import main.json.admin.type.EditCourseTypeJson;
 
 import main.model.course.CourseType;
 import main.model.course.CourseTypeName;
@@ -47,7 +45,7 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
-    public void addCourseType(NewCourseTypeJson courseTypeJson) {
+    public void addCourseType(CourseTypeJson courseTypeJson) {
         try {
             CourseType newCourseType = new CourseType();
             for( CourseTypeNameJson courseTypeNameJson : courseTypeJson.getNamesInLanguages() ) {
@@ -60,9 +58,9 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
-    public CourseTypeJson getCourseTypeInfo(CourseType courseType) {
+    public main.json.admin.type.view.multilang.CourseTypeJson getCourseTypeInfo(CourseType courseType) {
         try {
-            CourseTypeJson result = new CourseTypeJson(courseType.getId());
+            main.json.admin.type.view.multilang.CourseTypeJson result = new main.json.admin.type.view.multilang.CourseTypeJson(courseType.getId());
             for( CourseTypeName courseTypeName : courseType.getCourseTypeNames() ) {
                 result.addName(courseTypeName.getNamingLanguage().getId(), courseTypeName.getCourseTypeName());
             }
@@ -73,7 +71,7 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
-    public void editCourseTypeNames(CourseType courseType, EditCourseTypeJson courseTypeJson) {
+    public void editCourseTypeNames(CourseType courseType, CourseTypeJson courseTypeJson) {
         try {
             // erasing course type name list
             for( CourseTypeName courseTypeName : courseType.getCourseTypeNames() ) {

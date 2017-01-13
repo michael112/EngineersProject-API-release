@@ -28,10 +28,6 @@ import main.service.crud.language.LanguageCrudService;
 import main.json.admin.type.CourseTypeNameJson;
 
 import main.json.admin.type.CourseTypeJson;
-import main.json.admin.type.NewCourseTypeJson;
-import main.json.admin.type.EditCourseTypeJson;
-
-import main.model.UuidGenerator;
 
 import main.model.course.CourseType;
 import main.model.course.CourseTypeName;
@@ -108,7 +104,7 @@ public class AdminTypeControllerTest extends AbstractControllerTest {
     public void testAddCourseType() throws Exception {
         String returnMessage = "";
 
-        NewCourseTypeJson newTypeJson = new NewCourseTypeJson();
+        CourseTypeJson newTypeJson = new CourseTypeJson();
         newTypeJson.addName("EN", "individual");
         newTypeJson.addName("PL", "indywidualny");
 
@@ -154,7 +150,7 @@ public class AdminTypeControllerTest extends AbstractControllerTest {
 
         CourseType sampleCourseType = this.testEnvironment.getCourseTypes().get(0);
 
-        EditCourseTypeJson editTypeJson = new EditCourseTypeJson(sampleCourseType.getId());
+        CourseTypeJson editTypeJson = new CourseTypeJson();
         editTypeJson.addName("EN", "individual");
         editTypeJson.addName("PL", "indywidualny");
 
