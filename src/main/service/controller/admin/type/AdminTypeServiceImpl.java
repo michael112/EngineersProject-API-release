@@ -111,6 +111,20 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
         }
     }
 
+    public void removeCourseTypeName(CourseType courseType, String courseTypeNameID) {
+        try {
+            for( CourseTypeName courseTypeName : courseType.getCourseTypeNames() ) {
+                if( courseTypeName.getId().equals(courseTypeNameID) ) {
+                    courseType.removeCourseTypeName(courseTypeName);
+                    this.courseTypeCrudService.updateCourseType(courseType);
+                }
+            }
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public void removeCourseType(CourseType courseType) {
         try {
             if( courseType.hasActiveCourses() ) {

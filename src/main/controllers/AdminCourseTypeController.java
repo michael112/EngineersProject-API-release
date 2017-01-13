@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -112,6 +113,17 @@ public class AdminCourseTypeController {
         CourseType courseType = this.courseTypeCrudService.findCourseTypeByID(courseTypeID);
         if( courseType == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.coursetype.not.found"));
         this.adminTypeService.addCourseTypeName(courseType, courseTypeNameJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.coursetype.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminCourseTypeControllerUrlConstants.EDIT_TYPE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json", params = "mode=remove")
+    public ResponseEntity<? extends AbstractResponseJson> removeCourseTypeName(@PathVariable("courseTypeID") String courseTypeID, @RequestParam("courseTypeNameID") String courseTypeNameID) {
+        CourseType courseType = this.courseTypeCrudService.findCourseTypeByID(courseTypeID);
+        if( courseType == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.coursetype.not.found"));
+        this.adminTypeService.removeCourseTypeName(courseType, courseTypeNameID);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.coursetype.edit.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

@@ -22,6 +22,8 @@ public interface AdminTypeService {
 
     void addCourseTypeName(CourseType courseType, CourseTypeNameJson courseTypeNameJson);
 
+    void removeCourseTypeName(CourseType courseType, String courseTypeNameID);
+
     void removeCourseType(CourseType courseType);
 
 }
