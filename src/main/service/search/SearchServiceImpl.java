@@ -93,26 +93,44 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			}
 			query += "( c.courseLevel.id = \'" + searchPattern.getCourseLevel() + "\' ) ";
 		}
+		boolean isFirstOfCourseDay = true;
+		String courseDayQuery = "";
 		for(CourseDayJson courseDayJson : searchPattern.getCourseDays()) {
 			if( isFirst ) {
-				query += "where (";
+				courseDayQuery += "where ( (";
 				isFirst = false;
+				isFirstOfCourseDay = false;
+			}
+			else if( isFirstOfCourseDay ) {
+				courseDayQuery += "and ( ";
+				isFirstOfCourseDay = false;
 			}
 			else {
-				query += "and ";
+				courseDayQuery += "or ";
 			}
-			query += "( d.day.day = " + ( ( courseDayJson.getDay() - 1 ) % 7 ) + " ) ";
+			courseDayQuery += "( d.day.day = " + ( ( courseDayJson.getDay() - 1 ) % 7 ) + " ) ";
 		}
+		courseDayQuery += ") ";
+		query += courseDayQuery;
+		boolean isFirstOfCourseHour = true;
+		String courseHourQuery = "";
 		for( CourseHourJson courseHourJson : searchPattern.getCourseHours() ) {
 			if( isFirst ) {
-				query += "where ( ";
+				courseHourQuery += "where ( (";
 				isFirst = false;
+				isFirstOfCourseHour = false;
+			}
+			else if( isFirstOfCourseHour ) {
+				courseHourQuery += "and ( ";
+				isFirstOfCourseHour = false;
 			}
 			else {
-				query += "and ";
+				courseHourQuery += "or ";
 			}
-			query += "( d.hourFrom.time = \'" + courseHourJson.getHour() + ':' + courseHourJson.getMinute() + "\' ) ";
+			courseHourQuery += "( d.hourFrom.time = \'" + courseHourJson.getHour() + ':' + courseHourJson.getMinute() + "\' ) ";
 		}
+		courseHourQuery += ") ";
+		query += courseHourQuery;
 		query += ")";
 		return query;
 	}

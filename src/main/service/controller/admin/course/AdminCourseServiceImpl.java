@@ -112,6 +112,9 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setMaxStudents(newCourseJson.getMaxStudents());
             course.setPrice(newCourseJson.getPrice());
             this.courseCrudService.saveCourse(course);
+            for( User teacher : course.getTeachers() ) {
+                this.userCrudService.updateUser(teacher);
+            }
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
