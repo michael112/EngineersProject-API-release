@@ -130,10 +130,10 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(editedCourse.getCourseLevelID()));
             course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(editedCourse.getCourseActivity().getDateFrom()), this.df.parseLocalDate(editedCourse.getCourseActivity().getDateTo())));
             // remove old course days
-            Iterator<CourseDay> cdIter = course.getCourseDays().iterator();
-            while( cdIter.hasNext() ) {
-                cdIter.next();
-                cdIter.remove();
+            Iterator<CourseDay> courseDayIterator = course.getCourseDays().iterator();
+            while( courseDayIterator.hasNext() ) {
+                courseDayIterator.next();
+                courseDayIterator.remove();
             }
             for( CourseDayJson courseDayJson : editedCourse.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
@@ -204,8 +204,10 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
     public void editCourseDays(Course course, EditCourseDaysJson editedCourseDays) {
         try {
             // remove old course days
-            for( CourseDay courseDay : course.getCourseDays() ) {
-                course.removeCourseDay(courseDay);
+            Iterator<CourseDay> courseDayIterator = course.getCourseDays().iterator();
+            while( courseDayIterator.hasNext() ) {
+                courseDayIterator.next();
+                courseDayIterator.remove();
             }
             for( CourseDayJson courseDayJson : editedCourseDays.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
@@ -244,10 +246,11 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
                 // remove teachers
                 for( User oldTeacher : course.getTeachers() ) {
                     course.removeTeacher(oldTeacher);
+                    this.userCrudService.updateUser(oldTeacher);
                 }
                 // add new teacher
                 this.addTeacher(course, teacher);
-                this.courseCrudService.updateCourse(course);
+                this.userCrudService.updateUser(teacher);
             }
         }
         catch( NullPointerException ex ) {
@@ -258,7 +261,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
     public void editCourseAddTeacher(Course course, User teacher) {
         try {
             this.addTeacher(course, teacher);
-            this.courseCrudService.updateCourse(course);
+            this.userCrudService.updateUser(teacher);
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
@@ -274,7 +277,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
     public void editCourseRemoveTeacher(Course course, User teacher) {
         try {
             course.removeTeacher(teacher);
-            this.courseCrudService.updateCourse(course);
+            this.userCrudService.updateUser(teacher);
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

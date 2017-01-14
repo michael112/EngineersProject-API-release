@@ -62,6 +62,11 @@ public class MyHour {
 	@Access(AccessType.PROPERTY)
 	@Column(name="hour", nullable=false)
 	public String getTime() {
-		return this.getHour() + ":" + this.getMinute();
+		if( this.getMinute() < 10 ) {
+			return this.getHour() + ":0" + this.getMinute();
+		}
+		else {
+			return this.getHour() + ":" + this.getMinute();
+		}
 	}
 }
