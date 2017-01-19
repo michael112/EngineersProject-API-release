@@ -96,7 +96,6 @@ public class Message extends AbstractUuidModel {
 
 	@Getter
 	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementsmessages",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "fileID", referencedColumnName="fileID") })
