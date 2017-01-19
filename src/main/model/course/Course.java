@@ -310,7 +310,6 @@ public class Course extends AbstractUuidModel {
 
 	@Getter
 	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
-	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementscourses",
 			joinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") },
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })

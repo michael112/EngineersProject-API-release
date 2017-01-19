@@ -100,7 +100,7 @@ public class CourseAttachementController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
     @RequestMapping(value = CourseAttachementControllerUrlConstants.REMOVE_ATTACHEMENT, method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> removeAttachement(@PathVariable("courseID") String courseID, @PathVariable("attachementID") String attachementID, @RequestParam("fullRemove") boolean fullRemove) {
+    public ResponseEntity<? extends AbstractResponseJson> removeAttachement(@PathVariable("courseID") String courseID, @PathVariable("attachementID") String attachementID, @RequestParam(name = "fullRemove", defaultValue = "true") boolean fullRemove) {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
 

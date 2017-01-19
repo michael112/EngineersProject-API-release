@@ -8,6 +8,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.joda.time.format.DateTimeFormatter;
 import org.joda.time.format.DateTimeFormat;
 
+import org.springframework.dao.DataIntegrityViolationException;
+
 import main.util.locale.LocaleCodeProvider;
 
 import main.service.file.FileUploadService;
@@ -50,7 +52,6 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
 
     public void addAttachement(User sender, Course course, MultipartFile attachement) {
         File fileInfo = this.fileUploadService.uploadFile(attachement, sender);
-        this.fileCrudService.saveFile(fileInfo);
         course.addAttachement(fileInfo);
         this.courseCrudService.updateCourse(course);
     }
@@ -61,10 +62,10 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
             this.courseCrudService.updateCourse(course);
         }
         if( fullRemove ) {
-            this.fileCrudService.deleteFile(attachement);
-        }
-        else {
-            this.fileCrudService.saveFile(attachement);
+            try {
+                this.fileCrudService.deleteFile(attachement);
+            }
+            catch( DataIntegrityViolationException ex ) {}
         }
     }
 
