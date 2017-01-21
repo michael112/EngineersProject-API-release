@@ -140,11 +140,13 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
         String returnMessage = "";
 
         Language english = this.testEnvironment.getLanguages().get(0);
+        Language german = this.testEnvironment.getLanguages().get(1);
 
         EditLanguageJson editLanguageJson = new EditLanguageJson();
-        editLanguageJson.addLanguageName("DE", "Englisch");
+        editLanguageJson.addLanguageName(german.getId(), "Englisch");
 
         when(languageCrudServiceMock.findLanguageByID(english.getId())).thenReturn(english);
+        when(languageCrudServiceMock.findLanguageByID(german.getId())).thenReturn(german);
         doNothing().when(languageCrudServiceMock).updateLanguage(Mockito.any(Language.class));
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
@@ -185,10 +187,12 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
         String returnMessage = "";
 
         Language english = this.testEnvironment.getLanguages().get(0);
+        Language spanish = this.testEnvironment.getLanguages().get(4);
 
-        LanguageNameJson languageNameJson = new LanguageNameJson("ES", "ingles");
+        LanguageNameJson languageNameJson = new LanguageNameJson(spanish.getId(), "ingles");
 
         when(languageCrudServiceMock.findLanguageByID(english.getId())).thenReturn(english);
+        when(languageCrudServiceMock.findLanguageByID(spanish.getId())).thenReturn(spanish);
         doNothing().when(languageCrudServiceMock).updateLanguage(Mockito.any(Language.class));
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
