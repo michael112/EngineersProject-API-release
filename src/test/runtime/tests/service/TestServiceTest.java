@@ -57,7 +57,7 @@ public class TestServiceTest extends AbstractServiceTest {
         initInsideMocks(this.courseMembershipValidatorMock, null);
         reset(this.localeCodeProviderMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.testCrudServiceMock);
         when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
-        this.testService = new TestServiceImpl(localeCodeProviderMock, testCrudServiceMock);
+        this.testService = new TestServiceImpl(localeCodeProviderMock, testCrudServiceMock, gradeCrudServiceMock);
     }
 
     @Test

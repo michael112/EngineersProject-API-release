@@ -25,4 +25,6 @@ public interface TestService {
 
     void editTestDescription(Test test, EditTestDescriptionJson editTestDescriptionJson);
 
+    void removeTest(Course course, Test test);
+
 }

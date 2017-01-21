@@ -126,7 +126,7 @@ public class HomeworkControllerTest extends AbstractControllerTest {
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         Homework sampleHomework = new ArrayList<Homework>(sampleCourse.getHomeworks()).get(0);
-        Grade sampleGrade = new ArrayList<Grade>(sampleHomework.getGrades()).get(0);
+        Grade sampleGrade = sampleHomework.getGrade();
 
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
@@ -228,7 +228,7 @@ public class HomeworkControllerTest extends AbstractControllerTest {
         User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
         Homework sampleHomework = new ArrayList<Homework>(sampleCourse.getHomeworks()).get(0);
         File sampleAttachement = new ArrayList<File>(sampleHomework.getAttachements()).get(0);
-        Grade sampleGrade = new ArrayList<Grade>(sampleHomework.getGrades()).get(0);
+        Grade sampleGrade = sampleHomework.getGrade();
 
         HomeworkSolution sampleSolution = null;
         for( HomeworkSolution solution : sampleHomework.getHomeworkSolutions() ) {

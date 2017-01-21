@@ -136,25 +136,25 @@ public class HomeworkTest extends AbstractDbTest {
     @Test
     public void testAddGrade() {
         Grade newGrade = getBasicGrade(false, false);
-        this.sampleHomework.addGrade(newGrade);
+        this.sampleHomework.setGrade(newGrade);
         this.homeworkCrudService.updateHomework(this.sampleHomework);
 
         Homework sampleHomeworkDb = this.homeworkCrudService.findHomeworkByID(this.sampleHomework.getId());
-        Assert.assertEquals(true, sampleHomeworkDb.containsGrade(newGrade));
+        Assert.assertEquals(newGrade, sampleHomeworkDb.getGrade());
     }
 
     @Test
     public void testRemoveGrade() {
         Grade newGrade = getBasicGrade(false, false);
-        this.sampleHomework.addGrade(newGrade);
+        this.sampleHomework.setGrade(newGrade);
         this.homeworkCrudService.updateHomework(this.sampleHomework);
 
         Homework sampleHomeworkDbBefore = this.homeworkCrudService.findHomeworkByID(this.sampleHomework.getId());
-        sampleHomeworkDbBefore.removeGrade(newGrade);
+        sampleHomeworkDbBefore.setGrade(null);
         this.homeworkCrudService.updateHomework(sampleHomeworkDbBefore);
 
         Homework sampleHomeworkDbAfter = this.homeworkCrudService.findHomeworkByID(this.sampleHomework.getId());
-        Assert.assertEquals(false, sampleHomeworkDbAfter.containsGrade(newGrade));
+        Assert.assertEquals(null, sampleHomeworkDbAfter.getGrade());
     }
 
     @Test
@@ -250,7 +250,7 @@ public class HomeworkTest extends AbstractDbTest {
     public void testUpdateSolutionGrade() {
         HomeworkSolution sampleSolution = getSolution(this.sampleHomework.getHomeworkSolutions(), 0);
         StudentGrade formerGrade = sampleSolution.getGrade();
-        StudentGrade newGrade = getBasicStudentGrade(false, getGrade(this.sampleHomework.getGrades(), 0), "user2");
+        StudentGrade newGrade = getBasicStudentGrade(false, this.sampleHomework.getGrade(), "user2");
         sampleSolution.setGrade(newGrade);
         this.homeworkCrudService.updateHomework(this.sampleHomework);
 

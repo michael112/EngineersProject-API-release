@@ -80,13 +80,16 @@ public class Grade extends AbstractUuidModel {
 	@JoinColumn(name = "taskID", referencedColumnName = "taskID", nullable=true)
 	private AbstractHomeworkOrTest task;
 	public void setTask(AbstractHomeworkOrTest task) {
-		if (this.task != null) {
-			if (this.task.containsGrade(this)) {
-				this.task.removeGrade(this);
+		if( !( (task == null) && (this.task == null) ) ) {
+			if( ( this.task != null ) && ( this.task.getGrade() != null ) && ( this.task.getGrade().equals(this) ) ) {
+				this.task.setGradeDirectly(null);
 			}
+			this.task = task;
+			if( task != null ) task.setGradeDirectly(this); // przypisanie powiązania
 		}
+	}
+	public void setTaskDirectly(AbstractHomeworkOrTest task) {
 		this.task = task;
-		if( task != null ) task.addGrade(this); // przypisanie powiązania
 	}
 
 	public boolean hasTask() {
@@ -124,6 +127,7 @@ public class Grade extends AbstractUuidModel {
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="grade", orphanRemoval=true)
+	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {
 		this.grades.clear();

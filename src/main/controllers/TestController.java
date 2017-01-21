@@ -151,10 +151,14 @@ public class TestController {
     @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
     @RequestMapping(value = TestControllerUrlConstants.DELETE_TEST, method = RequestMethod.DELETE, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> deleteTest(@PathVariable("courseID") String courseID, @PathVariable("testID") String testID) {
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
         Test test = this.testCrudService.findTestByID(testID);
         if( test == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("test.not.found"));
 
-        this.testCrudService.deleteTestByID(testID);
+        this.testService.removeTest(course, test);
+
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("test.delete.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

@@ -15,6 +15,8 @@ import main.service.controller.AbstractService;
 
 import main.service.crud.course.test.TestCrudService;
 
+import main.service.crud.course.grade.GradeCrudService;
+
 import main.json.course.test.view.TestListJson;
 
 import main.json.course.test.TestJson;
@@ -32,6 +34,8 @@ import main.model.course.Course;
 public class TestServiceImpl extends AbstractService implements TestService {
 
     private TestCrudService testCrudService;
+
+    private GradeCrudService gradeCrudService;
 
     private DateTimeFormatter dateFormat;
 
@@ -145,10 +149,17 @@ public class TestServiceImpl extends AbstractService implements TestService {
         }
     }
 
+    public void removeTest(Course course, Test test) {
+        course.removeTest(test);
+        if( test.getGrade() != null ) this.gradeCrudService.deleteGrade(test.getGrade());
+        this.testCrudService.deleteTest(test);
+    }
+
     @Autowired
-    public TestServiceImpl(LocaleCodeProvider localeCodeProvider, TestCrudService testCrudService) {
+    public TestServiceImpl(LocaleCodeProvider localeCodeProvider, TestCrudService testCrudService, GradeCrudService gradeCrudService) {
         super(localeCodeProvider);
         this.testCrudService = testCrudService;
+        this.gradeCrudService = gradeCrudService;
         this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 

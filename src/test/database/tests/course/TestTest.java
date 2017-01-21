@@ -121,25 +121,25 @@ public class TestTest extends AbstractDbTest {
     @org.junit.Test
     public void testAddGrade() {
         Grade newGrade = getBasicGrade(false, false);
-        this.sampleTest.addGrade(newGrade);
+        this.sampleTest.setGrade(newGrade);
         this.testCrudService.updateTest(this.sampleTest);
 
         Test sampleTestDb = this.testCrudService.findTestByID(this.sampleTest.getId());
-        Assert.assertEquals(true, sampleTestDb.containsGrade(newGrade));
+        Assert.assertEquals(newGrade, sampleTestDb.getGrade());
     }
 
     @org.junit.Test
     public void testRemoveGrade() {
         Grade newGrade = getBasicGrade(false, false);
-        this.sampleTest.addGrade(newGrade);
+        this.sampleTest.setGrade(newGrade);
         this.testCrudService.updateTest(this.sampleTest);
 
         Test sampleTestDbBefore = this.testCrudService.findTestByID(this.sampleTest.getId());
-        sampleTestDbBefore.removeGrade(newGrade);
+        sampleTestDbBefore.setGrade(null);
         this.testCrudService.updateTest(sampleTestDbBefore);
 
         Test sampleTestDbAfter = this.testCrudService.findTestByID(this.sampleTest.getId());
-        Assert.assertEquals(false, sampleTestDbAfter.containsGrade(newGrade));
+        Assert.assertEquals(null, sampleTestDbAfter.getGrade());
     }
 
     @org.junit.Test
@@ -211,7 +211,7 @@ public class TestTest extends AbstractDbTest {
     public void testUpdateSolutionGrade() {
         TestSolution sampleSolution = getSolution(this.sampleTest.getTestSolutions(), 0);
         StudentGrade formerGrade = sampleSolution.getGrade();
-        StudentGrade newGrade = getBasicStudentGrade(false, getGrade(this.sampleTest.getGrades(), 0), "user2");
+        StudentGrade newGrade = getBasicStudentGrade(false, this.sampleTest.getGrade(), "user2");
         sampleSolution.setGrade(newGrade);
         this.testCrudService.updateTest(this.sampleTest);
 

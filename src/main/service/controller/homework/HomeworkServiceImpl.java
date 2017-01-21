@@ -19,6 +19,8 @@ import main.service.file.FileUploadService;
 
 import main.service.crud.course.homework.HomeworkCrudService;
 
+import main.service.crud.course.grade.GradeCrudService;
+
 import main.json.course.HomeworkJson;
 
 import main.json.course.CourseUserJson;
@@ -57,6 +59,8 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     private FileUploadService fileUploadService;
 
     private HomeworkCrudService homeworkCrudService;
+
+    private GradeCrudService gradeCrudService;
 
     private DateTimeFormatter dateFormat;
 
@@ -185,14 +189,16 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
 
     public void removeHomework(Course course, Homework homework) {
         course.removeHomework(homework);
+        if( homework.getGrade() != null ) this.gradeCrudService.deleteGrade(homework.getGrade());
         this.homeworkCrudService.deleteHomework(homework);
 	}
 
     @Autowired
-    public HomeworkServiceImpl(LocaleCodeProvider localeCodeProvider, FileUploadService fileUploadService, HomeworkCrudService homeworkCrudService) {
+    public HomeworkServiceImpl(LocaleCodeProvider localeCodeProvider, FileUploadService fileUploadService, HomeworkCrudService homeworkCrudService, GradeCrudService gradeCrudService) {
         super(localeCodeProvider);
         this.fileUploadService = fileUploadService;
         this.homeworkCrudService = homeworkCrudService;
+        this.gradeCrudService = gradeCrudService;
         this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 

@@ -390,7 +390,7 @@ public abstract class AbstractDbTest extends AbstractTest {
         public Homework getBasicHomework(boolean register) {
             Homework sampleHomework = new Homework("Sample homework title", new LocalDate(2015,9,12), "Sample homework description", getBasicCourse(register));
             sampleHomework.addHomeworkSolution(getBasicHomeworkSolution(false, sampleHomework));
-            sampleHomework.addGrade(getBasicGrade(sampleHomework, false));
+            sampleHomework.setGrade(getBasicGrade(sampleHomework, false));
             this.homeworkCrudService.saveHomework(sampleHomework);
             return sampleHomework;
         }
@@ -403,7 +403,7 @@ public abstract class AbstractDbTest extends AbstractTest {
         public Test getBasicTest(boolean register) {
             Test sampleTest = new Test("Sample test title", new LocalDate(2015,9,12), "Sample test decscription", getBasicCourse(register));
             sampleTest.addTestSolution(getBasicTestSolution(false, sampleTest));
-            sampleTest.addGrade(getBasicGrade(sampleTest, false));
+            sampleTest.setGrade(getBasicGrade(sampleTest, false));
             this.testCrudService.saveTest(sampleTest);
             return sampleTest;
         }

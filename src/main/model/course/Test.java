@@ -95,9 +95,9 @@ public class Test extends AbstractHomeworkOrTest {
 		this.setDescription(desciption);
 	}
 
-	public Test(String title, LocalDate date, String desciption, Set<Grade> grades, Course course, Set<TestSolution> solutions) {
+	public Test(String title, LocalDate date, String desciption, Grade grade, Course course, Set<TestSolution> solutions) {
 		this(title, date, desciption, course);
-		this.setGrades(grades);
+		this.setGrade(grade);
 		this.setTestSolutions(solutions);
 	}
 

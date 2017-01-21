@@ -167,7 +167,7 @@ public class TestEnvironmentDbSaver {
     }
 
     private void clearTaskDependencies(AbstractHomeworkOrTest task) {
-        task.getGrades().clear();
+        task.setGrade(null);
     }
 
 }

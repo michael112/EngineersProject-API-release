@@ -1,14 +1,11 @@
 package main.model.course;
 
-import java.util.Set;
-import java.util.HashSet;
-
 import org.joda.time.LocalDate;
 
 import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
-import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.ManyToOne;
 import javax.persistence.JoinColumn;
 import javax.persistence.FetchType;
@@ -43,33 +40,21 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	private String description;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
-	@JoinColumn(name="taskID", referencedColumnName="taskID")
-	private Set<Grade> grades;
-	public void setGrades(Set<Grade> grades) {
-		this.grades.clear();
-		if( grades != null ) {
-			this.grades.addAll(grades);
-			for( Grade grade : grades ) {
-				if( ( grade.getTask() == null ) || ( !( grade.getTask().equals(this) ) ) ) {
-					grade.setTask(this); // przypisanie powiązania
-				}
+	@OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@org.hibernate.annotations.Cascade(value={org.hibernate.annotations.CascadeType.DELETE_ORPHAN, org.hibernate.annotations.CascadeType.DELETE})
+	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
+	private Grade grade;
+	public void setGrade(Grade grade) {
+		if( !( (grade == null) && (this.grade == null) ) ) {
+			if( ( this.grade != null ) && ( this.grade.getTask() != null ) && ( this.grade.getTask().equals(this) ) ) {
+				this.grade.setTaskDirectly(null);
 			}
+			this.grade = grade;
+			if( grade != null ) grade.setTaskDirectly(this); // przypisanie powiązania
 		}
 	}
-	public void addGrade(Grade grade) {
-		if ( !( this.grades.contains(grade) ) ) {
-			this.grades.add(grade);
-		}
-		if( grade.getTask() != this ) {
-			grade.setTask(this); // przypisanie powiązania
-		}
-	}
-	public void removeGrade(Grade grade) {
-		this.grades.remove(grade);
-	}
-	public boolean containsGrade(Grade grade) {
-		return this.grades.contains(grade);
+	public void setGradeDirectly(Grade grade) {
+		this.grade = grade;
 	}
 
 	@Getter
@@ -80,7 +65,6 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 
 	public AbstractHomeworkOrTest() {
 		super();
-		this.grades = new HashSet<>();
 	}
 
 	@Override

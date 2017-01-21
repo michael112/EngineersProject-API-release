@@ -123,10 +123,10 @@ public class Homework extends AbstractHomeworkOrTest {
 		this.setDescription(description);
 	}
 
-	public Homework(String title, LocalDate date, String description, Set<Grade> grades, Course course, Set<File> attachements, Set<HomeworkSolution> solutions ) {
+	public Homework(String title, LocalDate date, String description, Grade grade, Course course, Set<File> attachements, Set<HomeworkSolution> solutions ) {
 		this(title, date, description, course);
 		this.setAttachements(attachements);
-		this.setGrades(grades);
+		this.setGrade(grade);
 		this.setHomeworkSolutions(solutions);
 	}
 
