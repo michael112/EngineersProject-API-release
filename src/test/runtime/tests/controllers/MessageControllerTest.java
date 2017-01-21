@@ -177,7 +177,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
 
-        String URL = this.testedClassURI + '/' + sampleUser.getId() + "?type=received";
+        String URL = this.testedClassURI + "/?type=received";
 
         this.mockMvc.perform(get(URL)
             .contentType("application/json;charset=utf-8")
@@ -205,7 +205,7 @@ public class MessageControllerTest extends AbstractControllerTest {
         when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleUser);
         when(localeCodeProvider.getLocaleCode()).thenReturn("en");
 
-        String URL = this.testedClassURI + '/' + sampleUser.getId() + "?type=sended";
+        String URL = this.testedClassURI + "/?type=sended";
 
         this.mockMvc.perform(get(URL)
             .contentType("application/json;charset=utf-8")
