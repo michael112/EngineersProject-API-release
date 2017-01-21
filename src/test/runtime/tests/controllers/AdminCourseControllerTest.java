@@ -534,10 +534,29 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRemoveCourse() throws Exception {
+    public void testRemoveCourseWithExistingMembers() throws Exception {
         String returnMessage = "";
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseCrudServiceMock).deleteCourse(Mockito.any(Course.class));
+
+        this.mockMvc.perform(delete(this.testedClassURI + '/' + sampleCourse.getId())
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isInternalServerError())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(false)));
+    }
+
+    @Test
+    public void testRemoveCourse() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(1);
 
         when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
