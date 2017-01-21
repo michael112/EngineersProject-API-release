@@ -371,7 +371,8 @@ public class AdminUserControllerTest extends AbstractControllerTest {
 
         User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
 
-        AccountJson editedAccount = new AccountJson();
+        AccountJson editedAccount = new AccountJson(sampleUser.getUsername(), sampleUser.getFirstName() + '\'', sampleUser.getLastName() + '\'', sampleUser.getEmail(), sampleUser.getAddress());
+        editedAccount.addPhone(new PhoneJson(new ArrayList<>(sampleUser.getPhone()).get(0)));
 
         when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
