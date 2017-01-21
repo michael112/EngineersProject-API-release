@@ -99,7 +99,7 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
     public void testAddCourseLevel() throws Exception {
         String returnMessage = "";
 
-        CourseLevelJson newLevelJson = new CourseLevelJson("C3");
+        CourseLevelJson newLevelJson = new CourseLevelJson("C2");
 
         doNothing().when(courseLevelCrudServiceMock).saveCourseLevel(Mockito.any(CourseLevel.class));
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
@@ -160,7 +160,7 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
 
-        CourseLevelJson editLevelJson = new CourseLevelJson("A3");
+        CourseLevelJson editLevelJson = new CourseLevelJson("A2");
 
         when(courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(sampleLevel);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
