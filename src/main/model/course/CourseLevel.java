@@ -21,7 +21,7 @@ import main.model.abstracts.AbstractSinglePKModel;
 @Table(name="courseLevels")
 @Access(AccessType.FIELD)
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "name")) })
-public class CourseLevel extends AbstractSinglePKModel<String> {
+public class CourseLevel extends AbstractSinglePKModel<String> implements Comparable<CourseLevel> {
 
 	public String getName() {
 		return this.getId();
@@ -91,6 +91,11 @@ public class CourseLevel extends AbstractSinglePKModel<String> {
 	@Override
 	public boolean equals(Object otherObj) {
 		return super.equals(otherObj);
+	}
+
+	@Override
+	public int compareTo(CourseLevel other) {
+		return this.getName().compareTo(other.getName());
 	}
 
 }

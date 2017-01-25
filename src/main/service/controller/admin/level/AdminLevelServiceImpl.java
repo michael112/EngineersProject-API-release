@@ -2,6 +2,11 @@ package main.service.controller.admin.level;
 
 import java.util.Set;
 
+import java.util.List;
+import java.util.ArrayList;
+
+import java.util.Collections;
+
 import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +31,8 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
 
     public CourseLevelListJson getCourseLevelList() {
         try {
-            Set<CourseLevel> courseLevels = this.courseLevelCrudService.findAllCourseLevels();
+            List<CourseLevel> courseLevels = new ArrayList<>(this.courseLevelCrudService.findAllCourseLevels());
+            Collections.sort(courseLevels);
             CourseLevelListJson result = new CourseLevelListJson();
             for( CourseLevel level : courseLevels ) {
                 CourseLevelJson courseLevelJson = new CourseLevelJson(level.getName());
