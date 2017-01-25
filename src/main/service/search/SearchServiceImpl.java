@@ -36,7 +36,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		if( ( courses != null ) && ( courses.size() > 0 ) ) {
 			Set<CourseSignupJson> result = new HashSet<>();
 			for( Course course : courses ) {
-				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
 				for( User teacher : course.getTeachers() ) {
 					courseSignupJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
 				}
@@ -91,7 +91,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 			else {
 				query += "and ";
 			}
-			query += "( c.courseLevel.id = \'" + searchPattern.getCourseLevel() + "\' ) ";
+			query += "( c.courseLevel.name = \'" + searchPattern.getCourseLevel() + "\' ) ";
 		}
 		boolean isFirstOfCourseDay = true;
 		String courseDayQuery = "";

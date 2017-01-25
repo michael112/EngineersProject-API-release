@@ -19,7 +19,7 @@ public class CourseJson {
     protected LanguageJson language;
 
     @Getter
-    protected String courseLevel;
+    protected CourseLevelJson courseLevel;
 
     @Getter
     protected CourseTypeJson courseType;
@@ -31,10 +31,10 @@ public class CourseJson {
         this.teachers.add(teacher);
     }
 
-    public CourseJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
+    public CourseJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
         this.courseID = courseID;
         this.language = new LanguageJson(languageID, languageName);
-        this.courseLevel = courseLevel;
+        this.courseLevel = new CourseLevelJson(courseLevelID, courseLevelName);
         this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
         this.teachers = new HashSet<>();
     }

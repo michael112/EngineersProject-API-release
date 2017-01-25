@@ -26,6 +26,18 @@ import main.model.user.User;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "taskID")) })
 public class Test extends AbstractHomeworkOrTest {
 
+	@Access(AccessType.PROPERTY)
+	@javax.persistence.OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@javax.persistence.JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
+	@Override
+	public Grade getGrade() {
+		return super.getGrade();
+	}
+	@Override
+	public void setGrade(Grade grade) {
+		super.setGrade(grade);
+	}
+
 	@Override
 	public void setCourse(Course course) {
 		if( this.getCourse() != null ) {

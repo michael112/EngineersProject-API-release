@@ -3,8 +3,6 @@ package test.runtime.tests.controllers;
 import java.util.HashSet;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.junit.Before;
 import org.junit.Test;
 
@@ -85,12 +83,12 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.levels.levels", hasSize(6)))
-            .andExpect(jsonPath("$.levels.levels[0].name", is(levels.get(0).getName())))
-            .andExpect(jsonPath("$.levels.levels[1].name", is(levels.get(1).getName())))
-            .andExpect(jsonPath("$.levels.levels[2].name", is(levels.get(2).getName())))
-            .andExpect(jsonPath("$.levels.levels[3].name", is(levels.get(3).getName())))
-            .andExpect(jsonPath("$.levels.levels[4].name", is(levels.get(4).getName())))
-            .andExpect(jsonPath("$.levels.levels[5].name", is(levels.get(5).getName())))
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(0).getId() + "\" && @.name == \"" + levels.get(0).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(1).getId() + "\" && @.name == \"" + levels.get(1).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(2).getId() + "\" && @.name == \"" + levels.get(2).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(3).getId() + "\" && @.name == \"" + levels.get(3).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(4).getId() + "\" && @.name == \"" + levels.get(4).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(5).getId() + "\" && @.name == \"" + levels.get(5).getName() + "\")]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -115,7 +113,7 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testGetCourseLevelInfo() throws Exception {
+    public void testGetCourseLevelInfoCallingById() throws Exception {
         String returnMessage = "";
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
@@ -123,7 +121,7 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         when(courseLevelCrudServiceMock.findCourseLevelByID(Mockito.any(String.class))).thenReturn(sampleLevel);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
-        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleLevel.getId())
+        this.mockMvc.perform(get(this.testedClassURI + "/?identifier=" + sampleLevel.getId() + "&identifierIsID=true")
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())
@@ -134,28 +132,26 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testSwapCourseLevels() throws Exception {
+    public void testGetCourseLevelInfoCallingByName() throws Exception {
         String returnMessage = "";
 
-        CourseLevel sampleLevel1 = this.testEnvironment.getCourseLevels().get(0);
-        CourseLevel sampleLevel2 = this.testEnvironment.getCourseLevels().get(1);
+        CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
 
-        when(courseLevelCrudServiceMock.findCourseLevelByID(sampleLevel1.getId())).thenReturn(sampleLevel1);
-        when(courseLevelCrudServiceMock.findCourseLevelByID(sampleLevel2.getId())).thenReturn(sampleLevel2);
+        when(courseLevelCrudServiceMock.findCourseLevelByName(Mockito.any(String.class))).thenReturn(sampleLevel);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
-        doNothing().when(courseLevelCrudServiceMock).updateCourseLevel(Mockito.any(CourseLevel.class));
 
-        this.mockMvc.perform(put(this.testedClassURI + '/' + AdminLevelControllerUrlConstants.LEVEL_SWAP + "?level1=" + sampleLevel1.getName() + "&level2=" + sampleLevel2.getName())
+        this.mockMvc.perform(get(this.testedClassURI + "/?identifier=" + sampleLevel.getName())
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.level.name", is(sampleLevel.getName())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
 
     @Test
-    public void testEditCourseLevel() throws Exception {
+    public void testEditCourseLevelCallingById() throws Exception {
         String returnMessage = "";
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
@@ -166,7 +162,7 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         doNothing().when(courseLevelCrudServiceMock).updateCourseLevel(Mockito.any(CourseLevel.class));
 
-        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleLevel.getName())
+        this.mockMvc.perform(put(this.testedClassURI + "/?identifier=" + sampleLevel.getId() + "&identifierIsID=true")
             .contentType("application/json;charset=utf-8")
             .content(objectToJsonBytes(editLevelJson))
             )
@@ -177,7 +173,29 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testRemoveCourseLevel() throws Exception {
+    public void testEditCourseLevelCallingByName() throws Exception {
+        String returnMessage = "";
+
+        CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
+
+        CourseLevelJson editLevelJson = new CourseLevelJson("A2");
+
+        when(courseLevelCrudServiceMock.findCourseLevelByName(Mockito.any(String.class))).thenReturn(sampleLevel);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseLevelCrudServiceMock).updateCourseLevel(Mockito.any(CourseLevel.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + "/?identifier=" + sampleLevel.getName())
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(editLevelJson))
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testRemoveCourseLevelCallingById() throws Exception {
         String returnMessage = "";
 
         CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
@@ -186,7 +204,26 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
         doNothing().when(courseLevelCrudServiceMock).deleteCourseLevel(Mockito.any(CourseLevel.class));
 
-        this.mockMvc.perform(delete(this.testedClassURI + '/' + sampleLevel.getName())
+        this.mockMvc.perform(delete(this.testedClassURI + "/?identifier=" + sampleLevel.getName() + "&identifierIsID=true")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testRemoveCourseLevelCallingByName() throws Exception {
+        String returnMessage = "";
+
+        CourseLevel sampleLevel = this.testEnvironment.getCourseLevels().get(0);
+
+        when(courseLevelCrudServiceMock.findCourseLevelByName(Mockito.any(String.class))).thenReturn(sampleLevel);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+        doNothing().when(courseLevelCrudServiceMock).deleteCourseLevel(Mockito.any(CourseLevel.class));
+
+        this.mockMvc.perform(delete(this.testedClassURI + "/?identifier=" + sampleLevel.getName())
             .contentType("application/json;charset=utf-8")
             )
             .andExpect(status().isOk())

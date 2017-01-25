@@ -271,8 +271,11 @@ public abstract class AbstractDbTest extends AbstractTest {
         }
         public CourseLevel setBasicCourseLevel(boolean register) {
             CourseLevel A1 = new CourseLevel("A1");
-            if( register ) this.courseLevelCrudService.saveCourseLevel(A1);
-            return A1;
+            if( register ) {
+                this.courseLevelCrudService.saveCourseLevel(A1);
+                return A1;
+            }
+            else return this.courseLevelCrudService.findCourseLevelByName("A1");
         }
 
         public CourseType setBasicCourseType(boolean register) {

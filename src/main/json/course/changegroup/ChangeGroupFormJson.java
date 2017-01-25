@@ -8,6 +8,8 @@ import lombok.Getter;
 import lombok.EqualsAndHashCode;
 
 import main.json.course.language.LanguageJson;
+import main.json.course.CourseLevelJson;
+import main.json.course.CourseTypeJson;
 
 @EqualsAndHashCode
 public class ChangeGroupFormJson {
@@ -16,18 +18,18 @@ public class ChangeGroupFormJson {
     private LanguageJson language;
 
     @Getter
-    private String courseLevel;
+    private CourseLevelJson courseLevel;
 
     @Getter
-    private String courseType;
+    private CourseTypeJson courseType;
 
     @Getter
     private Set<SimilarGroupJson> similarGroups;
 
-    public ChangeGroupFormJson(String languageID, String languageName, String courseLevel, String courseType) {
+    public ChangeGroupFormJson(String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
         this.language = new LanguageJson(languageID, languageName);
-        this.courseLevel = courseLevel;
-        this.courseType = courseType;
+        this.courseLevel = new CourseLevelJson(courseLevelID, courseLevelName);
+        this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
         this.similarGroups = new HashSet<>();
     }
 

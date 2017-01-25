@@ -1,7 +1,5 @@
 package main.service.controller.admin.level;
 
-import java.util.Set;
-
 import java.util.List;
 import java.util.ArrayList;
 
@@ -19,7 +17,8 @@ import main.service.crud.course.courselevel.CourseLevelCrudService;
 
 import main.error.exception.IllegalRemovalEntityException;
 
-import main.json.admin.level.CourseLevelListJson;
+import main.json.admin.level.view.CourseLevelListJson;
+
 import main.json.admin.level.CourseLevelJson;
 
 import main.model.course.CourseLevel;
@@ -35,7 +34,7 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
             Collections.sort(courseLevels);
             CourseLevelListJson result = new CourseLevelListJson();
             for( CourseLevel level : courseLevels ) {
-                CourseLevelJson courseLevelJson = new CourseLevelJson(level.getName());
+                main.json.admin.level.view.CourseLevelJson courseLevelJson = new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName());
                 result.addLevel(courseLevelJson);
             }
             return result;
@@ -55,22 +54,9 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
         }
     }
 
-    public CourseLevelJson getCourseLevelInfo(CourseLevel level) {
+    public main.json.admin.level.view.CourseLevelJson getCourseLevelInfo(CourseLevel level) {
         try {
-            return new CourseLevelJson(level.getName());
-        }
-        catch( NullPointerException ex ) {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    public void swapCourseLevel(CourseLevel level1, CourseLevel level2) {
-        try {
-            String tmpName = level1.getName();
-            level1.setName(level2.getName());
-            level2.setName(tmpName);
-            this.courseLevelCrudService.updateCourseLevel(level1);
-            this.courseLevelCrudService.updateCourseLevel(level2);
+            return new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName());
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

@@ -33,15 +33,6 @@ CREATE TABLE `attachementscourses` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `attachementscourses`
---
-
-LOCK TABLES `attachementscourses` WRITE;
-/*!40000 ALTER TABLE `attachementscourses` DISABLE KEYS */;
-/*!40000 ALTER TABLE `attachementscourses` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `attachementshomeworks`
 --
 
@@ -57,15 +48,6 @@ CREATE TABLE `attachementshomeworks` (
   CONSTRAINT `FK_ATT_HWRK__HWRK` FOREIGN KEY (`homeworkID`) REFERENCES `homeworks` (`taskID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `attachementshomeworks`
---
-
-LOCK TABLES `attachementshomeworks` WRITE;
-/*!40000 ALTER TABLE `attachementshomeworks` DISABLE KEYS */;
-/*!40000 ALTER TABLE `attachementshomeworks` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `attachementsmessages`
@@ -85,15 +67,6 @@ CREATE TABLE `attachementsmessages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `attachementsmessages`
---
-
-LOCK TABLES `attachementsmessages` WRITE;
-/*!40000 ALTER TABLE `attachementsmessages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `attachementsmessages` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `coursedays`
 --
 
@@ -111,15 +84,6 @@ CREATE TABLE `coursedays` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `coursedays`
---
-
-LOCK TABLES `coursedays` WRITE;
-/*!40000 ALTER TABLE `coursedays` DISABLE KEYS */;
-/*!40000 ALTER TABLE `coursedays` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `courselevels`
 --
 
@@ -127,19 +91,12 @@ DROP TABLE IF EXISTS `courselevels`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `courselevels` (
+  `courseLevelID` varchar(36) NOT NULL,
   `name` varchar(2) NOT NULL,
-  PRIMARY KEY (`name`)
+  PRIMARY KEY (`courseLevelID`),
+  UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `courselevels`
---
-
-LOCK TABLES `courselevels` WRITE;
-/*!40000 ALTER TABLE `courselevels` DISABLE KEYS */;
-/*!40000 ALTER TABLE `courselevels` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `coursememberships`
@@ -166,15 +123,6 @@ CREATE TABLE `coursememberships` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `coursememberships`
---
-
-LOCK TABLES `coursememberships` WRITE;
-/*!40000 ALTER TABLE `coursememberships` DISABLE KEYS */;
-/*!40000 ALTER TABLE `coursememberships` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `courses`
 --
 
@@ -184,7 +132,7 @@ DROP TABLE IF EXISTS `courses`;
 CREATE TABLE `courses` (
   `courseID` varchar(36) NOT NULL,
   `languageID` varchar(5) NOT NULL,
-  `courseLevelName` varchar(2) NOT NULL,
+  `courseLevelID` varchar(36) NOT NULL,
   `courseTypeID` varchar(36) NOT NULL,
   `maxStudents` int(11) DEFAULT NULL,
   `price` double DEFAULT NULL,
@@ -192,22 +140,13 @@ CREATE TABLE `courses` (
   `activityTo` datetime DEFAULT NULL,
   PRIMARY KEY (`courseID`),
   KEY `FK_CRS_LNG` (`languageID`),
-  KEY `FK__CRS__CRS_LEV` (`courseLevelName`),
+  KEY `FK__CRS__CRS_LEV` (`courseLevelID`),
   KEY `FK__CRS__CRS_TYPE` (`courseTypeID`),
   CONSTRAINT `FK_CRS_LNG` FOREIGN KEY (`languageID`) REFERENCES `languages` (`languageID`),
-  CONSTRAINT `FK__CRS__CRS_LEV` FOREIGN KEY (`courseLevelName`) REFERENCES `courselevels` (`name`),
+  CONSTRAINT `FK__CRS__CRS_LEV` FOREIGN KEY (`courseLevelID`) REFERENCES `courselevels` (`courseLevelID`),
   CONSTRAINT `FK__CRS__CRS_TYPE` FOREIGN KEY (`courseTypeID`) REFERENCES `coursetypes` (`courseTypeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `courses`
---
-
-LOCK TABLES `courses` WRITE;
-/*!40000 ALTER TABLE `courses` DISABLE KEYS */;
-/*!40000 ALTER TABLE `courses` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `coursetypenames`
@@ -230,15 +169,6 @@ CREATE TABLE `coursetypenames` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `coursetypenames`
---
-
-LOCK TABLES `coursetypenames` WRITE;
-/*!40000 ALTER TABLE `coursetypenames` DISABLE KEYS */;
-/*!40000 ALTER TABLE `coursetypenames` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `coursetypes`
 --
 
@@ -250,15 +180,6 @@ CREATE TABLE `coursetypes` (
   PRIMARY KEY (`courseTypeID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `coursetypes`
---
-
-LOCK TABLES `coursetypes` WRITE;
-/*!40000 ALTER TABLE `coursetypes` DISABLE KEYS */;
-/*!40000 ALTER TABLE `coursetypes` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `files`
@@ -278,15 +199,6 @@ CREATE TABLE `files` (
   CONSTRAINT `FK_FILES_USERS` FOREIGN KEY (`senderID`) REFERENCES `users` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `files`
---
-
-LOCK TABLES `files` WRITE;
-/*!40000 ALTER TABLE `files` DISABLE KEYS */;
-/*!40000 ALTER TABLE `files` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `grades`
@@ -315,15 +227,6 @@ CREATE TABLE `grades` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `grades`
---
-
-LOCK TABLES `grades` WRITE;
-/*!40000 ALTER TABLE `grades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `grades` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `homeworks`
 --
 
@@ -341,15 +244,6 @@ CREATE TABLE `homeworks` (
   CONSTRAINT `FK_HWR_CRS` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `homeworks`
---
-
-LOCK TABLES `homeworks` WRITE;
-/*!40000 ALTER TABLE `homeworks` DISABLE KEYS */;
-/*!40000 ALTER TABLE `homeworks` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `homeworksolutions`
@@ -375,15 +269,6 @@ CREATE TABLE `homeworksolutions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `homeworksolutions`
---
-
-LOCK TABLES `homeworksolutions` WRITE;
-/*!40000 ALTER TABLE `homeworksolutions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `homeworksolutions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `languagenames`
 --
 
@@ -402,15 +287,6 @@ CREATE TABLE `languagenames` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `languagenames`
---
-
-LOCK TABLES `languagenames` WRITE;
-/*!40000 ALTER TABLE `languagenames` DISABLE KEYS */;
-/*!40000 ALTER TABLE `languagenames` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `languages`
 --
 
@@ -422,15 +298,6 @@ CREATE TABLE `languages` (
   PRIMARY KEY (`languageID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `languages`
---
-
-LOCK TABLES `languages` WRITE;
-/*!40000 ALTER TABLE `languages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `languages` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `messages`
@@ -453,15 +320,6 @@ CREATE TABLE `messages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `messages`
---
-
-LOCK TABLES `messages` WRITE;
-/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `messagesusers`
 --
 
@@ -477,15 +335,6 @@ CREATE TABLE `messagesusers` (
   CONSTRAINT `FK__MESSAGES_USERS__USERS` FOREIGN KEY (`userID`) REFERENCES `users` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `messagesusers`
---
-
-LOCK TABLES `messagesusers` WRITE;
-/*!40000 ALTER TABLE `messagesusers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `messagesusers` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `phones`
@@ -506,15 +355,6 @@ CREATE TABLE `phones` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `phones`
---
-
-LOCK TABLES `phones` WRITE;
-/*!40000 ALTER TABLE `phones` DISABLE KEYS */;
-/*!40000 ALTER TABLE `phones` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `placementanswers`
 --
 
@@ -531,15 +371,6 @@ CREATE TABLE `placementanswers` (
   CONSTRAINT `FK__PL_ANS__PL_SNT` FOREIGN KEY (`placementSentenceID`) REFERENCES `placementsentences` (`placementSentenceID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `placementanswers`
---
-
-LOCK TABLES `placementanswers` WRITE;
-/*!40000 ALTER TABLE `placementanswers` DISABLE KEYS */;
-/*!40000 ALTER TABLE `placementanswers` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `placementsentences`
@@ -561,15 +392,6 @@ CREATE TABLE `placementsentences` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `placementsentences`
---
-
-LOCK TABLES `placementsentences` WRITE;
-/*!40000 ALTER TABLE `placementsentences` DISABLE KEYS */;
-/*!40000 ALTER TABLE `placementsentences` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `placementtasks`
 --
 
@@ -585,15 +407,6 @@ CREATE TABLE `placementtasks` (
   CONSTRAINT `FK__PL_TASK__PL_TEST` FOREIGN KEY (`placementTestID`) REFERENCES `placementtests` (`placementTestID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `placementtasks`
---
-
-LOCK TABLES `placementtasks` WRITE;
-/*!40000 ALTER TABLE `placementtasks` DISABLE KEYS */;
-/*!40000 ALTER TABLE `placementtasks` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `placementtestresults`
@@ -616,15 +429,6 @@ CREATE TABLE `placementtestresults` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `placementtestresults`
---
-
-LOCK TABLES `placementtestresults` WRITE;
-/*!40000 ALTER TABLE `placementtestresults` DISABLE KEYS */;
-/*!40000 ALTER TABLE `placementtestresults` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `placementtests`
 --
 
@@ -639,15 +443,6 @@ CREATE TABLE `placementtests` (
   CONSTRAINT `FK__PL_TEST__LNG` FOREIGN KEY (`languageID`) REFERENCES `languages` (`languageID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `placementtests`
---
-
-LOCK TABLES `placementtests` WRITE;
-/*!40000 ALTER TABLE `placementtests` DISABLE KEYS */;
-/*!40000 ALTER TABLE `placementtests` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `studentgrades`
@@ -670,15 +465,6 @@ CREATE TABLE `studentgrades` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `studentgrades`
---
-
-LOCK TABLES `studentgrades` WRITE;
-/*!40000 ALTER TABLE `studentgrades` DISABLE KEYS */;
-/*!40000 ALTER TABLE `studentgrades` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `teacherscourses`
 --
 
@@ -694,15 +480,6 @@ CREATE TABLE `teacherscourses` (
   CONSTRAINT `FK__TEACHERS_COURSES__USERS` FOREIGN KEY (`teacherID`) REFERENCES `users` (`userID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `teacherscourses`
---
-
-LOCK TABLES `teacherscourses` WRITE;
-/*!40000 ALTER TABLE `teacherscourses` DISABLE KEYS */;
-/*!40000 ALTER TABLE `teacherscourses` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `teacherslanguages`
@@ -722,15 +499,6 @@ CREATE TABLE `teacherslanguages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `teacherslanguages`
---
-
-LOCK TABLES `teacherslanguages` WRITE;
-/*!40000 ALTER TABLE `teacherslanguages` DISABLE KEYS */;
-/*!40000 ALTER TABLE `teacherslanguages` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `tests`
 --
 
@@ -748,15 +516,6 @@ CREATE TABLE `tests` (
   CONSTRAINT `FK_TST_CRS` FOREIGN KEY (`courseID`) REFERENCES `courses` (`courseID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `tests`
---
-
-LOCK TABLES `tests` WRITE;
-/*!40000 ALTER TABLE `tests` DISABLE KEYS */;
-/*!40000 ALTER TABLE `tests` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `testsolutions`
@@ -782,15 +541,6 @@ CREATE TABLE `testsolutions` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `testsolutions`
---
-
-LOCK TABLES `testsolutions` WRITE;
-/*!40000 ALTER TABLE `testsolutions` DISABLE KEYS */;
-/*!40000 ALTER TABLE `testsolutions` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `userroles`
 --
 
@@ -804,16 +554,6 @@ CREATE TABLE `userroles` (
   UNIQUE KEY `role` (`role`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `userroles`
---
-
-LOCK TABLES `userroles` WRITE;
-/*!40000 ALTER TABLE `userroles` DISABLE KEYS */;
-INSERT INTO `userroles` VALUES ('95e5acf0-4e56-11e6-a0dd-54ab3a01c2d0','ADMIN'),('56196e40-4e56-11e6-a0dd-54ab3a01c2d0','USER');
-/*!40000 ALTER TABLE `userroles` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Table structure for table `users`
@@ -841,15 +581,6 @@ CREATE TABLE `users` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `users`
---
-
-LOCK TABLES `users` WRITE;
-/*!40000 ALTER TABLE `users` DISABLE KEYS */;
-/*!40000 ALTER TABLE `users` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `usersuserroles`
 --
 
@@ -865,15 +596,6 @@ CREATE TABLE `usersuserroles` (
   CONSTRAINT `FK_UUR_USER_ROLE` FOREIGN KEY (`userRoleID`) REFERENCES `userroles` (`roleID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `usersuserroles`
---
-
-LOCK TABLES `usersuserroles` WRITE;
-/*!40000 ALTER TABLE `usersuserroles` DISABLE KEYS */;
-/*!40000 ALTER TABLE `usersuserroles` ENABLE KEYS */;
-UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -884,4 +606,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2016-07-27 23:49:38
+-- Dump completed on 2017-01-25 11:19:06

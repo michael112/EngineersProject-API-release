@@ -10,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -36,7 +35,7 @@ import main.json.response.AdminLevelInfoResponseJson;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 
-import main.json.admin.level.CourseLevelListJson;
+import main.json.admin.level.view.CourseLevelListJson;
 import main.json.admin.level.CourseLevelJson;
 
 import main.model.course.CourseLevel;
@@ -75,32 +74,31 @@ public class AdminLevelController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLevelControllerUrlConstants.LEVEL_INFO, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> getCourseLevelInfo(@PathVariable("courseLevelName") String courseLevelID) {
-        CourseLevel level = this.courseLevelCrudService.findCourseLevelByID(courseLevelID);
+    public ResponseEntity<? extends AbstractResponseJson> getCourseLevelInfo(@RequestParam("identifier") String courseLevelIdentifier, @RequestParam(value="identifierIsID", defaultValue="false") boolean identifierIsID) {
+        CourseLevel level;
+        if( identifierIsID ) {
+            level = this.courseLevelCrudService.findCourseLevelByID(courseLevelIdentifier);
+        }
+        else {
+            level = this.courseLevelCrudService.findCourseLevelByName(courseLevelIdentifier);
+        }
         if( level == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
-        CourseLevelJson levelJson = this.adminLevelService.getCourseLevelInfo(level);
+        main.json.admin.level.view.CourseLevelJson levelJson = this.adminLevelService.getCourseLevelInfo(level);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.level.info.success");
         return new ResponseEntity<AdminLevelInfoResponseJson>(new AdminLevelInfoResponseJson(levelJson, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
-    @RequestMapping(value = AdminLevelControllerUrlConstants.LEVEL_SWAP, method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> swapCourseLevels(@RequestParam(value = "level1", required = true) String courseLevel1ID, @RequestParam(value = "level2", required = true) String courseLevel2ID) {
-        CourseLevel level1 = this.courseLevelCrudService.findCourseLevelByID(courseLevel1ID);
-        if( level1 == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
-        CourseLevel level2 = this.courseLevelCrudService.findCourseLevelByID(courseLevel2ID);
-        if( level2 == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
-        this.adminLevelService.swapCourseLevel(level1, level2);
-        HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("admin.level.swap.success");
-        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
-    }
-
-    @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLevelControllerUrlConstants.EDIT_LEVEL, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@PathVariable("courseLevelName") String courseLevelID, @Valid @RequestBody CourseLevelJson editedLevel) {
-        CourseLevel level = this.courseLevelCrudService.findCourseLevelByID(courseLevelID);
+    public ResponseEntity<? extends AbstractResponseJson> editCourseLevel(@Valid @RequestBody CourseLevelJson editedLevel, @RequestParam("identifier") String courseLevelIdentifier, @RequestParam(value="identifierIsID", defaultValue="false") boolean identifierIsID) {
+        CourseLevel level;
+        if( identifierIsID ) {
+            level = this.courseLevelCrudService.findCourseLevelByID(courseLevelIdentifier);
+        }
+        else {
+            level = this.courseLevelCrudService.findCourseLevelByName(courseLevelIdentifier);
+        }
         if( level == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
         this.adminLevelService.editCourseLevel(level, editedLevel);
         HttpStatus responseStatus = HttpStatus.OK;
@@ -110,8 +108,14 @@ public class AdminLevelController {
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminLevelControllerUrlConstants.REMOVE_LEVEL, method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> removeCourseLevel(@PathVariable("courseLevelName") String courseLevelID) {
-        CourseLevel level = this.courseLevelCrudService.findCourseLevelByID(courseLevelID);
+    public ResponseEntity<? extends AbstractResponseJson> removeCourseLevel(@RequestParam("identifier") String courseLevelIdentifier, @RequestParam(value="identifierIsID", defaultValue="false") boolean identifierIsID) {
+        CourseLevel level;
+        if( identifierIsID ) {
+            level = this.courseLevelCrudService.findCourseLevelByID(courseLevelIdentifier);
+        }
+        else {
+            level = this.courseLevelCrudService.findCourseLevelByName(courseLevelIdentifier);
+        }
         if( level == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.level.not.found"));
         try {
             this.adminLevelService.removeCourseLevel(level);

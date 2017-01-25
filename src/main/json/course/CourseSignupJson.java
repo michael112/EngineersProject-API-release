@@ -10,8 +10,8 @@ public class CourseSignupJson extends CourseJson {
     @Getter
     private Double price;
 
-    public CourseSignupJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName, Double price) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public CourseSignupJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, Double price) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.price = price;
     }
 

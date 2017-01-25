@@ -16,8 +16,8 @@ public class FileInfoListJson extends CourseJson {
     @Getter
     private Set<FileInfoJson> attachements;
 
-    public FileInfoListJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public FileInfoListJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.attachements = new HashSet<>();
     }
 

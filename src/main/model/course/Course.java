@@ -54,7 +54,7 @@ public class Course extends AbstractUuidModel {
 
 	@Getter
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JoinColumn(name="courseLevelName", referencedColumnName="name", nullable=false)
+	@JoinColumn(name="courseLevelID", referencedColumnName="courseLevelID", nullable=false)
 	private CourseLevel courseLevel;
 	public void setCourseLevel(CourseLevel courseLevel) {
 		if( courseLevel != null ) {

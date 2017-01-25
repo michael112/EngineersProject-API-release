@@ -50,12 +50,12 @@ public class TestEnvironmentBuilder {
 		Language italian = generateLanguage("IT", "Italian", english);
 		environment.addLanguage(italian);
 
-		CourseLevel a1 = generateCourseLevel("A1");
-		CourseLevel a2 = generateCourseLevel("A2");
-		CourseLevel b1 = generateCourseLevel("B1");
-		CourseLevel b2 = generateCourseLevel("B2");
-		CourseLevel c1 = generateCourseLevel("C1");
-		CourseLevel c2 = generateCourseLevel("C2");
+		CourseLevel a1 = generateCourseLevel(hasUUID, "A1");
+		CourseLevel a2 = generateCourseLevel(hasUUID, "A2");
+		CourseLevel b1 = generateCourseLevel(hasUUID, "B1");
+		CourseLevel b2 = generateCourseLevel(hasUUID, "B2");
+		CourseLevel c1 = generateCourseLevel(hasUUID, "C1");
+		CourseLevel c2 = generateCourseLevel(hasUUID, "C2");
 
 		environment.addCourseLevel(a1);
 		environment.addCourseLevel(a2);
@@ -165,8 +165,9 @@ public class TestEnvironmentBuilder {
 		return language;
 	}
 
-	private static CourseLevel generateCourseLevel(String courseLevelName) {
+	private static CourseLevel generateCourseLevel(boolean hasUUID, String courseLevelName) {
 		CourseLevel level = new CourseLevel(courseLevelName);
+		if( hasUUID ) level.setId(UuidGenerator.newUUID());
 		return level;
 	}
 

@@ -39,10 +39,13 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	@Column(name="description", nullable=true)
 	private String description;
 
+	@javax.persistence.Transient
 	@Getter
+/*
 	@OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@org.hibernate.annotations.Cascade(value={org.hibernate.annotations.CascadeType.DELETE_ORPHAN, org.hibernate.annotations.CascadeType.DELETE})
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
+*/
 	private Grade grade;
 	public void setGrade(Grade grade) {
 		if( !( (grade == null) && (this.grade == null) ) ) {

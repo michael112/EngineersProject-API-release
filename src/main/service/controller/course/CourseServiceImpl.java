@@ -64,7 +64,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         try {
             String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
             String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
-            CourseListJson result = new CourseListJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
+            CourseListJson result = new CourseListJson(course.getId(), course.getLanguage().getId(), languageName, course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName);
             for( CourseMembership studentMembership : course.getStudents() ) {
                 User student = studentMembership.getUser();
                 result.addStudent(new CourseUserJson(student.getId(), student.getFullName()));
@@ -83,7 +83,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         try {
             String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
             String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
-            CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+            CourseInfoStudentJson courseInfo = new CourseInfoStudentJson(course.getId(), course.getLanguage().getId(), languageName, course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
             for( User teacher : course.getTeachers() ) {
                 courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
@@ -110,7 +110,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         try {
             String languageName = course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode());
             String courseTypeName = course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode());
-            CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), languageName, course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
+            CourseInfoTeacherJson courseInfo = new CourseInfoTeacherJson(course.getId(), course.getLanguage().getId(), languageName, course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), courseTypeName, getNextLesson(course));
             for( User teacher : course.getTeachers() ) {
                 courseInfo.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
@@ -144,7 +144,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     public CourseSignupJson getSignupCourseInfo(Course course) {
         try {
-            CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+            CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
             for( User teacher : course.getTeachers() ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
@@ -167,11 +167,11 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     public ChangeGroupFormJson getChangeGroupForm(Course course) {
         try {
-            ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
             // przetestować
-            Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("select course from Course course join course.language language join course.courseLevel courseLevel join course.courseType courseType where ( language.id = '" + course.getLanguage().getId() + "' ) and ( courseLevel.id = '" + course.getCourseLevel().getName() + "' ) and ( courseType.id = '" + course.getCourseType().getId() + "' ) and ( course.id != '" + course.getId() + "' )");
+            Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("select course from Course course join course.language language join course.courseLevel courseLevel join course.courseType courseType where ( language.id = '" + course.getLanguage().getId() + "' ) and ( courseLevel.name = '" + course.getCourseLevel().getName() + "' ) and ( courseType.id = '" + course.getCourseType().getId() + "' ) and ( course.id != '" + course.getId() + "' )");
             for( Course similarCourse : similarCourses ) {
-                SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
+                SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getId(), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getId(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
                 for( CourseDay courseDay : similarCourse.getCourseDays() ) {
                     similarGroupJson.addDayOfCourse(new DayOfCourseJson(courseDay.getDay().getDayName(), courseDay.getHourFrom().getTime()));
                 }
@@ -201,7 +201,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     public CourseJson getResignGroupForm(Course course) {
-        CourseJson result = new CourseJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        CourseJson result = new CourseJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }

@@ -8,6 +8,9 @@ import org.junit.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
+
 import main.service.controller.test.TestService;
 import main.service.controller.test.TestServiceImpl;
 
@@ -37,6 +40,8 @@ public class TestServiceTest extends AbstractServiceTest {
 
     private TestService testService;
 
+    private DateTimeFormatter dateFormat;
+
     @Autowired
     private CourseMembershipValidator courseMembershipValidatorMock;
     @Autowired
@@ -57,20 +62,21 @@ public class TestServiceTest extends AbstractServiceTest {
         initInsideMocks(this.courseMembershipValidatorMock, null);
         reset(this.localeCodeProviderMock, this.courseCrudServiceMock, this.gradeCrudServiceMock, this.testCrudServiceMock);
         when(this.localeCodeProviderMock.getLocaleCode()).thenReturn("en");
+        this.dateFormat = DateTimeFormat.forPattern("dd-MM-yyyy");
         this.testService = new TestServiceImpl(localeCodeProviderMock, testCrudServiceMock, gradeCrudServiceMock);
     }
 
     @Test
     public void testGetTestList() {
-        User sampleUser = this.testEnvironment.getUsers().get(0);
+        User sampleUser = this.testEnvironment.getUsers().get(1);
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 
         try {
-            TestListJson expectedResult = new TestListJson(sampleCourse.getId(), sampleCourse.getLanguage().getId(), sampleCourse.getLanguage().getLanguageName("en"), sampleCourse.getCourseLevel().getName(), sampleCourse.getCourseType().getId(), sampleCourse.getCourseType().getCourseTypeName("en"));
+            TestListJson expectedResult = new TestListJson(sampleCourse.getId(), sampleCourse.getLanguage().getId(), sampleCourse.getLanguage().getLanguageName("en"), sampleCourse.getCourseLevel().getId(), sampleCourse.getCourseLevel().getName(), sampleCourse.getCourseType().getId(), sampleCourse.getCourseType().getCourseTypeName("en"));
             main.model.course.TestSolution solution;
             for (main.model.course.Test test : sampleCourse.getTests()) {
                 solution = new ArrayList<main.model.course.TestSolution>(test.getTestSolutions()).get(0);
-                expectedResult.addTest(new TestJson(test.getId(), test.getTitle(), String.valueOf(test.getDate().getYear()) + '-' + String.valueOf(test.getDate().getMonthOfYear()) + '-' + String.valueOf(test.getDate().getDayOfMonth()), test.getDescription(), solution.isWritten(), solution.getGrade() != null, solution.getGrade().getGradeValue(), solution.getGrade().getGrade().getMaxPoints(), solution.getGrade().getGrade().getScale().name()));
+                expectedResult.addTest(new TestJson(test.getId(), test.getTitle(), this.dateFormat.print(test.getDate()), test.getDescription(), solution.isWritten(), solution.getGrade() != null, solution.getGrade().getGradeValue(), solution.getGrade().getGrade().getMaxPoints(), solution.getGrade().getGrade().getScale().name()));
             }
             for( User teacher : sampleCourse.getTeachers() ) {
                 expectedResult.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));

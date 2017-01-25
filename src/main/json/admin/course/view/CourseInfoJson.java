@@ -32,8 +32,8 @@ public class CourseInfoJson extends CourseJson {
         super.addTeacher(teacher);
     }
 
-    public CourseInfoJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName, String courseActivityFrom, String courseActivityTo, int maxStudents) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public CourseInfoJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, String courseActivityFrom, String courseActivityTo, int maxStudents) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.courseActivity = new CourseActivityJson(courseActivityFrom, courseActivityTo);
         this.maxStudents = maxStudents;
         this.courseDays = new ArrayList<>();

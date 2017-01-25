@@ -41,12 +41,6 @@ public class CourseLevelTest extends AbstractDbTest {
         this.courseLevelCrudService.saveCourseLevel(B1);
     }
 
-    @Test(expected = org.springframework.orm.hibernate5.HibernateSystemException.class)
-    public void testNullNameLevel() {
-        CourseLevel nullLevel = new CourseLevel();
-        this.courseLevelCrudService.saveCourseLevel(nullLevel);
-    }
-
     @Test
     public void testCourseLevelSet() {
         Set<CourseLevel> courseLevels = this.courseLevelCrudService.findAllCourseLevels();
@@ -56,7 +50,7 @@ public class CourseLevelTest extends AbstractDbTest {
 
     @Test
     public void testGetCourseLevel() {
-        CourseLevel B1Db = this.courseLevelCrudService.findCourseLevelByID("B1");
+        CourseLevel B1Db = this.courseLevelCrudService.findCourseLevelByID(B1.getId());
         Assert.assertNotNull(B1Db);
         Assert.assertEquals(B1, B1Db);
     }
@@ -65,7 +59,7 @@ public class CourseLevelTest extends AbstractDbTest {
     public void testDeleteCourseLevel() {
         this.courseLevelCrudService.deleteCourseLevel(B1);
 
-        Assert.assertNull(this.courseLevelCrudService.findCourseLevelByID("B1"));
+        Assert.assertNull(this.courseLevelCrudService.findCourseLevelByID(B1.getId()));
     }
 
     @Test
@@ -74,7 +68,7 @@ public class CourseLevelTest extends AbstractDbTest {
         this.A1.addCourse(newCourse);
         this.courseLevelCrudService.updateCourseLevel(this.A1);
 
-        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID("A1");
+        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID(A1.getId());
         Assert.assertEquals(true, A1Db.containsCourse(newCourse));
     }
 
@@ -90,32 +84,32 @@ public class CourseLevelTest extends AbstractDbTest {
 
         Course A2SampleCourseDb = this.courseCrudService.findCourseByID(this.A1SampleCourse.getId());
         Assert.assertEquals("A2", A2SampleCourseDb.getCourseLevel().getName());
-        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID("A1");
+        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID(this.A1.getId());
         Assert.assertEquals(false, A1Db.containsCourse(this.A1SampleCourse));
-        CourseLevel A2Db = this.courseLevelCrudService.findCourseLevelByID("A2");
+        CourseLevel A2Db = this.courseLevelCrudService.findCourseLevelByID(this.A2.getId());
         Assert.assertEquals(true, A2Db.containsCourse(this.A1SampleCourse));
     }
 
     @Test
     public void testUpdateCourseLevelName() {
-        CourseLevel sampleLevel = new CourseLevel("B5");
+        CourseLevel sampleLevel = new CourseLevel("B2");
         this.courseLevelCrudService.saveCourseLevel(sampleLevel);
 
-        sampleLevel.setId("B6");
+        sampleLevel.setName("C2");
         this.courseLevelCrudService.updateCourseLevel(sampleLevel);
 
         // Dziadostwo: w ogóle nie informuje, że nic nie robi!
 
-        CourseLevel B5Db = this.courseLevelCrudService.findCourseLevelByID("B5");
-        CourseLevel B6Db = this.courseLevelCrudService.findCourseLevelByID("B6");
+        CourseLevel B2Db = this.courseLevelCrudService.findCourseLevelByName("B2");
+        CourseLevel C2Db = this.courseLevelCrudService.findCourseLevelByName("C2");
 
-        Assert.assertNull(B6Db);
-        Assert.assertNotNull(B5Db);
+        Assert.assertNull(B2Db);
+        Assert.assertNotNull(C2Db);
     }
 
     @Test
     public void testCourseLevelCoursesContent() {
-        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID("A1");
+        CourseLevel A1Db = this.courseLevelCrudService.findCourseLevelByID(this.A1.getId());
 
         Assert.assertNotNull(A1Db.getCourses());
         Assert.assertEquals(1, A1Db.getCourses().size());

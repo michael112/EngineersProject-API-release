@@ -8,6 +8,8 @@ public interface CourseLevelCrudService {
 
     CourseLevel findCourseLevelByID(String id);
 
+    CourseLevel findCourseLevelByName(String name);
+
     Set<CourseLevel> findAllCourseLevels();
 
     void saveCourseLevel(CourseLevel entity);

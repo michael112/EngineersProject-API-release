@@ -23,8 +23,8 @@ public class HomeworkListTeacherJson extends AbstractHomeworkListJson {
         this.homeworks.add(homework);
     }
 
-    public HomeworkListTeacherJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public HomeworkListTeacherJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.homeworks = new HashSet<>();
     }
 

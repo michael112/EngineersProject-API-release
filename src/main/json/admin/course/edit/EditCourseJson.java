@@ -13,8 +13,8 @@ public class EditCourseJson extends AbstractCourseJson {
         super();
     }
 
-    public EditCourseJson(String languageID, String courseTypeID, String courseLevelID, CourseActivityJson courseActivity, int maxStudents, double price) {
-        super(languageID, courseTypeID, courseLevelID, courseActivity, maxStudents, price);
+    public EditCourseJson(String languageID, String courseTypeID, String courseLevelName, CourseActivityJson courseActivity, int maxStudents, double price) {
+        super(languageID, courseTypeID, courseLevelName, courseActivity, maxStudents, price);
     }
 
 }

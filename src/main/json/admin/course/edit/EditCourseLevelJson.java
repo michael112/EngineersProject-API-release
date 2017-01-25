@@ -19,6 +19,6 @@ public class EditCourseLevelJson {
     @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.courselevelname.invalid")
     @Getter
     @Setter
-    private String courseLevelID;
+    private String courseLevelName;
 
 }

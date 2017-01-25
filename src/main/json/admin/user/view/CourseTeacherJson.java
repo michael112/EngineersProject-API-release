@@ -12,8 +12,8 @@ public class CourseTeacherJson extends CourseJson {
         super.addTeacher(teacher);
     }
 
-    public CourseTeacherJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public CourseTeacherJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
     }
 
 }

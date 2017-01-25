@@ -9,8 +9,8 @@ public class NewCourseJson extends AbstractCourseJson {
         super();
     }
 
-    public NewCourseJson(String languageID, String courseTypeID, String courseLevelID, CourseActivityJson courseActivity, int maxStudents, double price) {
-        super(languageID, courseTypeID, courseLevelID, courseActivity, maxStudents, price);
+    public NewCourseJson(String languageID, String courseTypeID, String courseLevelName, CourseActivityJson courseActivity, int maxStudents, double price) {
+        super(languageID, courseTypeID, courseLevelName, courseActivity, maxStudents, price);
     }
 
 }

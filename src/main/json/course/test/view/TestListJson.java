@@ -15,8 +15,8 @@ public class TestListJson extends CourseJson {
     @Getter
     private Set<TestJson> tests;
 
-    public TestListJson(String courseID, String languageID, String languageName, String courseLevel, String courseTypeID, String courseTypeName) {
-        super(courseID, languageID, languageName, courseLevel, courseTypeID, courseTypeName);
+    public TestListJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
+        super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.tests = new HashSet<>();
     }
 

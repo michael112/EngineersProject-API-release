@@ -40,7 +40,7 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
     private DateTimeFormatter dateFormat;
 
     public FileInfoListJson getAttachementList(Course course) {
-        FileInfoListJson result = new FileInfoListJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        FileInfoListJson result = new FileInfoListJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }

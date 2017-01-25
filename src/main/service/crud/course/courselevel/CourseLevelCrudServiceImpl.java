@@ -20,6 +20,10 @@ public class CourseLevelCrudServiceImpl implements CourseLevelCrudService {
         return dao.findCourseLevelByID(id);
     }
 
+    public CourseLevel findCourseLevelByName(String name) {
+        return dao.findCourseLevelByName(name);
+    }
+
     public Set<CourseLevel> findAllCourseLevels() {
         return dao.findAllCourseLevels();
     }

@@ -106,16 +106,16 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		when( this.languageCrudServiceMock.findLanguagesByQuery(Mockito.any(String.class)) ).thenReturn(new HashSet<>(languagesWithPlacementTest));
 
 		this.mockMvc.perform(get(this.testedClassURI + PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST)
-						)
-						.andExpect( status().isOk() )
-						.andExpect( content().contentType("application/json;charset=utf-8") )
-						.andExpect(jsonPath("$.placementTestListJson", hasSize(1)))
-						.andExpect(jsonPath("$.placementTestListJson[0].language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
-						.andExpect(jsonPath("$.placementTestListJson[0].test", hasSize(1)))
-						.andExpect(jsonPath("$.placementTestListJson[0].test[0].result", is(samplePlacementTestResult.getResult())))
-						.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTestResult.getId())))
-						.andExpect(jsonPath("$.message", is(returnMessage)))
-						.andExpect(jsonPath("$.success", is(true)));
+			)
+			.andExpect( status().isOk() )
+			.andExpect( content().contentType("application/json;charset=utf-8") )
+			.andExpect(jsonPath("$.placementTestListJson", hasSize(1)))
+			.andExpect(jsonPath("$.placementTestListJson[0].language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
+			.andExpect(jsonPath("$.placementTestListJson[0].test", hasSize(1)))
+			.andExpect(jsonPath("$.placementTestListJson[0].test[0].result", is(samplePlacementTestResult.getResult())))
+			.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTestResult.getId())))
+			.andExpect(jsonPath("$.message", is(returnMessage)))
+			.andExpect(jsonPath("$.success", is(true)));
 
 		verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
 		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -134,15 +134,15 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		when( this.languageCrudServiceMock.findLanguagesByQuery(Mockito.any(String.class)) ).thenReturn(new HashSet<>(languagesWithPlacementTest));
 
 		this.mockMvc.perform(get(this.testedClassURI + PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST)
-		)
-				.andExpect( status().isOk() )
-				.andExpect( content().contentType("application/json;charset=utf-8") )
-				.andExpect(jsonPath("$.placementTestListJson", hasSize(1)))
-				.andExpect(jsonPath("$.placementTestListJson[0].language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
-				.andExpect(jsonPath("$.placementTestListJson[0].test", hasSize(1)))
-				.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTest.getId())))
-				.andExpect(jsonPath("$.message", is(returnMessage)))
-				.andExpect(jsonPath("$.success", is(true)));
+			)
+			.andExpect( status().isOk() )
+			.andExpect( content().contentType("application/json;charset=utf-8") )
+			.andExpect(jsonPath("$.placementTestListJson", hasSize(1)))
+			.andExpect(jsonPath("$.placementTestListJson[0].language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
+			.andExpect(jsonPath("$.placementTestListJson[0].test", hasSize(1)))
+			.andExpect(jsonPath("$.placementTestListJson[0].test[0].testID", is(samplePlacementTest.getId())))
+			.andExpect(jsonPath("$.message", is(returnMessage)))
+			.andExpect(jsonPath("$.success", is(true)));
 
 		verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
 		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -179,25 +179,25 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		*/
 
 		this.mockMvc.perform(get(this.testedClassURI + "/" + samplePlacementTest.getId())
-				)
-				.andExpect( status().isOk() )
-				.andExpect( content().contentType("application/json;charset=utf-8") )
-				.andExpect(jsonPath("$.test.language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
-				.andExpect(jsonPath("$.test.tasks", hasSize(1)))
-				.andExpect(jsonPath("$.test.tasks[0].id", is(samplePlacementTask.getId())))
-				.andExpect(jsonPath("$.test.tasks[0].command", is(samplePlacementTask.getCommand())))
-				.andExpect(jsonPath("$.test.tasks[0].sentences", hasSize(1)))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].id", is(samplePlacementSentence.getId())))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].prefix", is(samplePlacementSentence.getPrefix())))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].suffix", is(samplePlacementSentence.getSuffix())))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].correctAnswer", is(samplePlacementSentence.getCorrectAnswer())))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers", hasSize(4)))
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(0).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(0).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(0).getAnswerName() + "\")]").exists())
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(1).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(1).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(1).getAnswerName() + "\")]").exists())
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(2).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(2).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(2).getAnswerName() + "\")]").exists())
-				.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(3).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(3).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(3).getAnswerName() + "\")]").exists())
-				.andExpect(jsonPath("$.message", is(returnMessage)))
-				.andExpect(jsonPath("$.success", is(true)));
+			)
+			.andExpect( status().isOk() )
+			.andExpect( content().contentType("application/json;charset=utf-8") )
+			.andExpect(jsonPath("$.test.language", is(samplePlacementTest.getLanguage().getLanguageName("EN"))))
+			.andExpect(jsonPath("$.test.tasks", hasSize(1)))
+			.andExpect(jsonPath("$.test.tasks[0].id", is(samplePlacementTask.getId())))
+			.andExpect(jsonPath("$.test.tasks[0].command", is(samplePlacementTask.getCommand())))
+			.andExpect(jsonPath("$.test.tasks[0].sentences", hasSize(1)))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].id", is(samplePlacementSentence.getId())))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].prefix", is(samplePlacementSentence.getPrefix())))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].suffix", is(samplePlacementSentence.getSuffix())))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].correctAnswer", is(samplePlacementSentence.getCorrectAnswer())))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers", hasSize(4)))
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(0).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(0).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(0).getAnswerName() + "\")]").exists())
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(1).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(1).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(1).getAnswerName() + "\")]").exists())
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(2).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(2).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(2).getAnswerName() + "\")]").exists())
+			.andExpect(jsonPath("$.test.tasks[0].sentences[0].answers[?(@.id == \"" + samplePlacementAnswers.get(3).getId() + "\")][?(@.answerKey == \"" + samplePlacementAnswers.get(3).getAnswerKey() + "\")][?(@.answerName == \"" + samplePlacementAnswers.get(3).getAnswerName() + "\")]").exists())
+			.andExpect(jsonPath("$.message", is(returnMessage)))
+			.andExpect(jsonPath("$.success", is(true)));
 
 		verify(this.placementTestCrudServiceMock, times(1)).findPlacementTestByID(Mockito.any(String.class));
 		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -211,11 +211,11 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
 		this.mockMvc.perform(get(this.testedClassURI + "/" + "aaa")
-				)
-				.andExpect( status().isNotFound() )
-				.andExpect( content().contentType("application/json;charset=utf-8") )
-				.andExpect(jsonPath("$.message", is(returnMessage)))
-				.andExpect(jsonPath("$.success", is(false)));
+			)
+			.andExpect( status().isNotFound() )
+			.andExpect( content().contentType("application/json;charset=utf-8") )
+			.andExpect(jsonPath("$.message", is(returnMessage)))
+			.andExpect(jsonPath("$.success", is(false)));
 
 		verify(this.placementTestCrudServiceMock, times(1)).findPlacementTestByID(Mockito.any(String.class));
 		verify(this.labelProviderMock, times(1)).getLabel(Mockito.any(String.class));
@@ -242,14 +242,14 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		*/
 
 		this.mockMvc.perform(post(this.testedClassURI + PlacementTestControllerUrlConstants.SOLVED_PLACEMENT_TEST)
-				.contentType("application/json;charset=utf-8")
-				.content(objectToJsonBytes(getBasicSolvedPlacementTestJson(samplePlacementTest)))
-		)
-				.andExpect( status().isOk() )
-				.andExpect( content().contentType("application/json;charset=utf-8") )
-				.andExpect(jsonPath("$.result", closeTo(0, 0)))
-				.andExpect(jsonPath("$.message", is(returnMessage)))
-				.andExpect(jsonPath("$.success", is(true)));
+			.contentType("application/json;charset=utf-8")
+			.content(objectToJsonBytes(getBasicSolvedPlacementTestJson(samplePlacementTest)))
+			)
+			.andExpect( status().isOk() )
+			.andExpect( content().contentType("application/json;charset=utf-8") )
+			.andExpect(jsonPath("$.result", closeTo(0, 0)))
+			.andExpect(jsonPath("$.message", is(returnMessage)))
+			.andExpect(jsonPath("$.success", is(true)));
 
 		verify(this.currentUserServiceMock, times(2)).getCurrentUser(); // it's 2 times because of CourseMembershipRequiredVoter
 		verify(this.placementTestCrudServiceMock, times(1)).findPlacementTestByID(Mockito.any(String.class));

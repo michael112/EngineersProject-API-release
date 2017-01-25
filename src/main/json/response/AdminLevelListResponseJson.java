@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.admin.level.CourseLevelListJson;
+import main.json.admin.level.view.CourseLevelListJson;
 
 public class AdminLevelListResponseJson extends AbstractResponseJson {
 

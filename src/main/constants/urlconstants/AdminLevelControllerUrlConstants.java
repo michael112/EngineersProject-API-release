@@ -8,12 +8,10 @@ public class AdminLevelControllerUrlConstants {
 
     public static final String ADD_LEVEL = "";
 
-    public static final String LEVEL_INFO = "{courseLevelName}";
+    public static final String LEVEL_INFO = "";
 
-    public static final String LEVEL_SWAP = "/swap";
+    public static final String EDIT_LEVEL = "";
 
-    public static final String EDIT_LEVEL = "{courseLevelName}";
-
-    public static final String REMOVE_LEVEL = "{courseLevelName}";
+    public static final String REMOVE_LEVEL = "";
 
 }

@@ -121,7 +121,7 @@ public class SearchServiceTest extends AbstractRuntimeTest {
     private Set<CourseSignupJson> getTestSeekCoursesExpectedResult() {
         Set<CourseSignupJson> resultSet = new HashSet<>();
         Course course = this.testEnvironment.getCourses().get(0);
-        CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName("en"), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName("en"), course.getPrice());
+        CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName("en"), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName("en"), course.getPrice());
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }

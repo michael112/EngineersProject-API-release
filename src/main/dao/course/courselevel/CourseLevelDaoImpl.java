@@ -2,6 +2,9 @@ package main.dao.course.courselevel;
 
 import java.util.Set;
 
+import org.hibernate.Criteria;
+import org.hibernate.criterion.Restrictions;
+
 import org.springframework.stereotype.Repository;
 
 import main.dao.AbstractDao;
@@ -12,6 +15,12 @@ public class CourseLevelDaoImpl extends AbstractDao<String, CourseLevel> impleme
 
     public CourseLevel findCourseLevelByID(String id) {
         return findByID(id);
+    }
+
+    public CourseLevel findCourseLevelByName(String name) {
+        Criteria crit = createEntityCriteria();
+        crit.add(Restrictions.eq("name", name));
+        return (CourseLevel) crit.uniqueResult();
     }
 
     public Set<CourseLevel> findAllCourseLevels() {

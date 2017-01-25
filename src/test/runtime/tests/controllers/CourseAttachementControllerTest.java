@@ -25,6 +25,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import main.util.currentUser.CurrentUserService;
 
+import main.util.locale.LocaleCodeProvider;
 import main.util.labels.LabelProvider;
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
@@ -57,6 +58,8 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
     @Autowired
     private WebApplicationContext webApplicationContext;
 
+    @Autowired
+    private LocaleCodeProvider localeCodeProviderMock;
     @Autowired
     private LabelProvider labelProviderMock;
     @Autowired
@@ -93,6 +96,7 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         this.testEnvironment = TestEnvironmentBuilder.build();
         setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
         initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+        initInsideMocks(this.localeCodeProviderMock);
         this.dateParser = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 
@@ -130,7 +134,8 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.attachements.courseID", is(sampleCourse.getId())))
                 .andExpect(jsonPath("$.attachements.language.id", is(sampleCourse.getLanguage().getId())))
                 .andExpect(jsonPath("$.attachements.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
-                .andExpect(jsonPath("$.attachements.courseLevel", is(sampleCourse.getCourseLevel().getName())))
+                .andExpect(jsonPath("$.attachements.courseLevel.courseLevelID", is(sampleCourse.getCourseLevel().getId())))
+                .andExpect(jsonPath("$.attachements.courseLevel.name", is(sampleCourse.getCourseLevel().getName())))
                 .andExpect(jsonPath("$.attachements.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
                 .andExpect(jsonPath("$.attachements.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
                 .andExpect(jsonPath("$.attachements.teachers", hasSize(1)))

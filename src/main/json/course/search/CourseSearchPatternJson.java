@@ -37,7 +37,7 @@ public class CourseSearchPatternJson {
     @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.search.courselevelname.invalid")
     @Getter
     @Setter
-    private String courseLevel; // id == name
+    private String courseLevel; // name
 
     @Getter
     @Setter

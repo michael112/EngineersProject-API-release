@@ -1,4 +1,4 @@
-package main.json.admin.level;
+package main.json.admin.level.view;
 
 import java.util.Set;
 import java.util.TreeSet;

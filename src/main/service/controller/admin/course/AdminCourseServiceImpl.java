@@ -84,7 +84,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
 
     public CourseInfoJson getCourseInfo(Course course) {
         try {
-            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.print(course.getCourseActivity().getFrom()), this.df.print(course.getCourseActivity().getTo()), course.getMaxStudents());
+            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.print(course.getCourseActivity().getFrom()), this.df.print(course.getCourseActivity().getTo()), course.getMaxStudents());
             for( CourseDay courseDay : course.getCourseDays() ) {
                 result.addCourseDay(courseDay.getId(), courseDay.getDay().getDay(), courseDay.getHourFrom().getHour(), courseDay.getHourFrom().getMinute(), courseDay.getHourTo().getHour(), courseDay.getHourTo().getMinute());
             }
@@ -103,7 +103,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             Course course = new Course();
             course.setLanguage(this.languageCrudService.findLanguageByID(newCourseJson.getLanguageID()));
             course.setCourseType(this.courseTypeCrudService.findCourseTypeByID(newCourseJson.getCourseTypeID()));
-            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(newCourseJson.getCourseLevelID()));
+            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByName(newCourseJson.getCourseLevelName()));
             course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(newCourseJson.getCourseActivity().getDateFrom()), this.df.parseLocalDate(newCourseJson.getCourseActivity().getDateTo())));
             for( CourseDayJson courseDayJson : newCourseJson.getCourseDays() ) {
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
@@ -127,7 +127,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
         try {
             course.setLanguage(this.languageCrudService.findLanguageByID(editedCourse.getLanguageID()));
             course.setCourseType(this.courseTypeCrudService.findCourseTypeByID(editedCourse.getCourseTypeID()));
-            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(editedCourse.getCourseLevelID()));
+            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByName(editedCourse.getCourseLevelName()));
             course.setCourseActivity(new CourseActivity(this.df.parseLocalDate(editedCourse.getCourseActivity().getDateFrom()), this.df.parseLocalDate(editedCourse.getCourseActivity().getDateTo())));
             // remove old course days
             Iterator<CourseDay> courseDayIterator = course.getCourseDays().iterator();
@@ -183,7 +183,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
 
     public void editCourseLevel(Course course, EditCourseLevelJson editedCourseLevel) {
         try {
-            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByID(editedCourseLevel.getCourseLevelID()));
+            course.setCourseLevel(this.courseLevelCrudService.findCourseLevelByName(editedCourseLevel.getCourseLevelName()));
             this.courseCrudService.updateCourse(course);
         }
         catch( NullPointerException ex ) {

@@ -37,7 +37,7 @@ public abstract class AbstractCourseJson {
     @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.courselevelname.invalid")
     @Getter
     @Setter
-    private String courseLevelID;
+    private String courseLevelName;
 
     @Valid
     @Getter
@@ -77,11 +77,11 @@ public abstract class AbstractCourseJson {
         this.teachers = new HashSet<>();
     }
 
-    public AbstractCourseJson(String languageID, String courseTypeID, String courseLevelID, CourseActivityJson courseActivity, int maxStudents, double price) {
+    public AbstractCourseJson(String languageID, String courseTypeID, String courseLevelName, CourseActivityJson courseActivity, int maxStudents, double price) {
         this();
         this.setLanguageID(languageID);
         this.setCourseTypeID(courseTypeID);
-        this.setCourseLevelID(courseLevelID);
+        this.setCourseLevelName(courseLevelName);
         this.setCourseActivity(courseActivity);
         this.setMaxStudents(maxStudents);
         this.setPrice(price);

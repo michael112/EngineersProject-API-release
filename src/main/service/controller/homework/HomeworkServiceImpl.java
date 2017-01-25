@@ -65,7 +65,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     private DateTimeFormatter dateFormat;
 
     public HomeworkListTeacherJson getHomeworkListTeacher(Course course) {
-        HomeworkListTeacherJson result = new HomeworkListTeacherJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        HomeworkListTeacherJson result = new HomeworkListTeacherJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
@@ -76,7 +76,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     }
 
     public HomeworkListStudentJson getHomeworkListStudent(Course course, User student) {
-        HomeworkListStudentJson result = new HomeworkListStudentJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        HomeworkListStudentJson result = new HomeworkListStudentJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
@@ -92,7 +92,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     }
 
     public HomeworkInfoTeacherJson getHomeworkInfoTeacher(Homework homework) {
-        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : homework.getCourse().getTeachers() ) {
             courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
@@ -107,7 +107,7 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     }
 
     public HomeworkInfoStudentJson getHomeworkInfoStudent(Homework homework, User student) {
-        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
         for( User teacher : homework.getCourse().getTeachers() ) {
             courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }

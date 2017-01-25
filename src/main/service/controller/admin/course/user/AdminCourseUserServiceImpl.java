@@ -34,7 +34,7 @@ public class AdminCourseUserServiceImpl extends AbstractService implements Admin
                 CourseUserJson studentJson = new CourseUserJson(cm.getUser().getId(), cm.getUser().getFullName());
                 if( cm.getMovedFrom() != null ) {
                     Course movedFrom = cm.getMovedFrom();
-                    CourseJson movedFromJson = new CourseJson(movedFrom.getId(), movedFrom.getLanguage().getId(), movedFrom.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), movedFrom.getCourseLevel().getName(), movedFrom.getCourseType().getId(), movedFrom.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+                    CourseJson movedFromJson = new CourseJson(movedFrom.getId(), movedFrom.getLanguage().getId(), movedFrom.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), movedFrom.getCourseLevel().getId(), movedFrom.getCourseLevel().getName(), movedFrom.getCourseType().getId(), movedFrom.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
                     for( User teacher : movedFrom.getTeachers() ) {
                         movedFromJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
                     }

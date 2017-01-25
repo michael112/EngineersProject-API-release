@@ -71,7 +71,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         ReceiverMessageJson messageJson;
         for( Message message : user.getMessages() ) {
             if( message.getCourse() != null ) {
-                messageJson = new ReceiverMessageJson(message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
+                messageJson = new ReceiverMessageJson(message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getId(), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
             }
             else messageJson = new ReceiverMessageJson(message.getTitle(), message.getContent(), message.isAnnouncement());
             for( User receiver : message.getReceivers() ) {
@@ -87,7 +87,7 @@ public class MessageServiceImpl extends AbstractService implements MessageServic
         SenderMessageJson messageJson;
         for( Message message : user.getMyMessages() ) {
             if( message.getCourse() != null ) {
-                messageJson = new SenderMessageJson(new CourseUserJson(message.getSender().getId(), message.getSender().getFullName()), message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
+                messageJson = new SenderMessageJson(new CourseUserJson(message.getSender().getId(), message.getSender().getFullName()), message.getTitle(), message.getContent(), message.isAnnouncement(), new CourseJson(message.getCourse().getId(), message.getCourse().getLanguage().getId(), message.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), message.getCourse().getCourseLevel().getId(), message.getCourse().getCourseLevel().getName(), message.getCourse().getCourseType().getId(), message.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
             }
             else messageJson = new SenderMessageJson(new CourseUserJson(message.getSender().getId(), message.getSender().getFullName()), message.getTitle(), message.getContent(), message.isAnnouncement());
             messageList.addMessage(messageJson);

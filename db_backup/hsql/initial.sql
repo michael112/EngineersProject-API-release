@@ -26,8 +26,9 @@ CREATE TABLE coursedays (
 )
 
 CREATE TABLE courselevels (
+  courseLevelID varchar(36) NOT NULL,
   name varchar(2) NOT NULL,
-  PRIMARY KEY (name)
+  PRIMARY KEY (courseLevelID)
 )
 
 CREATE TABLE coursememberships (
@@ -43,7 +44,7 @@ CREATE TABLE coursememberships (
 CREATE TABLE courses (
   courseID varchar(36) NOT NULL,
   languageID varchar(5) NOT NULL,
-  courseLevelName varchar(2) NOT NULL,
+  courseLevelID varchar(36) NOT NULL,
   courseTypeID varchar(36) NOT NULL,
   maxStudents integer DEFAULT NULL,
   price double DEFAULT NULL,

@@ -14,22 +14,20 @@ import javax.persistence.Access;
 import javax.persistence.AccessType;
 
 import lombok.Getter;
+import lombok.Setter;
 
-import main.model.abstracts.AbstractSinglePKModel;
+import main.model.abstracts.AbstractUuidModel;
 
 @Entity
 @Table(name="courseLevels")
 @Access(AccessType.FIELD)
-@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "name")) })
-public class CourseLevel extends AbstractSinglePKModel<String> implements Comparable<CourseLevel> {
+@AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseLevelID")) })
+public class CourseLevel extends AbstractUuidModel implements Comparable<CourseLevel> {
 
-	public String getName() {
-		return this.getId();
-	}
-
-	public void setName(String name) {
-		this.setId(name);
-	}
+	@Column(name="name", unique=true, nullable=false)
+	@Getter
+	@Setter
+	private String name;
 
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseLevel")

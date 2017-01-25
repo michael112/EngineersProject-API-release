@@ -96,9 +96,9 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
             for( CourseMembership courseMembership : user.getCoursesAsStudent() ) {
                 Course courseAsStudent = courseMembership.getCourse();
                 CourseStudentJson courseStudentJson;
-                CourseJson courseJson = new CourseJson(courseAsStudent.getId(), courseAsStudent.getLanguage().getId(), courseAsStudent.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseAsStudent.getCourseLevel().getName(), courseAsStudent.getCourseType().getId(), courseAsStudent.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+                CourseJson courseJson = new CourseJson(courseAsStudent.getId(), courseAsStudent.getLanguage().getId(), courseAsStudent.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseAsStudent.getCourseLevel().getId(), courseAsStudent.getCourseLevel().getName(), courseAsStudent.getCourseType().getId(), courseAsStudent.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
                 if( courseMembership.getMovedFrom() != null ) {
-                    CourseJson movedFromJson = new CourseJson(courseMembership.getMovedFrom().getId(), courseMembership.getMovedFrom().getLanguage().getId(), courseMembership.getMovedFrom().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseMembership.getMovedFrom().getCourseLevel().getName(), courseMembership.getMovedFrom().getCourseType().getId(), courseMembership.getMovedFrom().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+                    CourseJson movedFromJson = new CourseJson(courseMembership.getMovedFrom().getId(), courseMembership.getMovedFrom().getLanguage().getId(), courseMembership.getMovedFrom().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseMembership.getMovedFrom().getCourseLevel().getId(), courseMembership.getMovedFrom().getCourseLevel().getName(), courseMembership.getMovedFrom().getCourseType().getId(), courseMembership.getMovedFrom().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
                     courseStudentJson = new CourseStudentJson(courseJson, movedFromJson, courseMembership.isActive(), courseMembership.isResignation());
                 }
                 else {
@@ -110,7 +110,7 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
                 userJson.addCourseAsStudent(courseStudentJson);
             }
             for( Course courseAsTeacher : user.getCoursesAsTeacher() ) {
-                CourseTeacherJson courseTeacherJson = new CourseTeacherJson(courseAsTeacher.getId(), courseAsTeacher.getLanguage().getId(), courseAsTeacher.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseAsTeacher.getCourseLevel().getName(), courseAsTeacher.getCourseType().getId(), courseAsTeacher.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+                CourseTeacherJson courseTeacherJson = new CourseTeacherJson(courseAsTeacher.getId(), courseAsTeacher.getLanguage().getId(), courseAsTeacher.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), courseAsTeacher.getCourseLevel().getId(), courseAsTeacher.getCourseLevel().getName(), courseAsTeacher.getCourseType().getId(), courseAsTeacher.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
                 for( User teacher : courseAsTeacher.getTeachers() ) {
                     courseTeacherJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
                 }

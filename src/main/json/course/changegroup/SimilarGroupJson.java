@@ -4,6 +4,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 import main.json.course.language.LanguageJson;
+import main.json.course.CourseLevelJson;
+import main.json.course.CourseTypeJson;
 import main.json.course.CourseUserJson;
 
 import lombok.Getter;
@@ -20,10 +22,10 @@ public class SimilarGroupJson {
     private LanguageJson language;
 
     @Getter
-    private String courseLevel;
+    private CourseLevelJson courseLevel;
 
     @Getter
-    private String courseType;
+    private CourseTypeJson courseType;
 
     @Getter
     private Set<DayOfCourseJson> daysOfCourse;
@@ -37,11 +39,11 @@ public class SimilarGroupJson {
     @Getter
     private Double price;
 
-    public SimilarGroupJson(String courseID, String languageID, String languageName, String courseLevel, String courseType, Integer peopleInCourse, Double price) {
+    public SimilarGroupJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, Integer peopleInCourse, Double price) {
         this.courseID = courseID;
         this.language = new LanguageJson(languageID, languageName);
-        this.courseLevel = courseLevel;
-        this.courseType = courseType;
+        this.courseLevel = new CourseLevelJson(courseLevelID, courseLevelName);
+        this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
         this.daysOfCourse = new HashSet<>();
         this.teachers = new HashSet<>();
         this.peopleInCourse = peopleInCourse;

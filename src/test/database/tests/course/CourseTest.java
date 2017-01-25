@@ -112,6 +112,7 @@ public class CourseTest extends AbstractDbTest {
     public void testUpdateCourseLevel() {
         CourseLevel formerCourseLevel = this.sampleCourse.getCourseLevel();
         CourseLevel newCourseLevel = new CourseLevel("B1");
+        this.courseLevelCrudService.saveCourseLevel(newCourseLevel);
         this.sampleCourse.setCourseLevel(newCourseLevel);
         this.courseCrudService.updateCourse(this.sampleCourse);
 
