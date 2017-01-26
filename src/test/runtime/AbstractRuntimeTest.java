@@ -66,6 +66,7 @@ import test.AbstractTest;
 
 public abstract class AbstractRuntimeTest extends AbstractTest {
 
+	protected final String MULTIPART_BOUNDARY_PREFIX = "--";
 	protected final String MULTIPART_BOUNDARY = "265001916915724";
 	protected final String MULTIPART_LINE_FEED = "\r\n";
 
@@ -120,10 +121,11 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 	}
 
 	protected byte[] buildMultipartContent(MockMultipartFile... files) {
-		byte[] result = (this.MULTIPART_BOUNDARY + this.MULTIPART_LINE_FEED).getBytes();
+		byte[] result = new byte[0];
 		for( MockMultipartFile file : files ) {
-			result = Bytes.concat(result, fileToMultipartContent(file), (this.MULTIPART_BOUNDARY + this.MULTIPART_LINE_FEED).getBytes());
+			result = Bytes.concat(result, (this.MULTIPART_BOUNDARY_PREFIX + this.MULTIPART_BOUNDARY + this.MULTIPART_LINE_FEED).getBytes(), fileToMultipartContent(file));
 		}
+		result = Bytes.concat(result, (this.MULTIPART_BOUNDARY_PREFIX + this.MULTIPART_BOUNDARY + this.MULTIPART_BOUNDARY_PREFIX).getBytes());
 		return result;
 	}
 
