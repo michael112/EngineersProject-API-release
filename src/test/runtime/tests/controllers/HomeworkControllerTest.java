@@ -549,7 +549,7 @@ public class HomeworkControllerTest extends AbstractControllerTest {
         String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleHomework.getId() + "/add/attachement";
 
         this.mockMvc.perform(put(URL)
-            .content(fileToUpload.getBytes())
+            .content(buildMultipartContent(fileToUpload))
             .contentType(buildMediaType())
             )
             .andExpect(status().isOk())

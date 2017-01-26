@@ -11,6 +11,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 
+import com.google.common.primitives.Bytes;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -23,6 +25,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -62,6 +65,9 @@ import main.json.placementtests.SolvedPlacementSentenceJson;
 import test.AbstractTest;
 
 public abstract class AbstractRuntimeTest extends AbstractTest {
+
+	protected final String MULTIPART_BOUNDARY = "265001916915724";
+	protected final String MULTIPART_LINE_FEED = "\r\n";
 
 	public void initInsideMocks(CourseMembershipValidator courseMembershipValidatorMock, LocaleResolver localeResolverMock) {
 		Mockito.reset(courseMembershipValidatorMock);
@@ -109,8 +115,34 @@ public abstract class AbstractRuntimeTest extends AbstractTest {
 
 	protected MediaType buildMediaType() {
 		HashMap<String, String> contentTypeParams = new HashMap<String, String>();
-		contentTypeParams.put("boundary", "265001916915724");
+		contentTypeParams.put("boundary", this.MULTIPART_BOUNDARY);
 		return new MediaType("multipart", "form-data", contentTypeParams);
+	}
+
+	protected byte[] buildMultipartContent(MockMultipartFile... files) {
+		byte[] result = (this.MULTIPART_BOUNDARY + this.MULTIPART_LINE_FEED).getBytes();
+		for( MockMultipartFile file : files ) {
+			result = Bytes.concat(result, fileToMultipartContent(file), (this.MULTIPART_BOUNDARY + this.MULTIPART_LINE_FEED).getBytes());
+		}
+		return result;
+	}
+
+	private byte[] fileToMultipartContent(MockMultipartFile file) {
+		try {
+			byte[] contentDisposition;
+			if( file.getOriginalFilename().equals("") ) {
+				contentDisposition = ("Content-Disposition: form-data; name=\"" + file.getName() + "\"" + this.MULTIPART_LINE_FEED).getBytes();
+			}
+			else {
+				contentDisposition = ("Content-Disposition: form-data; name=\"" + file.getName() + "\"; filename=\"" + file.getOriginalFilename() + "\"" + this.MULTIPART_LINE_FEED).getBytes();
+			}
+			byte[] contentType = ("Content-Type: " + file.getContentType() + this.MULTIPART_LINE_FEED).getBytes();
+			byte[] result = Bytes.concat(contentDisposition, contentType, file.getBytes(), (this.MULTIPART_LINE_FEED).getBytes());
+			return result;
+		}
+		catch( java.io.IOException | NullPointerException ex ) {
+			return new byte[0];
+		}
 	}
 
 	protected TokenJson getBasicTokenJson() {
