@@ -28,6 +28,8 @@ public interface UserService {
 
     void addPhone(User currentUser, PhoneJson newPhone);
 
-    void removePhone(User currentUser, PhoneJson phoneToRemove);
+    void removePhoneById(User currentUser, String idOfPhoneToRemove);
+
+    void removePhoneByNumber(User currentUser, String numberOfPhoneToRemove);
 
 }

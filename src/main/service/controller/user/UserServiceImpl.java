@@ -111,6 +111,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
     }
 
     public void editPhoneList(User currentUser, PhoneJsonSet newPhone) {
+        currentUser.getPhone().clear();
         for( PhoneJson phoneJson : newPhone.getPhone() ) {
             currentUser.addPhone(phoneJson.toObject());
         }
@@ -122,9 +123,26 @@ public class UserServiceImpl extends AbstractService implements UserService {
         this.userCrudService.updateUser(currentUser);
     }
 
-    public void removePhone(User currentUser, PhoneJson phoneToRemove) {
-        currentUser.removePhone(currentUser.getPhoneByNumber(phoneToRemove.getPhoneNumber()));
-        this.userCrudService.updateUser(currentUser);
+    public void removePhoneById(User currentUser, String idOfPhoneToRemove) {
+        try {
+            Phone phoneToRemove = currentUser.getPhoneById(idOfPhoneToRemove);
+            currentUser.removePhone(phoneToRemove);
+            this.userCrudService.updateUser(currentUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void removePhoneByNumber(User currentUser, String numberOfPhoneToRemove) {
+        try {
+            Phone phoneToRemove = currentUser.getPhoneByNumber(numberOfPhoneToRemove);
+            currentUser.removePhone(phoneToRemove);
+            this.userCrudService.updateUser(currentUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     private String getEmailMessage(User currentUser, String newEmail) {

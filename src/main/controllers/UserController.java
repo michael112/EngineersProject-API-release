@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -192,10 +194,15 @@ public class UserController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> removePhone(@Valid @RequestBody PhoneJson phoneToRemove) {
+    public ResponseEntity<? extends AbstractResponseJson> removePhone(@PathVariable("phoneIdentifier") String phoneIdentifier, @RequestParam(name="identifierIsPhoneNumber", defaultValue="true") boolean identifierIsPhoneNumber) {
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
-        this.userService.removePhone(currentUser, phoneToRemove);
+        if( identifierIsPhoneNumber ) {
+            this.userService.removePhoneByNumber(currentUser, phoneIdentifier);
+        }
+        else {
+            this.userService.removePhoneById(currentUser, phoneIdentifier);
+        }
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("user.removephone.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

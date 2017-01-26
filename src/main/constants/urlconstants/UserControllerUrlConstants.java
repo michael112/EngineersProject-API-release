@@ -26,6 +26,6 @@ public class UserControllerUrlConstants {
 
     public static final String EDIT_USER_ADD_PHONE = "/add/phone";
 
-    public static final String EDIT_USER_REMOVE_PHONE = "/remove/phone";
+    public static final String EDIT_USER_REMOVE_PHONE = "/remove/phone/{phoneIdentifier}";
 
 }
