@@ -48,7 +48,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 	}
 
 	public Set<CourseUserJson> seekUsers(UserSearchPatternJson searchPattern) {
-		Set<User> users = this.userCrudService.findUsersByQuery("from User u where lower(concat(u.firstName, ' ', u.lastName)) like lower('%" + searchPattern.getPattern() + "%')");
+		Set<User> users = this.userCrudService.findUsersByQuery("from User u where ( ( lower(concat(u.firstName, ' ', u.lastName)) like lower('%" + searchPattern.getPattern() + "%') ) or ( lower(concat(u.lastName, ' ', u.firstName)) like lower('%" + searchPattern.getPattern() + "%') ) )");
 		if( ( users != null ) && ( users.size() > 0 ) ) {
 			Set<CourseUserJson> result = new HashSet<>();
 			for( User user : users ) {

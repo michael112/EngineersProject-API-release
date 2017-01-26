@@ -189,9 +189,10 @@ public class UserServiceImpl extends AbstractService implements UserService {
     }
 
     @Autowired
-    public UserServiceImpl(LocaleCodeProvider localeCodeProvider, LabelProvider labelProvider, MailSender mailSender, DomainURIProvider domainURIProvider, UserCrudService userCrudService, UserRoleCrudService userRoleCrudService, PasswordEncoder passwordEncoder) {
+    public UserServiceImpl(LocaleCodeProvider localeCodeProvider, LabelProvider labelProvider, PasswordEncoder passwordEncoder, MailSender mailSender, DomainURIProvider domainURIProvider, UserCrudService userCrudService, UserRoleCrudService userRoleCrudService) {
         super(localeCodeProvider);
         this.labelProvider = labelProvider;
+        this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.domainURIProvider = domainURIProvider;
         this.userCrudService = userCrudService;

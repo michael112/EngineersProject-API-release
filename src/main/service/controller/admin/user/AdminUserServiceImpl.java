@@ -6,6 +6,8 @@ import org.springframework.stereotype.Service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.transaction.annotation.Transactional;
 
 import main.util.locale.LocaleCodeProvider;
@@ -48,6 +50,8 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
     private UserCrudService userCrudService;
 
     private LabelProvider labelProvider;
+
+    private PasswordEncoder passwordEncoder;
 
     private MailSender mailSender;
 
@@ -180,9 +184,7 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
             user.setEmail(editedAccount.getEMail());
             user.setAddress(editedAccount.getAddress());
             // erasing phone list
-            for( Phone phone : user.getPhone() ) {
-                user.removePhone(phone);
-            }
+            user.getPhone().clear();
             // adding new phone list
             for( PhoneJson phoneJson : editedAccount.getPhone() ) {
                 user.addPhone(phoneJson.toObject());
@@ -282,15 +284,17 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
     }
 
     private void generatePasswordAndSendMail(User user) {
-        user.setPassword(this.randomPasswordGenerator.generateRandomPassword());
-        String message = this.labelProvider.getLabel("password.reset.message.part1") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part2") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part3") + user.getPassword() + this.labelProvider.getLabel("password.reset.message.part4");
+        String tempPassword = this.randomPasswordGenerator.generateRandomPassword();
+        user.setPassword(this.passwordEncoder.encode(tempPassword));
+        String message = this.labelProvider.getLabel("password.reset.message.part1") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part2") + user.getUsername() + this.labelProvider.getLabel("password.reset.message.part3") + tempPassword + this.labelProvider.getLabel("password.reset.message.part4");
         this.mailSender.sendMail(user.getEmail(), this.labelProvider.getLabel("password.reset.title"), message);
     }
 
     @Autowired
-    public AdminUserServiceImpl(LocaleCodeProvider localeCodeProvider, LabelProvider labelProvider, MailSender mailSender, RandomPasswordGenerator randomPasswordGenerator, UserCrudService userCrudService) {
+    public AdminUserServiceImpl(LocaleCodeProvider localeCodeProvider, LabelProvider labelProvider, PasswordEncoder passwordEncoder, MailSender mailSender, RandomPasswordGenerator randomPasswordGenerator, UserCrudService userCrudService) {
         super(localeCodeProvider);
         this.labelProvider = labelProvider;
+        this.passwordEncoder = passwordEncoder;
         this.mailSender = mailSender;
         this.randomPasswordGenerator = randomPasswordGenerator;
         this.userCrudService = userCrudService;
