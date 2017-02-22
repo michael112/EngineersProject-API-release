@@ -7,7 +7,6 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 
 import main.json.token.TokenJson;
-import main.json.menu.AbstractMenuJson;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class LoginResponseJson extends AbstractResponseJson {
@@ -16,16 +15,17 @@ public class LoginResponseJson extends AbstractResponseJson {
 	private TokenJson token;
 
 	@Getter
-	private AbstractMenuJson menu;
+	private String role;
 
-	public LoginResponseJson(String message, HttpStatus status, AbstractMenuJson menu) {
+	public LoginResponseJson(String message, HttpStatus status) {
 		super(message, status);
-		this.menu = menu;
+		this.role = "GUEST";
 	}
 
-	public LoginResponseJson(String message, HttpStatus status, TokenJson token, AbstractMenuJson menu) {
-		this(message, status, menu);
+	public LoginResponseJson(String message, HttpStatus status, TokenJson token, String role) {
+		this(message, status);
 		this.token = token;
+		this.role = role;
 	}
 
 }

@@ -6,9 +6,6 @@ import javax.annotation.PostConstruct;
 import javax.annotation.security.RolesAllowed;
 import javax.annotation.security.PermitAll;
 
-import main.json.menu.AdminMenuJson;
-import main.json.menu.GuestMenuJson;
-import main.json.menu.UserMenuJson;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -22,8 +19,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
-
-import org.springframework.util.Assert;
 
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 import main.constants.urlconstants.LoginControllerUrlConstants;
@@ -41,7 +36,6 @@ import main.json.token.TokenJson;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.LoginResponseJson;
-import main.json.menu.AbstractMenuJson;
 
 @RequestMapping(value = LoginControllerUrlConstants.CLASS_URL)
 @RestController
@@ -76,44 +70,32 @@ public class LoginController {
         else {
             String messageStr = this.labelProvider.getLabel("login.success");
             HttpStatus responseStatus = HttpStatus.OK;
-            AbstractMenuJson menu = null;
             User user = this.userCrudService.findUserByUsername(username);
-            Assert.notNull(user);
             String userRole = this.getUserRole(user);
-            Assert.notNull(userRole);
-            switch(userRole) {
-                case "ROLE_USER":
-                    menu = new UserMenuJson();
-                    break;
-                case "ROLE_ADMIN":
-                    menu = new AdminMenuJson();
-                    break;
-            }
-
-            return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, token, menu), responseStatus);
+            return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, token, userRole), responseStatus);
         }
     }
 
     private ResponseEntity<? extends AbstractResponseJson> failedLogin() {
         String messageStr = this.labelProvider.getLabel("login.invalid");
         HttpStatus responseStatus = HttpStatus.UNAUTHORIZED;
-        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, new GuestMenuJson()), responseStatus);
+        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @SuppressWarnings("unchecked")
     private String getUserRole(User user) {
         final String prefix = "ROLE_";
-        final String ADMIN = prefix + "ADMIN";
-        final String USER = prefix + "USER";
+        final String ADMIN = "ADMIN";
+        final String USER = "USER";
         String userRole = null;
         Collection<? extends GrantedAuthority> authorities = this.roleHierarchy.getReachableGrantedAuthorities(this.userDetailsService.getGrantedAuthorities(user));
         for( GrantedAuthority authority : authorities ) {
-            if( authority.getAuthority().equals(USER) ) {
+            if( authority.getAuthority().equals(prefix + USER) ) {
                 if( userRole == null ) {
                     userRole = USER;
                 }
             }
-            if( authority.getAuthority().equals(ADMIN) ) {
+            if( authority.getAuthority().equals(prefix + ADMIN) ) {
                 return ADMIN;
             }
         }
@@ -126,8 +108,7 @@ public class LoginController {
         this.tokenProvider.deactivateToken(authorizationHeader);
         String messageStr = this.labelProvider.getLabel("logout.success");
         HttpStatus responseStatus = HttpStatus.OK;
-        AbstractMenuJson menu = new GuestMenuJson();
-        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus, menu), responseStatus);
+        return new ResponseEntity<LoginResponseJson>(new LoginResponseJson(messageStr, responseStatus), responseStatus);
     }
 
 }
