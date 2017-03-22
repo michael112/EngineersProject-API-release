@@ -485,7 +485,7 @@ public class UserControllerTest extends AbstractControllerTest {
         when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
         doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
 
-        this.mockMvc.perform(delete(this.testedClassURI + UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE)
+        this.mockMvc.perform(delete(this.testedClassURI + "/remove/phone/" + phoneToRemove.getId())
             .contentType("application/json;charset=utf-8")
             .content(objectToJsonBytes(new PhoneJson(phoneToRemove)))
             )

@@ -18,6 +18,8 @@ public class AdminUserControllerUrlConstants {
 
     public static final String ACCOUNT_INFO_EMAIL = "/{userID}/email";
 
+    public static final String ACCOUNT_INFO_PHONE_LIST = "/{userID}/phone";
+
     public static final String ACCOUNT_INFO_PHONE = "/{userID}/phone/{phoneID}";
 
     public static final String ACCOUNT_INFO_ADDRESS = "/{userID}/address";
@@ -31,6 +33,10 @@ public class AdminUserControllerUrlConstants {
     public static final String EDIT_ACCOUNT_EMAIL = "/{userID}/email";
 
     public static final String EDIT_ACCOUNT_PHONE = "/{userID}/phone/{phoneID}";
+
+    public static final String EDIT_ACCOUNT_ADD_PHONE = "/{userID}/phone";
+
+    public static final String EDIT_ACCOUNT_REMOVE_PHONE = "/{userID}/phone/{phoneID}";
 
     public static final String EDIT_ACCOUNT_ADDRESS = "/{userID}/address";
 

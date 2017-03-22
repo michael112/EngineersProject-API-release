@@ -242,6 +242,38 @@ public class AdminUserServiceImpl extends AbstractService implements AdminUserSe
         }
     }
 
+    public void addPhone(User currentUser, PhoneJson newPhone) {
+        try {
+            currentUser.addPhone(newPhone.toObject());
+            this.userCrudService.updateUser(currentUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void removePhoneById(User currentUser, String idOfPhoneToRemove) {
+        try {
+            Phone phoneToRemove = currentUser.getPhoneById(idOfPhoneToRemove);
+            currentUser.removePhone(phoneToRemove);
+            this.userCrudService.updateUser(currentUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public void removePhoneByNumber(User currentUser, String numberOfPhoneToRemove) {
+        try {
+            Phone phoneToRemove = currentUser.getPhoneByNumber(numberOfPhoneToRemove);
+            currentUser.removePhone(phoneToRemove);
+            this.userCrudService.updateUser(currentUser);
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
     public void editAddress(User user, Address address) {
         try {
             user.setAddress(address);

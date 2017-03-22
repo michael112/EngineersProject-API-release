@@ -41,6 +41,12 @@ public interface AdminUserService {
 
     void editPhone(User user, String phoneID, PhoneJson phoneJson);
 
+    void addPhone(User currentUser, PhoneJson newPhone);
+
+    void removePhoneById(User currentUser, String idOfPhoneToRemove);
+
+    void removePhoneByNumber(User currentUser, String numberOfPhoneToRemove);
+
     void editAddress(User user, Address address);
 
     void deactivateAccount(User user);

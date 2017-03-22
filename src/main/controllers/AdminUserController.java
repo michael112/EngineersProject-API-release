@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import main.util.labels.LabelProvider;
 
@@ -42,6 +43,7 @@ import main.json.response.AdminAccountListResponseJson;
 import main.json.response.AdminAccountUsernameInfoResponseJson;
 import main.json.response.AdminAccountNameInfoResponseJson;
 import main.json.response.AdminAccountEmailInfoResponseJson;
+import main.json.response.AdminAccountPhoneListResponseJson;
 import main.json.response.AdminAccountPhoneInfoResponseJson;
 import main.json.response.AdminAccountAddressInfoResponseJson;
 
@@ -141,6 +143,16 @@ public class AdminUserController {
         return new ResponseEntity<AdminAccountEmailInfoResponseJson>(new AdminAccountEmailInfoResponseJson(eMailJson, messageStr, responseStatus), responseStatus);
     }
 
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_PHONE_LIST, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getPhoneList(@PathVariable("userID") String accountID) {
+		User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.info.success");
+        return new ResponseEntity<AdminAccountPhoneListResponseJson>(new AdminAccountPhoneListResponseJson(account.getPhone(), messageStr, responseStatus), responseStatus);
+    }
+
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.ACCOUNT_INFO_PHONE, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPhoneInfo(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID) {
@@ -213,6 +225,33 @@ public class AdminUserController {
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editPhone(account, phoneID, phoneJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADD_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> addPhone(@PathVariable("userID") String accountID, @Valid @RequestBody PhoneJson phoneJson) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        this.adminUserService.addPhone(account, phoneJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> removePhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneIdentifier, @RequestParam(name="identifierIsPhoneNumber", defaultValue="true") boolean identifierIsPhoneNumber) {
+        User account = this.userCrudService.findUserByID(accountID);
+        if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
+        if( identifierIsPhoneNumber ) {
+            this.adminUserService.removePhoneByNumber(account, phoneIdentifier);
+        }
+        else {
+            this.adminUserService.removePhoneById(account, phoneIdentifier);
+		}
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.user.edit.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);

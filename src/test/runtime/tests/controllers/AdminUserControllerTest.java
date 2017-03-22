@@ -323,6 +323,29 @@ public class AdminUserControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testGetPhoneList() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        Phone sampleUserPhone = (Phone) sampleUser.getPhone().toArray()[0];
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleUser.getId() + "/phone")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.phone", hasSize(1)))
+            .andExpect(jsonPath("$.phone[0].phoneType", is(sampleUserPhone.getPhoneType().name())))
+            .andExpect(jsonPath("$.phone[0].phoneNumber", is(sampleUserPhone.getPhoneNumber())))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
     public void testGetPhoneInfo() throws Exception {
         String returnMessage = "";
 
@@ -431,7 +454,7 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
-}
+    }
 
     @Test
     public void testEditEmail() throws Exception {
@@ -475,6 +498,49 @@ public class AdminUserControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testAddPhone() throws Exception {
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+        Phone newPhone = new ArrayList<>(getBasicEditPhoneJson().getPhone()).get(0).toObject();
+        String returnMessage = "";
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleUser.getId() + "/phone")
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(new PhoneJson(newPhone)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testRemovePhone() throws Exception {
+        User sampleUser = this.testEnvironment.getUsers().get(0); // sampleUser1
+
+        Phone phoneToRemove = new ArrayList<>(getBasicEditPhoneJson().getPhone()).get(0).toObject();
+        sampleUser.addPhone(phoneToRemove);
+
+        String returnMessage = "";
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleUser);
+        when( this.labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+        doNothing().when(this.userCrudServiceMock).updateUser(Mockito.any(User.class));
+
+        this.mockMvc.perform(delete(this.testedClassURI + '/' + sampleUser.getId() + "/phone/" + phoneToRemove.getId())
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(new PhoneJson(phoneToRemove)))
+            )
+            .andExpect( status().isOk() )
+            .andExpect( content().contentType("application/json;charset=utf-8") )
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
