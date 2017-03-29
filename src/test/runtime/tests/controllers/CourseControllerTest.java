@@ -331,6 +331,10 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.course.teachers", hasSize(1)))
             .andExpect(jsonPath("$.course.teachers[0].userID", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getId())))
             .andExpect(jsonPath("$.course.teachers[0].name", is(new ArrayList<>(sampleCourse.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.course.courseDays", hasSize(1)))
+            .andExpect(jsonPath("$.course.courseDays[0].day", is(new ArrayList<>(sampleCourse.getCourseDays()).get(0).getDay().getDay())))
+            .andExpect(jsonPath("$.course.courseDays[0].time.hour", is(new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getHour())))
+            .andExpect(jsonPath("$.course.courseDays[0].time.minute", is(new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getMinute())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }

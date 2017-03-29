@@ -33,6 +33,8 @@ import main.json.course.search.CourseSearchPatternJson;
 
 import main.json.user.UserSearchPatternJson;
 
+import main.model.course.CourseDay;
+
 import main.model.course.Course;
 import main.model.user.User;
 
@@ -124,6 +126,9 @@ public class SearchServiceTest extends AbstractRuntimeTest {
         CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName("en"), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName("en"), course.getPrice());
         for( User teacher : course.getTeachers() ) {
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        }
+        for( CourseDay cd : course.getCourseDays() ) {
+            result.addCourseDay( new main.json.course.CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute()) );
         }
         resultSet.add(result);
         return resultSet;

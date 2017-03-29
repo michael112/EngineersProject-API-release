@@ -37,6 +37,7 @@ import main.json.course.CourseJson;
 import main.json.course.CourseSignupJson;
 import main.json.course.CourseListJson;
 import main.json.course.CourseUserJson;
+import main.json.course.CourseDayJson;
 import main.json.course.CourseInfoTeacherJson;
 import main.json.course.CourseInfoStudentJson;
 import main.json.course.NextLessonJson;
@@ -147,6 +148,9 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
             CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
             for( User teacher : course.getTeachers() ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            for( CourseDay cd : course.getCourseDays() ) {
+                result.addCourseDay( new CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute()) );
             }
             return result;
         }

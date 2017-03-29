@@ -24,6 +24,7 @@ import main.json.user.UserSearchPatternJson;
 
 import main.model.user.User;
 import main.model.course.Course;
+import main.model.course.CourseDay;
 
 @Service("searchService")
 public class SearchServiceImpl extends AbstractService implements SearchService {
@@ -39,6 +40,9 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
 				for( User teacher : course.getTeachers() ) {
 					courseSignupJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+				}
+				for( CourseDay cd : course.getCourseDays() ) {
+					courseSignupJson.addCourseDay( new main.json.course.CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute()) );
 				}
 				result.add(courseSignupJson);
 			}
