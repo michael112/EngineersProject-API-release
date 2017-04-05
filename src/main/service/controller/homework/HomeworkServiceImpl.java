@@ -65,71 +65,94 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
     private DateTimeFormatter dateFormat;
 
     public HomeworkListTeacherJson getHomeworkListTeacher(Course course) {
-        HomeworkListTeacherJson result = new HomeworkListTeacherJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
-        for( User teacher : course.getTeachers() ) {
-            result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        try {
+            HomeworkListTeacherJson result = new HomeworkListTeacherJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            for( Homework homework : course.getHomeworks() ) {
+                result.addHomework(new HomeworkJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle()));
+            }
+            return result;
         }
-        for( Homework homework : course.getHomeworks() ) {
-            result.addHomework(new HomeworkJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        return result;
     }
 
     public HomeworkListStudentJson getHomeworkListStudent(Course course, User student) {
-        HomeworkListStudentJson result = new HomeworkListStudentJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
-        for( User teacher : course.getTeachers() ) {
-            result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
-        }
-        for( Homework homework : course.getHomeworks() ) {
-            HomeworkGradeJson homeworkGrade = null;
-            if( homework.containsHomeworkSolution(student) ) {
-                HomeworkSolution homeworkSolution = homework.getHomeworkSolution(student);
-                homeworkGrade = new HomeworkGradeJson(homeworkSolution.getGrade().getGrade().getScale().name(), homeworkSolution.getGrade().getGradeValue(), homeworkSolution.getGrade().getGrade().getWeight(), homeworkSolution.getGrade().getGrade().getMaxPoints());
+        try {
+            HomeworkListStudentJson result = new HomeworkListStudentJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
-            result.addHomework(new HomeworkWithGradeJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homeworkGrade));
+            for( Homework homework : course.getHomeworks() ) {
+                HomeworkGradeJson homeworkGrade = null;
+                boolean hasSolution = homework.containsHomeworkSolution(student);
+                if( hasSolution ) {
+                    HomeworkSolution homeworkSolution = homework.getHomeworkSolution(student);
+                    if( homeworkSolution.getGrade() != null ) {
+                        homeworkGrade = new HomeworkGradeJson(homeworkSolution.getGrade().getGrade().getScale().name(), homeworkSolution.getGrade().getGradeValue(), homeworkSolution.getGrade().getGrade().getWeight(), homeworkSolution.getGrade().getGrade().getMaxPoints());
+                    }
+                }
+                result.addHomework(new HomeworkWithGradeJson(homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homeworkGrade, hasSolution));
+            }
+            return result;
         }
-        return result;
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
     }
 
     public HomeworkInfoTeacherJson getHomeworkInfoTeacher(Homework homework) {
-        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
-        for( User teacher : homework.getCourse().getTeachers() ) {
-            courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+        try {
+            CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : homework.getCourse().getTeachers() ) {
+                courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            HomeworkInfoTeacherJson result = new HomeworkInfoTeacherJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
+            for( File attachement : homework.getAttachements() ) {
+                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+            }
+            for( HomeworkSolution solution : homework.getHomeworkSolutions() ) {
+                result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath())));
+            }
+            return result;
         }
-        HomeworkInfoTeacherJson result = new HomeworkInfoTeacherJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
-        for( File attachement : homework.getAttachements() ) {
-            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( HomeworkSolution solution : homework.getHomeworkSolutions() ) {
-            result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath())));
-        }
-        return result;
     }
 
     public HomeworkInfoStudentJson getHomeworkInfoStudent(Homework homework, User student) {
-        CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
-        for( User teacher : homework.getCourse().getTeachers() ) {
-            courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
-        }
-        HomeworkInfoStudentJson result;
-        if( homework.containsHomeworkSolution(student) ) {
-            HomeworkSolution solution = homework.getHomeworkSolution(student);
-            AttachementJson solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath());
-            if( solution.getGrade() != null ) {
-                StudentGrade solutionGrade = solution.getGrade();
-                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson, new HomeworkGradeJson(solutionGrade.getGrade().getScale().name(), solutionGrade.getGradeValue(), solutionGrade.getGrade().getWeight(), solutionGrade.getGrade().getMaxPoints()));
+        try {
+            CourseJson courseJson = new CourseJson(homework.getCourse().getId(), homework.getCourse().getLanguage().getId(), homework.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), homework.getCourse().getCourseLevel().getId(), homework.getCourse().getCourseLevel().getName(), homework.getCourse().getCourseType().getId(), homework.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : homework.getCourse().getTeachers() ) {
+                courseJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            HomeworkInfoStudentJson result;
+            if( homework.containsHomeworkSolution(student) ) {
+                HomeworkSolution solution = homework.getHomeworkSolution(student);
+                AttachementJson solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath());
+                if( solution.getGrade() != null ) {
+                    StudentGrade solutionGrade = solution.getGrade();
+                    result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson, new HomeworkGradeJson(solutionGrade.getGrade().getScale().name(), solutionGrade.getGradeValue(), solutionGrade.getGrade().getWeight(), solutionGrade.getGrade().getMaxPoints()));
+                }
+                else {
+                    result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson);
+                }
             }
             else {
-                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson);
+                result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
             }
+            for( File attachement : homework.getAttachements() ) {
+                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+            }
+            return result;
         }
-        else {
-            result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( File attachement : homework.getAttachements() ) {
-            result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
-        }
-        return result;
     }
 
     public void sendHomeworkSolution(User student, Homework homework, MultipartFile solutionFile) {

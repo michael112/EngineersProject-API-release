@@ -12,9 +12,14 @@ public class HomeworkWithGradeJson extends HomeworkJson {
     @Getter
     private HomeworkGradeJson grade;
 
-    public HomeworkWithGradeJson(String homeworkID, String date, String title, HomeworkGradeJson grade) {
+    @Getter
+    private boolean hasSolution;
+
+    public HomeworkWithGradeJson(String homeworkID, String date, String title, HomeworkGradeJson grade, boolean hasSolution) {
         super(homeworkID, date, title);
         this.grade = grade;
+        this.hasSolution = hasSolution;
     }
 
 }
+ 

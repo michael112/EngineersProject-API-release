@@ -164,6 +164,7 @@ public class HomeworkControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.homeworks.homeworks[0].homeworkID", is(sampleHomework.getId())))
                 .andExpect(jsonPath("$.homeworks.homeworks[0].date", is(this.dateFormat.print(sampleHomework.getDate()))))
                 .andExpect(jsonPath("$.homeworks.homeworks[0].title", is(sampleHomework.getTitle())))
+                .andExpect(jsonPath("$.homeworks.homeworks[0].hasSolution", is(sampleHomework.getHomeworkSolution(sampleUser) != null)))
                 .andExpect(jsonPath("$.homeworks.homeworks[0].grade.scale", is(sampleGrade.getScale().name())))
                 .andExpect(jsonPath("$.homeworks.homeworks[0].grade.weight", is(sampleGrade.getWeight())))
                 .andExpect(jsonPath("$.homeworks.homeworks[0].grade.grade", is(sampleGrade.getGradeForUser(sampleUser).getGradeValue())))
