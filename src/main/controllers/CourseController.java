@@ -40,6 +40,7 @@ import main.json.response.CourseSignupResponseJson;
 import main.json.response.ChangeGroupResponseJson;
 import main.json.response.ResignGroupResponseJson;
 import main.json.response.CourseSearchResultsResponseJson;
+import main.json.response.CourseMembershipTypeResponseJson;
 
 import main.json.course.AbstractCourseInfoJson;
 
@@ -249,5 +250,31 @@ public class CourseController {
         String messageStr = this.labelProvider.getLabel("course.resign.group.confirmation.success");
         HttpStatus responseStatus = HttpStatus.OK;
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired
+    @RequestMapping(value = CourseControllerUrlConstants.COURSE_MEMBERSHIP_TYPE, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getCourseMembershipType(@PathVariable("courseID") String courseID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        boolean isStudent = this.courseMembershipValidator.isStudent( currentUser, course );
+        boolean isTeacher = this.courseMembershipValidator.isTeacher( currentUser, course );
+        if( !( isStudent ^ isTeacher ) ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
+
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("coursemembershiptype.success");
+        String courseMembershipType;
+
+
+        if( isStudent ) courseMembershipType = "STUDENT";
+        else if( isTeacher ) courseMembershipType = "TEACHER";
+        else throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.impossible"));
+
+        return new ResponseEntity<CourseMembershipTypeResponseJson>(new CourseMembershipTypeResponseJson(courseMembershipType, messageStr, responseStatus), responseStatus);
     }
 }

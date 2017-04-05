@@ -467,4 +467,52 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.success", is(true)));
     }
 
+    @Test
+    public void testGetCourseMembershipTypeStudent() throws Exception {
+        String returnMessage = "";
+
+        User sampleUser = this.testEnvironment.getUsers().get(0);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(false);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/coursemembershiptype")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.courseMembershipType", is("STUDENT")));
+    }
+
+    @Test
+    public void testGetCourseMembershipTypeTeacher() throws Exception {
+        String returnMessage = "";
+
+        User sampleTeacher = this.testEnvironment.getUsers().get(2);
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+
+        when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(false);
+        when( courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
+        when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/coursemembershiptype")
+            .contentType("application/json;charset=utf-8")
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)))
+            .andExpect(jsonPath("$.courseMembershipType", is("TEACHER")));
+    }
+
 }

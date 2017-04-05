@@ -22,4 +22,6 @@ public class CourseControllerUrlConstants {
 
     public static final String RESIGNATION_CONFIRM = "/{courseID}/resignation";
 
+    public static final String COURSE_MEMBERSHIP_TYPE = "/{courseID}/coursemembershiptype";
+
 }
