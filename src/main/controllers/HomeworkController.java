@@ -48,10 +48,13 @@ import main.model.course.File;
 
 import main.json.response.HomeworkListResponseJson;
 import main.json.response.HomeworkInfoResponseJson;
+import main.json.response.HomeworkAttachementListResponseJson;
 import main.json.response.DefaultResponseJson;
 
 import main.json.course.homework.list.AbstractHomeworkListJson;
 import main.json.course.homework.info.AbstractHomeworkInfo;
+
+import main.json.course.homework.info.HomeworkAttachementsJson;
 
 import main.json.course.homework.NewHomeworkJson;
 
@@ -145,6 +148,26 @@ public class HomeworkController {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("homework.info.success");
         return new ResponseEntity<HomeworkInfoResponseJson>(new HomeworkInfoResponseJson(homeworkInfo, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
+    @RequestMapping(value = HomeworkControllerUrlConstants.ATTACHEMENT_LIST, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getHomeworkAttachementList(@PathVariable("courseID") String courseID, @PathVariable("homeworkID") String homeworkID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        Homework homework = this.homeworkCrudService.findHomeworkByID(homeworkID);
+        if( homework == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("homework.not.found"));
+
+        HomeworkAttachementsJson attachements = this.homeworkService.getHomeworkAttachementList(homework);
+
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("homework.attachement.list.success");
+        return new ResponseEntity<HomeworkAttachementListResponseJson>(new HomeworkAttachementListResponseJson(attachements, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)

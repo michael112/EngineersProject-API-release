@@ -8,6 +8,8 @@ public class HomeworkControllerUrlConstants {
 
     public static final String HOMEWORK_INFO = "/{homeworkID}";
 
+    public static final String ATTACHEMENT_LIST = "/{homeworkID}/attachements";
+
     public static final String SEND_SOLUTION = "/{homeworkID}/solve";
 
     public static final String ADD_HOMEWORK = "";

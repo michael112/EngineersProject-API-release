@@ -354,6 +354,44 @@ public class HomeworkControllerTest extends AbstractControllerTest {
         }
     }
 
+    @Test
+    public void testGetHomeworkAttachementList() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
+        Homework sampleHomework = new ArrayList<Homework>(sampleCourse.getHomeworks()).get(0);
+        File sampleAttachement = new ArrayList<File>(sampleHomework.getAttachements()).get(0);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(homeworkCrudServiceMock.findHomeworkByID(Mockito.any(String.class))).thenReturn(sampleHomework);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleHomework.getId() + "/attachements";
+
+        try {
+            this.mockMvc.perform(get(URL)
+                .contentType("application/json;charset=utf-8")
+                )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=utf-8"))
+                .andExpect(jsonPath("$.attachements.attachements", hasSize(1)))
+                .andExpect(jsonPath("$.attachements.attachements[0].id", is(sampleAttachement.getId())))
+                .andExpect(jsonPath("$.attachements.attachements[0].name", is(sampleAttachement.getName())))
+                .andExpect(jsonPath("$.attachements.attachements[0].date", is(this.dateFormat.print(sampleAttachement.getDate()))))
+                .andExpect(jsonPath("$.attachements.attachements[0].path", is(sampleAttachement.getPath())))
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+        }
+        catch( NullPointerException ex ) {
+            Assert.fail();
+        }
+    }
+
 	@Test
     public void testSendHomeworkSolution() throws Exception {
         String returnMessage = "";

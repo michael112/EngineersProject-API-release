@@ -32,6 +32,8 @@ import main.json.course.homework.list.HomeworkListStudentJson;
 import main.json.course.homework.info.HomeworkInfoStudentJson;
 import main.json.course.homework.info.HomeworkInfoTeacherJson;
 
+import main.json.course.homework.info.HomeworkAttachementsJson;
+
 import main.json.course.homework.NewHomeworkJson;
 
 import main.json.course.homework.HomeworkWithGradeJson;
@@ -145,6 +147,19 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
             else {
                 result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
             }
+            for( File attachement : homework.getAttachements() ) {
+                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public HomeworkAttachementsJson getHomeworkAttachementList(Homework homework) {
+        try {
+            HomeworkAttachementsJson result = new HomeworkAttachementsJson();
             for( File attachement : homework.getAttachements() ) {
                 result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
             }

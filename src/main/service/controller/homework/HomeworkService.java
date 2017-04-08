@@ -15,6 +15,8 @@ import main.json.course.homework.list.HomeworkListStudentJson;
 import main.json.course.homework.info.HomeworkInfoStudentJson;
 import main.json.course.homework.info.HomeworkInfoTeacherJson;
 
+import main.json.course.homework.info.HomeworkAttachementsJson;
+
 import main.json.course.homework.NewHomeworkJson;
 
 import main.json.course.homework.edit.EditHomeworkTitleJson;
@@ -30,6 +32,8 @@ public interface HomeworkService {
     HomeworkInfoTeacherJson getHomeworkInfoTeacher(Homework homework);
 
     HomeworkInfoStudentJson getHomeworkInfoStudent(Homework homework, User student);
+
+    HomeworkAttachementsJson getHomeworkAttachementList(Homework homework);
 
     void sendHomeworkSolution(User student, Homework homework, MultipartFile solutionFile);
 
