@@ -17,6 +17,8 @@ import main.service.crud.course.test.TestCrudService;
 
 import main.service.crud.course.grade.GradeCrudService;
 
+import main.json.course.CourseJson;
+
 import main.json.course.test.list.TestListJson;
 
 import main.json.course.test.TestJson;
@@ -79,6 +81,27 @@ public class TestServiceImpl extends AbstractService implements TestService {
                 }
             }
             return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public main.json.course.test.info.TestJson getTestInfo(Test test) {
+        try {
+            CourseJson course = new CourseJson(test.getCourse().getId(), test.getCourse().getLanguage().getId(), test.getCourse().getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), test.getCourse().getCourseLevel().getId(), test.getCourse().getCourseLevel().getName(), test.getCourse().getCourseType().getId(), test.getCourse().getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            for( User teacher : test.getCourse().getTeachers() ) {
+                course.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+
+            String dateStr = this.dateFormat.print(test.getDate());
+
+            if( test.getDescription() != null ) {
+                return new main.json.course.test.info.TestJson(course, test.getId(), test.getTitle(), dateStr, test.getDescription());
+            }
+            else {
+                return new main.json.course.test.info.TestJson(course, test.getId(), test.getTitle(), dateStr);
+            }
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

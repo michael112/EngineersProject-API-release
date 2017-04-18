@@ -6,6 +6,8 @@ public class TestControllerUrlConstants {
 
     public static final String TEST_LIST = "/list";
 
+    public static final String TEST_INFO = "/{testID}";
+
     public static final String ADD_TEST  = "";
 
     public static final String EDIT_TEST = "/{testID}";
@@ -16,6 +18,6 @@ public class TestControllerUrlConstants {
 
     public static final String EDIT_TEST_DESCRIPTION = "/{testID}/description";
 
-    public static final String DELETE_TEST = "{testID}";
+    public static final String DELETE_TEST = "/{testID}";
 
 }

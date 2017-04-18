@@ -9,7 +9,7 @@ import main.json.course.test.list.TestListJson;
 public class TestListResponseJson extends AbstractResponseJson {
 
     @Getter
-    TestListJson tests;
+    private TestListJson tests;
 
     public TestListResponseJson(TestListJson tests, String message, HttpStatus status) {
         super(message, status);

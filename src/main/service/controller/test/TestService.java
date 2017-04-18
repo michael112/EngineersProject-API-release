@@ -15,6 +15,8 @@ public interface TestService {
 
     TestListJson getTestList(User user, Course course);
 
+    main.json.course.test.info.TestJson getTestInfo(Test test);
+
     void addTest(Course course, TestJson testJson);
 
     void editTest(Test test, TestJson testJson);

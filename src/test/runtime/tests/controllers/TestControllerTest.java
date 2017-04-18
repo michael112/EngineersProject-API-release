@@ -156,6 +156,52 @@ public class TestControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testGetTestInfo() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
+        main.model.course.Test sampleTest = new ArrayList<main.model.course.Test>(sampleCourse.getTests()).get(0);
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        when(testCrudServiceMock.findTestByID(Mockito.any(String.class))).thenReturn(sampleTest);
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + '/' + sampleTest.getId();
+
+        try {
+            this.mockMvc.perform(get(URL)
+                    .contentType("application/json;charset=utf-8")
+                    )
+                    .andExpect(status().isOk())
+                    .andExpect(content().contentType("application/json;charset=utf-8"))
+                    .andExpect(jsonPath("$.test.course.courseID", is(sampleCourse.getId())))
+                    .andExpect(jsonPath("$.test.course.language.id", is(sampleCourse.getLanguage().getId())))
+                    .andExpect(jsonPath("$.test.course.language.name", is(sampleCourse.getLanguage().getLanguageName("en"))))
+                    .andExpect(jsonPath("$.test.course.courseLevel.courseLevelID", is(sampleCourse.getCourseLevel().getId())))
+                    .andExpect(jsonPath("$.test.course.courseLevel.name", is(sampleCourse.getCourseLevel().getName())))
+                    .andExpect(jsonPath("$.test.course.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
+                    .andExpect(jsonPath("$.test.course.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+                    .andExpect(jsonPath("$.test.course.teachers", hasSize(1)))
+                    .andExpect(jsonPath("$.test.course.teachers[0].userID", is(sampleTeacher.getId())))
+                    .andExpect(jsonPath("$.test.course.teachers[0].name", is(sampleTeacher.getFullName())))
+                    .andExpect(jsonPath("$.test.testID", is(sampleTest.getId())))
+                    .andExpect(jsonPath("$.test.date", is(this.dateFormat.print(sampleTest.getDate()))))
+                    .andExpect(jsonPath("$.test.title", is(sampleTest.getTitle())))
+                    .andExpect(jsonPath("$.test.description", is(sampleTest.getDescription())))
+                    .andExpect(jsonPath("$.message", is(returnMessage)))
+                    .andExpect(jsonPath("$.success", is(true)));
+        }
+        catch( NullPointerException ex ) {
+            Assert.fail();
+        }
+    }
+
+    @Test
     public void testAddTest() throws Exception {
         String returnMessage = "";
 

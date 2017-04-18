@@ -131,6 +131,8 @@ public class HomeworkController {
         Homework homework = this.homeworkCrudService.findHomeworkByID(homeworkID);
         if( homework == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("homework.not.found"));
 
+        if( !( homework.getCourse().equals(course) ) ) throw new HttpBadRequestException(this.labelProvider.getLabel("error.task.not.in.course"));
+
         boolean isStudent = this.courseMembershipValidator.isStudent(currentUser, course);
         boolean isTeacher = this.courseMembershipValidator.isTeacher(currentUser, course);
 

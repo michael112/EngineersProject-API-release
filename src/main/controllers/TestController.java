@@ -30,6 +30,7 @@ import main.service.crud.course.test.TestCrudService;
 import main.service.crud.course.course.CourseCrudService;
 
 import main.error.exception.HttpNotFoundException;
+import main.error.exception.HttpBadRequestException;
 import main.error.exception.HttpInternalServerErrorException;
 
 import main.json.course.test.list.TestListJson;
@@ -40,6 +41,7 @@ import main.json.course.test.edit.EditTestDateJson;
 import main.json.course.test.edit.EditTestDescriptionJson;
 
 import main.json.response.TestListResponseJson;
+import main.json.response.TestInfoResponseJson;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 
@@ -80,6 +82,29 @@ public class TestController {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("test.list.success");
         return new ResponseEntity<TestListResponseJson>(new TestListResponseJson(testListJson, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired
+    @RequestMapping(value = TestControllerUrlConstants.TEST_INFO, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getTestInfo(@PathVariable("courseID") String courseID, @PathVariable("testID") String testID) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        Test test = this.testCrudService.findTestByID(testID);
+        if( test == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("test.not.found"));
+
+        if( !( test.getCourse().equals(course) ) ) throw new HttpBadRequestException(this.labelProvider.getLabel("error.task.not.in.course"));
+
+        main.json.course.test.info.TestJson testInfo = this.testService.getTestInfo(test);
+
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("test.info.success");
+
+        return new ResponseEntity<TestInfoResponseJson>(new TestInfoResponseJson(testInfo, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.USER)
