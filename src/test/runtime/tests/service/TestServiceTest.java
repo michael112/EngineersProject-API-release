@@ -26,8 +26,8 @@ import main.model.user.User;
 import main.model.course.Course;
 
 import main.json.course.CourseUserJson;
-import main.json.course.test.view.TestJson;
-import main.json.course.test.view.TestListJson;
+import main.json.course.test.list.TestJson;
+import main.json.course.test.list.TestListJson;
 
 import test.runtime.environment.TestEnvironment;
 import test.runtime.environment.TestEnvironmentBuilder;

@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import lombok.Getter;
 
-import main.json.course.test.view.TestListJson;
+import main.json.course.test.list.TestListJson;
 
 public class TestListResponseJson extends AbstractResponseJson {
 

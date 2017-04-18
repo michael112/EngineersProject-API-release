@@ -32,7 +32,7 @@ import main.service.crud.course.course.CourseCrudService;
 import main.error.exception.HttpNotFoundException;
 import main.error.exception.HttpInternalServerErrorException;
 
-import main.json.course.test.view.TestListJson;
+import main.json.course.test.list.TestListJson;
 
 import main.json.course.test.TestJson;
 import main.json.course.test.edit.EditTestTitleJson;

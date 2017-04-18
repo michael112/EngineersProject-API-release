@@ -17,7 +17,7 @@ import main.service.crud.course.test.TestCrudService;
 
 import main.service.crud.course.grade.GradeCrudService;
 
-import main.json.course.test.view.TestListJson;
+import main.json.course.test.list.TestListJson;
 
 import main.json.course.test.TestJson;
 import main.json.course.test.edit.EditTestTitleJson;
@@ -53,29 +53,29 @@ public class TestServiceImpl extends AbstractService implements TestService {
                     if( ( test.getDescription() != null ) && ( !( test.getDescription().equals("") )) ) {
                         switch( test.getTestSolution(user).getGrade().getGrade().getScale() ) {
                             case PUNKTOWA:
-                                result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getMaxPoints(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
+                                result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getMaxPoints(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
                                 break;
                             case SZKOLNA:
-                                result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
+                                result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
                                 break;
                         }
                     }
                     else {
                         switch( test.getTestSolution(user).getGrade().getGrade().getScale() ) {
                             case PUNKTOWA:
-                                result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getMaxPoints(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
+                                result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getMaxPoints(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
                                 break;
                             case SZKOLNA:
-                                result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
+                                result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, test.getTestSolution(user).isWritten(), true, test.getTestSolution(user).getGrade().getGradeValue(), test.getTestSolution(user).getGrade().getGrade().getScale().name()));
                                 break;
                         }
                     }
                 }
                 else if( ( test.getDescription() != null ) && ( !( test.getDescription().equals("") )) ) {
-                    result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), false, false));
+                    result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, test.getDescription(), false, false));
                 }
                 else {
-                    result.addTest(new main.json.course.test.view.TestJson(test.getId(), test.getTitle(),  dateStr, false, false));
+                    result.addTest(new main.json.course.test.list.TestJson(test.getId(), test.getTitle(),  dateStr, false, false));
                 }
             }
             return result;
