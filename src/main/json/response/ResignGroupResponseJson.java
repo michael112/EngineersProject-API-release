@@ -9,7 +9,7 @@ import main.json.course.CourseJson;
 public class ResignGroupResponseJson extends AbstractResponseJson {
 
     @Getter
-    CourseJson formJson;
+    private CourseJson formJson;
 
     public ResignGroupResponseJson(CourseJson formJson, String message, HttpStatus status) {
         super(message, status);
