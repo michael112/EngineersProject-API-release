@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -369,10 +370,15 @@ public class CourseControllerTest extends AbstractControllerTest {
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
 
+        Course alternativeCourse = this.testEnvironment.getCourses().get(1);
+        Set<Course> alternativeCourses = new HashSet<>();
+        alternativeCourses.add(alternativeCourse);
+
         when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
         when( courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class)) ).thenReturn(true);
         when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
         when( courseCrudServiceMock.findCourseByID(Mockito.any(String.class)) ).thenReturn(sampleCourse);
+        when( courseCrudServiceMock.findCoursesByQuery(Mockito.any(String.class)) ).thenReturn(alternativeCourses);
 
         this.mockMvc.perform(get(this.testedClassURI + '/' + sampleCourse.getId() + "/change")
             .contentType("application/json;charset=utf-8")
@@ -386,7 +392,24 @@ public class CourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.formJson.courseLevel.courseLevelID", is(sampleCourse.getCourseLevel().getId())))
             .andExpect(jsonPath("$.formJson.courseLevel.name", is(sampleCourse.getCourseLevel().getName())))
             .andExpect(jsonPath("$.formJson.courseType.courseTypeID", is(sampleCourse.getCourseType().getId())))
-            .andExpect(jsonPath("$.formJson.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))));
+            .andExpect(jsonPath("$.formJson.courseType.name", is(sampleCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.formJson.price", is(sampleCourse.getPrice())))
+            .andExpect(jsonPath("$.formJson.similarGroups", hasSize(1)))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].courseID", is(alternativeCourse.getId())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].language.id", is(alternativeCourse.getLanguage().getId())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].language.name", is(alternativeCourse.getLanguage().getLanguageName("en"))))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].courseLevel.courseLevelID", is(alternativeCourse.getCourseLevel().getId())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].courseLevel.name", is(alternativeCourse.getCourseLevel().getName())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].courseType.courseTypeID", is(alternativeCourse.getCourseType().getId())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].courseType.name", is(alternativeCourse.getCourseType().getCourseTypeName("en"))))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].daysOfCourse", hasSize(1)))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].daysOfCourse[0].day", is(new ArrayList<>(alternativeCourse.getCourseDays()).get(0).getDay().getDay())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].daysOfCourse[0].time", is(new ArrayList<>(alternativeCourse.getCourseDays()).get(0).getHourFrom().getTime())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].teachers", hasSize(1)))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].teachers[0].userID", is(new ArrayList<>(alternativeCourse.getTeachers()).get(0).getId())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].teachers[0].name", is(new ArrayList<>(alternativeCourse.getTeachers()).get(0).getFullName())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].peopleInCourse", is(alternativeCourse.getStudents().size())))
+            .andExpect(jsonPath("$.formJson.similarGroups[0].price", is(alternativeCourse.getPrice())));
     }
 
     @Test

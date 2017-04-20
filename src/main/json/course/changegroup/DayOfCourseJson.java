@@ -8,12 +8,12 @@ import lombok.EqualsAndHashCode;
 public class DayOfCourseJson {
 
     @Getter
-    private String day;
+    private int day;
 
     @Getter
     private String time;
 
-    public DayOfCourseJson(String day, String time) {
+    public DayOfCourseJson(int day, String time) {
         this.day = day;
         this.time = time;
     }

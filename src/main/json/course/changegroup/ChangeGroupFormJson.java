@@ -26,11 +26,15 @@ public class ChangeGroupFormJson {
     @Getter
     private Set<SimilarGroupJson> similarGroups;
 
-    public ChangeGroupFormJson(String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName) {
+    @Getter
+    private Double price;
+
+    public ChangeGroupFormJson(String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, Double price) {
         this.language = new LanguageJson(languageID, languageName);
         this.courseLevel = new CourseLevelJson(courseLevelID, courseLevelName);
         this.courseType = new CourseTypeJson(courseTypeID, courseTypeName);
         this.similarGroups = new HashSet<>();
+        this.price = price;
     }
 
     public void addSimilarGroup(SimilarGroupJson similarGroup) {
