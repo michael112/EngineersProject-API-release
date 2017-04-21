@@ -44,6 +44,8 @@ import main.model.user.User;
 import main.model.course.File;
 import main.model.course.Course;
 
+import main.json.course.attachements.NewRemoteAttachementJson;
+
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -156,7 +158,7 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
     }
 
     @Test
-    public void testAddAttachement() throws Exception {
+    public void testAddLocalAttachement() throws Exception {
         String returnMessage = "";
 
         Course sampleCourse = this.testEnvironment.getCourses().get(0);
@@ -174,11 +176,40 @@ public class CourseAttachementControllerTest extends AbstractControllerTest {
         when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
         when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
 
-        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT;
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT + "?type=local";
 
 
         mockMvc.perform(MockMvcRequestBuilders.fileUpload(URL)
             .file(fileToUpload)
+            )
+            .andExpect(status().isOk())
+            .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.message", is(returnMessage)))
+            .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
+    public void testAddRemoteAttachement() throws Exception {
+        String returnMessage = "";
+
+        Course sampleCourse = this.testEnvironment.getCourses().get(0);
+        User sampleTeacher = new ArrayList<User>(sampleCourse.getTeachers()).get(0);
+        NewRemoteAttachementJson fileToUpload = new NewRemoteAttachementJson("http://sampleaddress.com/file.pdf");
+
+        when(currentUserServiceMock.getCurrentUser()).thenReturn(sampleTeacher);
+        when(courseCrudServiceMock.findCourseByID(Mockito.any(String.class))).thenReturn(sampleCourse);
+        doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
+        when(courseMembershipValidatorMock.isStudent(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(false);
+        when(courseMembershipValidatorMock.isTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(courseMembershipValidatorMock.isStudentOrTeacher(Mockito.any(User.class), Mockito.any(Course.class))).thenReturn(true);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        String URL = getClassURI(this.testedClassURI, sampleCourse.getId()) + CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT + "?type=remote";
+
+
+        mockMvc.perform(post(URL)
+            .contentType("application/json;charset=utf-8")
+            .content(objectToJsonBytes(fileToUpload))
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))

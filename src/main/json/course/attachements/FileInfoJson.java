@@ -4,9 +4,12 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import main.json.course.CourseUserJson;
 
 @EqualsAndHashCode
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class FileInfoJson {
 
     @Getter

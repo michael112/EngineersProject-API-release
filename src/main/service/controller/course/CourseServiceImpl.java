@@ -172,6 +172,9 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     public ChangeGroupFormJson getChangeGroupForm(Course course) {
         try {
             ChangeGroupFormJson result = new ChangeGroupFormJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
             Set<Course> similarCourses = this.courseCrudService.findCoursesByQuery("select course from Course course join course.language language join course.courseLevel courseLevel join course.courseType courseType where ( language.id = '" + course.getLanguage().getId() + "' ) and ( courseLevel.name = '" + course.getCourseLevel().getName() + "' ) and ( courseType.id = '" + course.getCourseType().getId() + "' ) and ( course.id != '" + course.getId() + "' )");
             for( Course similarCourse : similarCourses ) {
                 SimilarGroupJson similarGroupJson = new SimilarGroupJson(similarCourse.getId(), similarCourse.getLanguage().getId(), similarCourse.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), similarCourse.getCourseLevel().getId(), similarCourse.getCourseLevel().getName(), similarCourse.getCourseType().getId(), similarCourse.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), similarCourse.getStudents().size(), similarCourse.getPrice());

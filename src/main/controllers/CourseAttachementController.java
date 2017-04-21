@@ -2,12 +2,15 @@ package main.controllers;
 
 import javax.annotation.security.RolesAllowed;
 
+import javax.validation.Valid;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -32,6 +35,8 @@ import main.json.response.DefaultResponseJson;
 import main.json.response.FileInfoResponseJson;
 
 import main.json.course.attachements.FileInfoListJson;
+
+import main.json.course.attachements.NewRemoteAttachementJson;
 
 import main.model.user.User;
 import main.model.course.File;
@@ -82,7 +87,7 @@ public class CourseAttachementController {
 
     @RolesAllowed(RolesAllowedConstants.USER)
     @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
-    @RequestMapping(value = CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT, method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data")
+    @RequestMapping(value = CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT, method = RequestMethod.POST, produces = "application/json", consumes = "multipart/form-data", params = "type=local")
     public ResponseEntity<? extends AbstractResponseJson> addAttachement(@PathVariable("courseID") String courseID, @RequestPart("file") MultipartFile attachement) {
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
@@ -90,7 +95,24 @@ public class CourseAttachementController {
         Course course = this.courseCrudService.findCourseByID(courseID);
         if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
 
-        this.courseAttachementService.addAttachement(currentUser, course, attachement);
+        this.courseAttachementService.addLocalAttachement(currentUser, course, attachement);
+
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("attachement.add.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.USER)
+    @CourseMembershipRequired(type = CourseMembershipType.TEACHER)
+    @RequestMapping(value = CourseAttachementControllerUrlConstants.ADD_ATTACHEMENT, method = RequestMethod.POST, produces = "application/json", consumes = "application/json", params = "type=remote")
+    public ResponseEntity<? extends AbstractResponseJson> addRemoteAttachement(@PathVariable("courseID") String courseID, @Valid @RequestBody NewRemoteAttachementJson attachement) {
+        User currentUser = this.currentUserService.getCurrentUser();
+        if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
+
+        Course course = this.courseCrudService.findCourseByID(courseID);
+        if( course == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("course.not.found"));
+
+        this.courseAttachementService.addRemoteAttachement(currentUser, course, attachement);
 
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("attachement.add.success");

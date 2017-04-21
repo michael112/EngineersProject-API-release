@@ -67,7 +67,7 @@ CREATE TABLE coursetypes (
 
 CREATE TABLE files (
   fileID varchar(36) NOT NULL,
-  name varchar(50) NOT NULL,
+  name varchar(50) DEFAULT NULL,
   date datetime NOT NULL,
   path varchar(100) NOT NULL,
   senderID varchar(36) NOT NULL,

@@ -1,5 +1,9 @@
 package main.service.controller.course.attachement;
 
+import org.joda.time.DateTime;
+
+import java.sql.Timestamp;
+
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -20,6 +24,8 @@ import main.service.crud.course.file.FileCrudService;
 import main.service.controller.AbstractService;
 
 import main.json.course.attachements.FileInfoListJson;
+
+import main.json.course.attachements.NewRemoteAttachementJson;
 
 import main.json.course.attachements.FileInfoJson;
 import main.json.course.CourseUserJson;
@@ -50,9 +56,19 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
         return result;
     }
 
-    public void addAttachement(User sender, Course course, MultipartFile attachement) {
+    public void addLocalAttachement(User sender, Course course, MultipartFile attachement) {
         File fileInfo = this.fileUploadService.uploadFile(attachement, sender);
         course.addAttachement(fileInfo);
+        this.courseCrudService.updateCourse(course);
+    }
+
+    public void addRemoteAttachement(User sender, Course course, NewRemoteAttachementJson attachement) {
+        File newAttachement = new File();
+        newAttachement.setPath(attachement.getPath());
+        newAttachement.setDate(new DateTime(new Timestamp(System.currentTimeMillis())));
+        newAttachement.setSender(sender);
+
+        course.addAttachement(newAttachement);
         this.courseCrudService.updateCourse(course);
     }
 

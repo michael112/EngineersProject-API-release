@@ -4,7 +4,10 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 @EqualsAndHashCode
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class AttachementJson {
 
     @Getter

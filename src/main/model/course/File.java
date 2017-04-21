@@ -30,7 +30,7 @@ public class File extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@Column(name="name", nullable=false)
+	@Column(name="name", nullable=true)
 	private String name;
 
 	@Getter
