@@ -116,7 +116,9 @@ public class GradeServiceTest extends AbstractServiceTest {
                     gradeJson.setTestFor(new TestJson(grade.getTask().getId(), grade.getTask().getDate().toString(), grade.getTask().getTitle()));
                 }
                 for( StudentGrade studentGrade : grade.getGrades() ) {
-					gradeJson.addGrade(new StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue(), new CourseUserJson(studentGrade.getStudent().getUser().getId(), studentGrade.getStudent().getUser().getFullName())));
+                    if( studentGrade.getStudent().getUser().equals(user) ) {
+                        gradeJson.addGrade(new StudentGradeJson(studentGrade.getId(), studentGrade.getGradeValue(), new CourseUserJson(studentGrade.getStudent().getUser().getId(), studentGrade.getStudent().getUser().getFullName())));
+                    }
                 }
                 result.addGrade(gradeJson);
             }
