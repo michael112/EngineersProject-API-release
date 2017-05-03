@@ -93,9 +93,9 @@ public class AdminTypeControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.courseTypes.types", hasSize(3)))
-            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(0).getId() + "\" && @.name == \"" + courseTypes.get(0).getCourseTypeName("EN") + "\")]").exists())
-            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(1).getId() + "\" && @.name == \"" + courseTypes.get(1).getCourseTypeName("EN") + "\")]").exists())
-            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(2).getId() + "\" && @.name == \"" + courseTypes.get(2).getCourseTypeName("EN") + "\")]").exists())
+            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(0).getId() + "\" && @.name == \"" + courseTypes.get(0).getCourseTypeName("EN") + "\" && @.hasCourses == " + courseTypes.get(0).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(1).getId() + "\" && @.name == \"" + courseTypes.get(1).getCourseTypeName("EN") + "\" && @.hasCourses == " + courseTypes.get(1).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + courseTypes.get(2).getId() + "\" && @.name == \"" + courseTypes.get(2).getCourseTypeName("EN") + "\" && @.hasCourses == " + courseTypes.get(2).hasActiveCourses() + ")]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }

@@ -36,7 +36,7 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
             Set<CourseType> courseTypes = this.courseTypeCrudService.findAllCourseTypes();
             CourseTypeListJson result = new CourseTypeListJson();
             for( CourseType courseType : courseTypes ) {
-                result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+                result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()), courseType.hasActiveCourses());
             }
             return result;
         }

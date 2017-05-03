@@ -14,8 +14,8 @@ public class CourseTypeListJson {
     @Getter
     private Set<CourseTypeJson> types;
 
-    public void addType(String courseTypeID, String courseTypeName) {
-        this.types.add(new CourseTypeJson(courseTypeID, courseTypeName));
+    public void addType(String courseTypeID, String courseTypeName, boolean hasCourses) {
+        this.types.add(new CourseTypeJson(courseTypeID, courseTypeName, hasCourses));
     }
 
     public CourseTypeListJson() {
