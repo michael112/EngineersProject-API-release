@@ -15,9 +15,17 @@ public class LanguageJson {
     @Getter
     private String languageID;
 
+    @Getter
+    @Setter
+    private String languageName;
+
     @Setter
     @Getter
     public Set<LanguageNameJson> languageNames;
+
+    @Setter
+    @Getter
+    private boolean hasCourses;
 
     public void addLanguageName(String namedLanguageID, String namingLanguageID, String languageName) {
         this.languageNames.add(new LanguageNameJson(namedLanguageID, namingLanguageID, languageName));
@@ -28,9 +36,11 @@ public class LanguageJson {
         this.languageNames = new HashSet<>();
     }
 
-    public LanguageJson(String languageID) {
+    public LanguageJson(String languageID, String languageName, boolean hasCourses) {
         this();
         this.setLanguageID(languageID);
+        this.setLanguageName(languageName);
+        this.setHasCourses(hasCourses);
     }
 
 }
