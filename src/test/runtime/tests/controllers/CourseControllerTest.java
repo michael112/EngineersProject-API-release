@@ -27,11 +27,13 @@ import main.model.user.User;
 import main.model.course.CourseMembership;
 import main.model.course.Course;
 import main.model.course.CourseDay;
+import main.model.course.CourseLevel;
 import main.model.course.CourseType;
 import main.model.course.Message;
 import main.model.language.Language;
 
 import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.course.courselevel.CourseLevelCrudService;
 import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.language.LanguageCrudService;
 
@@ -69,6 +71,8 @@ public class CourseControllerTest extends AbstractControllerTest {
     private CurrentUserService currentUserServiceMock;
     @Autowired
     private CourseCrudService courseCrudServiceMock;
+    @Autowired
+    private CourseLevelCrudService courseLevelCrudServiceMock;
     @Autowired
     private CourseTypeCrudService courseTypeCrudServiceMock;
     @Autowired
@@ -269,16 +273,18 @@ public class CourseControllerTest extends AbstractControllerTest {
 
         User sampleUser = this.testEnvironment.getUsers().get(0);
         List<Language> sampleAvailableLanguages = this.testEnvironment.getLanguages();
+        List<CourseLevel> sampleAvailableCourseLevels = this.testEnvironment.getCourseLevels();
         List<CourseType> sampleAvailableCourseTypes = this.testEnvironment.getCourseTypes();
 
         when( currentUserServiceMock.getCurrentUser() ).thenReturn(sampleUser); // for CourseMembershipRequiredVoter
         when( languageCrudServiceMock.findAllLanguages() ).thenReturn(new HashSet<>(sampleAvailableLanguages));
+        when( courseLevelCrudServiceMock.findAllCourseLevels() ).thenReturn(new HashSet<>(sampleAvailableCourseLevels));
         when( courseTypeCrudServiceMock.findAllCourseTypes() ).thenReturn(new HashSet<>(sampleAvailableCourseTypes));
         when( labelProviderMock.getLabel(Mockito.any(String.class)) ).thenReturn(returnMessage);
 
         /*
         String responseJSON = getResponseJson(this.mockMvc,
-            get()
+            get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES)
             .contentType("application/json;charset=utf-8")
         );
         */
@@ -296,6 +302,13 @@ public class CourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.result.languages[?(@.id == \"" + sampleAvailableLanguages.get(4).getId() + "\")][?(@.name == \"" + sampleAvailableLanguages.get(4).getLanguageName("EN") + "\")]").exists())
                 .andExpect(jsonPath("$.result.languages[?(@.id == \"" + sampleAvailableLanguages.get(5).getId() + "\")][?(@.name == \"" + sampleAvailableLanguages.get(5).getLanguageName("EN") + "\")]").exists())
                 .andExpect(jsonPath("$.result.languages[?(@.id == \"" + sampleAvailableLanguages.get(6).getId() + "\")][?(@.name == \"" + sampleAvailableLanguages.get(6).getLanguageName("EN") + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels", hasSize(6)))
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(0).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(0).getName() + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(1).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(1).getName() + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(2).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(2).getName() + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(3).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(3).getName() + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(4).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(4).getName() + "\")]").exists())
+                .andExpect(jsonPath("$.result.levels[?(@.courseLevelID == \"" + sampleAvailableCourseLevels.get(5).getId() + "\")][?(@.name == \"" + sampleAvailableCourseLevels.get(5).getName() + "\")]").exists())
                 .andExpect(jsonPath("$.result.types", hasSize(3)))
                 .andExpect(jsonPath("$.result.types[?(@.courseTypeID == \"" + sampleAvailableCourseTypes.get(0).getId() + "\")][?(@.name == \"" + sampleAvailableCourseTypes.get(0).getCourseTypeName("EN") + "\")]").exists())
                 .andExpect(jsonPath("$.result.types[?(@.courseTypeID == \"" + sampleAvailableCourseTypes.get(1).getId() + "\")][?(@.name == \"" + sampleAvailableCourseTypes.get(1).getCourseTypeName("EN") + "\")]").exists())

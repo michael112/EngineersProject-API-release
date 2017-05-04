@@ -14,6 +14,7 @@ import org.joda.time.format.DateTimeFormat;
 import main.service.controller.AbstractService;
 
 import main.service.crud.course.course.CourseCrudService;
+import main.service.crud.course.courselevel.CourseLevelCrudService;
 import main.service.crud.course.coursetype.CourseTypeCrudService;
 import main.service.crud.course.coursemembership.CourseMembershipCrudService;
 import main.service.crud.language.LanguageCrudService;
@@ -23,6 +24,7 @@ import main.util.locale.LocaleCodeProvider;
 import main.model.course.Course;
 import main.model.course.CourseDay;
 import main.model.course.CourseType;
+import main.model.course.CourseLevel;
 import main.model.course.CourseMembership;
 import main.model.course.Homework;
 import main.model.course.Test;
@@ -52,6 +54,8 @@ import main.json.course.changegroup.SimilarGroupJson;
 public class CourseServiceImpl extends AbstractService implements CourseService {
 
     private CourseCrudService courseCrudService;
+
+    private CourseLevelCrudService courseLevelCrudService;
 
     private CourseTypeCrudService courseTypeCrudService;
 
@@ -133,9 +137,13 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     public AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes() {
         AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
         Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
+        Set<CourseLevel> availableCourseLevels = this.courseLevelCrudService.findAllCourseLevels();
         Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
         for( Language language : availableLanguages ) {
             result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+        }
+        for( CourseLevel courseLevel : availableCourseLevels ) {
+            result.addLevel(courseLevel.getId(), courseLevel.getName());
         }
         for( CourseType courseType : availableCourseTypes ) {
             result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
@@ -280,12 +288,13 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     @Autowired
-    public CourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, CourseTypeCrudService courseTypeCrudService, CourseMembershipCrudService courseMembershipCrudService, LanguageCrudService languageCrudService) {
+    public CourseServiceImpl(LocaleCodeProvider localeCodeProvider, CourseCrudService courseCrudService, CourseLevelCrudService courseLevelCrudService, CourseTypeCrudService courseTypeCrudService, CourseMembershipCrudService courseMembershipCrudService, LanguageCrudService languageCrudService) {
         super(localeCodeProvider);
         this.courseCrudService = courseCrudService;
+        this.courseLevelCrudService = courseLevelCrudService;
         this.courseTypeCrudService = courseTypeCrudService;
         this.courseMembershipCrudService = courseMembershipCrudService;
         this.languageCrudService = languageCrudService;
-        this.dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy");;
+        this.dateFormatter = DateTimeFormat.forPattern("dd-MM-yyyy");
     }
 }

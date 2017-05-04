@@ -17,6 +17,9 @@ public class AvailableLngAndTypesJson {
     private Set<LanguageJson> languages;
 
     @Getter
+    private Set<CourseLevelJson> levels;
+
+    @Getter
     private Set<CourseTypeJson> types;
 
     public void addLanguage(String id, String languageName) {
@@ -24,6 +27,13 @@ public class AvailableLngAndTypesJson {
     }
     private void addLanguage(LanguageJson language) {
         this.languages.add(language);
+    }
+
+    public void addLevel(String courseLevelID, String courseLevelName) {
+        this.addLevel(new CourseLevelJson(courseLevelID, courseLevelName));
+    }
+    public void addLevel(CourseLevelJson courseLevel) {
+        this.levels.add(courseLevel);
     }
 
     public void addType(String courseTypeID, String courseTypeName) {
@@ -35,6 +45,7 @@ public class AvailableLngAndTypesJson {
 
     public AvailableLngAndTypesJson() {
         this.languages = new HashSet<>();
+        this.levels = new HashSet<>();
         this.types = new HashSet<>();
     }
 }
