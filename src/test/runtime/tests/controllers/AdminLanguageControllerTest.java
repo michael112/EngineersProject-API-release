@@ -252,6 +252,30 @@ public class AdminLanguageControllerTest extends AbstractControllerTest {
     }
 
     @Test
+    public void testGetTaughtLanguageList() throws Exception {
+        String returnMessage = "";
+
+        User sampleTeacher = this.testEnvironment.getUsers().get(2);
+        Language english = this.testEnvironment.getLanguages().get(0);
+
+        when(userCrudServiceMock.findUserByID(Mockito.any(String.class))).thenReturn(sampleTeacher);
+        when(labelProviderMock.getLabel(Mockito.any(String.class))).thenReturn(returnMessage);
+
+        this.mockMvc.perform(get(this.testedClassURI + '/' + sampleTeacher.getId() + "/languages")
+                .contentType("application/json;charset=utf-8")
+        )
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=utf-8"))
+                .andExpect(jsonPath("$.taughtLanguages.teacher.userID", is(sampleTeacher.getId())))
+                .andExpect(jsonPath("$.taughtLanguages.teacher.name", is(sampleTeacher.getFullName())))
+                .andExpect(jsonPath("$.taughtLanguages.taughtLanguages", hasSize(1)))
+                .andExpect(jsonPath("$.taughtLanguages.taughtLanguages[?(@.id == \"" + english.getId() + "\" && @.name == \"" + english.getLanguageName("EN") + "\" )]").exists())
+                .andExpect(jsonPath("$.taughtLanguages.taughtLanguages[?(@.id == \"" + english.getId() + "\" && @.name == \"" + english.getLanguageName("EN") + "\" )]").exists())
+                .andExpect(jsonPath("$.message", is(returnMessage)))
+                .andExpect(jsonPath("$.success", is(true)));
+    }
+
+    @Test
     public void testAddTeacherLanguage() throws Exception {
         String returnMessage = "";
 

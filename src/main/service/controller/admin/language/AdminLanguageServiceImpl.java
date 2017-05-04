@@ -27,6 +27,8 @@ import main.json.admin.language.LanguageNameJson;
 
 import main.json.admin.language.teacher.TeacherLanguageListJson;
 
+import main.json.admin.language.teacher.TaughtLanguageListJson;
+
 import main.json.course.CourseUserJson;
 
 import main.model.language.Language;
@@ -131,6 +133,20 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             TeacherLanguageListJson result = new TeacherLanguageListJson(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
             for( User teacher : teacherLanguageList ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public TaughtLanguageListJson getTaughtLanguageList(User teacher) {
+        try {
+            Set<Language> taughtLanguageList = teacher.getTaughtLanguages();
+            TaughtLanguageListJson result = new TaughtLanguageListJson(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            for( Language language : taughtLanguageList ) {
+                result.addTaughtLanguage(new main.json.course.LanguageJson(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode())));
             }
             return result;
         }

@@ -35,6 +35,7 @@ import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 import main.json.response.AdminLanguageListResponseJson;
 import main.json.response.AdminTeacherLanguageListResponseJson;
+import main.json.response.AdminTaughtLanguageListResponseJson;
 
 import main.json.admin.language.view.LanguageListJson;
 
@@ -45,6 +46,7 @@ import main.json.admin.language.EditLanguageJson;
 import main.json.admin.language.LanguageNameJson;
 
 import main.json.admin.language.teacher.TeacherLanguageListJson;
+import main.json.admin.language.teacher.TaughtLanguageListJson;
 
 import main.model.language.Language;
 
@@ -144,6 +146,18 @@ public class AdminLanguageController {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.teacher.list.success");
         return new ResponseEntity<AdminTeacherLanguageListResponseJson>(new AdminTeacherLanguageListResponseJson(teacherLanguageList, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminLanguageControllerUrlConstants.TAUGHT_LANGUAGE_LIST, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getTaughtLanguageList(@PathVariable("teacherID") String teacherID) {
+        User teacher = this.userCrudService.findUserByID(teacherID);
+        if( teacher == null ) throw new HttpNotFoundException("admin.teacher.not.found");
+        TaughtLanguageListJson taughtLanguageList = this.adminLanguageService.getTaughtLanguageList(teacher);
+        if( taughtLanguageList.getTaughtLanguages().size() <= 0 ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.taught.language.list.empty"));
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.language.taught.language.list.success");
+        return new ResponseEntity<AdminTaughtLanguageListResponseJson>(new AdminTaughtLanguageListResponseJson(taughtLanguageList, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)

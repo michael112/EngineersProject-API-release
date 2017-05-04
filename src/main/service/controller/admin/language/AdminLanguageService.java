@@ -10,6 +10,8 @@ import main.json.admin.language.LanguageNameJson;
 
 import main.json.admin.language.teacher.TeacherLanguageListJson;
 
+import main.json.admin.language.teacher.TaughtLanguageListJson;
+
 import main.model.language.Language;
 
 import main.model.user.User;
@@ -29,6 +31,8 @@ public interface AdminLanguageService {
     void removeLanguage(Language language);
 
     TeacherLanguageListJson getTeacherLanguageList(Language language);
+
+    TaughtLanguageListJson getTaughtLanguageList(User teacher);
 
     void addTeacherLanguage(Language language, User teacher);
 
