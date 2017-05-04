@@ -34,7 +34,7 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
             Collections.sort(courseLevels);
             CourseLevelListJson result = new CourseLevelListJson();
             for( CourseLevel level : courseLevels ) {
-                main.json.admin.level.view.CourseLevelJson courseLevelJson = new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName());
+                main.json.admin.level.view.CourseLevelJson courseLevelJson = new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName(), level.hasActiveCourses());
                 result.addLevel(courseLevelJson);
             }
             return result;
@@ -56,7 +56,7 @@ public class AdminLevelServiceImpl extends AbstractService implements AdminLevel
 
     public main.json.admin.level.view.CourseLevelJson getCourseLevelInfo(CourseLevel level) {
         try {
-            return new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName());
+            return new main.json.admin.level.view.CourseLevelJson(level.getId(), level.getName(), level.hasActiveCourses());
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

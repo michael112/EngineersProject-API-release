@@ -13,9 +13,13 @@ public class CourseLevelJson implements Comparable<CourseLevelJson> {
     @Getter
     private String name;
 
-    public CourseLevelJson(String courseLevelID, String name) {
+    @Getter
+    private boolean hasCourses;
+
+    public CourseLevelJson(String courseLevelID, String name, boolean hasCourses) {
         this.courseLevelID = courseLevelID;
         this.name = name;
+        this.hasCourses = hasCourses;
     }
 
     @Override

@@ -83,12 +83,12 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
             .andExpect(jsonPath("$.levels.levels", hasSize(6)))
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(0).getId() + "\" && @.name == \"" + levels.get(0).getName() + "\")]").exists())
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(1).getId() + "\" && @.name == \"" + levels.get(1).getName() + "\")]").exists())
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(2).getId() + "\" && @.name == \"" + levels.get(2).getName() + "\")]").exists())
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(3).getId() + "\" && @.name == \"" + levels.get(3).getName() + "\")]").exists())
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(4).getId() + "\" && @.name == \"" + levels.get(4).getName() + "\")]").exists())
-            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(5).getId() + "\" && @.name == \"" + levels.get(5).getName() + "\")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(0).getId() + "\" && @.name == \"" + levels.get(0).getName() + "\" && @.hasCourses == " + levels.get(0).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(1).getId() + "\" && @.name == \"" + levels.get(1).getName() + "\" && @.hasCourses == " + levels.get(1).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(2).getId() + "\" && @.name == \"" + levels.get(2).getName() + "\" && @.hasCourses == " + levels.get(2).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(3).getId() + "\" && @.name == \"" + levels.get(3).getName() + "\" && @.hasCourses == " + levels.get(3).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(4).getId() + "\" && @.name == \"" + levels.get(4).getName() + "\" && @.hasCourses == " + levels.get(4).hasActiveCourses() + ")]").exists())
+            .andExpect(jsonPath("$.levels.levels[?(@.courseLevelID == \"" + levels.get(5).getId() + "\" && @.name == \"" + levels.get(5).getName() + "\" && @.hasCourses == " + levels.get(5).hasActiveCourses() + ")]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
@@ -126,7 +126,9 @@ public class AdminLevelControllerTest extends AbstractControllerTest {
             )
             .andExpect(status().isOk())
             .andExpect(content().contentType("application/json;charset=utf-8"))
+            .andExpect(jsonPath("$.level.courseLevelID", is(sampleLevel.getId())))
             .andExpect(jsonPath("$.level.name", is(sampleLevel.getName())))
+            .andExpect(jsonPath("$.level.hasCourses", is(sampleLevel.hasActiveCourses())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
