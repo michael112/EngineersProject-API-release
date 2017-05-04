@@ -1,5 +1,8 @@
 package main.json.course.grade.commons;
 
+import java.util.Set;
+import java.util.HashSet;
+
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
@@ -9,6 +12,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
+
+import main.json.course.grade.teacher.edit.StudentGradeJson;
 
 import main.constants.validationconstants.ValidationConstants;
 
@@ -53,6 +58,10 @@ public class NewGradeJson {
     @Setter
     private Double weight;
 
+    @Getter
+    @Setter
+    private Set<StudentGradeJson> values;
+
     public boolean hasHomework() {
         return ( ( this.getHomeworkID() != null ) && ( this.getHomeworkID().length() > 0 ) );
     }
@@ -63,6 +72,7 @@ public class NewGradeJson {
 
     public NewGradeJson() {
         this.setWeight(new Double(1));
+        this.setValues(new HashSet<StudentGradeJson>());
     }
 
 }

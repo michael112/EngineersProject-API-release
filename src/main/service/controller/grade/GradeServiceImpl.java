@@ -153,6 +153,9 @@ public class GradeServiceImpl extends AbstractService implements GradeService {
                 grade.setTask(test);
             }
             this.gradeCrudService.saveGrade(grade);
+            for( StudentGradeJson studentGrade : newGradeJson.getValues() ) {
+                createStudentGrade(studentGrade, grade);
+            }
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
