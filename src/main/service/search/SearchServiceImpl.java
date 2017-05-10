@@ -37,7 +37,7 @@ public class SearchServiceImpl extends AbstractService implements SearchService 
 		if( ( courses != null ) && ( courses.size() > 0 ) ) {
 			Set<CourseSignupJson> result = new HashSet<>();
 			for( Course course : courses ) {
-				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+				CourseSignupJson courseSignupJson = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
 				for( User teacher : course.getTeachers() ) {
 					courseSignupJson.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
 				}

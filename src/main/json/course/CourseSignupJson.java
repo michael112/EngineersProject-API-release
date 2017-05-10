@@ -14,11 +14,15 @@ public class CourseSignupJson extends CourseJson {
     private Set<CourseDayJson> courseDays;
 
     @Getter
+    private int peopleInCourse;
+
+    @Getter
     private Double price;
 
-    public CourseSignupJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, Double price) {
+    public CourseSignupJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, int peopleInCourse, Double price) {
         super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.courseDays = new HashSet<>();
+        this.peopleInCourse = peopleInCourse;
         this.price = price;
     }
 

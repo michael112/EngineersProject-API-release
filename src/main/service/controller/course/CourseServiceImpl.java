@@ -153,7 +153,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
 
     public CourseSignupJson getSignupCourseInfo(Course course) {
         try {
-            CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getPrice());
+            CourseSignupJson result = new CourseSignupJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), course.getStudents().size(), course.getPrice());
             for( User teacher : course.getTeachers() ) {
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
