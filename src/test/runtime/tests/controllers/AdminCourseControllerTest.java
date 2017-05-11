@@ -311,7 +311,7 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
         when(this.courseTypeCrudServiceMock.findCourseTypeByID(Mockito.any(String.class))).thenReturn(this.testEnvironment.getCourseTypes().get(0));
         doNothing().when(courseCrudServiceMock).updateCourse(Mockito.any(Course.class));
 
-        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/coursetype")
+        this.mockMvc.perform(put(this.testedClassURI + '/' + sampleCourse.getId() + "/type")
             .contentType("application/json;charset=utf-8")
             .content(objectToJsonBytes(editCourseType))
             )

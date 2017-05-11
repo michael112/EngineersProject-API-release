@@ -18,7 +18,7 @@ public class AdminCourseControllerUrlConstants {
 
     public static final String EDIT_COURSE_LANGUAGE = "/{courseID}/language";
 
-    public static final String EDIT_COURSE_TYPE = "/{courseID}/coursetype";
+    public static final String EDIT_COURSE_TYPE = "/{courseID}/type";
 
     public static final String EDIT_COURSE_LEVEL = "/{courseID}/level";
 
