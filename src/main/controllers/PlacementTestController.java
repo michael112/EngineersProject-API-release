@@ -4,8 +4,6 @@ import java.util.Set;
 
 import javax.annotation.security.RolesAllowed;
 
-import javax.annotation.security.PermitAll;
-
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,7 +58,7 @@ public class PlacementTestController {
     @Autowired
     private LabelProvider labelProvider;
 
-    @PermitAll
+    @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = PlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestList() {
 		User currentUser = this.currentUserService.getCurrentUser();
