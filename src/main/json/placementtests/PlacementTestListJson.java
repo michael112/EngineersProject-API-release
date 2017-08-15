@@ -11,6 +11,7 @@ public class PlacementTestListJson {
 
     @Getter
     private String language;
+
     @Getter
     private Set<PlacementTestResultJson> test;
 

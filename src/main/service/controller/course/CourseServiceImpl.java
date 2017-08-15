@@ -34,7 +34,7 @@ import main.model.language.Language;
 
 import main.model.user.User;
 
-import main.json.course.AvailableLngAndTypesJson;
+import main.json.course.AvailableInfoToSignupJson;
 import main.json.course.CourseJson;
 import main.json.course.CourseSignupJson;
 import main.json.course.CourseListJson;
@@ -134,8 +134,8 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
         }
     }
 
-    public AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes() {
-        AvailableLngAndTypesJson result = new AvailableLngAndTypesJson();
+    public AvailableInfoToSignupJson showAvailableLanguagesAndCourseTypes() {
+        AvailableInfoToSignupJson result = new AvailableInfoToSignupJson();
         Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
         Set<CourseLevel> availableCourseLevels = this.courseLevelCrudService.findAllCourseLevels();
         Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();

@@ -1,5 +1,3 @@
-// Sprawidzić działanie klucza głównego
-
 package main.model.language;
 
 import java.io.Serializable;

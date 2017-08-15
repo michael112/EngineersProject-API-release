@@ -9,19 +9,24 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class PlacementTestResultJson {
+    // dołożyć maxResult
 
     @Getter
-    private String testID;
+    private String placementTestID;
+
+    @Getter
+    private String placementTestResultID;
 
     @Getter
     private Double result;
 
-    public PlacementTestResultJson(String testID) {
-        this.testID = testID;
+    public PlacementTestResultJson(String placementTestID) {
+        this.placementTestID = placementTestID;
     }
 
-    public PlacementTestResultJson(String testID, Double result) {
-        this(testID);
+    public PlacementTestResultJson(String placementTestID, String placementTestResultID, Double result) {
+        this(placementTestID);
+        this.placementTestResultID = placementTestResultID;
         this.result = result;
     }
 

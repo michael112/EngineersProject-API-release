@@ -284,12 +284,12 @@ public class CourseControllerTest extends AbstractControllerTest {
 
         /*
         String responseJSON = getResponseJson(this.mockMvc,
-            get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES)
+            get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_INFO_TO_SIGNUP)
             .contentType("application/json;charset=utf-8")
         );
         */
 
-        this.mockMvc.perform(get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES)
+        this.mockMvc.perform(get(this.testedClassURI + '/' + CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_INFO_TO_SIGNUP)
                 .contentType("application/json;charset=utf-8")
                 )
                 .andExpect(status().isOk())

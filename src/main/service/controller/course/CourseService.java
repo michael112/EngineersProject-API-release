@@ -8,7 +8,7 @@ import main.json.course.CourseListJson;
 import main.json.course.CourseInfoTeacherJson;
 import main.json.course.CourseInfoStudentJson;
 
-import main.json.course.AvailableLngAndTypesJson;
+import main.json.course.AvailableInfoToSignupJson;
 
 import main.json.course.CourseJson;
 
@@ -24,7 +24,7 @@ public interface CourseService {
 
     CourseInfoTeacherJson getCourseInfoTeacher(Course course, User user);
 
-    AvailableLngAndTypesJson showAvailableLanguagesAndCourseTypes();
+    AvailableInfoToSignupJson showAvailableLanguagesAndCourseTypes();
 
     CourseSignupJson getSignupCourseInfo(Course course);
 

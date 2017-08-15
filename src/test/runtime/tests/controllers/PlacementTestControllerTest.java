@@ -37,6 +37,7 @@ import main.util.labels.LabelProvider;
 import main.util.currentUser.CurrentUserService;
 import main.util.domain.DomainURIProvider;
 import main.util.coursemembership.validator.CourseMembershipValidator;
+import main.util.locale.LocaleCodeProvider;
 
 import test.runtime.environment.TestEnvironmentBuilder;
 import test.runtime.environment.TestEnvironment;
@@ -59,6 +60,8 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 	private UserCrudService userCrudServiceMock;
 	@Autowired
 	private LabelProvider labelProviderMock;
+	@Autowired
+	private LocaleCodeProvider localeCodeProviderMock;
 	@Autowired
 	private LanguageCrudService languageCrudServiceMock;
 	@Autowired
@@ -90,6 +93,7 @@ public class PlacementTestControllerTest extends AbstractControllerTest {
 		setAuthorizationMock(this.testEnvironment.getUsers().get(0)); // sampleUser 1
 
 		initInsideMocks(this.courseMembershipValidatorMock, this.localeResolverMock);
+		initInsideMocks(this.localeCodeProviderMock);
 	}
 
 	@Test

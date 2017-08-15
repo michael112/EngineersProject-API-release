@@ -35,7 +35,7 @@ import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 import main.json.response.CourseInfoResponseJson;
 import main.json.response.CourseListResponseJson;
-import main.json.response.AvailableLngAndTypesResponseJson;
+import main.json.response.AvailableInfoToSignupResponseJson;
 import main.json.response.CourseSignupResponseJson;
 import main.json.response.ChangeGroupResponseJson;
 import main.json.response.ResignGroupResponseJson;
@@ -45,7 +45,7 @@ import main.json.response.CourseMembershipTypeResponseJson;
 import main.json.course.AbstractCourseInfoJson;
 
 import main.json.course.CourseListJson;
-import main.json.course.AvailableLngAndTypesJson;
+import main.json.course.AvailableInfoToSignupJson;
 import main.json.course.CourseJson;
 import main.json.course.search.CourseSearchPatternJson;
 import main.json.course.CourseSignupJson;
@@ -128,12 +128,12 @@ public class CourseController {
     }
 
     @PermitAll
-    @RequestMapping(value = CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_LANGUAGES_AND_COURSE_TYPES, method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> showAvailableLanguagesAndCourseTypes() {
-        AvailableLngAndTypesJson result = this.courseService.showAvailableLanguagesAndCourseTypes();
+    @RequestMapping(value = CourseControllerUrlConstants.COURSE_SHOW_AVAILABLE_INFO_TO_SIGNUP, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> showAvailableInfoToSignup() {
+        AvailableInfoToSignupJson result = this.courseService.showAvailableLanguagesAndCourseTypes();
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("course.showavailablelanguagesandcoursetypes");
-        return new ResponseEntity<AvailableLngAndTypesResponseJson>(new AvailableLngAndTypesResponseJson(result, messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<AvailableInfoToSignupResponseJson>(new AvailableInfoToSignupResponseJson(result, messageStr, responseStatus), responseStatus);
     }
 
     @PermitAll

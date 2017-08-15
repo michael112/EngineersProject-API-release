@@ -11,7 +11,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 @EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AvailableLngAndTypesJson {
+public class AvailableInfoToSignupJson {
 
     @Getter
     private Set<LanguageJson> languages;
@@ -43,7 +43,7 @@ public class AvailableLngAndTypesJson {
         this.types.add(courseType);
     }
 
-    public AvailableLngAndTypesJson() {
+    public AvailableInfoToSignupJson() {
         this.languages = new HashSet<>();
         this.levels = new HashSet<>();
         this.types = new HashSet<>();
