@@ -99,6 +99,9 @@ public class Language extends AbstractSinglePKModel<String> {
 	@Getter
 	@OneToMany(fetch=FetchType.EAGER, mappedBy="language")
 	private Set<PlacementTest> placementTests;
+	public boolean hasPlacementTests() {
+		return this.placementTests.size() > 0;
+	}
 	public void setPlacementTests(Set<PlacementTest> placementTests) {
 		this.placementTests.clear();
 		if( placementTests != null ) {
