@@ -107,6 +107,16 @@ public class PlacementTest extends AbstractUuidModel {
 		return null;
 	}
 
+	public double getMaxResult() {
+		double result = 0;
+		for( PlacementTask task : this.getTasks() ) {
+			for( PlacementSentence sentence : task.getSentences() ) {
+				result++;
+			}
+		}
+		return result;
+	}
+
 	public PlacementTest() {
 		super();
 		this.tasks = new HashSet<>();

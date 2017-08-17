@@ -46,7 +46,7 @@ public class PlacementTestServiceImpl extends AbstractService implements Placeme
                 for (PlacementTest t : l.getPlacementTests()) {
                     PlacementTestResult currentUserTestResult = getCurrentUserTestResult(currentUser, t);
                     if (currentUserTestResult != null) {
-                        tests.add(new PlacementTestResultJson(t.getId(), currentUserTestResult.getId(), currentUserTestResult.getResult()));
+                        tests.add(new PlacementTestResultJson(t.getId(), currentUserTestResult.getId(), currentUserTestResult.getResult(), t.getMaxResult()));
                     } else {
                         tests.add(new PlacementTestResultJson(t.getId()));
                     }
