@@ -84,7 +84,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
 
     public CourseInfoJson getCourseInfo(Course course) {
         try {
-            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.print(course.getCourseActivity().getFrom()), this.df.print(course.getCourseActivity().getTo()), course.getMaxStudents());
+            CourseInfoJson result = new CourseInfoJson(course.getId(), course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getId(), course.getCourseLevel().getName(), course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode()), this.df.print(course.getCourseActivity().getFrom()), this.df.print(course.getCourseActivity().getTo()), course.getMaxStudents(), course.getPrice());
             for( CourseDay courseDay : course.getCourseDays() ) {
                 result.addCourseDay(courseDay.getId(), courseDay.getDay().getDay(), courseDay.getHourFrom().getHour(), courseDay.getHourFrom().getMinute(), courseDay.getHourTo().getHour(), courseDay.getHourTo().getMinute());
             }

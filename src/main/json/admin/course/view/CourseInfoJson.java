@@ -24,6 +24,9 @@ public class CourseInfoJson extends CourseJson {
     @Getter
     private int maxStudents;
 
+    @Getter
+    private Double price;
+
     public void addCourseDay(String courseDayID, int day, int hourFrom, int minuteFrom, int hourTo, int minuteTo) {
         this.courseDays.add(new CourseDayJson(courseDayID, day, hourFrom, minuteFrom, hourTo, minuteTo));
     }
@@ -32,10 +35,11 @@ public class CourseInfoJson extends CourseJson {
         super.addTeacher(teacher);
     }
 
-    public CourseInfoJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, String courseActivityFrom, String courseActivityTo, int maxStudents) {
+    public CourseInfoJson(String courseID, String languageID, String languageName, String courseLevelID, String courseLevelName, String courseTypeID, String courseTypeName, String courseActivityFrom, String courseActivityTo, int maxStudents, Double price) {
         super(courseID, languageID, languageName, courseLevelID, courseLevelName, courseTypeID, courseTypeName);
         this.courseActivity = new CourseActivityJson(courseActivityFrom, courseActivityTo);
         this.maxStudents = maxStudents;
+        this.price = price;
         this.courseDays = new ArrayList<>();
     }
 

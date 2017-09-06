@@ -171,6 +171,7 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
             .andExpect(jsonPath("$.course.courseActivity.dateTo", is(this.dateTimeFormatter.print(sampleCourse.getCourseActivity().getTo()))))
             .andExpect(jsonPath("$.course.courseDays[?(@.courseDayID == \"" + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getId() + "\" && @.day == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getDay().getDay() + " && @.hourFrom.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getHour() + " && @.hourFrom.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourFrom().getMinute() + " && @.hourTo.hour == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getHour() + " && @.hourTo.minute == " + new ArrayList<>(sampleCourse.getCourseDays()).get(0).getHourTo().getMinute() + ")]").exists())
             .andExpect(jsonPath("$.course.maxStudents", is(sampleCourse.getMaxStudents())))
+            .andExpect(jsonPath("$.course.price", is(sampleCourse.getPrice())))
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
