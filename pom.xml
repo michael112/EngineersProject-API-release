@@ -10,7 +10,7 @@
 	<packaging>war</packaging>
 
 	<name>SpringSecurityWithHibernate</name>
-	
+
 	<build>
 			<sourceDirectory>src</sourceDirectory>
 			<plugins>
