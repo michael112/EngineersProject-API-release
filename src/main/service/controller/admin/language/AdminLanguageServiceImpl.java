@@ -85,6 +85,7 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             for( LanguageName languageName : language.getLanguageNames() ) {
                 language.removeLanguageName(languageName);
             }
+            this.languageCrudService.updateLanguage(language);
             for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
                 language.addLanguageName(new LanguageName(language, this.languageCrudService.findLanguageByID(languageNameJson.getLanguageID()), languageNameJson.getLanguageName()));
             }
