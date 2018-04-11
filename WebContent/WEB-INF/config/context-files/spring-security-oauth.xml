@@ -109,8 +109,8 @@
 					  authorities="ROLE_CLIENT, ROLE_TRUSTED_CLIENT"
 					  redirect-uri="/web"
 					  scope="read,write,trust"
-					  access-token-validity="600"
-					  refresh-token-validity="7200"/>
+					  access-token-validity="${oauth.access.token.validity.time}"
+					  refresh-token-validity="${oauth.refresh.token.validity.time}"/>
 	</oauth:client-details-service>
 
 	<oauth:expression-handler id="oauthExpressionHandler" />
