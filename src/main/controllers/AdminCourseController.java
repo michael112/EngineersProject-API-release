@@ -127,7 +127,7 @@ public class AdminCourseController {
     public ResponseEntity<? extends AbstractResponseJson> getCreatingCourseData() {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.course.creating.data.success");
-        return new ResponseEntity<AdminCreatingCourseDataResponseJson>(new AdminCreatingCourseDataResponseJson(this.adminLanguageService.getLanguageList(), this.adminLevelService.getCourseLevelList(), this.adminTypeService.getCourseTypeList(), messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<AdminCreatingCourseDataResponseJson>(new AdminCreatingCourseDataResponseJson(this.adminLanguageService.getLanguageList(), this.adminLevelService.getCourseLevelList(), this.adminTypeService.getCourseTypeList(), this.adminCourseService.getAllCourseDays(), messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)

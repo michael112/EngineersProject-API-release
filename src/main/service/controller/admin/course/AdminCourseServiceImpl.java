@@ -1,6 +1,7 @@
 package main.service.controller.admin.course;
 
 import java.util.Set;
+import java.util.HashSet;
 
 import java.util.Iterator;
 
@@ -45,6 +46,8 @@ import main.json.admin.course.edit.EditCoursePriceJson;
 import main.json.admin.course.edit.EditCourseTypeJson;
 
 import main.json.course.CourseUserJson;
+
+import main.json.course.CourseDaySetJson;
 
 import main.model.course.Course;
 import main.model.user.User;
@@ -92,6 +95,26 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
                 result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
             }
             return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public Set<CourseDaySetJson> getAllCourseDays() {
+        try {
+            Set<Course> allCourses = this.courseCrudService.findAllCourses();
+            Set<CourseDaySetJson> allCourseDays = new HashSet<>();
+            for( Course course : allCourses ) {
+                Set<CourseDay> cds = course.getCourseDays();
+                CourseDaySetJson cdsj = new CourseDaySetJson();
+                for( CourseDay cd : cds ) {
+                    main.json.course.CourseDayJson cdj = new main.json.course.CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute());
+                    cdsj.addDay(cdj);
+                }
+                if(!allCourseDays.contains(cdsj)) allCourseDays.add(cdsj);
+            }
+            return allCourseDays;
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

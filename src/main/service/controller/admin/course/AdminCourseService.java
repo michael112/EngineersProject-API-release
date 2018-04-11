@@ -1,5 +1,7 @@
 package main.service.controller.admin.course;
 
+import java.util.Set;
+
 import main.json.admin.course.view.CourseListJson;
 import main.json.admin.course.view.CourseInfoJson;
 
@@ -16,6 +18,8 @@ import main.json.admin.course.edit.EditCourseMaxStudentsJson;
 import main.json.admin.course.edit.EditCoursePriceJson;
 import main.json.admin.course.edit.EditCourseTypeJson;
 
+import main.json.course.CourseDaySetJson;
+
 import main.model.course.Course;
 import main.model.course.CourseDay;
 import main.model.user.User;
@@ -25,6 +29,8 @@ public interface AdminCourseService {
     CourseListJson getCourseList();
 
     CourseInfoJson getCourseInfo(Course course);
+
+    Set<CourseDaySetJson> getAllCourseDays();
 
     void addCourse(NewCourseJson newCourseJson);
 
