@@ -25,7 +25,7 @@ public class DomainURIProviderImpl implements DomainURIProvider {
         }
 
         String domainURI = http + parts[0];
-        return domainURI;
+        return domainURI + this.httpServletRequest.getContextPath();
     }
 
 }
