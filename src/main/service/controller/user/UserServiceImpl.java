@@ -32,6 +32,12 @@ import main.json.user.EditEmailJson;
 import main.json.user.PhoneJson;
 import main.json.user.PhoneJsonSet;
 import main.json.user.CourseJson;
+import main.json.user.ExtendedCourseJson;
+
+import main.json.course.LanguageJson;
+import main.json.course.CourseLevelJson;
+import main.json.course.CourseTypeJson;
+import main.json.course.CourseUserJson;
 
 import main.constants.urlconstants.UserControllerUrlConstants;
 
@@ -161,10 +167,14 @@ public class UserServiceImpl extends AbstractService implements UserService {
         return result;
     }
 
-    private CourseJson getStudentCourseJson(CourseMembership courseMembership) {
+    private ExtendedCourseJson getStudentCourseJson(CourseMembership courseMembership) {
         try {
             Course course = courseMembership.getCourse();
-            return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName(), courseMembership.isActive());
+            ExtendedCourseJson result = new ExtendedCourseJson(course.getId(), new LanguageJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode())), new CourseLevelJson(course.getCourseLevel().getId(), course.getCourseLevel().getName()), new CourseTypeJson(course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())), courseMembership.isActive());
+            for( User teacher : course.getTeachers() ) {
+                result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
+            }
+            return result;
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();
@@ -173,7 +183,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
 
     private CourseJson getTeacherCourseJson(Course course) {
         try {
-            return new CourseJson(course.getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()), course.getCourseLevel().getName());
+            return new CourseJson(course.getId(), new LanguageJson(course.getLanguage().getId(), course.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode())), new CourseLevelJson(course.getCourseLevel().getId(), course.getCourseLevel().getName()), new CourseTypeJson(course.getCourseType().getId(), course.getCourseType().getCourseTypeName(this.localeCodeProvider.getLocaleCode())));
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

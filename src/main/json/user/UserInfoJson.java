@@ -19,7 +19,7 @@ public class UserInfoJson {
     @Getter
     private String lastName;
     @Getter
-    private Set<CourseJson> coursesAsStudent;
+    private Set<ExtendedCourseJson> coursesAsStudent;
     @Getter
     private Set<CourseJson> coursesAsTeacher;
 
@@ -33,7 +33,7 @@ public class UserInfoJson {
         this.coursesAsTeacher = new HashSet<>();
     }
 
-    public void addCourseAsStudent(CourseJson courseAsStudent) {
+    public void addCourseAsStudent(ExtendedCourseJson courseAsStudent) {
         this.coursesAsStudent.add(courseAsStudent);
     }
     public void addCourseAsTeacher(CourseJson courseAsTeacher) {

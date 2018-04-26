@@ -6,28 +6,35 @@ import lombok.Getter;
 
 import lombok.EqualsAndHashCode;
 
+import main.json.course.LanguageJson;
+import main.json.course.CourseLevelJson;
+import main.json.course.CourseTypeJson;
+
 @EqualsAndHashCode
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CourseJson {
 
     @Getter
-    private String id;
+    private String courseID;
     @Getter
-    private String language;
+    private LanguageJson language;
     @Getter
-    private String level;
+    private CourseLevelJson courseLevel;
+    @Getter
+    private CourseTypeJson courseType;
     @Getter
     private Boolean confirmed;
 
-
-    public CourseJson(String id, String language, String level) {
-        this.id = id;
+    public CourseJson(String courseID, LanguageJson language, CourseLevelJson level, CourseTypeJson type) {
+        super();
+        this.courseID = courseID;
         this.language = language;
-        this.level = level;
+        this.courseLevel = level;
+        this.courseType = type;
         this.confirmed = null;
     }
-    public CourseJson(String id, String language, String level, boolean confirmed) {
-        this(id, language, level);
+    public CourseJson(String courseID, LanguageJson language, CourseLevelJson level, CourseTypeJson type, boolean confirmed) {
+        this(courseID, language, level, type);
         this.confirmed = confirmed;
     }
 
