@@ -92,8 +92,9 @@ public class PlacementTestController {
         if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("placementtest.content.null"));
 
         double result = this.placementTestService.setSolvedPlacementTest(currentUser, placementTest, solvedPlacementTestJson);
+        double maxResult = placementTest.getMaxResult();
         String messageStr = this.labelProvider.getLabel("placementtest.solved.success");
         HttpStatus responseStatus = HttpStatus.OK;
-        return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, messageStr, responseStatus), responseStatus);
+        return new ResponseEntity<PlacementTestResultResponseJson>(new PlacementTestResultResponseJson(result, maxResult, messageStr, responseStatus), responseStatus);
     }
 }
