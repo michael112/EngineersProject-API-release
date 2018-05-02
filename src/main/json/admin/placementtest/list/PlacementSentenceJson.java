@@ -1,35 +1,37 @@
-package main.json.admin.placementtest.add;
+package main.json.admin.placementtest.list;
 
 import java.util.Set;
 import java.util.HashSet;
 
 import lombok.Getter;
-import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
 import main.model.placementtest.PlacementAnswer;
 
 @EqualsAndHashCode
-public class NewPlacementSentenceJson {
+public class PlacementSentenceJson {
 
     @Getter
-    @Setter
+    private String id;
+
+    @Getter
     private String prefix;
 
     @Getter
-    @Setter
     private String suffix;
 
     @Getter
-    @Setter
     private Set<PlacementAnswer> answers;
 
-    @Getter
-    @Setter
-    private String correctAnswer;
+    public void addAnswer(PlacementAnswer answer) {
+        this.answers.add(answer);
+    }
 
-    public NewPlacementSentenceJson() {
+    public PlacementSentenceJson(String id, String prefix, String suffix) {
         super();
+        this.id = id;
+        this.prefix = prefix;
+        this.suffix = suffix;
         this.answers = new HashSet<>();
     }
 

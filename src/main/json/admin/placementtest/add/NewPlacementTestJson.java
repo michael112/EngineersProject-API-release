@@ -12,7 +12,7 @@ public class NewPlacementTestJson {
 
     @Getter
     @Setter
-    private String language;
+    private String languageID;
 
     @Getter
     @Setter
