@@ -40,6 +40,7 @@ import main.json.course.CourseSignupJson;
 import main.json.course.CourseListJson;
 import main.json.course.CourseUserJson;
 import main.json.course.CourseDayJson;
+import main.json.course.CourseDaySetJson;
 import main.json.course.CourseInfoTeacherJson;
 import main.json.course.CourseInfoStudentJson;
 import main.json.course.NextLessonJson;
@@ -135,20 +136,42 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
     }
 
     public AvailableInfoToSignupJson showAvailableLanguagesAndCourseTypes() {
-        AvailableInfoToSignupJson result = new AvailableInfoToSignupJson();
-        Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
-        Set<CourseLevel> availableCourseLevels = this.courseLevelCrudService.findAllCourseLevels();
-        Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
-        for( Language language : availableLanguages ) {
-            result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+        try {
+            AvailableInfoToSignupJson result = new AvailableInfoToSignupJson();
+            Set<Language> availableLanguages = this.languageCrudService.findAllLanguages();
+            Set<CourseLevel> availableCourseLevels = this.courseLevelCrudService.findAllCourseLevels();
+            Set<CourseType> availableCourseTypes = this.courseTypeCrudService.findAllCourseTypes();
+            Set<CourseDaySetJson> availableCourseDays = getAllCourseDays();
+            for (Language language : availableLanguages) {
+                result.addLanguage(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()));
+            }
+            for (CourseLevel courseLevel : availableCourseLevels) {
+                result.addLevel(courseLevel.getId(), courseLevel.getName());
+            }
+            for (CourseType courseType : availableCourseTypes) {
+                result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+            }
+            result.setDays(availableCourseDays);
+            return result;
         }
-        for( CourseLevel courseLevel : availableCourseLevels ) {
-            result.addLevel(courseLevel.getId(), courseLevel.getName());
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
         }
-        for( CourseType courseType : availableCourseTypes ) {
-            result.addType(courseType.getId(), courseType.getCourseTypeName(this.localeCodeProvider.getLocaleCode()));
+    }
+
+    private Set<CourseDaySetJson> getAllCourseDays() {
+        Set<Course> allCourses = this.courseCrudService.findAllCourses();
+        Set<CourseDaySetJson> allCourseDays = new HashSet<>();
+        for( Course course : allCourses ) {
+            Set<CourseDay> cds = course.getCourseDays();
+            CourseDaySetJson cdsj = new CourseDaySetJson();
+            for( CourseDay cd : cds ) {
+                main.json.course.CourseDayJson cdj = new main.json.course.CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute());
+                cdsj.addDay(cdj);
+            }
+            if(!allCourseDays.contains(cdsj)) allCourseDays.add(cdsj);
         }
-        return result;
+        return allCourseDays;
     }
 
     public CourseSignupJson getSignupCourseInfo(Course course) {

@@ -4,6 +4,7 @@ import java.util.Set;
 import java.util.HashSet;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import lombok.EqualsAndHashCode;
 
@@ -21,6 +22,10 @@ public class AvailableInfoToSignupJson {
 
     @Getter
     private Set<CourseTypeJson> types;
+
+    @Getter
+    @Setter
+    private Set<CourseDaySetJson> days;
 
     public void addLanguage(String id, String languageName) {
         this.addLanguage(new LanguageJson(id, languageName));
@@ -47,5 +52,6 @@ public class AvailableInfoToSignupJson {
         this.languages = new HashSet<>();
         this.levels = new HashSet<>();
         this.types = new HashSet<>();
+        this.days = new HashSet<>();
     }
 }
