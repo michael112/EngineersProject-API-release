@@ -19,13 +19,11 @@ import main.constants.validationconstants.ValidationConstants;
 @EqualsAndHashCode
 public class CourseSearchPatternJson {
 
-    @NotBlank(message = "course.search.languageid.empty")
     @Size(min = 2, max = 2, message = "course.search.languageid.size")
     @Getter
     @Setter
     private String language; // id
 
-    @NotBlank(message = "course.search.coursetypeid.empty")
     @Pattern(regexp = ValidationConstants.UUID_REGEX, message = "course.search.coursetypeid.invalid")
     @Size(max = 36, message = "course.search.coursetypeid.length")
     @Getter
