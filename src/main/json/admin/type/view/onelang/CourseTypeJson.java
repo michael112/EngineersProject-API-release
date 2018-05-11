@@ -8,7 +8,7 @@ import lombok.EqualsAndHashCode;
 public class CourseTypeJson {
 
     @Getter
-    private String id;
+    private String courseTypeID;
 
     @Getter
     private String name;
@@ -17,7 +17,7 @@ public class CourseTypeJson {
     private boolean hasCourses;
 
     public CourseTypeJson(String id, String name, boolean hasCourses) {
-        this.id = id;
+        this.courseTypeID = id;
         this.name = name;
         this.hasCourses = hasCourses;
     }

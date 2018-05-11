@@ -169,7 +169,7 @@ public class CourseServiceImpl extends AbstractService implements CourseService 
                 main.json.course.CourseDayJson cdj = new main.json.course.CourseDayJson(cd.getDay().getDay(), cd.getHourFrom().getHour(), cd.getHourFrom().getMinute());
                 cdsj.addDay(cdj);
             }
-            if(!allCourseDays.contains(cdsj)) allCourseDays.add(cdsj);
+            if( ( cdsj.getDays().size() > 0 ) && (!allCourseDays.contains(cdsj)) ) allCourseDays.add(cdsj);
         }
         return allCourseDays;
     }

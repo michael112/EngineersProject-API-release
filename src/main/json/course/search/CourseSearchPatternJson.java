@@ -30,7 +30,6 @@ public class CourseSearchPatternJson {
     @Setter
     private String courseType; // id
 
-    @NotBlank(message = "course.search.courselevelname.empty")
     @Size(min = 2, max = 2, message = "course.search.courselevelname.length")
     @Pattern(regexp = ValidationConstants.COURSE_LEVEL_REGEX, message = "course.search.courselevelname.invalid")
     @Getter

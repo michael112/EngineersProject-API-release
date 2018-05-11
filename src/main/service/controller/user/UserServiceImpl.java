@@ -74,7 +74,7 @@ public class UserServiceImpl extends AbstractService implements UserService {
             UserInfoJson res = new UserInfoJson(user.getId(), user.getUsername(), user.getFirstName(), user.getLastName());
 
             for( CourseMembership cs : user.getCoursesAsStudent() ) {
-                res.addCourseAsStudent(getStudentCourseJson(cs));
+                if( cs.isActive() ) res.addCourseAsStudent(getStudentCourseJson(cs));
             }
             for( Course ct : user.getCoursesAsTeacher() ) {
                 res.addCourseAsTeacher(getTeacherCourseJson(ct));
