@@ -213,9 +213,9 @@ public class AdminCourseControllerTest extends AbstractControllerTest {
                 .andExpect(jsonPath("$.courseLevels.levels[?(@.courseLevelID == \"" + this.testEnvironment.getCourseLevels().get(4).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseLevels().get(4).getName() + "\")]").exists())
                 .andExpect(jsonPath("$.courseLevels.levels[?(@.courseLevelID == \"" + this.testEnvironment.getCourseLevels().get(5).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseLevels().get(5).getName() + "\")]").exists())
                 .andExpect(jsonPath("$.courseTypes.types", hasSize(3)))
-                .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + this.testEnvironment.getCourseTypes().get(0).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(0).getCourseTypeName("EN") + "\")]").exists())
-                .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + this.testEnvironment.getCourseTypes().get(1).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(1).getCourseTypeName("EN") + "\")]").exists())
-                .andExpect(jsonPath("$.courseTypes.types[?(@.id == \"" + this.testEnvironment.getCourseTypes().get(2).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(2).getCourseTypeName("EN") + "\")]").exists())
+                .andExpect(jsonPath("$.courseTypes.types[?(@.courseTypeID == \"" + this.testEnvironment.getCourseTypes().get(0).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(0).getCourseTypeName("EN") + "\")]").exists())
+                .andExpect(jsonPath("$.courseTypes.types[?(@.courseTypeID == \"" + this.testEnvironment.getCourseTypes().get(1).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(1).getCourseTypeName("EN") + "\")]").exists())
+                .andExpect(jsonPath("$.courseTypes.types[?(@.courseTypeID == \"" + this.testEnvironment.getCourseTypes().get(2).getId() + "\" && @.name == \"" + this.testEnvironment.getCourseTypes().get(2).getCourseTypeName("EN") + "\")]").exists())
             .andExpect(jsonPath("$.message", is(returnMessage)))
             .andExpect(jsonPath("$.success", is(true)));
     }
