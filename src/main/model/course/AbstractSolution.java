@@ -21,7 +21,7 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseMembershipID", referencedColumnName="courseMembershipID", nullable=false)
 	private CourseMembership courseMembership;
 
@@ -34,7 +34,7 @@ public abstract class AbstractSolution extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="studentGradeID", referencedColumnName="studentGradeID", nullable=true)
 	private StudentGrade grade;
 	

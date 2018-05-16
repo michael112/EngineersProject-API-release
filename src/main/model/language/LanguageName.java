@@ -45,7 +45,7 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 
 	@Getter
 	@MapsId("namedLanguageID")
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="namedLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namedLanguage; //  język którego wpis dotyczy
 	public void setNamedLanguage(Language namedLanguage) {
@@ -64,7 +64,7 @@ public class LanguageName extends AbstractModel<LanguageName.LanguageNameKey> {
 	
 	@Getter
 	@MapsId("namingLanguageID")
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="namingLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namingLanguage; // język w którym robimy nazwę
 	public void setNamingLanguage(Language namingLanguage) {

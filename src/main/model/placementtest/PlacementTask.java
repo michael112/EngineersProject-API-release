@@ -32,7 +32,7 @@ public class PlacementTask extends AbstractUuidModel {
 	private String command;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="placementTaskID", referencedColumnName="placementTaskID", nullable=false)
 	private Set<PlacementSentence> sentences;
 	public void setSentences(Set<PlacementSentence> sentences) {

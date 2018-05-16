@@ -27,7 +27,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class PlacementTestResult extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="testID", referencedColumnName="placementTestID", nullable=false)
 	private PlacementTest test;
 	public void setTest(PlacementTest test) {
@@ -44,7 +44,7 @@ public class PlacementTestResult extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {

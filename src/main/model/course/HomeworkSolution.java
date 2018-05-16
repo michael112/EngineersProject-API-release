@@ -25,7 +25,7 @@ import main.model.user.User;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "homeworkSolutionID")) })
 public class HomeworkSolution extends AbstractSolution {
 
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable=false)
 	@Access(AccessType.PROPERTY)
 	@Override
@@ -46,7 +46,7 @@ public class HomeworkSolution extends AbstractSolution {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinColumn(name="fileID", referencedColumnName="fileID", nullable=false)
 	private File solutionFile;
 

@@ -32,7 +32,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class CourseMembership extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 	public void setCourse(Course course) {
@@ -54,7 +54,7 @@ public class CourseMembership extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private User user;
 	public void setUser(User user) {
@@ -71,7 +71,7 @@ public class CourseMembership extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="student", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="student", orphanRemoval=true)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {
 		this.grades.clear();
@@ -101,7 +101,7 @@ public class CourseMembership extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseIDMovedFrom", referencedColumnName="courseID", nullable=true)
 	private Course movedFrom;
 

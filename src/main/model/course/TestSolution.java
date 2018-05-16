@@ -26,7 +26,7 @@ import main.model.user.User;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "testSolutionID")) }) // albo solutionID zamiast id
 public class TestSolution extends AbstractSolution {
 
-    @ManyToOne(fetch=FetchType.EAGER)
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="taskID", referencedColumnName="taskID", nullable=false)
     @Access(AccessType.PROPERTY)
     @Override

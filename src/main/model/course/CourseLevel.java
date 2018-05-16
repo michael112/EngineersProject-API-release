@@ -30,7 +30,7 @@ public class CourseLevel extends AbstractUuidModel implements Comparable<CourseL
 	private String name;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseLevel")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseLevel")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
 		this.courses.clear();

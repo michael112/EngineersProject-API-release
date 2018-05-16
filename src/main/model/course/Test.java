@@ -27,7 +27,7 @@ import main.model.user.User;
 public class Test extends AbstractHomeworkOrTest {
 
 	@Access(AccessType.PROPERTY)
-	@javax.persistence.OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@javax.persistence.OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@javax.persistence.JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
 	@Override
 	public Grade getGrade() {
@@ -49,7 +49,7 @@ public class Test extends AbstractHomeworkOrTest {
 		if( course != null) course.addTest(this); // przypisanie powiązania
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
 	@Getter
 	private Set<TestSolution> testSolutions;
 	public void setTestSolutions(Set<TestSolution> solutions) {

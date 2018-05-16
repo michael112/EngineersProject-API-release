@@ -37,7 +37,7 @@ public class PlacementSentence extends AbstractUuidModel {
 	private String suffix;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="placementSentenceID", referencedColumnName="placementSentenceID", nullable=false)
 	private Set<PlacementAnswer> answers;
 	public void setAnswers(Set<PlacementAnswer> answers) {

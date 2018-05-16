@@ -23,7 +23,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class StudentGrade extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="studentID", referencedColumnName="courseMembershipID", nullable=false)
 	private CourseMembership student;
 	public void setStudent(CourseMembership student) {
@@ -45,7 +45,7 @@ public class StudentGrade extends AbstractUuidModel {
 	private double gradeValue;
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="gradeID", referencedColumnName="gradeID", nullable=false)
 	private Grade grade;
 	public void setGrade(Grade grade) {

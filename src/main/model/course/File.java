@@ -46,7 +46,7 @@ public class File extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="senderID", referencedColumnName="userID", nullable=false)
 	private User sender;
 

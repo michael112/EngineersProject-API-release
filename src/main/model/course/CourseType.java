@@ -27,7 +27,7 @@ import main.model.abstracts.AbstractUuidModel;
 @AttributeOverrides({ @AttributeOverride(name = "id", column = @Column(name = "courseTypeID")) })
 public class CourseType extends AbstractUuidModel {
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="courseType", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="courseType", orphanRemoval=true)
 	private Set<CourseTypeName> courseTypeNames;
 	public void setCourseTypeNames(Set<CourseTypeName> courseTypeNames) {
 		this.courseTypeNames.clear();
@@ -60,7 +60,7 @@ public class CourseType extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="courseType")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="courseType")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
 		this.courses.clear();

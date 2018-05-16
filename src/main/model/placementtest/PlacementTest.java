@@ -29,7 +29,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class PlacementTest extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
@@ -46,7 +46,7 @@ public class PlacementTest extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="placementTestID", referencedColumnName="placementTestID", nullable=false)
 	private Set<PlacementTask> tasks;
 	public void setTasks(Set<PlacementTask> tasks) {
@@ -68,7 +68,7 @@ public class PlacementTest extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="test", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="test", orphanRemoval=true)
 	private Set<PlacementTestResult> results;
 	public void setResults(Set<PlacementTestResult> results) {
 		this.results.clear();

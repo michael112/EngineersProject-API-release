@@ -30,7 +30,7 @@ import main.model.user.User;
 public class Homework extends AbstractHomeworkOrTest {
 
 	@Access(AccessType.PROPERTY)
-	@javax.persistence.OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true, targetEntity=Grade.class)
+	@javax.persistence.OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true, targetEntity=Grade.class)
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
 	@Override
 	public Grade getGrade() {
@@ -53,7 +53,7 @@ public class Homework extends AbstractHomeworkOrTest {
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	@JoinTable(name = "attachementshomeworks",
 			joinColumns = { @JoinColumn(name = "homeworkID", referencedColumnName="taskID") },
@@ -77,7 +77,7 @@ public class Homework extends AbstractHomeworkOrTest {
 		return this.attachements.contains(attachement);
 	}
 
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="task", orphanRemoval=true)
 	@Getter
 	private Set<HomeworkSolution> homeworkSolutions;
 	public void setHomeworkSolutions(Set<HomeworkSolution> solutions) {

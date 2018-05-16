@@ -36,7 +36,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class Course extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="languageID", referencedColumnName="languageID", nullable=false)
 	private Language language;
 	public void setLanguage(Language language) {
@@ -53,7 +53,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseLevelID", referencedColumnName="courseLevelID", nullable=false)
 	private CourseLevel courseLevel;
 	public void setCourseLevel(CourseLevel courseLevel) {
@@ -70,7 +70,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
 	public void setCourseType(CourseType courseType) {
@@ -92,7 +92,7 @@ public class Course extends AbstractUuidModel {
 	private CourseActivity courseActivity;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Set<CourseDay> courseDays;
 	public void setCourseDays(Set<CourseDay> courseDays) {
@@ -122,7 +122,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="coursesAsTeacher")
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="coursesAsTeacher")
 	private Set<User> teachers;
 	public void setTeachers(Set<User> teachers) {
 		this.teachers.clear();
@@ -154,7 +154,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="course")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="course")
 	private Set<CourseMembership> students;
 	public void setStudents(Set<CourseMembership> students) {
 		this.students.clear();
@@ -192,7 +192,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Test> tests;
 	public void setTests(Set<Test> tests) {
 		this.tests.clear();
@@ -221,7 +221,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Homework> homeworks;
 	public void setHomeworks(Set<Homework> homeworks) {
 		this.homeworks.clear();
@@ -250,7 +250,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Grade> grades;
 	public void setGrades(Set<Grade> grades) {
 		this.grades.clear();
@@ -280,7 +280,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="course", orphanRemoval=true)
 	private Set<Message> messages;
 	public void setMessages(Set<Message> messages) {
 		this.messages.clear();
@@ -309,7 +309,7 @@ public class Course extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinTable(name = "attachementscourses",
 			joinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") },
 			inverseJoinColumns = { @JoinColumn(name = "attachementID", referencedColumnName="fileID") })

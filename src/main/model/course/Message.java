@@ -33,7 +33,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class Message extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="senderID", referencedColumnName="userID", nullable=false)
 	private User sender;
 	public void setSender(User sender) {
@@ -50,7 +50,7 @@ public class Message extends AbstractUuidModel {
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER)
+	@ManyToMany(fetch=FetchType.LAZY)
 	@JoinTable(name = "messagesusers",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") })
@@ -95,7 +95,7 @@ public class Message extends AbstractUuidModel {
 	private String content;
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL})
+	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
 	@JoinTable(name = "attachementsmessages",
 			joinColumns = { @JoinColumn(name = "messageID", referencedColumnName="messageID") },
 			inverseJoinColumns = { @JoinColumn(name = "fileID", referencedColumnName="fileID") })
@@ -125,7 +125,7 @@ public class Message extends AbstractUuidModel {
 	private boolean isAnnouncement;
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=true)
 	private Course course;
 	public void setCourse(Course course) {

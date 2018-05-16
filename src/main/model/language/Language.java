@@ -32,7 +32,7 @@ import main.model.abstracts.AbstractSinglePKModel;
 public class Language extends AbstractSinglePKModel<String> {
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="namedLanguage", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="namedLanguage", orphanRemoval=true)
 	private Set<LanguageName> languageNames;
 	public void setLanguageNames(Set<LanguageName> languageNames) {
 		this.languageNames.clear();
@@ -67,7 +67,7 @@ public class Language extends AbstractSinglePKModel<String> {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="language")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="language")
 	private Set<Course> courses;
 	public void setCourses(Set<Course> courses) {
 		this.courses.clear();
@@ -97,7 +97,7 @@ public class Language extends AbstractSinglePKModel<String> {
 	}
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, mappedBy="language")
+	@OneToMany(fetch=FetchType.LAZY, mappedBy="language")
 	private Set<PlacementTest> placementTests;
 	public boolean hasPlacementTests() {
 		return this.placementTests.size() > 0;
@@ -130,7 +130,7 @@ public class Language extends AbstractSinglePKModel<String> {
 	}
 
 	@Getter
-	@ManyToMany(fetch=FetchType.EAGER, mappedBy="taughtLanguages")
+	@ManyToMany(fetch=FetchType.LAZY, mappedBy="taughtLanguages")
 	private Set<User> teachers;
 	public void setTeachers(Set<User> teachers) {
 		this.teachers.clear();

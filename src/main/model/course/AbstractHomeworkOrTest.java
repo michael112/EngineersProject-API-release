@@ -42,7 +42,7 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 	@javax.persistence.Transient
 	@Getter
 /*
-	@OneToOne(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+	@OneToOne(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
 	@org.hibernate.annotations.Cascade(value={org.hibernate.annotations.CascadeType.DELETE_ORPHAN, org.hibernate.annotations.CascadeType.DELETE})
 	@JoinColumn(name="taskID", referencedColumnName="taskID", nullable = true)
 */
@@ -62,7 +62,7 @@ public abstract class AbstractHomeworkOrTest extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 

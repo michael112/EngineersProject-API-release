@@ -25,7 +25,7 @@ import main.model.abstracts.AbstractUuidModel;
 public class CourseTypeName extends AbstractUuidModel {
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseTypeID", referencedColumnName="courseTypeID", nullable=false)
 	private CourseType courseType;
 	public void setCourseType(CourseType courseType) {
@@ -43,7 +43,7 @@ public class CourseTypeName extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="namingLanguageID", referencedColumnName="languageID", nullable=false)
 	private Language namingLanguage;
 

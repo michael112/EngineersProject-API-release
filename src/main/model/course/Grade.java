@@ -38,12 +38,12 @@ public class Grade extends AbstractUuidModel {
 
 	@Getter
 	@Setter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="gradedByID", referencedColumnName="userID", nullable=false)
 	private User gradedBy; // nauczyciel, który wystawił ocenę
 
 	@Getter
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name="courseID", referencedColumnName="courseID", nullable=false)
 	private Course course;
 	public void setCourse(Course course) {
@@ -126,7 +126,7 @@ public class Grade extends AbstractUuidModel {
 	private double weight;
 
 	@Getter
-	@OneToMany(fetch=FetchType.EAGER, cascade=CascadeType.ALL, mappedBy="grade", orphanRemoval=true)
+	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL, mappedBy="grade", orphanRemoval=true)
 	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
 	private Set<StudentGrade> grades;
 	public void setGrades(Set<StudentGrade> grades) {

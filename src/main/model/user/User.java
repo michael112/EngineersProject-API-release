@@ -50,7 +50,7 @@ public class User extends AbstractUuidModel {
     @Setter
     private boolean active;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "usersuserroles",
             joinColumns = { @JoinColumn(name = "userID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "userRoleID", referencedColumnName="roleID") })
@@ -85,7 +85,7 @@ public class User extends AbstractUuidModel {
     private String lastName;
 	
 	@Getter
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, orphanRemoval=true)
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, orphanRemoval=true)
     @JoinColumn(name="userID", referencedColumnName="userID", nullable=false)
 	private Set<Phone> phone;
     public void setPhone(Set<Phone> phone) {
@@ -128,7 +128,7 @@ public class User extends AbstractUuidModel {
 	private Address address;
 	
     @Getter
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user", orphanRemoval=true)
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user", orphanRemoval=true)
 	private Set<PlacementTestResult> placementTest;
     public void setPlacementTest(Set<PlacementTestResult> placementTest) {
         this.placementTest.clear();
@@ -157,7 +157,7 @@ public class User extends AbstractUuidModel {
     }
 
     @Getter
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="user")
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="user")
 	private Set<CourseMembership> coursesAsStudent;
     public void setCoursesAsStudent(Set<CourseMembership> coursesAsStudent) {
         this.coursesAsStudent.clear();
@@ -186,7 +186,7 @@ public class User extends AbstractUuidModel {
     }
 
     @Getter
-    @OneToMany(fetch=FetchType.EAGER, cascade={CascadeType.ALL}, mappedBy="sender", orphanRemoval=true)
+    @OneToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL}, mappedBy="sender", orphanRemoval=true)
     private Set<Message> myMessages;
     public void setMyMessages(Set<Message> myMessages) {
         this.myMessages.clear();
@@ -215,7 +215,7 @@ public class User extends AbstractUuidModel {
     }
 
     @Getter
-    @ManyToMany(fetch=FetchType.EAGER, mappedBy="receivers")
+    @ManyToMany(fetch=FetchType.LAZY, mappedBy="receivers")
 	private Set<Message> messages; // wiadomości, których user jest jednym z adresatów
     public void setMessages(Set<Message> messages) {
         this.messages.clear();
@@ -247,7 +247,7 @@ public class User extends AbstractUuidModel {
     }
 
 	@Getter
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "teacherslanguages",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "languageID", referencedColumnName="languageID") })
@@ -282,7 +282,7 @@ public class User extends AbstractUuidModel {
     }
 
 	@Getter
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(fetch=FetchType.LAZY)
     @JoinTable(name = "teacherscourses",
             joinColumns = { @JoinColumn(name = "teacherID", referencedColumnName="userID") },
             inverseJoinColumns = { @JoinColumn(name = "courseID", referencedColumnName="courseID") })
