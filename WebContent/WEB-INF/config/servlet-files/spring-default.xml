@@ -20,6 +20,10 @@
 
     <mvc:resources mapping="/static/**" location="/static/" />
 
+    <mvc:interceptors>
+        <ref bean="openSessionInViewInterceptor" />
+    </mvc:interceptors>
+
     <!-- temporary -->
     <bean id="testEnvironmentDbSaver" class="test.runtime.environment.TestEnvironmentDbSaver" />
 
