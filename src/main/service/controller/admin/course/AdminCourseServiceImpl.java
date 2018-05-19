@@ -265,6 +265,7 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
     public void editCourseTeacher(Course course, User teacher) {
         try {
             if( course.getTeachers().size() != 1 ) throw new IllegalServiceOperationException();
+            if( !( teacher.containsTaughtLanguage(course.getLanguage()) ) ) throw new IllegalServiceOperationException();
             else {
                 // remove teachers
                 for( User oldTeacher : course.getTeachers() ) {
