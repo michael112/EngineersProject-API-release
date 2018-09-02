@@ -1,6 +1,7 @@
 package main.service.controller.admin.type;
 
 import java.util.Set;
+import java.util.Iterator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -73,9 +74,10 @@ public class AdminTypeServiceImpl extends AbstractService implements AdminTypeSe
 
     public void editCourseTypeNames(CourseType courseType, CourseTypeJson courseTypeJson) {
         try {
-            // erasing course type name list
-            for( CourseTypeName courseTypeName : courseType.getCourseTypeNames() ) {
-                courseType.removeCourseTypeName(courseTypeName);
+            Iterator<CourseTypeName> removeIterator = courseType.getCourseTypeNames().iterator();
+            while( removeIterator.hasNext() ) {
+                removeIterator.next();
+                removeIterator.remove();
             }
             for( CourseTypeNameJson courseTypeNameJson : courseTypeJson.getNamesInLanguages() ) {
                 courseType.addCourseTypeName(new CourseTypeName(courseType, this.languageCrudService.findLanguageByID(courseTypeNameJson.getLanguage()), courseTypeNameJson.getName()));
