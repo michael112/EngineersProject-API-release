@@ -278,12 +278,6 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
                     teacherIterator.remove();
                     this.userCrudService.updateUser(oldTeacher);
                 }
-                /*
-                for( User oldTeacher : course.getTeachers() ) {
-                    course.removeTeacher(oldTeacher);
-                    this.userCrudService.updateUser(oldTeacher);
-                }
-                */
                 // add new teacher
                 this.addTeacher(course, teacher);
                 this.userCrudService.updateUser(teacher);
