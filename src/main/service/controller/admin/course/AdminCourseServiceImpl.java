@@ -162,8 +162,11 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
                 course.addCourseDay(new CourseDay(courseDayJson.getDay(), courseDayJson.getHourFrom().getHour(), courseDayJson.getHourFrom().getMinute(), courseDayJson.getHourTo().getHour(), courseDayJson.getHourTo().getMinute()));
             }
             // remove teachers
-            for( User oldTeacher : course.getTeachers() ) {
-                course.removeTeacher(oldTeacher);
+            Iterator<User> teacherIterator = course.getTeachers().iterator();
+            User oldTeacher;
+            while( teacherIterator.hasNext() ) {
+                oldTeacher = teacherIterator.next();
+                teacherIterator.remove();
                 this.userCrudService.updateUser(oldTeacher);
             }
             for( TeacherJson teacher : editedCourse.getTeachers() ) {
@@ -268,10 +271,19 @@ public class AdminCourseServiceImpl extends AbstractService implements AdminCour
             if( !( teacher.containsTaughtLanguage(course.getLanguage()) ) ) throw new IllegalServiceOperationException();
             else {
                 // remove teachers
+                Iterator<User> teacherIterator = course.getTeachers().iterator();
+                User oldTeacher;
+                while( teacherIterator.hasNext() ) {
+                    oldTeacher = teacherIterator.next();
+                    teacherIterator.remove();
+                    this.userCrudService.updateUser(oldTeacher);
+                }
+                /*
                 for( User oldTeacher : course.getTeachers() ) {
                     course.removeTeacher(oldTeacher);
                     this.userCrudService.updateUser(oldTeacher);
                 }
+                */
                 // add new teacher
                 this.addTeacher(course, teacher);
                 this.userCrudService.updateUser(teacher);
