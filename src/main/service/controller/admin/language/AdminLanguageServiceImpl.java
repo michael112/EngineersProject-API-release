@@ -1,6 +1,7 @@
 package main.service.controller.admin.language;
 
 import java.util.Set;
+import java.util.Iterator;
 
 import org.springframework.stereotype.Service;
 
@@ -82,8 +83,10 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
     public void editLanguageNames(Language language, EditLanguageJson languageJson) {
         try {
             // erasing language name list
-            for( LanguageName languageName : language.getLanguageNames() ) {
-                language.removeLanguageName(languageName);
+            Iterator<LanguageName> languageNameIterator = language.getLanguageNames().iterator();
+            while( languageNameIterator.hasNext() ) {
+                languageNameIterator.next();
+                languageNameIterator.remove();
             }
             this.languageCrudService.updateLanguage(language);
             for( LanguageNameJson languageNameJson : languageJson.getLanguageNames() ) {
