@@ -21,7 +21,7 @@ public class LanguageJson {
 
     @Setter
     @Getter
-    public Set<LanguageNameJson> languageNames;
+    private Set<LanguageNameJson> languageNames;
 
     @Setter
     @Getter
