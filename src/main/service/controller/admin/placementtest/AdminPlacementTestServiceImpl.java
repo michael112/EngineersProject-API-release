@@ -22,6 +22,7 @@ import main.json.admin.placementtest.list.PlacementTaskJson;
 import main.json.admin.placementtest.list.PlacementSentenceJson;
 
 import main.model.language.Language;
+import main.model.placementtest.PlacementTest;
 
 @Service("adminPlacementTestService")
 public class AdminPlacementTestServiceImpl extends AbstractService implements AdminPlacementTestService {
@@ -38,25 +39,28 @@ public class AdminPlacementTestServiceImpl extends AbstractService implements Ad
 
     private Set<PlacementTestJson> getPlacementTestList(Set<PlacementTest> tests) {
         Set<PlacementTestJson> result = new HashSet<>();
-        PlacementTestJson testJson;
-        PlacementTaskJson taskJson;
-        PlacementSentenceJson sentenceJson;
         for( PlacementTest test : tests ) {
-            testJson = new PlacementTestJson(test.getId(), test.getLanguage().getId(), test.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()));
-            for( PlacementTask task : test.getTasks() ) {
-                taskJson = new PlacementTaskJson(task.getId(), task.getCommand());
-                for( PlacementSentence sentence : task.getSentences() ) {
-                    sentenceJson = new PlacementSentenceJson(sentence.getId(), sentence.getPrefix(), sentence.getSuffix());
-                    for( PlacementAnswer answer : sentence.getAnswers() ) {
-                        sentenceJson.addAnswer(answer);
-                    }
-                    taskJson.addSentence(sentenceJson);
-                }
-                testJson.addTask(taskJson);
-            }
-            result.add(testJson);
+            result.add(getPlacementTestInfo(test));
         }
         return result;
+    }
+
+    public PlacementTestJson getPlacementTestInfo(PlacementTest placementTest) {
+        PlacementTestJson testJson = new PlacementTestJson(placementTest.getId(), placementTest.getLanguage().getId(), placementTest.getLanguage().getLanguageName(this.localeCodeProvider.getLocaleCode()));
+        PlacementTaskJson taskJson;
+        PlacementSentenceJson sentenceJson;
+        for( PlacementTask task : placementTest.getTasks() ) {
+            taskJson = new PlacementTaskJson(task.getId(), task.getCommand());
+            for( PlacementSentence sentence : task.getSentences() ) {
+                sentenceJson = new PlacementSentenceJson(sentence.getId(), sentence.getPrefix(), sentence.getSuffix());
+                for( PlacementAnswer answer : sentence.getAnswers() ) {
+                    sentenceJson.addAnswer(answer);
+                }
+                taskJson.addSentence(sentenceJson);
+            }
+            testJson.addTask(taskJson);
+        }
+        return testJson;
     }
 
     public void createPlacementTest() {

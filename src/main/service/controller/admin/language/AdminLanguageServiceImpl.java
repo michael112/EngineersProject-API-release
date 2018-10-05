@@ -48,13 +48,22 @@ public class AdminLanguageServiceImpl extends AbstractService implements AdminLa
             Set<Language> languages = this.languageCrudService.findAllLanguages();
             LanguageListJson result = new LanguageListJson();
             for( Language language : languages ) {
-                LanguageJson languageJson = new LanguageJson(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()), language.hasActiveCourses(), language.hasPlacementTests());
-                for( LanguageName languageName : language.getLanguageNames() ) {
-                    languageJson.addLanguageName(languageName.getNamedLanguage().getId(), languageName.getNamingLanguage().getId(), languageName.getLanguageName());
-                }
-                result.addLanguage(languageJson);
+                result.addLanguage(getLanguageInfo(language));
             }
             return result;
+        }
+        catch( NullPointerException ex ) {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    public LanguageJson getLanguageInfo(Language language) {
+        try {
+            LanguageJson languageJson = new LanguageJson(language.getId(), language.getLanguageName(this.localeCodeProvider.getLocaleCode()), language.hasActiveCourses(), language.hasPlacementTests());
+            for( LanguageName languageName : language.getLanguageNames() ) {
+                languageJson.addLanguageName(languageName.getNamedLanguage().getId(), languageName.getNamingLanguage().getId(), languageName.getLanguageName());
+            }
+            return languageJson;
         }
         catch( NullPointerException ex ) {
             throw new IllegalArgumentException();

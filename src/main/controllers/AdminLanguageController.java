@@ -34,10 +34,12 @@ import main.constants.urlconstants.AdminLanguageControllerUrlConstants;
 import main.json.response.DefaultResponseJson;
 import main.json.response.AbstractResponseJson;
 import main.json.response.AdminLanguageListResponseJson;
+import main.json.response.AdminLanguageInfoResponseJson;
 import main.json.response.AdminTeacherLanguageListResponseJson;
 import main.json.response.AdminTaughtLanguageListResponseJson;
 
 import main.json.admin.language.view.LanguageListJson;
+import main.json.admin.language.view.LanguageJson;
 
 import main.json.admin.language.NewLanguageJson;
 
@@ -76,6 +78,17 @@ public class AdminLanguageController {
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.language.list.success");
         return new ResponseEntity<AdminLanguageListResponseJson>(new AdminLanguageListResponseJson(languageList, messageStr, responseStatus), responseStatus);
+    }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminLanguageControllerUrlConstants.GET_LANGUAGE_INFO, method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> getLanguageInfo(@PathVariable("languageID") String languageID) {
+        Language language = this.languageCrudService.findLanguageByID(languageID);
+        if( language == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.language.not.found"));
+        LanguageJson languageInfo = this.adminLanguageService.getLanguageInfo(language);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.language.info.success");
+        return new ResponseEntity<AdminLanguageInfoResponseJson>(new AdminLanguageInfoResponseJson(languageInfo, messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)

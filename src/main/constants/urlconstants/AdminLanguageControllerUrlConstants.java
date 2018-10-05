@@ -12,6 +12,8 @@ public class AdminLanguageControllerUrlConstants {
 
     public static final String REMOVE_LANGUAGE = "/{languageID}";
 
+    public static final String GET_LANGUAGE_INFO = "/{languageID}";
+
     public static final String TEACHER_LANGUAGE_LIST = "/{languageID}/teachers";
 
     public static final String TAUGHT_LANGUAGE_LIST = "/{teacherID}/languages";
