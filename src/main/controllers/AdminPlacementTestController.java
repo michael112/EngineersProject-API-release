@@ -1,7 +1,5 @@
 package main.controllers;
 
-import java.util.Set;
-
 import javax.annotation.security.RolesAllowed;
 
 import main.error.exception.HttpBadRequestException;
@@ -11,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import main.util.labels.LabelProvider;
@@ -29,7 +28,7 @@ import main.service.controller.admin.placementtest.AdminPlacementTestService;
 import main.model.language.Language;
 import main.model.placementtest.PlacementTest;
 
-import main.json.admin.placementtest.list.PlacementTestJson;
+import main.json.admin.placementtest.add.PlacementTestJson;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.AdminPlacementTestListResponseJson;
@@ -64,7 +63,7 @@ public class AdminPlacementTestController {
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestInfo(@PathVariable("placementTestID") String placementTestID) {
         PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(placementTestID);
         if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.placementtest.not.found"));
-        PlacementTestJson placementTestJson = this.adminPlacementTestService.getPlacementTestInfo(placementTest);
+        main.json.admin.placementtest.list.PlacementTestJson placementTestJson = this.adminPlacementTestService.getPlacementTestInfo(placementTest);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.placementtest.info.success");
         return new ResponseEntity<AdminPlacementTestInfoResponseJson>(new AdminPlacementTestInfoResponseJson(placementTestJson, messageStr, responseStatus), responseStatus);
@@ -79,9 +78,27 @@ public class AdminPlacementTestController {
     }
 
     /*
-    public ResponseEntity<? extends AbstractResponseJson> createPlacementTest() {
 
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminPlacementTestControllerUrlConstants.CREATE_TEST_STRUCTURE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> createPlacementTestStructure(@RequestBody PlacementTestJson placementTestJson) {
+        this.adminPlacementTestService.createPlacementTestStructure(placementTestJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("");
+        return new ResponseEntity<>();
     }
+
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminPlacementTestControllerUrlConstants.EDIT_TEST_STRUCTURE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> editPlacementTestStructure(@PathVariable("placementTestID") String placementTestID, @RequestBody PlacementTestJson placementTestJson) {
+        PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(placementTestID);
+        if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.placementtest.not.found"));
+        this.adminPlacementTestService.editPlacementTestStructure(placementTest, placementTestJson);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("");
+        return new ResponseEntity<>();
+    }
+
     */
 
 }

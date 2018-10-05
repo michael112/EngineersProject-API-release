@@ -12,6 +12,7 @@ public interface AdminPlacementTestService {
     Set<PlacementTestJson> getPlacementTestList();
     PlacementTestJson getPlacementTestInfo(PlacementTest placementTest);
     Set<PlacementTestJson> getPlacementTestListForLanguage(Language language);
-    void createPlacementTest();
+    void createPlacementTestStructure(main.json.admin.placementtest.add.PlacementTestJson placementTestJson);
+    void editPlacementTestStructure(PlacementTest placementTest, main.json.admin.placementtest.add.PlacementTestJson placementTestJson);
 
 }

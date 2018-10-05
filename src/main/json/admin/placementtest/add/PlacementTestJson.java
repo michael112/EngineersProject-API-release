@@ -8,7 +8,7 @@ import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class NewPlacementTestJson {
+public class PlacementTestJson {
 
     @Getter
     @Setter
@@ -16,13 +16,13 @@ public class NewPlacementTestJson {
 
     @Getter
     @Setter
-    private Set<NewPlacementTaskJson> tasks;
+    private Set<PlacementTaskJson> tasks;
 
     @Getter
     @Setter
-    private Set<NewPlacementTestLevelSuggestion> suggestedLevels;
+    private Set<PlacementTestLevelSuggestion> suggestedLevels;
 
-    public NewPlacementTestJson() {
+    public PlacementTestJson() {
         super();
         this.tasks = new HashSet<>();
         this.suggestedLevels = new HashSet<>();

@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 import main.model.placementtest.PlacementAnswer;
 
 @EqualsAndHashCode
-public class NewPlacementSentenceJson {
+public class PlacementSentenceJson {
 
     @Getter
     @Setter
@@ -28,7 +28,7 @@ public class NewPlacementSentenceJson {
     @Setter
     private String correctAnswer;
 
-    public NewPlacementSentenceJson() {
+    public PlacementSentenceJson() {
         super();
         this.answers = new HashSet<>();
     }

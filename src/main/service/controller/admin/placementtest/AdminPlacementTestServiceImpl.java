@@ -63,7 +63,11 @@ public class AdminPlacementTestServiceImpl extends AbstractService implements Ad
         return testJson;
     }
 
-    public void createPlacementTest() {
+    public void createPlacementTestStructure(main.json.admin.placementtest.add.PlacementTestJson placementTestJson) {
+
+    }
+
+    public void editPlacementTestStructure(PlacementTest placementTest, main.json.admin.placementtest.add.PlacementTestJson placementTestJson) {
 
     }
 

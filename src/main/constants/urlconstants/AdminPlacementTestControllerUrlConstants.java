@@ -8,6 +8,10 @@ public class AdminPlacementTestControllerUrlConstants {
 
     public static final String PLACEMENT_TEST_INFO = "/{placementTestID}";
 
+    public static final String CREATE_TEST_STRUCTURE = "";
+
+    public static final String EDIT_TEST_STRUCTURE = "/{placementTestID}";
+
     public static final String PLACEMENT_TEST_LIST_FOR_LANGUAGE = "/{languageID}";
 
     public static final String CREATE_PLACEMENT_TEST = "";

@@ -5,7 +5,7 @@ import lombok.Setter;
 import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode
-public class NewPlacementTestLevelSuggestion {
+public class PlacementTestLevelSuggestion {
 
     @Getter
     @Setter
