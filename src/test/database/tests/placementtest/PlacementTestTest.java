@@ -6,10 +6,13 @@ import org.junit.Before;
 import org.junit.Assert;
 import org.junit.Test;
 
+import org.apache.commons.collections4.CollectionUtils;
+
 import main.model.placementtest.PlacementTest;
 import main.model.placementtest.PlacementTask;
 import main.model.placementtest.PlacementSentence;
 import main.model.placementtest.PlacementAnswer;
+import main.model.placementtest.LevelSuggestion;
 import main.model.user.userprofile.PlacementTestResult;
 import main.model.language.Language;
 
@@ -90,6 +93,40 @@ public class PlacementTestTest extends AbstractDbTest {
         PlacementTest samplePlacementTestDbAfter = this.placementTestCrudService.findPlacementTestByID(this.samplePlacementTest.getId());
 
         Assert.assertEquals(false, samplePlacementTestDbAfter.containsResult(newResult));
+    }
+
+    @Test
+    public void testAddLevelSuggestion() {
+        LevelSuggestion a1 = new LevelSuggestion(setBasicCourseLevel("A1", false), 0);
+        this.samplePlacementTest.addLevelSuggestion(a1);
+        this.placementTestCrudService.updatePlacementTest(this.samplePlacementTest);
+
+        PlacementTest samplePlacementTestDb = this.placementTestCrudService.findPlacementTestByID(this.samplePlacementTest.getId());
+        Assert.assertEquals(true, samplePlacementTestDb.containsLevelSuggestion(a1));
+    }
+    @Test
+    public void testRemoveLevelSuggestion() {
+        LevelSuggestion newLS = new LevelSuggestion(setBasicCourseLevel("A1", false), 0);
+        this.samplePlacementTest.addLevelSuggestion(newLS);
+        this.placementTestCrudService.updatePlacementTest(this.samplePlacementTest);
+
+        PlacementTest samplePlacementTestDbBefore = this.placementTestCrudService.findPlacementTestByID(this.samplePlacementTest.getId());
+
+        samplePlacementTestDbBefore.removeLevelSuggestion(newLS);
+        this.placementTestCrudService.updatePlacementTest(samplePlacementTestDbBefore);
+
+        PlacementTest samplePlacementTestDbAfter = this.placementTestCrudService.findPlacementTestByID(this.samplePlacementTest.getId());
+
+        Assert.assertEquals(false, samplePlacementTestDbAfter.containsLevelSuggestion(newLS));
+    }
+    @Test
+    public void testSetLevelSuggestions() {
+        Set<LevelSuggestion> levelSuggestions = getBasicLevelSuggestions(false);
+        this.samplePlacementTest.setLevelSuggestions(levelSuggestions);
+        this.placementTestCrudService.updatePlacementTest(this.samplePlacementTest);
+
+        PlacementTest samplePlacementTestDb = this.placementTestCrudService.findPlacementTestByID(this.samplePlacementTest.getId());
+        Assert.assertEquals(true, CollectionUtils.isEqualCollection(this.samplePlacementTest.getLevelSuggestions(), samplePlacementTestDb.getLevelSuggestions()));
     }
 
     public PlacementTask beforeAddTask() {

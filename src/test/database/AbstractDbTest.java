@@ -74,6 +74,7 @@ import main.model.placementtest.PlacementTest;
 import main.model.placementtest.PlacementTask;
 import main.model.placementtest.PlacementSentence;
 import main.model.placementtest.PlacementAnswer;
+import main.model.placementtest.LevelSuggestion;
 import main.service.crud.placementtest.PlacementTestCrudService;
 
 // PlacementTestResult model & service imports
@@ -269,13 +270,13 @@ public abstract class AbstractDbTest extends AbstractTest {
             if( register ) this.languageCrudService.saveLanguage(english);
             return english;
         }
-        public CourseLevel setBasicCourseLevel(boolean register) {
-            CourseLevel A1 = new CourseLevel("A1");
+        public CourseLevel setBasicCourseLevel(String levelName, boolean register) {
+            CourseLevel level = new CourseLevel(levelName);
             if( register ) {
-                this.courseLevelCrudService.saveCourseLevel(A1);
-                return A1;
+                this.courseLevelCrudService.saveCourseLevel(level);
+                return level;
             }
-            else return this.courseLevelCrudService.findCourseLevelByName("A1");
+            else return this.courseLevelCrudService.findCourseLevelByName(levelName);
         }
 
         public CourseType setBasicCourseType(boolean register) {
@@ -296,7 +297,7 @@ public abstract class AbstractDbTest extends AbstractTest {
 
         public Course getBasicCourse(boolean register) {
             Language english = setBasicLanguage(register);
-            CourseLevel A1 = setBasicCourseLevel(register);
+            CourseLevel A1 = setBasicCourseLevel("A1", register);
             CourseType standardType = setBasicCourseType(register);
             Course sampleCourse = new Course(english, A1, standardType, new CourseActivity(new LocalDate(2015,9,1), new LocalDate(2016,6,30)));
             this.courseCrudService.saveCourse(sampleCourse);
@@ -331,7 +332,7 @@ public abstract class AbstractDbTest extends AbstractTest {
     // <placement-test-methods>
         public PlacementTest getBasicPlacementTest(boolean register) {
             Language english = setBasicLanguage(register);
-            PlacementTest placementTest = new PlacementTest(english, getBasicTasks());
+            PlacementTest placementTest = new PlacementTest(english, getBasicTasks(), getBasicLevelSuggestions(register));
             this.placementTestCrudService.savePlacementTest(placementTest);
             return placementTest;
         }
@@ -351,7 +352,7 @@ public abstract class AbstractDbTest extends AbstractTest {
         public Set<PlacementSentence> getBasicSentences() {
             PlacementSentence sentence = new PlacementSentence("sample prefix", "sample suffix", getBasicAnswers(), "d");
             Set<PlacementSentence> sentences = new HashSet<>();
-            sentences.add(sentence);
+             sentences.add(sentence);
             return sentences;
         }
         public Set<PlacementAnswer> getBasicAnswers() {
@@ -365,6 +366,21 @@ public abstract class AbstractDbTest extends AbstractTest {
             answers.add(c);
             answers.add(d);
             return answers;
+        }
+
+        public Set<LevelSuggestion> getBasicLevelSuggestions(boolean register) {
+            LevelSuggestion a2 = new LevelSuggestion(setBasicCourseLevel("A2", register), 10);
+            LevelSuggestion b1 = new LevelSuggestion(setBasicCourseLevel("B1", register), 20);
+            LevelSuggestion b2 = new LevelSuggestion(setBasicCourseLevel("B2", register), 25);
+            LevelSuggestion c1 = new LevelSuggestion(setBasicCourseLevel("C1", register), 30);
+            LevelSuggestion c2 = new LevelSuggestion(setBasicCourseLevel("C2", register), 40);
+            Set<LevelSuggestion> result = new HashSet<>();
+            result.add(a2);
+            result.add(b1);
+            result.add(b2);
+            result.add(c1);
+            result.add(c2);
+            return result;
         }
     // </placement-test-methods>
 

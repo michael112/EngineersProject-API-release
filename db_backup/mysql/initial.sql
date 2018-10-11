@@ -300,6 +300,23 @@ CREATE TABLE `languages` (
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
+-- Table structure for table `levelsuggestions`
+--
+
+DROP TABLE IF EXISTS `levelsuggestions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `levelsuggestions` (
+  `levelSuggestionID` varchar(36) NOT NULL,
+  `courseLevelID` varchar(36) NOT NULL,
+  `points` double NOT NULL,
+  PRIMARY KEY (`levelSuggestionID`),
+  KEY `FK_CRS_CRS_LEV_` (`courseLevelID`),
+  CONSTRAINT `FK_CRS_CRS_LEV_` FOREIGN KEY (`courseLevelID`) REFERENCES `courselevels` (`courseLevelID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
 -- Table structure for table `messages`
 --
 
@@ -441,6 +458,24 @@ CREATE TABLE `placementtests` (
   PRIMARY KEY (`placementTestID`),
   KEY `FK__PL_TEST__LNG` (`languageID`),
   CONSTRAINT `FK__PL_TEST__LNG` FOREIGN KEY (`languageID`) REFERENCES `languages` (`languageID`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `placementtestslevelsuggestions`
+--
+
+DROP TABLE IF EXISTS `placementtestslevelsuggestions`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `placementtestslevelsuggestions` (
+  `placementTestID` varchar(36) NOT NULL,
+  `levelSuggestionID` varchar(36) NOT NULL,
+  PRIMARY KEY (`placementTestID`,`levelSuggestionID`),
+  KEY `FK_PL_TST_PL_TST` (`placementTestID`),
+  KEY `FK_LEV_SUG` (`levelSuggestionID`),
+  CONSTRAINT `FK_LEV_SUG` FOREIGN KEY (`levelSuggestionID`) REFERENCES `levelsuggestions` (`levelSuggestionID`),
+  CONSTRAINT `FK_PL_TST_PL_TST` FOREIGN KEY (`placementTestID`) REFERENCES `placementtests` (`placementTestID`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 

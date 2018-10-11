@@ -1,5 +1,6 @@
 package test.runtime.environment;
 
+import java.util.List;
 import java.util.Set;
 import java.util.HashSet;
 
@@ -72,7 +73,8 @@ public class TestEnvironmentBuilder {
 		environment.addCourseType(businessCourseType);
 		environment.addCourseType(examCourseType);
 
-		PlacementTest englishPlacementTest = generatePlacementTest(hasUUID, english);
+		// PlacementTest englishPlacementTest = generatePlacementTest(hasUUID, english);
+		PlacementTest englishPlacementTest = generatePlacementTest(hasUUID, english, environment.getCourseLevels().subList(1, environment.getCourseLevels().size()));
 		environment.addPlacementTest(englishPlacementTest);
 
 		User sampleStudent1 = generateUser(hasUUID, "ramsay1", "ramsay1", "ramsay1@samplemail.com", "Ramsay", "Bolton", "Sample street 1", "12a", "5", "12-511", "Vdfs", user, generatePhone(hasUUID, PhoneType.MOBILE, "666-666-666"));
@@ -187,9 +189,17 @@ public class TestEnvironmentBuilder {
 		return result;
 	}
 
+	/*
 	private static PlacementTest generatePlacementTest(boolean hasUUID, Language language) {
 		PlacementTest placementTest = new PlacementTest(language, generatePlacementTask(hasUUID));
 		if( hasUUID ) placementTest.setId(UuidGenerator.newUUID());
+		return placementTest;
+	}
+	*/
+	private static PlacementTest generatePlacementTest(boolean hasUUID, Language language, List<CourseLevel> levels) {
+		PlacementTest placementTest = new PlacementTest(language, generatePlacementTask(hasUUID));
+		if( hasUUID ) placementTest.setId(UuidGenerator.newUUID());
+		generateLevelSuggestions(hasUUID, levels);
 		return placementTest;
 	}
 
@@ -223,6 +233,18 @@ public class TestEnvironmentBuilder {
 		answers.add(c);
 		answers.add(d);
 		return answers;
+	}
+	private static Set<LevelSuggestion> generateLevelSuggestions(boolean hasUUID, List<CourseLevel> levels) {
+		Set<LevelSuggestion> result = new HashSet<>();
+		LevelSuggestion levelSug;
+		double points = 10;
+		for( CourseLevel level : levels ) {
+			levelSug = new LevelSuggestion(level, points);
+			if( hasUUID ) levelSug.setId(UuidGenerator.newUUID());
+			result.add(levelSug);
+			points += 10;
+		}
+		return result;
 	}
 
 	private static User generateUser(boolean hasUUID, String username, String rawPassword, String email, String firstName, String lastName, String street, String houseNumber, String flatNumber, String postCode, String city, UserRole userRole, Phone phone) {

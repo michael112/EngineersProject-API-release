@@ -41,6 +41,7 @@
 		<javax.mail.version>1.5.5</javax.mail.version>
 		<uuid.version>3.2</uuid.version>
 		<commons-lang-version>3.4</commons-lang-version>
+        <commons-collections-version>4.2</commons-collections-version>
 		<joda.time.version>2.9.6</joda.time.version>
 		<jadira.version>5.0.0.GA</jadira.version>
 		<junit.version>4.12</junit.version>
@@ -242,6 +243,12 @@
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>${commons-lang-version}</version>
+		</dependency>
+		<!-- Commons Collections -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+    		<artifactId>commons-collections4</artifactId>
+		    <version>${commons-collections-version}</version>
 		</dependency>
 
 		<!-- Joda Time -->

@@ -180,6 +180,19 @@ CREATE TABLE placementtests (
   PRIMARY KEY (placementTestID)
 )
 
+CREATE TABLE levelsuggestions (
+  levelSuggestionID varchar(36) NOT NULL,
+  courseLevelID varchar(36) NOT NULL,
+  points double NOT NULL,
+  PRIMARY KEY (levelSuggestionID)
+)
+
+CREATE TABLE placementtestslevelsuggestions (
+  placementTestID varchar(36) NOT NULL,
+  levelSuggestionID varchar(36) NOT NULL,
+  PRIMARY KEY (placementTestID,levelSuggestionID)
+)
+
 CREATE TABLE studentgrades (
   studentGradeID varchar(36) NOT NULL,
   studentID varchar(36) NOT NULL,

@@ -8,7 +8,9 @@ import javax.persistence.Table;
 import javax.persistence.Column;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.ManyToMany;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.FetchType;
 import javax.persistence.CascadeType;
 import javax.persistence.AttributeOverride;
@@ -96,6 +98,31 @@ public class PlacementTest extends AbstractUuidModel {
 		return this.results.contains(result);
 	}
 
+	@Getter
+	@ManyToMany(fetch=FetchType.LAZY, cascade={CascadeType.ALL})
+	@org.hibernate.annotations.Cascade(value=org.hibernate.annotations.CascadeType.DELETE_ORPHAN)
+	@JoinTable(name = "placementtestslevelsuggestions",
+			joinColumns = { @JoinColumn(name = "placementTestID", referencedColumnName="placementTestID") },
+			inverseJoinColumns = { @JoinColumn(name = "levelSuggestionID", referencedColumnName="levelSuggestionID") })
+	private Set<LevelSuggestion> levelSuggestions;
+	public void setLevelSuggestions(Set<LevelSuggestion> levelSuggestions) {
+		this.levelSuggestions.clear();
+		if( levelSuggestions != null ) {
+			this.levelSuggestions.addAll(levelSuggestions);
+		}
+	}
+	public void addLevelSuggestion(LevelSuggestion levelSuggestion) {
+		if( !( this.levelSuggestions.contains(levelSuggestion) ) ) {
+			this.levelSuggestions.add(levelSuggestion);
+		}
+	}
+	public void removeLevelSuggestion(LevelSuggestion levelSuggestion) {
+		this.levelSuggestions.remove(levelSuggestion);
+	}
+	public boolean containsLevelSuggestion(LevelSuggestion levelSuggestion) {
+		return this.levelSuggestions.contains(levelSuggestion);
+	}
+
 	public PlacementSentence getSentence(String sentenceID) {
 		for( PlacementTask task : this.getTasks() ) {
 			for( PlacementSentence sentence : task.getSentences() ) {
@@ -121,12 +148,18 @@ public class PlacementTest extends AbstractUuidModel {
 		super();
 		this.tasks = new HashSet<>();
 		this.results = new HashSet<>();
+		this.levelSuggestions = new HashSet<>();
 	}
 
 	public PlacementTest(Language language, Set<PlacementTask> tasks) {
 		this();
 		this.setLanguage(language);
 		this.setTasks(tasks);
+	}
+
+	public PlacementTest(Language language, Set<PlacementTask> tasks, Set<LevelSuggestion> levelSuggestions) {
+		this(language, tasks);
+		this.setLevelSuggestions(levelSuggestions);
 	}
 
 	@Override
