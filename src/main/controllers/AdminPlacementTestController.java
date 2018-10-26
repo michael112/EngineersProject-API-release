@@ -28,9 +28,8 @@ import main.service.controller.admin.placementtest.AdminPlacementTestService;
 import main.model.language.Language;
 import main.model.placementtest.PlacementTest;
 
-import main.json.admin.placementtest.add.PlacementTestJson;
-
 import main.json.response.AbstractResponseJson;
+import main.json.response.DefaultResponseJson;
 import main.json.response.AdminPlacementTestListResponseJson;
 import main.json.response.AdminPlacementTestInfoResponseJson;
 
@@ -77,28 +76,35 @@ public class AdminPlacementTestController {
         return new ResponseEntity<AdminPlacementTestListResponseJson>(new AdminPlacementTestListResponseJson(this.adminPlacementTestService.getPlacementTestListForLanguage(language), messageStr, responseStatus), responseStatus);
     }
 
-    /*
-
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminPlacementTestControllerUrlConstants.CREATE_TEST_STRUCTURE, method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> createPlacementTestStructure(@RequestBody PlacementTestJson placementTestJson) {
+    public ResponseEntity<? extends AbstractResponseJson> createPlacementTestStructure(@RequestBody main.json.admin.placementtest.add.PlacementTestJson placementTestJson) {
         this.adminPlacementTestService.createPlacementTestStructure(placementTestJson);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("");
-        return new ResponseEntity<>();
+        String messageStr = this.labelProvider.getLabel("admin.placementtest.create.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminPlacementTestControllerUrlConstants.EDIT_TEST_STRUCTURE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
-    public ResponseEntity<? extends AbstractResponseJson> editPlacementTestStructure(@PathVariable("placementTestID") String placementTestID, @RequestBody PlacementTestJson placementTestJson) {
+    public ResponseEntity<? extends AbstractResponseJson> editPlacementTestStructure(@PathVariable("placementTestID") String placementTestID, @RequestBody main.json.admin.placementtest.edit.PlacementTestJson placementTestJson) {
         PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(placementTestID);
         if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.placementtest.not.found"));
         this.adminPlacementTestService.editPlacementTestStructure(placementTest, placementTestJson);
         HttpStatus responseStatus = HttpStatus.OK;
-        String messageStr = this.labelProvider.getLabel("");
-        return new ResponseEntity<>();
+        String messageStr = this.labelProvider.getLabel("admin.placementtest.edit.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
 
-    */
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminPlacementTestControllerUrlConstants.REMOVE_TEST, method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<? extends AbstractResponseJson> removePlacementTest(@PathVariable("placementTestID") String placementTestID) {
+        PlacementTest placementTest = this.placementTestCrudService.findPlacementTestByID(placementTestID);
+        if( placementTest == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.placementtest.not.found"));
+        this.adminPlacementTestService.removePlacementTest(placementTest);
+        HttpStatus responseStatus = HttpStatus.OK;
+        String messageStr = this.labelProvider.getLabel("admin.placementtest.delete.success");
+        return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
+    }
 
 }

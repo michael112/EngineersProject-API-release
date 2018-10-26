@@ -1,4 +1,4 @@
-package main.json.admin.placementtest.add;
+package main.json.admin.placementtest.edit;
 
 import java.util.Set;
 import java.util.HashSet;
@@ -9,6 +9,10 @@ import lombok.EqualsAndHashCode;
 
 @EqualsAndHashCode(callSuper = true)
 public class PlacementTestJson extends main.json.admin.placementtest.abs.AbstractPlacementTestJson {
+
+    @Getter
+    @Setter
+    private String id;
 
     @Getter
     @Setter

@@ -12,8 +12,6 @@ public class AdminPlacementTestControllerUrlConstants {
 
     public static final String EDIT_TEST_STRUCTURE = "/{placementTestID}";
 
-    public static final String PLACEMENT_TEST_LIST_FOR_LANGUAGE = "/{languageID}";
-
-    public static final String CREATE_PLACEMENT_TEST = "";
+    public static final String REMOVE_TEST = "/{placementTestID}";
 
 }
