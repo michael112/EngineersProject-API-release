@@ -59,7 +59,7 @@ public class AdminPlacementTestServiceImpl extends AbstractService implements Ad
         for( PlacementTask task : placementTest.getTasks() ) {
             taskJson = new PlacementTaskJson(task.getId(), task.getCommand());
             for( PlacementSentence sentence : task.getSentences() ) {
-                sentenceJson = new PlacementSentenceJson(sentence.getId(), sentence.getPrefix(), sentence.getSuffix());
+                sentenceJson = new PlacementSentenceJson(sentence.getId(), sentence.getPrefix(), sentence.getSuffix(), sentence.getCorrectAnswer());
                 for( PlacementAnswer answer : sentence.getAnswers() ) {
                     sentenceJson.addAnswer(answer);
                 }

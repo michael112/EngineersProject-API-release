@@ -21,17 +21,21 @@ public class PlacementSentenceJson {
     private String suffix;
 
     @Getter
+    private String correctAnswer;
+
+    @Getter
     private Set<PlacementAnswer> answers;
 
     public void addAnswer(PlacementAnswer answer) {
         this.answers.add(answer);
     }
 
-    public PlacementSentenceJson(String id, String prefix, String suffix) {
+    public PlacementSentenceJson(String id, String prefix, String suffix, String correctAnswer) {
         super();
         this.id = id;
         this.prefix = prefix;
         this.suffix = suffix;
+        this.correctAnswer = correctAnswer;
         this.answers = new HashSet<>();
     }
 
