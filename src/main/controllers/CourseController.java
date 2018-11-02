@@ -90,8 +90,6 @@ public class CourseController {
     @CourseMembershipRequired
     @RequestMapping(value = CourseControllerUrlConstants.COURSE_INFO, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getCourseInfo(@PathVariable("id") String courseID) {
-        // Przy implementacji panelu administracyjnego dodać obsługę nadawania komunikatów o płatnościach dla użytkownika
-
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         Course course = this.courseCrudService.findCourseByID(courseID);
