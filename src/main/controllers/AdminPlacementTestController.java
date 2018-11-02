@@ -68,6 +68,8 @@ public class AdminPlacementTestController {
         return new ResponseEntity<AdminPlacementTestInfoResponseJson>(new AdminPlacementTestInfoResponseJson(placementTestJson, messageStr, responseStatus), responseStatus);
     }
 
+    @RolesAllowed(RolesAllowedConstants.ADMIN)
+    @RequestMapping(value = AdminPlacementTestControllerUrlConstants.PLACEMENT_TEST_LIST_FOR_LANGUAGE, method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> getPlacementTestListForLanguage(@PathVariable("languageID") String languageID) {
         Language language = this.languageCrudService.findLanguageByID(languageID);
         if( language == null ) throw new HttpBadRequestException(this.labelProvider.getLabel("admin.language.not.found"));
