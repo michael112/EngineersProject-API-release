@@ -24,6 +24,8 @@ import main.json.user.NewUserJson;
 import main.constants.urlconstants.UserControllerUrlConstants;
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
+import main.constants.releaseconstants.ReleaseConstants;
+
 import main.model.user.User;
 import main.model.user.userprofile.Address;
 
@@ -32,6 +34,7 @@ import main.service.controller.user.UserService;
 import main.util.currentUser.CurrentUserService;
 
 import main.util.labels.LabelProvider;
+import main.util.properties.PropertyProvider;
 
 import main.json.response.AbstractResponseJson;
 import main.json.response.DefaultResponseJson;
@@ -49,6 +52,8 @@ import main.json.user.PhoneJson;
 import main.error.exception.HttpBadRequestException;
 import main.error.exception.HttpInternalServerErrorException;
 
+import main.error.exception.GDPRNotice;
+
 @RequestMapping(value = UserControllerUrlConstants.CLASS_URL)
 @RestController
 public class UserController {
@@ -60,11 +65,16 @@ public class UserController {
     private LabelProvider labelProvider;
 
     @Autowired
+    private PropertyProvider propertyProvider;
+
+    @Autowired
     private UserService userService;
 
     @PermitAll
     @RequestMapping(value = UserControllerUrlConstants.REGISTER_USER, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> registerUser(@Valid @RequestBody NewUserJson userJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         HttpStatus responseStatus;
         String messageStr;
         try {
@@ -92,6 +102,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PASSWORD, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editUserPassword(@Valid @RequestBody EditPasswordJson editPasswordJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         HttpStatus responseStatus;
@@ -120,6 +132,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_EMAIL, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editEmail(@Valid @RequestBody EditEmailJson editEmailJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         this.userService.sendEditEmailConfirmation(currentUser, editEmailJson);
@@ -131,6 +145,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.USER_EMAIL_CONFIRM, method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> confirmEmailEdition(@RequestParam("newEmail") String newEmail) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         this.userService.editEmail(currentUser, newEmail);
@@ -152,6 +168,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADDRESS, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editAddress(@Valid @RequestBody Address newAddress) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         this.userService.editAddress(currentUser, newAddress);
@@ -173,6 +191,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_PHONE_LIST, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editPhoneList(@Valid @RequestBody PhoneJsonSet newPhone) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         this.userService.editPhoneList(currentUser, newPhone);
@@ -184,6 +204,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_ADD_PHONE, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> addPhone(@Valid @RequestBody PhoneJson newPhone) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         this.userService.addPhone(currentUser, newPhone);
@@ -195,6 +217,8 @@ public class UserController {
     @RolesAllowed(RolesAllowedConstants.USER)
     @RequestMapping(value = UserControllerUrlConstants.EDIT_USER_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> removePhone(@PathVariable("phoneIdentifier") String phoneIdentifier, @RequestParam(name="identifierIsPhoneNumber", defaultValue="true") boolean identifierIsPhoneNumber) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
 		User currentUser = this.currentUserService.getCurrentUser();
         if( currentUser == null ) throw new HttpInternalServerErrorException(this.labelProvider.getLabel("error.currentuser.notfound"));
         if( identifierIsPhoneNumber ) {
@@ -207,4 +231,5 @@ public class UserController {
         String messageStr = this.labelProvider.getLabel("user.removephone.success");
         return new ResponseEntity<DefaultResponseJson>(new DefaultResponseJson(messageStr, responseStatus), responseStatus);
     }
+
 }

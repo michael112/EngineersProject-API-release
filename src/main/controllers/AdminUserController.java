@@ -21,12 +21,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import main.util.labels.LabelProvider;
+import main.util.properties.PropertyProvider;
 
 import main.constants.rolesallowedconstants.RolesAllowedConstants;
 
 import main.constants.urlconstants.AdminUserControllerUrlConstants;
 
+import main.constants.releaseconstants.ReleaseConstants;
+
 import main.error.exception.HttpNotFoundException;
+
+import main.error.exception.GDPRNotice;
 
 import main.service.search.SearchService;
 
@@ -72,6 +77,9 @@ public class AdminUserController {
     private LabelProvider labelProvider;
 
     @Autowired
+    private PropertyProvider propertyProvider;
+
+    @Autowired
     private UserCrudService userCrudService;
 
     @Autowired
@@ -93,6 +101,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.ADD_ACCOUNT, method = RequestMethod.POST, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> addAccount(@Valid @RequestBody AccountJson newAccount) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         this.adminUserService.addAccount(newAccount);
         HttpStatus responseStatus = HttpStatus.OK;
         String messageStr = this.labelProvider.getLabel("admin.user.add.success");
@@ -178,6 +188,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT, method = RequestMethod.PUT, consumes = "application/json", produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editAccount(@PathVariable("userID") String accountID, @Valid @RequestBody AccountJson editedAccount) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editAccount(account, editedAccount);
@@ -189,6 +201,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_USERNAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editUsername(@PathVariable("userID") String accountID, @Valid @RequestBody UsernameJson usernameJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editUsername(account, usernameJson);
@@ -200,6 +214,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_NAME, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editName(@PathVariable("userID") String accountID, @Valid @RequestBody NameJson nameJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editName(account, nameJson);
@@ -211,6 +227,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_EMAIL, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editEmail(@PathVariable("userID") String accountID, @Valid @RequestBody EmailJson emailJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editEmail(account, emailJson);
@@ -222,6 +240,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editPhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneID, @Valid @RequestBody PhoneJson phoneJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editPhone(account, phoneID, phoneJson);
@@ -233,6 +253,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADD_PHONE, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> addPhone(@PathVariable("userID") String accountID, @Valid @RequestBody PhoneJson phoneJson) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.addPhone(account, phoneJson);
@@ -244,6 +266,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_REMOVE_PHONE, method = RequestMethod.DELETE, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> removePhone(@PathVariable("userID") String accountID, @PathVariable("phoneID") String phoneIdentifier, @RequestParam(name="identifierIsPhoneNumber", defaultValue="true") boolean identifierIsPhoneNumber) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         if( identifierIsPhoneNumber ) {
@@ -260,6 +284,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.EDIT_ACCOUNT_ADDRESS, method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> editAddress(@PathVariable("userID") String accountID, @Valid @RequestBody Address address) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.editAddress(account, address);
@@ -271,6 +297,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.DEACTIVATE_ACCOUNT, method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> deactivateAccount(@PathVariable("userID") String accountID) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.deactivateAccount(account);
@@ -282,6 +310,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.ACTIVATE_ACCOUNT, method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> activateAccount(@PathVariable("userID") String accountID) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.activateAccount(account);
@@ -293,6 +323,8 @@ public class AdminUserController {
     @RolesAllowed(RolesAllowedConstants.ADMIN)
     @RequestMapping(value = AdminUserControllerUrlConstants.RESET_PASSWORD, method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<? extends AbstractResponseJson> resetUserPassword(@PathVariable("userID") String accountID) {
+        if( this.propertyProvider.getProperty("release.version").equals(ReleaseConstants.DEMO_RELEASE) )
+            throw new GDPRNotice();
         User account = this.userCrudService.findUserByID(accountID);
         if( account == null ) throw new HttpNotFoundException(this.labelProvider.getLabel("admin.user.not.found"));
         this.adminUserService.resetUserPassword(account);
