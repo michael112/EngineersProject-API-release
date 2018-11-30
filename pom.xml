@@ -53,6 +53,7 @@
 		<commons-io.version>2.5</commons-io.version>
 		<cors-filter.version>2.5</cors-filter.version>
 		<hsqldb.version>1.8.0.10</hsqldb.version>
+        <dropbox.api.app.version>3.0.10</dropbox.api.app.version>
 	</properties>
 
 	<dependencies>
@@ -337,6 +338,13 @@
 			<artifactId>hsqldb</artifactId>
 			<version>${hsqldb.version}</version>
 			<scope>test</scope>
+		</dependency>
+
+		<!-- Dropbox API app -->
+		<dependency>
+    		<groupId>com.dropbox.core</groupId>
+    		<artifactId>dropbox-core-sdk</artifactId>
+    		<version>${dropbox.api.app.version}</version>
 		</dependency>
 
 	</dependencies>
