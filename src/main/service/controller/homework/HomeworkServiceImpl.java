@@ -114,10 +114,20 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
             }
             HomeworkInfoTeacherJson result = new HomeworkInfoTeacherJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
             for( File attachement : homework.getAttachements() ) {
-                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+                if( attachement.isRemote() ) {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.isRemote(), attachement.getRemoteID()));
+                }
+                else {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.isRemote()));
+                }
             }
             for( HomeworkSolution solution : homework.getHomeworkSolutions() ) {
-                result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath())));
+                if( solution.getSolutionFile().isRemote() ) {
+                    result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().isRemote(), solution.getSolutionFile().getRemoteID())));
+                }
+                else {
+                    result.addSolution(new HomeworkSolutionJson(solution.getUser().getId(), solution.getUser().getFullName(), new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath(), solution.getSolutionFile().isRemote())));
+                }
             }
             return result;
         }
@@ -135,7 +145,13 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
             HomeworkInfoStudentJson result;
             if( homework.containsHomeworkSolution(student) ) {
                 HomeworkSolution solution = homework.getHomeworkSolution(student);
-                AttachementJson solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath());
+                AttachementJson solutionFileJson;
+                if( solution.getSolutionFile().isRemote() ) {
+                    solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().isRemote(), solution.getSolutionFile().getRemoteID());
+                }
+                else {
+                    solutionFileJson = new AttachementJson(solution.getSolutionFile().getId(), solution.getSolutionFile().getName(), this.dateFormat.print(solution.getSolutionFile().getDate()), solution.getSolutionFile().getPath(), solution.getSolutionFile().isRemote());
+                }
                 if( solution.getGrade() != null ) {
                     StudentGrade solutionGrade = solution.getGrade();
                     result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription(), solutionFileJson, new HomeworkGradeJson(solutionGrade.getGrade().getScale().name(), solutionGrade.getGradeValue(), solutionGrade.getGrade().getWeight(), solutionGrade.getGrade().getMaxPoints()));
@@ -148,7 +164,12 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
                 result = new HomeworkInfoStudentJson(courseJson, homework.getId(), this.dateFormat.print(homework.getDate()), homework.getTitle(), homework.getDescription());
             }
             for( File attachement : homework.getAttachements() ) {
-                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+                if( attachement.isRemote() ) {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.isRemote(), attachement.getRemoteID()));
+                }
+                else {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.isRemote()));
+                }
             }
             return result;
         }
@@ -161,7 +182,12 @@ public class HomeworkServiceImpl extends AbstractService implements HomeworkServ
         try {
             HomeworkAttachementsJson result = new HomeworkAttachementsJson();
             for( File attachement : homework.getAttachements() ) {
-                result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath()));
+                if( attachement.isRemote() ) {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.isRemote(), attachement.getRemoteID()));
+                }
+                else {
+                    result.addAttachement(new AttachementJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.isRemote()));
+                }
             }
             return result;
         }

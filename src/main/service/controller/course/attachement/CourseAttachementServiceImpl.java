@@ -51,7 +51,12 @@ public class CourseAttachementServiceImpl extends AbstractService implements Cou
             result.addTeacher(new CourseUserJson(teacher.getId(), teacher.getFullName()));
         }
         for( File attachement : course.getAttachements() ) {
-            result.addAttachement(new FileInfoJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.getSender().getId(), attachement.getSender().getFullName()));
+            if( attachement.isRemote() ) {
+                result.addAttachement(new FileInfoJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getSender().getId(), attachement.getSender().getFullName(), attachement.isRemote(), attachement.getRemoteID()));
+            }
+            else {
+                result.addAttachement(new FileInfoJson(attachement.getId(), attachement.getName(), this.dateFormat.print(attachement.getDate()), attachement.getPath(), attachement.getSender().getId(), attachement.getSender().getFullName(), attachement.isRemote()));
+            }
         }
         return result;
     }
