@@ -69,8 +69,10 @@ CREATE TABLE files (
   fileID varchar(36) NOT NULL,
   name varchar(50) DEFAULT NULL,
   date datetime NOT NULL,
-  path varchar(100) NOT NULL,
+  path varchar(100) DEFAULT NULL,
   senderID varchar(36) NOT NULL,
+  isRemote boolean NOT NULL DEFAULT FALSE,
+  remoteID varchar(36) DEFAULT NULL,
   PRIMARY KEY (fileID)
 )
 
@@ -116,6 +118,13 @@ CREATE TABLE languagenames (
 CREATE TABLE languages (
   languageID varchar(5) NOT NULL,
   PRIMARY KEY (languageID)
+)
+
+CREATE TABLE levelsuggestions (
+  levelSuggestionID varchar(36) NOT NULL,
+  courseLevelID varchar(36) NOT NULL,
+  points double NOT NULL,
+  PRIMARY KEY (levelSuggestionID)
 )
 
 CREATE TABLE messages (
@@ -178,13 +187,6 @@ CREATE TABLE placementtests (
   placementTestID varchar(36) NOT NULL,
   languageID varchar(5) NOT NULL,
   PRIMARY KEY (placementTestID)
-)
-
-CREATE TABLE levelsuggestions (
-  levelSuggestionID varchar(36) NOT NULL,
-  courseLevelID varchar(36) NOT NULL,
-  points double NOT NULL,
-  PRIMARY KEY (levelSuggestionID)
 )
 
 CREATE TABLE placementtestslevelsuggestions (

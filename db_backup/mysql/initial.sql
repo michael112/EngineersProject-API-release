@@ -192,8 +192,10 @@ CREATE TABLE `files` (
   `fileID` varchar(36) NOT NULL,
   `name` varchar(50) NOT NULL,
   `date` datetime NOT NULL,
-  `path` varchar(100) NOT NULL,
+  `path` varchar(100) DEFAULT NULL,
   `senderID` varchar(36) NOT NULL,
+  `isRemote` tinyint(1) NOT NULL DEFAULT '0',
+  `remoteID` varchar(36) DEFAULT NULL,
   PRIMARY KEY (`fileID`),
   KEY `FK_FILES_USERS` (`senderID`),
   CONSTRAINT `FK_FILES_USERS` FOREIGN KEY (`senderID`) REFERENCES `users` (`userID`)
@@ -641,4 +643,4 @@ CREATE TABLE `usersuserroles` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-01-25 11:19:06
+-- Dump completed on 2019-01-11 19:34:06
