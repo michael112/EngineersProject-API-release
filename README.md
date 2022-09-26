@@ -1,0 +1,1 @@
+Before using, please fill in /WebContent/WEB-INF/resources/application.properties file with your authentication data and create a database, filling it with data from one of /db_backup/mysql dumps. (If using /db_backup/mysql/initial_with_admin.sql also please fill it with your admin authentication data.)
